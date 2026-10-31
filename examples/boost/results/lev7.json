@@ -1,0 +1,47 @@
+{
+  "schema": "dsh-boost-bench/1",
+  "practice": "LEV-7",
+  "generatedAt": "2026-10-31T13:27:05.210Z",
+  "n": 64,
+  "delayMs": 20,
+  "runs": 5,
+  "rows": [
+    {
+      "limit": 1,
+      "samples": [
+        1302.732034,
+        1351.290128,
+        1332.419355,
+        1339.080294,
+        1364.741185
+      ],
+      "median": 1339.080294,
+      "speedup": 1
+    },
+    {
+      "limit": 4,
+      "samples": [
+        338.768861,
+        326.671147,
+        321.792625,
+        323.136951,
+        322.638217
+      ],
+      "median": 323.136951,
+      "speedup": 4.144002379969229
+    },
+    {
+      "limit": 8,
+      "samples": [
+        161.605746,
+        161.302861,
+        162.636317,
+        162.416393,
+        162.427872
+      ],
+      "median": 162.416393,
+      "speedup": 8.244736071684587
+    }
+  ],
+  "caveat": "Synthetic timers, single machine, not a production baseline."
+}

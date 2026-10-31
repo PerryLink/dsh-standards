@@ -1,0 +1,38 @@
+{
+  "schema": "dsh-bundle-smoke/1",
+  "package": "dsh-ci-diet",
+  "version": "0.5.2",
+  "g0": {
+    "patchFiles": 1,
+    "parsed": true
+  },
+  "g1": {
+    "rows": 98,
+    "targetRows": 1,
+    "warnings": []
+  },
+  "g2": {
+    "compatibility": "admit"
+  },
+  "g3": {
+    "state": "partial",
+    "rows": [
+      {
+        "id": "include:ciDiet.bootstrap",
+        "state": null,
+        "disabled": false
+      }
+    ],
+    "active": 0
+  },
+  "g4": {
+    "hasClient": true,
+    "clientExport": false,
+    "rootRows": [],
+    "ok": false
+  },
+  "attempt": {
+    "status": "timeout",
+    "note": "boot hit 120s; target row never ACTIVE; NOT a pass"
+  }
+}

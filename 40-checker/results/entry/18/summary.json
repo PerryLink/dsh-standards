@@ -1,0 +1,266 @@
+{
+  "schema": "dsh-entry-static/1",
+  "generatedAt": "2026-10-31T13:24:19.371Z",
+  "scope": "entry",
+  "claim": "static",
+  "mode": "recognized",
+  "count": 18,
+  "status": {
+    "pass": 0,
+    "warn": 18,
+    "fail": 0,
+    "incomplete": 0
+  },
+  "clean": 0,
+  "rows": [
+    {
+      "id": "DDDMUC__dsh-free-search",
+      "name": "dsh-free-search",
+      "version": "0.9.26",
+      "status": "warn",
+      "level": "DSH-ENTRY recognized (warnings)",
+      "warnings": [
+        "DSC-02",
+        "DSC-11",
+        "DSC-13"
+      ],
+      "fails": []
+    },
+    {
+      "id": "Ebony-Vinyl__dsh-our-free-model",
+      "name": "dsh-our-free-model",
+      "version": "2.1.0",
+      "status": "warn",
+      "level": "DSH-ENTRY recognized (warnings)",
+      "warnings": [
+        "DSC-02",
+        "DSC-11",
+        "DSC-13"
+      ],
+      "fails": []
+    },
+    {
+      "id": "SeaOf0__dsh-redteam-model",
+      "name": "@dsh-external/dsh-redteam-model",
+      "version": "1.1.2",
+      "status": "warn",
+      "level": "DSH-ENTRY recognized (warnings)",
+      "warnings": [
+        "DSC-02",
+        "DSC-11",
+        "DSC-13"
+      ],
+      "fails": []
+    },
+    {
+      "id": "YuJunZhiXue__dsh-purge",
+      "name": "dsh-purge",
+      "version": "1.1.85",
+      "status": "warn",
+      "level": "DSH-ENTRY recognized (warnings)",
+      "warnings": [
+        "DSC-02",
+        "DSC-10",
+        "DSC-11",
+        "DSC-12",
+        "DSC-13"
+      ],
+      "fails": []
+    },
+    {
+      "id": "ci-diet",
+      "name": "dsh-ci-diet",
+      "version": "0.5.2",
+      "status": "warn",
+      "level": "DSH-ENTRY recognized (warnings)",
+      "warnings": [
+        "DSC-11",
+        "DSC-13"
+      ],
+      "fails": []
+    },
+    {
+      "id": "daily-log",
+      "name": "@zzerx/dsh-plugin-daily-log",
+      "version": "0.4.3",
+      "status": "warn",
+      "level": "DSH-ENTRY recognized (warnings)",
+      "warnings": [
+        "DSC-02",
+        "DSC-11",
+        "DSC-13"
+      ],
+      "fails": []
+    },
+    {
+      "id": "howmp__dsh-pentest",
+      "name": "@howmp/dsh-pentest",
+      "version": "0.1.0-rc.37",
+      "status": "warn",
+      "level": "DSH-ENTRY recognized (warnings)",
+      "warnings": [
+        "DSC-02",
+        "DSC-11",
+        "DSC-13"
+      ],
+      "fails": []
+    },
+    {
+      "id": "kingcharleslzy-ai__dsh-purge",
+      "name": "dsh-purge-community",
+      "version": "1.6.67",
+      "status": "warn",
+      "level": "DSH-ENTRY recognized (warnings)",
+      "warnings": [
+        "DSC-02",
+        "DSC-11",
+        "DSC-12",
+        "DSC-13"
+      ],
+      "fails": []
+    },
+    {
+      "id": "liguobao__ds-harness-remote",
+      "name": "ds-harness-remote",
+      "version": "0.6.0",
+      "status": "warn",
+      "level": "DSH-ENTRY recognized (warnings)",
+      "warnings": [
+        "DSC-01",
+        "DSC-02",
+        "DSC-11",
+        "DSC-12",
+        "DSC-13"
+      ],
+      "fails": []
+    },
+    {
+      "id": "mmparko__dsh-purge",
+      "name": "dsh-purge",
+      "version": "1.1.71",
+      "status": "warn",
+      "level": "DSH-ENTRY recognized (warnings)",
+      "warnings": [
+        "DSC-02",
+        "DSC-10",
+        "DSC-11",
+        "DSC-12",
+        "DSC-13"
+      ],
+      "fails": []
+    },
+    {
+      "id": "project-memory",
+      "name": "@yolk_vat-y/dsh-project-memory",
+      "version": "0.6.7",
+      "status": "warn",
+      "level": "DSH-ENTRY recognized (warnings)",
+      "warnings": [
+        "DSC-02",
+        "DSC-11",
+        "DSC-13"
+      ],
+      "fails": []
+    },
+    {
+      "id": "qiushi",
+      "name": "qiushi-dsh-evidence-audit",
+      "version": "0.1.0",
+      "status": "warn",
+      "level": "DSH-ENTRY recognized (warnings)",
+      "warnings": [
+        "DSC-02",
+        "DSC-11",
+        "DSC-13"
+      ],
+      "fails": []
+    },
+    {
+      "id": "shaobeichen__dsh-pocket",
+      "name": "dsh-pocket",
+      "version": "2.12.0",
+      "status": "warn",
+      "level": "DSH-ENTRY recognized (warnings)",
+      "warnings": [
+        "DSC-02",
+        "DSC-11",
+        "DSC-13"
+      ],
+      "fails": []
+    },
+    {
+      "id": "status-rotator",
+      "name": "dsh-status-rotator",
+      "version": "0.38.0",
+      "status": "warn",
+      "level": "DSH-ENTRY recognized (warnings)",
+      "warnings": [
+        "DSC-02",
+        "DSC-11",
+        "DSC-13"
+      ],
+      "fails": []
+    },
+    {
+      "id": "telemetry",
+      "name": "dsh-telemetry-redactor",
+      "version": "0.1.0",
+      "status": "warn",
+      "level": "DSH-ENTRY recognized (warnings)",
+      "warnings": [
+        "DSC-02",
+        "DSC-11",
+        "DSC-13"
+      ],
+      "fails": []
+    },
+    {
+      "id": "ui-auth",
+      "name": "dsh-ui-auth",
+      "version": "0.7.1",
+      "status": "warn",
+      "level": "DSH-ENTRY recognized (warnings)",
+      "warnings": [
+        "DSC-02",
+        "DSC-11",
+        "DSC-12",
+        "DSC-13"
+      ],
+      "fails": []
+    },
+    {
+      "id": "verification",
+      "name": "dsh-verification-receipt",
+      "version": "0.1.0",
+      "status": "warn",
+      "level": "DSH-ENTRY recognized (warnings)",
+      "warnings": [
+        "DSC-02",
+        "DSC-11",
+        "DSC-13"
+      ],
+      "fails": []
+    },
+    {
+      "id": "ysr666__dsh-vision-router",
+      "name": "dsh-vision-router",
+      "version": "3.1.0",
+      "status": "warn",
+      "level": "DSH-ENTRY recognized (warnings)",
+      "warnings": [
+        "DSC-01",
+        "DSC-11",
+        "DSC-13"
+      ],
+      "fails": []
+    }
+  ],
+  "caveat": "Static-only. recognized != runtime. G0-G3 raw JSON not included.",
+  "runtime": {
+    "status": "not-run",
+    "reason": "bundle-smoke base boot timed out (120s); target row 0/1 ACTIVE; no runtime claim",
+    "attempts": [
+      "ci-diet.runtime-attempt.json"
+    ]
+  }
+}

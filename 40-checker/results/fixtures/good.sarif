@@ -1,0 +1,274 @@
+{
+  "$schema": "https://json.schemastore.org/sarif-2.1.0.json",
+  "version": "2.1.0",
+  "runs": [
+    {
+      "tool": {
+        "driver": {
+          "name": "dsh-plugin-verify",
+          "version": "0.1.0",
+          "informationUri": "https://github.com/dsh-community/dsh-plugin-verify",
+          "rules": [
+            {
+              "id": "DSC-01",
+              "name": "DSC-01",
+              "shortDescription": {
+                "text": "C-1 L0"
+              },
+              "fullDescription": {
+                "text": "C-1 conformance check; coverage=full"
+              },
+              "properties": {
+                "clause": "C-1",
+                "layer": "L0",
+                "coverage": "full",
+                "advisory": false
+              }
+            },
+            {
+              "id": "DSC-02",
+              "name": "DSC-02",
+              "shortDescription": {
+                "text": "C-2 L0"
+              },
+              "fullDescription": {
+                "text": "C-2 conformance check; coverage=full"
+              },
+              "properties": {
+                "clause": "C-2",
+                "layer": "L0",
+                "coverage": "full",
+                "advisory": false
+              }
+            },
+            {
+              "id": "DSC-03",
+              "name": "DSC-03",
+              "shortDescription": {
+                "text": "C-3 L0"
+              },
+              "fullDescription": {
+                "text": "C-3 conformance check; coverage=not-run"
+              },
+              "properties": {
+                "clause": "C-3",
+                "layer": "L0",
+                "coverage": "not-run",
+                "advisory": false
+              }
+            },
+            {
+              "id": "DSC-04",
+              "name": "DSC-04",
+              "shortDescription": {
+                "text": "C-4 L1"
+              },
+              "fullDescription": {
+                "text": "C-4 conformance check; coverage=full"
+              },
+              "properties": {
+                "clause": "C-4",
+                "layer": "L1",
+                "coverage": "full",
+                "advisory": false
+              }
+            },
+            {
+              "id": "DSC-05",
+              "name": "DSC-05",
+              "shortDescription": {
+                "text": "C-5 L1"
+              },
+              "fullDescription": {
+                "text": "C-5 conformance check; coverage=full"
+              },
+              "properties": {
+                "clause": "C-5",
+                "layer": "L1",
+                "coverage": "full",
+                "advisory": false
+              }
+            },
+            {
+              "id": "DSC-06",
+              "name": "DSC-06",
+              "shortDescription": {
+                "text": "C-6 L1+L2"
+              },
+              "fullDescription": {
+                "text": "C-6 conformance check; coverage=full"
+              },
+              "properties": {
+                "clause": "C-6",
+                "layer": "L1+L2",
+                "coverage": "full",
+                "advisory": false
+              }
+            },
+            {
+              "id": "DSC-07",
+              "name": "DSC-07",
+              "shortDescription": {
+                "text": "C-7 L2"
+              },
+              "fullDescription": {
+                "text": "C-7 conformance check; coverage=full"
+              },
+              "properties": {
+                "clause": "C-7",
+                "layer": "L2",
+                "coverage": "full",
+                "advisory": false
+              }
+            },
+            {
+              "id": "DSC-08",
+              "name": "DSC-08",
+              "shortDescription": {
+                "text": "C-8 L3"
+              },
+              "fullDescription": {
+                "text": "C-8 conformance check; coverage=full"
+              },
+              "properties": {
+                "clause": "C-8",
+                "layer": "L3",
+                "coverage": "full",
+                "advisory": false
+              }
+            },
+            {
+              "id": "DSC-09",
+              "name": "DSC-09",
+              "shortDescription": {
+                "text": "C-9 L1"
+              },
+              "fullDescription": {
+                "text": "C-9 conformance check; coverage=full"
+              },
+              "properties": {
+                "clause": "C-9",
+                "layer": "L1",
+                "coverage": "full",
+                "advisory": false
+              }
+            },
+            {
+              "id": "DSC-10",
+              "name": "DSC-10",
+              "shortDescription": {
+                "text": "C-10 L0"
+              },
+              "fullDescription": {
+                "text": "C-10 conformance check; coverage=full; advisory"
+              },
+              "properties": {
+                "clause": "C-10",
+                "layer": "L0",
+                "coverage": "full",
+                "advisory": true
+              }
+            },
+            {
+              "id": "DSC-11",
+              "name": "DSC-11",
+              "shortDescription": {
+                "text": "C-11 L0"
+              },
+              "fullDescription": {
+                "text": "C-11 conformance check; coverage=full"
+              },
+              "properties": {
+                "clause": "C-11",
+                "layer": "L0",
+                "coverage": "full",
+                "advisory": false
+              }
+            },
+            {
+              "id": "DSC-12",
+              "name": "DSC-12",
+              "shortDescription": {
+                "text": "C-12 L0"
+              },
+              "fullDescription": {
+                "text": "C-12 conformance check; coverage=full"
+              },
+              "properties": {
+                "clause": "C-12",
+                "layer": "L0",
+                "coverage": "full",
+                "advisory": false
+              }
+            },
+            {
+              "id": "DSC-13",
+              "name": "DSC-13",
+              "shortDescription": {
+                "text": "C-13 L0"
+              },
+              "fullDescription": {
+                "text": "C-13 conformance check; coverage=full"
+              },
+              "properties": {
+                "clause": "C-13",
+                "layer": "L0",
+                "coverage": "full",
+                "advisory": false
+              }
+            }
+          ]
+        }
+      },
+      "properties": {
+        "standard": {
+          "id": "DS-C",
+          "version": "1.0.0"
+        },
+        "anchor": {
+          "repo": "deepseek-ai/deepseek-harness",
+          "commit": "ce7073d51254c26cd63b22a60835b8f948deb447",
+          "scanner": "dsh-plugin-verify@0.1.0",
+          "dsh": "0.2.2-alpha.2",
+          "cordis": "4.0.5",
+          "runtime": "/home/yy/deepseek-harness/vendor/cordis/lib/index.js"
+        },
+        "conclusion": {
+          "level": "DS-C (package, warnings)",
+          "status": "warn",
+          "exitCode": 0,
+          "profile": "package",
+          "scope": "ds-c",
+          "subset": null,
+          "staticOnly": false,
+          "reason": "WARN: DSC-08"
+        },
+        "subject": {
+          "mode": "package",
+          "profile": "package",
+          "kind": "plugin",
+          "kindInferred": false,
+          "name": "@dsh-fixtures/good-plugin",
+          "version": "1.0.0",
+          "path": "/mnt/c/Users/zzhdz/WorkBuddy/2026-10-30-16-02-58/dsh-standard/40-checker/fixtures/good"
+        }
+      },
+      "results": [
+        {
+          "ruleId": "DSC-08",
+          "level": "warning",
+          "message": {
+            "text": "C-8.2: revision null -> null; epoch :0 -> :0"
+          },
+          "locations": [],
+          "properties": {
+            "clause": "C-8",
+            "result": "WARN",
+            "coverage": "full",
+            "advisory": false
+          }
+        }
+      ]
+    }
+  ]
+}

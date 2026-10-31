@@ -1,0 +1,18 @@
+{
+  "format": 1,
+  "title": "DS-C fixture market",
+  "plugins": [
+    {
+      "name": "@dsh-fixtures/good-plugin",
+      "title": "Good fixture",
+      "versions": [
+        {
+          "version": "1.0.0",
+          "publishTimestamp": 1760000000,
+          "source": { "type": "npm" },
+          "engines": { "dsh": ">=0.2.2-alpha.2 <0.3.0" }
+        }
+      ]
+    }
+  ]
+}

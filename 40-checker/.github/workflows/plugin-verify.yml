@@ -1,0 +1,70 @@
+name: plugin-verify
+on:
+  push:
+  pull_request:
+  workflow_dispatch:
+jobs:
+  l0:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+      - name: unit tests
+        run: node --test
+      - name: good fixture (static-only M1; expect 0)
+        run: |
+          node bin/dsh-plugin-verify.mjs fixtures/good \
+            --static-only \
+            --market-index fixtures/market-index.json \
+            --plugin-name @dsh-fixtures/good-plugin \
+            --format json --out /tmp/good.json
+      - name: bad fixture (expect 1; 0 would be a false green)
+        run: |
+          set +e
+          node bin/dsh-plugin-verify.mjs fixtures/bad --format json --out /tmp/bad.json
+          code=$?
+          test "$code" -eq 1
+      - name: SARIF smoke
+        run: |
+          node bin/dsh-plugin-verify.mjs fixtures/good \
+            --static-only \
+            --market-index fixtures/market-index.json \
+            --plugin-name @dsh-fixtures/good-plugin \
+            --format sarif --out /tmp/good.sarif
+      - uses: actions/upload-artifact@v4
+        with:
+          name: reports
+          path: |
+            /tmp/good.json
+            /tmp/bad.json
+            /tmp/good.sarif
+
+  l1-manual:
+    if: github.event_name == 'workflow_dispatch'
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+      - name: build host farm (requires a DSH checkout at DSH_HOST)
+        env:
+          DSH_HOST: ${{ vars.DSH_HOST }}
+        run: |
+          test -n "$DSH_HOST"
+          node scripts/host-farm.mjs --plugin fixtures/bundle --farm /tmp/farm --link --quiet
+      - name: L1 on bundle fixture
+        env:
+          DSH_HOST: ${{ vars.DSH_HOST }}
+        run: |
+          node bin/dsh-plugin-verify.mjs /tmp/farm/plugins/bundle \
+            --treat-as-plugin \
+            --runtime "$DSH_HOST/vendor/cordis/lib/index.js" \
+            --runtime-version 0.2.2-alpha.2 \
+            --format json --out /tmp/l1.json
+      - uses: actions/upload-artifact@v4
+        with:
+          name: l1-report
+          path: /tmp/l1.json

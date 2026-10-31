@@ -1,0 +1,12 @@
+{
+  "engines": { "dsh": ">=0.2.2-alpha.2 <0.3.0" },
+  "dsh": {
+    "capabilities": ["llm:adapter", "network:egress"],
+    "labels": ["third-party-model-provider"],
+    "disclosure": {
+      "endpoints": ["https://api.example.com"],
+      "retention": "none",
+      "systemPrompt": "unchanged"
+    }
+  }
+}

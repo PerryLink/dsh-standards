@@ -1,0 +1,51 @@
+{
+  "schema": "dsh-negative-controls/1",
+  "generatedAt": "2026-10-31T13:27:09.410Z",
+  "count": 5,
+  "rows": [
+    {
+      "id": "bad-entry",
+      "status": "fail",
+      "level": null,
+      "fails": [
+        "DSC-01"
+      ]
+    },
+    {
+      "id": "no-entry",
+      "status": "fail",
+      "level": null,
+      "fails": [
+        "DSC-01"
+      ]
+    },
+    {
+      "id": "no-patch",
+      "status": "fail",
+      "level": null,
+      "fails": [
+        "DSC-01"
+      ]
+    },
+    {
+      "id": "root-missing",
+      "status": "warn",
+      "level": "DSH-ENTRY recognized (warnings)",
+      "fails": []
+    },
+    {
+      "id": "workspace",
+      "status": "fail",
+      "level": null,
+      "fails": [
+        "DSC-01"
+      ]
+    }
+  ],
+  "rootMissingRuntime": {
+    "state": "failed",
+    "rows": 0,
+    "active": 0
+  },
+  "caveat": "Structural negatives; root-missing is only caught by G0-G3, not by recognized."
+}

@@ -1,0 +1,33 @@
+{
+  "schema": "dsh-m2-level/1",
+  "status": "inconclusive",
+  "standard": {
+    "id": "DS-C",
+    "version": "1.0.0"
+  },
+  "subject": {
+    "name": null,
+    "version": null,
+    "path": "/mnt/c/Users/zzhdz/WorkBuddy/2026-10-30-16-02-58/dsh-standard/40-checker/fixtures/hang"
+  },
+  "anchor": null,
+  "coverage": null,
+  "conclusion": null,
+  "sandbox": {
+    "runner": "m2-runner/1",
+    "node": "v24.22.1",
+    "timeoutMs": 3000,
+    "elapsedMs": 3008,
+    "killed": true,
+    "exitCode": null,
+    "isolatedHome": true,
+    "backend": "unshare",
+    "networkNamespace": true,
+    "containment": "network-namespace+process",
+    "linkedModules": 0,
+    "note": "user+network namespace + process isolation; still not a full security sandbox"
+  },
+  "checks": [],
+  "stderr": "",
+  "ranAt": "2026-10-31T04:26:21.757Z"
+}

@@ -1,0 +1,31 @@
+{
+  "schema": "dsh-m2-level/1",
+  "status": "inconclusive",
+  "standard": {
+    "id": "DS-C",
+    "version": "1.0.0"
+  },
+  "subject": {
+    "name": null,
+    "version": null,
+    "path": "/mnt/c/Users/zzhdz/WorkBuddy/2026-10-30-16-02-58/dsh-standard/40-checker/fixtures/hang"
+  },
+  "anchor": null,
+  "coverage": null,
+  "conclusion": null,
+  "sandbox": {
+    "runner": "m2-runner/1",
+    "node": "v24.22.1",
+    "timeoutMs": 3000,
+    "elapsedMs": 3031,
+    "killed": true,
+    "exitCode": null,
+    "isolatedHome": true,
+    "linkedModules": 0,
+    "containment": false,
+    "note": "process isolation only; not a security sandbox (50 §5)"
+  },
+  "checks": [],
+  "stderr": "",
+  "ranAt": "2026-10-31T04:21:14.283Z"
+}

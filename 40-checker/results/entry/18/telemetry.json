@@ -1,0 +1,349 @@
+{
+  "schema": "dsh-conformance/1",
+  "standard": {
+    "id": "DS-C",
+    "version": "1.0.0"
+  },
+  "subject": {
+    "mode": "package",
+    "profile": "package",
+    "kind": "bundle",
+    "kindInferred": true,
+    "kindEvaluated": "bundle",
+    "name": "dsh-telemetry-redactor",
+    "version": "0.1.0",
+    "path": "/tmp/rerun18/telemetry"
+  },
+  "anchor": {
+    "repo": "deepseek-ai/deepseek-harness",
+    "commit": "ce7073d51254c26cd63b22a60835b8f948deb447",
+    "scanner": "dsh-plugin-verify@0.1.0",
+    "dsh": "0.2.2-alpha.2",
+    "cordis": "4.0.6-alpha.1",
+    "runtime": null
+  },
+  "checks": [
+    {
+      "id": "DSC-01",
+      "clause": "C-1",
+      "layer": "L0",
+      "result": "PASS",
+      "coverage": "full",
+      "reason": "",
+      "evidence": [
+        "package.json"
+      ],
+      "details": [
+        {
+          "item": "C-1.1",
+          "result": "PASS",
+          "reason": "name=dsh-telemetry-redactor",
+          "evidence": []
+        },
+        {
+          "item": "C-1.1",
+          "result": "PASS",
+          "reason": "version=0.1.0",
+          "evidence": []
+        },
+        {
+          "item": "C-1.2",
+          "result": "PASS",
+          "reason": "entry resolves via exports[\".\"]: lib/index.js",
+          "evidence": [
+            "lib/index.js"
+          ]
+        },
+        {
+          "item": "C-1.3",
+          "result": "NA",
+          "reason": "not a directly loadable plugin entry",
+          "evidence": []
+        },
+        {
+          "item": "C-1.4",
+          "result": "PASS",
+          "reason": "bundle patch present (1 file(s))",
+          "evidence": [
+            "./cordis.patch.yml"
+          ]
+        },
+        {
+          "item": "C-1.5",
+          "result": "PASS",
+          "reason": "license=MIT",
+          "evidence": []
+        }
+      ],
+      "method": "M",
+      "advisory": false
+    },
+    {
+      "id": "DSC-02",
+      "clause": "C-2",
+      "layer": "L0",
+      "result": "WARN",
+      "coverage": "full",
+      "reason": "entry static claim: version declaration is WARN, not blocking",
+      "evidence": [
+        "package.json#engines",
+        "package.json#peerDependencies"
+      ],
+      "details": [
+        {
+          "item": "C-2.2",
+          "result": "FAIL",
+          "reason": "peer @deepseek-ai/dsh-session-telemetry >=0.1.0-rc.5 <0.2.0 does not satisfy runtime 0.2.2-alpha.2",
+          "evidence": [
+            "package.json#peerDependencies.@deepseek-ai/dsh-session-telemetry"
+          ]
+        },
+        {
+          "item": "C-2.1",
+          "result": "FAIL",
+          "reason": "one or more dsh peers are unsatisfied",
+          "evidence": []
+        }
+      ],
+      "method": "M",
+      "advisory": false
+    },
+    {
+      "id": "DSC-03",
+      "clause": "C-3",
+      "layer": "L0",
+      "result": "NA",
+      "coverage": "not-run",
+      "reason": "install spec not supplied (package profile)",
+      "evidence": [
+        "package.json#dependencies",
+        "package.json#scripts",
+        "--install-spec"
+      ],
+      "details": [],
+      "method": "M",
+      "advisory": false
+    },
+    {
+      "id": "DSC-04",
+      "clause": "C-4",
+      "layer": "L1",
+      "result": "NA",
+      "coverage": "not-run",
+      "reason": "kind=bundle; L1-L3 apply to plugin entries only",
+      "evidence": [],
+      "details": [],
+      "method": "M",
+      "advisory": false
+    },
+    {
+      "id": "DSC-05",
+      "clause": "C-5",
+      "layer": "L1",
+      "result": "NA",
+      "coverage": "not-run",
+      "reason": "kind=bundle; L1-L3 apply to plugin entries only",
+      "evidence": [],
+      "details": [],
+      "method": "M",
+      "advisory": false
+    },
+    {
+      "id": "DSC-06",
+      "clause": "C-6",
+      "layer": "L1+L2",
+      "result": "NA",
+      "coverage": "not-run",
+      "reason": "kind=bundle; L1-L3 apply to plugin entries only",
+      "evidence": [],
+      "details": [],
+      "method": "M",
+      "advisory": false
+    },
+    {
+      "id": "DSC-07",
+      "clause": "C-7",
+      "layer": "L2",
+      "result": "NA",
+      "coverage": "not-run",
+      "reason": "kind=bundle; L1-L3 apply to plugin entries only",
+      "evidence": [],
+      "details": [],
+      "method": "M",
+      "advisory": false
+    },
+    {
+      "id": "DSC-08",
+      "clause": "C-8",
+      "layer": "L3",
+      "result": "NA",
+      "coverage": "not-run",
+      "reason": "kind=bundle; L1-L3 apply to plugin entries only",
+      "evidence": [],
+      "details": [],
+      "method": "M",
+      "advisory": false
+    },
+    {
+      "id": "DSC-09",
+      "clause": "C-9",
+      "layer": "L1",
+      "result": "NA",
+      "coverage": "not-run",
+      "reason": "kind=bundle; L1-L3 apply to plugin entries only",
+      "evidence": [],
+      "details": [],
+      "method": "M",
+      "advisory": false
+    },
+    {
+      "id": "DSC-14",
+      "clause": "C-14",
+      "layer": "L1",
+      "method": "M",
+      "advisory": false,
+      "details": [],
+      "evidence": [],
+      "result": "NA",
+      "coverage": "not-run",
+      "reason": "entry static claim: no runtime evidence"
+    },
+    {
+      "id": "DSC-10",
+      "clause": "C-10",
+      "layer": "L0",
+      "result": "PASS",
+      "coverage": "full",
+      "reason": "",
+      "evidence": [],
+      "details": [],
+      "method": "M",
+      "advisory": true
+    },
+    {
+      "id": "DSC-11",
+      "clause": "C-11",
+      "layer": "L0",
+      "result": "WARN",
+      "coverage": "full",
+      "reason": "C-11.1: dsh.capabilities is not declared (transitional WARN; host does not read it yet)",
+      "evidence": [
+        "package.json#dsh.capabilities",
+        "dsh.bundle.patch"
+      ],
+      "details": [
+        {
+          "item": "C-11.1",
+          "result": "WARN",
+          "reason": "dsh.capabilities is not declared (transitional WARN; host does not read it yet)",
+          "evidence": [
+            "package.json#dsh.capabilities"
+          ]
+        }
+      ],
+      "method": "M",
+      "advisory": false
+    },
+    {
+      "id": "DSC-12",
+      "clause": "C-12",
+      "layer": "L0",
+      "result": "PASS",
+      "coverage": "full",
+      "reason": "",
+      "evidence": [
+        "package.json#dsh.capabilities"
+      ],
+      "details": [
+        {
+          "item": "C-12.1",
+          "result": "PASS",
+          "reason": "no credential backing-file reference found",
+          "evidence": []
+        },
+        {
+          "item": "C-12.2",
+          "result": "PASS",
+          "reason": "listRecords() not used",
+          "evidence": []
+        },
+        {
+          "item": "C-12.6",
+          "result": "NA",
+          "reason": "dsh.commitments is not declared (optional disclosure)",
+          "evidence": [
+            "package.json#dsh.commitments"
+          ]
+        },
+        {
+          "item": "C-12.7",
+          "result": "NA",
+          "reason": "dsh.disclosure is not declared (optional disclosure)",
+          "evidence": [
+            "package.json#dsh.commitments"
+          ]
+        }
+      ],
+      "method": "M",
+      "advisory": false
+    },
+    {
+      "id": "DSC-13",
+      "clause": "C-13",
+      "layer": "L0",
+      "result": "WARN",
+      "coverage": "full",
+      "reason": "C-13.1: dsh.labels is not declared | C-13.2: dsh.capabilities is absent; trigger-to-label mapping cannot be evaluated",
+      "evidence": [
+        "package.json#dsh.labels",
+        "package.json#dsh.upstream"
+      ],
+      "details": [
+        {
+          "item": "C-13.1",
+          "result": "WARN",
+          "reason": "dsh.labels is not declared",
+          "evidence": [
+            "package.json#dsh.labels"
+          ]
+        },
+        {
+          "item": "C-13.2",
+          "result": "WARN",
+          "reason": "dsh.capabilities is absent; trigger-to-label mapping cannot be evaluated",
+          "evidence": [
+            "package.json#dsh.capabilities"
+          ]
+        }
+      ],
+      "method": "M",
+      "advisory": false
+    }
+  ],
+  "coverage": {
+    "mandatory": 5,
+    "pass": 2,
+    "warn": 3,
+    "fail": 0,
+    "na": 0,
+    "notRun": 0,
+    "error": 0,
+    "entryBlocking": {
+      "required": 6,
+      "failed": [],
+      "pass": true
+    }
+  },
+  "conclusion": {
+    "level": "DSH-ENTRY recognized (warnings)",
+    "status": "warn",
+    "exitCode": 0,
+    "profile": "package",
+    "scope": "entry",
+    "subset": null,
+    "staticOnly": false,
+    "entryRuntime": "require",
+    "entryClaim": "static",
+    "reason": "WARN: DSC-02, DSC-11, DSC-13"
+  }
+}

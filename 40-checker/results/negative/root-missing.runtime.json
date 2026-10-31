@@ -1,0 +1,30 @@
+{
+  "schema": "dsh-bundle-smoke/1",
+  "package": "@dsh-fixtures/neg-root-missing",
+  "version": "1.0.0",
+  "g0": {
+    "patchFiles": 1,
+    "parsed": true
+  },
+  "g1": {
+    "rows": 0,
+    "targetRows": 0,
+    "warnings": [
+      "patch: entry \"ghost\" not found"
+    ]
+  },
+  "g2": {
+    "compatibility": "admit"
+  },
+  "g3": {
+    "state": "failed",
+    "rows": [],
+    "active": 0
+  },
+  "g4": {
+    "hasClient": false,
+    "clientExport": false,
+    "rootRows": [],
+    "ok": true
+  }
+}

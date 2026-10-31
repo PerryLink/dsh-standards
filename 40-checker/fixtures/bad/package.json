@@ -1,0 +1,15 @@
+{
+  "name": "@dsh-fixtures/bad-plugin",
+  "version": "1.0.0",
+  "type": "module",
+  "main": "./index.mjs",
+  "exports": {
+    ".": "./index.mjs"
+  },
+  "dsh": {
+    "manifestVersion": 1,
+    "kind": "plugin",
+    "capabilities": ["network:ingress"],
+    "labels": ["official"]
+  }
+}

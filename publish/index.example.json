@@ -1,0 +1,52 @@
+{
+  "format": 1,
+  "title": "DSH Plugin Conformance (non-official example)",
+  "description": "Example only; labels are not certification or endorsement.",
+  "metadata": {
+    "categories": {},
+    "labels": {
+      "dsh-entry:recognized": {
+        "title": "ENTRY recognized (static only)"
+      },
+      "dsh-entry:runtime": {
+        "title": "ENTRY runtime checked"
+      },
+      "dsh-entry:unavailable": {
+        "title": "ENTRY unavailable"
+      },
+      "dsh-flow:draft": {
+        "title": "FLOW draft; J1 only"
+      },
+      "dsh-boost:lev7": {
+        "title": "BOOST LEV-7 reference only"
+      }
+    },
+    "sortKeys": {}
+  },
+  "plugins": [
+    {
+      "name": "@dsh-fixtures/good-plugin",
+      "title": "Good plugin fixture",
+      "description": "Example only; not a real plugin.",
+      "metadata": {
+        "keywords": [],
+        "labels": [
+          "dsh-entry:recognized"
+        ],
+        "sortKeys": {}
+      },
+      "versions": [
+        {
+          "version": "1.0.0",
+          "publishTimestamp": 1761955200,
+          "source": {
+            "type": "npm"
+          },
+          "engines": {
+            "dsh": ">=0.2.2-alpha.2 <0.3.0"
+          }
+        }
+      ]
+    }
+  ]
+}

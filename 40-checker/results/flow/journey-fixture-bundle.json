@@ -1,0 +1,90 @@
+{
+  "schema": "dsh-flow-runtime/1",
+  "package": "@dsh-fixtures/bundle-with-server",
+  "version": "1.0.0",
+  "mode": "j1-runtime",
+  "checks": [
+    {
+      "id": "J1.profile",
+      "result": "PASS",
+      "reason": "create profile exit=0",
+      "stderr": ""
+    },
+    {
+      "id": "J1.exemption",
+      "result": "WARN",
+      "reason": "allow-version exit=0",
+      "stderr": "dsh: warning: allowing incompatible plugin versions can break the application or corrupt data. Approval applies only to the exact package and DSH versions.\n"
+    },
+    {
+      "id": "J1.install",
+      "result": "PASS",
+      "reason": "add exit=0",
+      "stderr": "Already up to date\n\ndependencies:\n+ @dsh-fixtures/bundle-with-server <- ../../../../mnt/c/Users/zzhdz/WorkBuddy/2026-10-30-16-02-58/dsh-standard/40-checker/fixtures/bundle\n\nDone in 42ms using pnpm v12.15.0\n"
+    },
+    {
+      "id": "J1.dump",
+      "result": "PASS",
+      "reason": "dump exit=0",
+      "stderr": ""
+    },
+    {
+      "id": "J1.layer",
+      "result": "PASS",
+      "reason": "layer/entry appears in dump"
+    },
+    {
+      "id": "J1.remove",
+      "result": "PASS",
+      "reason": "remove exit=0",
+      "stderr": "Already up to date\n\ndependencies:\n- @dsh-fixtures/bundle-with-server link:/mnt/c/Users/zzhdz/WorkBuddy/2026-10-30-16-02-58/dsh-standard/40-checker/fixtures/bundle\n\nDone in 201ms using pnpm v12.15.0\n"
+    },
+    {
+      "id": "J1.clean",
+      "result": "PASS",
+      "reason": "layer/dependency gone after remove"
+    },
+    {
+      "id": "J2.toggle",
+      "result": "not-run",
+      "reason": "runtime harness not implemented yet"
+    },
+    {
+      "id": "J3.config",
+      "result": "not-run",
+      "reason": "runtime harness not implemented yet"
+    },
+    {
+      "id": "J4.first-run",
+      "result": "not-run",
+      "reason": "runtime harness not implemented yet"
+    },
+    {
+      "id": "J5.permissions",
+      "result": "not-run",
+      "reason": "runtime harness not implemented yet"
+    },
+    {
+      "id": "J6.upgrade",
+      "result": "not-run",
+      "reason": "runtime harness not implemented yet"
+    },
+    {
+      "id": "J7.observe",
+      "result": "not-run",
+      "reason": "runtime harness not implemented yet"
+    },
+    {
+      "id": "J8.client",
+      "result": "not-run",
+      "reason": "runtime harness not implemented yet"
+    }
+  ],
+  "summary": {
+    "pass": 6,
+    "warn": 1,
+    "fail": 0,
+    "notRun": 7
+  },
+  "conclusion": "flow-warn"
+}

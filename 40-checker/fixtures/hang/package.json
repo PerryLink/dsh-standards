@@ -1,0 +1,10 @@
+{
+  "name": "@dsh-fixtures/hang",
+  "version": "1.0.0",
+  "license": "MIT",
+  "type": "module",
+  "main": "./index.mjs",
+  "exports": { ".": "./index.mjs" },
+  "engines": { "dsh": ">=0.2.2-alpha.2 <0.3.0" },
+  "dsh": { "manifestVersion": 1, "kind": "plugin", "capabilities": [], "labels": [] }
+}

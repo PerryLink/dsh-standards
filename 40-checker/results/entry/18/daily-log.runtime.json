@@ -1,0 +1,519 @@
+{
+  "schema": "dsh-bundle-smoke/1",
+  "package": "@zzerx/dsh-plugin-daily-log",
+  "version": "0.4.3",
+  "g0": {
+    "patchFiles": 1,
+    "parsed": true
+  },
+  "g1": {
+    "rows": 98,
+    "targetRows": 98,
+    "warnings": []
+  },
+  "g2": {
+    "compatibility": "admit"
+  },
+  "g3": {
+    "state": "partial",
+    "rows": [
+      {
+        "id": "include:tool-plugin-manager",
+        "state": null,
+        "disabled": true
+      },
+      {
+        "id": "include:plugin-manager",
+        "state": null,
+        "disabled": true
+      },
+      {
+        "id": "include:timer",
+        "state": null,
+        "disabled": false
+      },
+      {
+        "id": "include:hmr",
+        "state": null,
+        "disabled": true
+      },
+      {
+        "id": "include:llm",
+        "state": 2,
+        "disabled": false
+      },
+      {
+        "id": "include:deepseek-llm-api-extensions",
+        "state": 2,
+        "disabled": false
+      },
+      {
+        "id": "include:session",
+        "state": 2,
+        "disabled": false
+      },
+      {
+        "id": "include:session-log-deepseek",
+        "state": 2,
+        "disabled": false
+      },
+      {
+        "id": "include:typert",
+        "state": 2,
+        "disabled": false
+      },
+      {
+        "id": "include:typert-loader",
+        "state": 2,
+        "disabled": false
+      },
+      {
+        "id": "include:typert-gateway",
+        "state": 2,
+        "disabled": false
+      },
+      {
+        "id": "include:remote-access",
+        "state": 2,
+        "disabled": false
+      },
+      {
+        "id": "include:session-title",
+        "state": 2,
+        "disabled": false
+      },
+      {
+        "id": "include:session-title-llm",
+        "state": 2,
+        "disabled": false
+      },
+      {
+        "id": "include:user-questions",
+        "state": 2,
+        "disabled": false
+      },
+      {
+        "id": "include:agent",
+        "state": 2,
+        "disabled": false
+      },
+      {
+        "id": "include:plugin-package-inventory-deepseek",
+        "state": 2,
+        "disabled": false
+      },
+      {
+        "id": "include:agent-default-model",
+        "state": 2,
+        "disabled": false
+      },
+      {
+        "id": "include:jobs",
+        "state": 2,
+        "disabled": false
+      },
+      {
+        "id": "include:llm-retry",
+        "state": 2,
+        "disabled": false
+      },
+      {
+        "id": "include:config-editor",
+        "state": null,
+        "disabled": true
+      },
+      {
+        "id": "include:settings",
+        "state": null,
+        "disabled": true
+      },
+      {
+        "id": "include:authorization",
+        "state": 2,
+        "disabled": false
+      },
+      {
+        "id": "include:deepseek-account",
+        "state": 2,
+        "disabled": false
+      },
+      {
+        "id": "include:credentials",
+        "state": 2,
+        "disabled": false
+      },
+      {
+        "id": "include:llm-pi-ai",
+        "state": 2,
+        "disabled": false
+      },
+      {
+        "id": "include:session-persistence-jsonl",
+        "state": 2,
+        "disabled": false
+      },
+      {
+        "id": "include:attachment-local",
+        "state": 2,
+        "disabled": false
+      },
+      {
+        "id": "include:session-query-sqlite",
+        "state": 2,
+        "disabled": false
+      },
+      {
+        "id": "include:working-directory",
+        "state": 2,
+        "disabled": false
+      },
+      {
+        "id": "include:tool-working-directory",
+        "state": 2,
+        "disabled": false
+      },
+      {
+        "id": "include:session-projection",
+        "state": 2,
+        "disabled": false
+      },
+      {
+        "id": "include:storage",
+        "state": 2,
+        "disabled": false
+      },
+      {
+        "id": "include:storage-json",
+        "state": 2,
+        "disabled": false
+      },
+      {
+        "id": "include:storage-domain",
+        "state": 2,
+        "disabled": false
+      },
+      {
+        "id": "include:session-projection-cache",
+        "state": 2,
+        "disabled": false
+      },
+      {
+        "id": "include:otel",
+        "state": 2,
+        "disabled": false
+      },
+      {
+        "id": "include:session-telemetry-otel",
+        "state": 2,
+        "disabled": false
+      },
+      {
+        "id": "include:subprocess",
+        "state": 2,
+        "disabled": false
+      },
+      {
+        "id": "include:sandbox",
+        "state": 2,
+        "disabled": false
+      },
+      {
+        "id": "include:sandbox-policy",
+        "state": 2,
+        "disabled": false
+      },
+      {
+        "id": "include:bash-sandbox",
+        "state": 2,
+        "disabled": false
+      },
+      {
+        "id": "include:pwsh-sandbox",
+        "state": null,
+        "disabled": true
+      },
+      {
+        "id": "include:approval",
+        "state": 2,
+        "disabled": false
+      },
+      {
+        "id": "include:permission",
+        "state": 2,
+        "disabled": false
+      },
+      {
+        "id": "include:shell-env",
+        "state": 2,
+        "disabled": false
+      },
+      {
+        "id": "include:tool-bash",
+        "state": 2,
+        "disabled": false
+      },
+      {
+        "id": "include:tool-pwsh",
+        "state": null,
+        "disabled": true
+      },
+      {
+        "id": "include:tool-jobs",
+        "state": 2,
+        "disabled": false
+      },
+      {
+        "id": "include:fs-observation-policy",
+        "state": 2,
+        "disabled": false
+      },
+      {
+        "id": "include:tool-fs",
+        "state": 2,
+        "disabled": false
+      },
+      {
+        "id": "include:tool-fs-search",
+        "state": 2,
+        "disabled": false
+      },
+      {
+        "id": "include:agent-instructions",
+        "state": 2,
+        "disabled": false
+      },
+      {
+        "id": "include:skill",
+        "state": 2,
+        "disabled": false
+      },
+      {
+        "id": "include:skill-filesystem",
+        "state": 2,
+        "disabled": false
+      },
+      {
+        "id": "include:tool-skill",
+        "state": 2,
+        "disabled": false
+      },
+      {
+        "id": "include:commands",
+        "state": 2,
+        "disabled": false
+      },
+      {
+        "id": "include:command-feedback",
+        "state": 2,
+        "disabled": false
+      },
+      {
+        "id": "include:goal",
+        "state": 2,
+        "disabled": false
+      },
+      {
+        "id": "include:goal-round-driver",
+        "state": 2,
+        "disabled": false
+      },
+      {
+        "id": "include:command-goal",
+        "state": 2,
+        "disabled": false
+      },
+      {
+        "id": "include:plan-mode",
+        "state": 2,
+        "disabled": false
+      },
+      {
+        "id": "include:token-meter",
+        "state": 2,
+        "disabled": false
+      },
+      {
+        "id": "include:compaction-basic",
+        "state": 2,
+        "disabled": false
+      },
+      {
+        "id": "include:command-compact",
+        "state": 2,
+        "disabled": false
+      },
+      {
+        "id": "include:subagent",
+        "state": 2,
+        "disabled": false
+      },
+      {
+        "id": "include:subagent-spawn-in-process",
+        "state": 2,
+        "disabled": false
+      },
+      {
+        "id": "include:subagent-fork-in-process",
+        "state": 2,
+        "disabled": false
+      },
+      {
+        "id": "include:tool-subagent-control",
+        "state": 2,
+        "disabled": false
+      },
+      {
+        "id": "include:tool-subagent",
+        "state": 2,
+        "disabled": false
+      },
+      {
+        "id": "include:tool-subagent-fork",
+        "state": 2,
+        "disabled": false
+      },
+      {
+        "id": "include:ptc-runtime",
+        "state": 2,
+        "disabled": false
+      },
+      {
+        "id": "include:workflow-ptc",
+        "state": 2,
+        "disabled": false
+      },
+      {
+        "id": "include:tool-workflow",
+        "state": 2,
+        "disabled": false
+      },
+      {
+        "id": "include:timeout-policy",
+        "state": 2,
+        "disabled": false
+      },
+      {
+        "id": "include:spill-local",
+        "state": 2,
+        "disabled": false
+      },
+      {
+        "id": "include:spill-policy",
+        "state": 2,
+        "disabled": false
+      },
+      {
+        "id": "include:session-checkpoint-policy",
+        "state": 2,
+        "disabled": false
+      },
+      {
+        "id": "include:tool-result-pruner",
+        "state": 2,
+        "disabled": false
+      },
+      {
+        "id": "include:image-offload",
+        "state": 2,
+        "disabled": false
+      },
+      {
+        "id": "include:tool-todo",
+        "state": 2,
+        "disabled": false
+      },
+      {
+        "id": "include:tool-goal",
+        "state": 2,
+        "disabled": false
+      },
+      {
+        "id": "include:repeat-tool-reminder",
+        "state": 2,
+        "disabled": false
+      },
+      {
+        "id": "include:web",
+        "state": 2,
+        "disabled": false
+      },
+      {
+        "id": "include:web-search-deepseek",
+        "state": 2,
+        "disabled": false
+      },
+      {
+        "id": "include:web-deepseek-api",
+        "state": 2,
+        "disabled": false
+      },
+      {
+        "id": "include:web-fetch-http",
+        "state": 2,
+        "disabled": false
+      },
+      {
+        "id": "include:tool-web",
+        "state": 2,
+        "disabled": false
+      },
+      {
+        "id": "include:mcp-resources",
+        "state": 2,
+        "disabled": false
+      },
+      {
+        "id": "include:tools",
+        "state": 2,
+        "disabled": false
+      },
+      {
+        "id": "include:tool-executor-native",
+        "state": 2,
+        "disabled": false
+      },
+      {
+        "id": "include:tool-executor-ptc",
+        "state": null,
+        "disabled": true
+      },
+      {
+        "id": "include:system-prompt",
+        "state": 2,
+        "disabled": false
+      },
+      {
+        "id": "include:agent-loop",
+        "state": 2,
+        "disabled": false
+      },
+      {
+        "id": "include:fs-sandbox",
+        "state": 2,
+        "disabled": false
+      },
+      {
+        "id": "include:llm-deepseek",
+        "state": 2,
+        "disabled": false
+      },
+      {
+        "id": "include:llm-deepseek-account",
+        "state": 2,
+        "disabled": false
+      },
+      {
+        "id": "include:zzerx-daily-log",
+        "state": null,
+        "disabled": false
+      }
+    ],
+    "active": 96
+  },
+  "g4": {
+    "hasClient": true,
+    "clientExport": false,
+    "rootRows": [],
+    "ok": false
+  }
+}

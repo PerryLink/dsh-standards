@@ -1,0 +1,13 @@
+{
+  "plugins": 3993,
+  "versions": 3993,
+  "npm": 3993,
+  "git": 0,
+  "withEngines": 1078,
+  "missingEngine": 2915,
+  "withStatus": 0,
+  "withUpstream": 0,
+  "withLevel": 0,
+  "withCapabilities": 0,
+  "duplicateNames": 0
+}

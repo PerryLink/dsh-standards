@@ -1,0 +1,357 @@
+{
+  "schema": "dsh-conformance/1",
+  "standard": {
+    "id": "DS-C",
+    "version": "1.0.0"
+  },
+  "subject": {
+    "mode": "package",
+    "profile": "package",
+    "kind": "bundle",
+    "kindInferred": true,
+    "name": "dsh-purge",
+    "version": "1.1.71",
+    "path": "/tmp/dsh-patched/mmparko__dsh-purge"
+  },
+  "anchor": {
+    "repo": "deepseek-ai/deepseek-harness",
+    "commit": "ce7073d51254c26cd63b22a60835b8f948deb447",
+    "scanner": "dsh-plugin-verify@0.1.0",
+    "dsh": "0.2.2-alpha.2",
+    "cordis": "4.0.6-alpha.1",
+    "runtime": null
+  },
+  "checks": [
+    {
+      "id": "DSC-01",
+      "clause": "C-1",
+      "layer": "L0",
+      "result": "PASS",
+      "coverage": "full",
+      "reason": "",
+      "evidence": [
+        "package.json"
+      ],
+      "details": [
+        {
+          "item": "C-1.1",
+          "result": "PASS",
+          "reason": "name=dsh-purge",
+          "evidence": []
+        },
+        {
+          "item": "C-1.1",
+          "result": "PASS",
+          "reason": "version=1.1.71",
+          "evidence": []
+        },
+        {
+          "item": "C-1.2",
+          "result": "PASS",
+          "reason": "entry resolves via exports[\".\"]: lib/index.js",
+          "evidence": [
+            "lib/index.js"
+          ]
+        },
+        {
+          "item": "C-1.3",
+          "result": "NA",
+          "reason": "not a directly loadable plugin entry",
+          "evidence": []
+        },
+        {
+          "item": "C-1.4",
+          "result": "PASS",
+          "reason": "bundle patch present (1 file(s))",
+          "evidence": [
+            "./cordis.patch.yml"
+          ]
+        },
+        {
+          "item": "C-1.5",
+          "result": "PASS",
+          "reason": "license=MIT",
+          "evidence": []
+        }
+      ],
+      "method": "M",
+      "advisory": false
+    },
+    {
+      "id": "DSC-02",
+      "clause": "C-2",
+      "layer": "L0",
+      "result": "PASS",
+      "coverage": "full",
+      "reason": "",
+      "evidence": [
+        "package.json#engines",
+        "package.json#peerDependencies"
+      ],
+      "details": [
+        {
+          "item": "C-2.1",
+          "result": "PASS",
+          "reason": "engines.dsh=>=0.2.2-alpha.2 <0.3.0",
+          "evidence": []
+        },
+        {
+          "item": "C-2.2",
+          "result": "PASS",
+          "reason": "runtime 0.2.2-alpha.2 satisfies >=0.2.2-alpha.2 <0.3.0",
+          "evidence": []
+        }
+      ],
+      "method": "M",
+      "advisory": false
+    },
+    {
+      "id": "DSC-03",
+      "clause": "C-3",
+      "layer": "L0",
+      "result": "NA",
+      "coverage": "not-run",
+      "reason": "install spec not supplied (package profile)",
+      "evidence": [
+        "package.json#dependencies",
+        "package.json#scripts",
+        "--install-spec"
+      ],
+      "details": [],
+      "method": "M",
+      "advisory": false
+    },
+    {
+      "id": "DSC-04",
+      "clause": "C-4",
+      "layer": "L1",
+      "result": "NA",
+      "coverage": "not-run",
+      "reason": "kind=bundle; L1-L3 apply to plugin entries only",
+      "evidence": [],
+      "details": [],
+      "method": "M",
+      "advisory": false
+    },
+    {
+      "id": "DSC-05",
+      "clause": "C-5",
+      "layer": "L1",
+      "result": "NA",
+      "coverage": "not-run",
+      "reason": "kind=bundle; L1-L3 apply to plugin entries only",
+      "evidence": [],
+      "details": [],
+      "method": "M",
+      "advisory": false
+    },
+    {
+      "id": "DSC-06",
+      "clause": "C-6",
+      "layer": "L1+L2",
+      "result": "NA",
+      "coverage": "not-run",
+      "reason": "kind=bundle; L1-L3 apply to plugin entries only",
+      "evidence": [],
+      "details": [],
+      "method": "M",
+      "advisory": false
+    },
+    {
+      "id": "DSC-07",
+      "clause": "C-7",
+      "layer": "L2",
+      "result": "NA",
+      "coverage": "not-run",
+      "reason": "kind=bundle; L1-L3 apply to plugin entries only",
+      "evidence": [],
+      "details": [],
+      "method": "M",
+      "advisory": false
+    },
+    {
+      "id": "DSC-08",
+      "clause": "C-8",
+      "layer": "L3",
+      "result": "NA",
+      "coverage": "not-run",
+      "reason": "kind=bundle; L1-L3 apply to plugin entries only",
+      "evidence": [],
+      "details": [],
+      "method": "M",
+      "advisory": false
+    },
+    {
+      "id": "DSC-09",
+      "clause": "C-9",
+      "layer": "L1",
+      "result": "NA",
+      "coverage": "not-run",
+      "reason": "kind=bundle; L1-L3 apply to plugin entries only",
+      "evidence": [],
+      "details": [],
+      "method": "M",
+      "advisory": false
+    },
+    {
+      "id": "DSC-10",
+      "clause": "C-10",
+      "layer": "L0",
+      "result": "WARN",
+      "coverage": "full",
+      "reason": "advisory: 2 import-time side-effect clue(s)",
+      "evidence": [
+        "lib/restart-desktop.js:471",
+        "lib/uninstall-restart.js:75"
+      ],
+      "details": [
+        {
+          "item": "C-10.1/2",
+          "result": "WARN",
+          "reason": "top-level await at lib/restart-desktop.js:471",
+          "evidence": [
+            "lib/restart-desktop.js:471"
+          ]
+        },
+        {
+          "item": "C-10.1/2",
+          "result": "WARN",
+          "reason": "top-level await at lib/uninstall-restart.js:75",
+          "evidence": [
+            "lib/uninstall-restart.js:75"
+          ]
+        }
+      ],
+      "method": "M",
+      "advisory": true
+    },
+    {
+      "id": "DSC-11",
+      "clause": "C-11",
+      "layer": "L0",
+      "result": "WARN",
+      "coverage": "full",
+      "reason": "C-11.5: declared capability system-prompt:write was not observed statically | C-11.4: danger-full-access literal found",
+      "evidence": [
+        "package.json#dsh.capabilities",
+        "dsh.bundle.patch"
+      ],
+      "details": [
+        {
+          "item": "C-11.5",
+          "result": "WARN",
+          "reason": "declared capability system-prompt:write was not observed statically",
+          "evidence": [
+            "package.json#dsh.capabilities"
+          ]
+        },
+        {
+          "item": "C-11.4",
+          "result": "WARN",
+          "reason": "danger-full-access literal found",
+          "evidence": [
+            "lib/core.js:1455",
+            "lib/core.js:2797",
+            "lib/core.js:2803"
+          ]
+        }
+      ],
+      "method": "M",
+      "advisory": false
+    },
+    {
+      "id": "DSC-12",
+      "clause": "C-12",
+      "layer": "L0",
+      "result": "WARN",
+      "coverage": "full",
+      "reason": "C-12.4: danger-full-access/--add-dir literal found",
+      "evidence": [
+        "package.json#dsh.capabilities"
+      ],
+      "details": [
+        {
+          "item": "C-12.1",
+          "result": "PASS",
+          "reason": "no credential backing-file reference found",
+          "evidence": []
+        },
+        {
+          "item": "C-12.2",
+          "result": "PASS",
+          "reason": "listRecords() not used",
+          "evidence": []
+        },
+        {
+          "item": "C-12.4",
+          "result": "WARN",
+          "reason": "danger-full-access/--add-dir literal found",
+          "evidence": [
+            "lib/core.js:1455",
+            "lib/core.js:2797",
+            "lib/core.js:2803"
+          ]
+        },
+        {
+          "item": "C-12.6",
+          "result": "NA",
+          "reason": "dsh.commitments is not declared (optional disclosure)",
+          "evidence": [
+            "package.json#dsh.commitments"
+          ]
+        },
+        {
+          "item": "C-12.7",
+          "result": "NA",
+          "reason": "dsh.disclosure is not declared (optional disclosure)",
+          "evidence": [
+            "package.json#dsh.commitments"
+          ]
+        }
+      ],
+      "method": "M",
+      "advisory": false
+    },
+    {
+      "id": "DSC-13",
+      "clause": "C-13",
+      "layer": "L0",
+      "result": "PASS",
+      "coverage": "full",
+      "reason": "",
+      "evidence": [
+        "package.json#dsh.labels",
+        "package.json#dsh.upstream"
+      ],
+      "details": [
+        {
+          "item": "C-13.1",
+          "result": "PASS",
+          "reason": "dsh.labels is declared and consistent with capability triggers",
+          "evidence": []
+        }
+      ],
+      "method": "M",
+      "advisory": false
+    }
+  ],
+  "coverage": {
+    "mandatory": 11,
+    "pass": 3,
+    "warn": 2,
+    "fail": 0,
+    "na": 6,
+    "notRun": 0,
+    "error": 0
+  },
+  "conclusion": {
+    "level": "DS-C (package, warnings)",
+    "status": "warn",
+    "exitCode": 0,
+    "profile": "package",
+    "scope": "ds-c",
+    "subset": null,
+    "staticOnly": false,
+    "reason": "WARN: DSC-11, DSC-12"
+  }
+}

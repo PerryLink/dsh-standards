@@ -1,0 +1,7 @@
+{
+  "engines": { "dsh": ">=0.2.2-alpha.2 <0.3.0" },
+  "dsh": {
+    "capabilities": ["network:ingress", "network:egress"],
+    "labels": ["remote-access"]
+  }
+}

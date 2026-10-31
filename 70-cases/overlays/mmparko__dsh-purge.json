@@ -1,0 +1,10 @@
+{
+  "engines": { "dsh": ">=0.2.2-alpha.2 <0.3.0" },
+  "repository": { "url": "git+https://github.com/mmparko/dsh-purge.git" },
+  "dsh": {
+    "capabilities": ["system-prompt:write", "tools:register", "sessions:read", "shell", "subprocess", "network:ingress", "network:egress"],
+    "labels": ["prompt-modification", "mirror", "remote-access"],
+    "upstream": "https://github.com/YuJunZhiXue/dsh-purge",
+    "mirrorOf": "dsh-purge@1.1.84"
+  }
+}
