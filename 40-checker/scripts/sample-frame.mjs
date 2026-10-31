@@ -33,12 +33,12 @@ function hash(text) {
 async function main() {
   const high = []
   for (let page = 1; page <= 3; page += 1) {
-    const data = await search('topic:dsh-plugin stars:>50', 'stars', 'desc', page)
+    const data = await search('topic:dsh-plugin stars:>50 size:<50000', 'stars', 'desc', page)
     high.push(...data.items)
   }
   const low = []
   for (let page = 1; page <= 2; page += 1) {
-    const data = await search('topic:dsh-plugin stars:1..50', 'stars', 'asc', page)
+    const data = await search('topic:dsh-plugin stars:1..50 size:<50000', 'stars', 'asc', page)
     low.push(...data.items)
   }
   const pool = [...new Map([...high, ...low].map(repo => [repo.full_name, repo])).values()]
@@ -49,7 +49,7 @@ async function main() {
     schema: 'dsh-plugin-sample/1',
     generatedAt: new Date().toISOString(),
     source: 'GitHub search: topic:dsh-plugin',
-    query: { high: 'topic:dsh-plugin stars:>50', low: 'topic:dsh-plugin stars:1..50' },
+    query: { high: 'topic:dsh-plugin stars:>50 size:<50000', low: 'topic:dsh-plugin stars:1..50 size:<50000' },
     seed,
     frameSize: pool.length,
     sampleSize: sample.length,

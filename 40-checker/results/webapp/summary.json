@@ -1,0 +1,9 @@
+{
+  "schema": "dsh-webapp-smoke/1",
+  "generatedAt": "2026-10-31T22:30:00+08:00",
+  "samples": ["SeaOf0__dsh-redteam-model", "liguobao__ds-harness-remote", "shaobeichen__dsh-pocket", "ui-auth"],
+  "state": "blocked",
+  "reason": "bundle-smoke loader-only cannot provide cmdlineArgs/webApp; web-app requires the real CLI profile",
+  "observed": "12-13 plugins wait for webStartup/webServer/connection; no target row ACTIVE",
+  "notAClaim": "not unavailable, not fail, not pass"
+}

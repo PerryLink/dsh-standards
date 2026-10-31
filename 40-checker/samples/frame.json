@@ -1,10 +1,10 @@
 {
   "schema": "dsh-plugin-sample/1",
-  "generatedAt": "2026-10-31T13:00:12.652Z",
+  "generatedAt": "2026-10-31T14:29:24.284Z",
   "source": "GitHub search: topic:dsh-plugin",
   "query": {
-    "high": "topic:dsh-plugin stars:>50",
-    "low": "topic:dsh-plugin stars:1..50"
+    "high": "topic:dsh-plugin stars:>50 size:<50000",
+    "low": "topic:dsh-plugin stars:1..50 size:<50000"
   },
   "seed": 20261031,
   "frameSize": 500,
@@ -12,34 +12,22 @@
   "lowStarSize": 20,
   "sample": [
     {
-      "fullName": "nocobase/nocobase",
-      "url": "https://github.com/nocobase/nocobase",
-      "stars": 24798,
-      "updatedAt": "2026-10-31T04:35:56Z"
-    },
-    {
       "fullName": "gjy1992/dsh-diagram",
       "url": "https://github.com/gjy1992/dsh-diagram",
       "stars": 1,
       "updatedAt": "2026-10-02T07:21:58Z"
     },
     {
-      "fullName": "FuRongJun-1999/dsh-memory",
-      "url": "https://github.com/FuRongJun-1999/dsh-memory",
-      "stars": 555,
-      "updatedAt": "2026-10-31T12:56:02Z"
-    },
-    {
-      "fullName": "dataelement/dsh-desktop",
-      "url": "https://github.com/dataelement/dsh-desktop",
-      "stars": 16992,
-      "updatedAt": "2026-10-31T12:56:18Z"
-    },
-    {
       "fullName": "NEAZ71eve/dsh-tool-github",
       "url": "https://github.com/NEAZ71eve/dsh-tool-github",
       "stars": 1,
       "updatedAt": "2026-09-14T08:10:37Z"
+    },
+    {
+      "fullName": "Tyan66666/billion-context-dsh",
+      "url": "https://github.com/Tyan66666/billion-context-dsh",
+      "stars": 167,
+      "updatedAt": "2026-10-30T12:48:41Z"
     },
     {
       "fullName": "LiarMTTT/TavernWeave",
@@ -57,19 +45,19 @@
       "fullName": "tinqiao-oss/engramory",
       "url": "https://github.com/tinqiao-oss/engramory",
       "stars": 198,
-      "updatedAt": "2026-10-31T12:09:05Z"
+      "updatedAt": "2026-10-31T13:55:50Z"
+    },
+    {
+      "fullName": "MichengAI/dsh-im-connect",
+      "url": "https://github.com/MichengAI/dsh-im-connect",
+      "stars": 111,
+      "updatedAt": "2026-10-31T14:16:40Z"
     },
     {
       "fullName": "RINGOLINK/dsh-desktop-shell",
       "url": "https://github.com/RINGOLINK/dsh-desktop-shell",
       "stars": 1,
       "updatedAt": "2026-09-19T20:45:35Z"
-    },
-    {
-      "fullName": "Alisa0808/vox-director",
-      "url": "https://github.com/Alisa0808/vox-director",
-      "stars": 2542,
-      "updatedAt": "2026-10-31T10:43:25Z"
     },
     {
       "fullName": "wkfedor/deepseek-harness-voice-input",
@@ -86,14 +74,14 @@
     {
       "fullName": "MichengAI/dsh-archive-manager",
       "url": "https://github.com/MichengAI/dsh-archive-manager",
-      "stars": 269,
-      "updatedAt": "2026-10-31T09:18:48Z"
+      "stars": 270,
+      "updatedAt": "2026-10-31T14:24:38Z"
     },
     {
       "fullName": "plastic-labs/honcho",
       "url": "https://github.com/plastic-labs/honcho",
-      "stars": 7848,
-      "updatedAt": "2026-10-31T12:34:34Z"
+      "stars": 7850,
+      "updatedAt": "2026-10-31T14:27:56Z"
     },
     {
       "fullName": "sopaco/terrain",
@@ -102,16 +90,10 @@
       "updatedAt": "2026-10-31T01:30:51Z"
     },
     {
-      "fullName": "edison7009/EchoBird",
-      "url": "https://github.com/edison7009/EchoBird",
-      "stars": 3474,
-      "updatedAt": "2026-10-31T12:39:09Z"
-    },
-    {
-      "fullName": "Ebony-Vinyl/EAC-design-world",
-      "url": "https://github.com/Ebony-Vinyl/EAC-design-world",
-      "stars": 368,
-      "updatedAt": "2026-10-31T11:59:08Z"
+      "fullName": "Ebony-Vinyl/EAC-Pack",
+      "url": "https://github.com/Ebony-Vinyl/EAC-Pack",
+      "stars": 179,
+      "updatedAt": "2026-10-31T09:57:08Z"
     },
     {
       "fullName": "Jamailar/beav-deepseek-harness",
@@ -120,34 +102,28 @@
       "updatedAt": "2026-10-20T15:35:33Z"
     },
     {
-      "fullName": "ruvnet/ruflo",
-      "url": "https://github.com/ruvnet/ruflo",
-      "stars": 80367,
-      "updatedAt": "2026-10-31T12:52:08Z"
-    },
-    {
-      "fullName": "ZipengWu365/TOMC",
-      "url": "https://github.com/ZipengWu365/TOMC",
-      "stars": 264,
-      "updatedAt": "2026-10-31T12:51:38Z"
-    },
-    {
       "fullName": "863683348/dsh-insight",
       "url": "https://github.com/863683348/dsh-insight",
       "stars": 1,
       "updatedAt": "2026-09-12T14:35:50Z"
     },
     {
-      "fullName": "mmparko/dsh-purge",
-      "url": "https://github.com/mmparko/dsh-purge",
-      "stars": 2791,
-      "updatedAt": "2026-10-31T12:55:03Z"
+      "fullName": "sjh9714/dsh-win32",
+      "url": "https://github.com/sjh9714/dsh-win32",
+      "stars": 152,
+      "updatedAt": "2026-10-31T09:53:03Z"
     },
     {
-      "fullName": "MemTensor/memmy-agent",
-      "url": "https://github.com/MemTensor/memmy-agent",
-      "stars": 2167,
-      "updatedAt": "2026-10-31T08:19:37Z"
+      "fullName": "mmparko/dsh-purge",
+      "url": "https://github.com/mmparko/dsh-purge",
+      "stars": 2797,
+      "updatedAt": "2026-10-31T14:12:37Z"
+    },
+    {
+      "fullName": "EricWang1358/dsh-web-studyhub",
+      "url": "https://github.com/EricWang1358/dsh-web-studyhub",
+      "stars": 159,
+      "updatedAt": "2026-10-31T14:22:01Z"
     },
     {
       "fullName": "tong-io/tongflow",
@@ -162,28 +138,34 @@
       "updatedAt": "2026-10-30T23:41:46Z"
     },
     {
-      "fullName": "wssfk12138/dsh-damage-pulse",
-      "url": "https://github.com/wssfk12138/dsh-damage-pulse",
-      "stars": 281,
-      "updatedAt": "2026-10-31T09:07:45Z"
+      "fullName": "fwerkor/local-shell-mcp",
+      "url": "https://github.com/fwerkor/local-shell-mcp",
+      "stars": 106,
+      "updatedAt": "2026-10-30T11:20:42Z"
+    },
+    {
+      "fullName": "Anionex/dsh-turn-rewind",
+      "url": "https://github.com/Anionex/dsh-turn-rewind",
+      "stars": 142,
+      "updatedAt": "2026-10-31T07:43:45Z"
     },
     {
       "fullName": "c3cvld7aag/fujiang-dsh",
       "url": "https://github.com/c3cvld7aag/fujiang-dsh",
-      "stars": 412,
-      "updatedAt": "2026-10-31T09:12:06Z"
+      "stars": 413,
+      "updatedAt": "2026-10-31T13:22:07Z"
     },
     {
-      "fullName": "Devin-AXIS/deepseek-design",
-      "url": "https://github.com/Devin-AXIS/deepseek-design",
-      "stars": 1653,
-      "updatedAt": "2026-10-31T11:39:45Z"
+      "fullName": "MindLab-Research/dsh-generative-ui",
+      "url": "https://github.com/MindLab-Research/dsh-generative-ui",
+      "stars": 102,
+      "updatedAt": "2026-10-31T09:08:33Z"
     },
     {
-      "fullName": "iflytek/skillhub",
-      "url": "https://github.com/iflytek/skillhub",
-      "stars": 5346,
-      "updatedAt": "2026-10-31T12:01:00Z"
+      "fullName": "seriousz158/dsh-memory",
+      "url": "https://github.com/seriousz158/dsh-memory",
+      "stars": 169,
+      "updatedAt": "2026-10-22T03:11:14Z"
     },
     {
       "fullName": "shanliuling/skills-link",
@@ -192,28 +174,16 @@
       "updatedAt": "2026-10-24T08:39:58Z"
     },
     {
-      "fullName": "volcengine/OpenViking",
-      "url": "https://github.com/volcengine/OpenViking",
-      "stars": 41237,
-      "updatedAt": "2026-10-31T12:49:33Z"
+      "fullName": "skymecode/deepseek-harness-for-vscode",
+      "url": "https://github.com/skymecode/deepseek-harness-for-vscode",
+      "stars": 162,
+      "updatedAt": "2026-10-31T14:26:16Z"
     },
     {
-      "fullName": "ericshang98/Perfect-Web-Clone",
-      "url": "https://github.com/ericshang98/Perfect-Web-Clone",
-      "stars": 276,
-      "updatedAt": "2026-10-25T18:31:14Z"
-    },
-    {
-      "fullName": "Loong-wql/Build-HOS-mcp",
-      "url": "https://github.com/Loong-wql/Build-HOS-mcp",
+      "fullName": "zed1902209846-dotcom/DPwhale-plugin",
+      "url": "https://github.com/zed1902209846-dotcom/DPwhale-plugin",
       "stars": 1,
-      "updatedAt": "2026-08-14T04:55:30Z"
-    },
-    {
-      "fullName": "vostride/agent-qa",
-      "url": "https://github.com/vostride/agent-qa",
-      "stars": 912,
-      "updatedAt": "2026-10-31T10:39:14Z"
+      "updatedAt": "2026-08-14T10:02:18Z"
     },
     {
       "fullName": "fangqiing/dsh-knowledge-lite",
@@ -222,10 +192,10 @@
       "updatedAt": "2026-10-22T08:41:46Z"
     },
     {
-      "fullName": "omdsh-dev/dsh-mnemon",
-      "url": "https://github.com/omdsh-dev/dsh-mnemon",
-      "stars": 804,
-      "updatedAt": "2026-10-31T12:30:02Z"
+      "fullName": "Tasihi89/dsh-talk-map",
+      "url": "https://github.com/Tasihi89/dsh-talk-map",
+      "stars": 104,
+      "updatedAt": "2026-10-31T08:26:01Z"
     },
     {
       "fullName": "Ruler4396/dsh-launcher",
@@ -248,8 +218,14 @@
     {
       "fullName": "Yu-tao-Li/dsh-computer-use-win",
       "url": "https://github.com/Yu-tao-Li/dsh-computer-use-win",
-      "stars": 376,
-      "updatedAt": "2026-10-31T12:55:42Z"
+      "stars": 377,
+      "updatedAt": "2026-10-31T14:00:59Z"
+    },
+    {
+      "fullName": "Ansellwan/DSH-Custom-Wallpaper",
+      "url": "https://github.com/Ansellwan/DSH-Custom-Wallpaper",
+      "stars": 1,
+      "updatedAt": "2026-10-14T03:23:41Z"
     },
     {
       "fullName": "xfgil/dsh-hot-reloader",
@@ -264,22 +240,10 @@
       "updatedAt": "2026-10-30T12:59:03Z"
     },
     {
-      "fullName": "MerlinShieh/deepseek-herness-desktop",
-      "url": "https://github.com/MerlinShieh/deepseek-herness-desktop",
-      "stars": 1,
-      "updatedAt": "2026-08-16T15:11:28Z"
-    },
-    {
       "fullName": "agent-mobile/dsh-mobile-gateway",
       "url": "https://github.com/agent-mobile/dsh-mobile-gateway",
       "stars": 1,
       "updatedAt": "2026-09-09T00:02:59Z"
-    },
-    {
-      "fullName": "Small-tailqwq/dsh-deep-whale",
-      "url": "https://github.com/Small-tailqwq/dsh-deep-whale",
-      "stars": 2983,
-      "updatedAt": "2026-10-31T12:27:11Z"
     },
     {
       "fullName": "GanyuanRan/Aegis",
@@ -312,28 +276,22 @@
       "updatedAt": "2026-08-24T17:15:30Z"
     },
     {
+      "fullName": "yi-yezhiqiu/dsh-prompt-market",
+      "url": "https://github.com/yi-yezhiqiu/dsh-prompt-market",
+      "stars": 109,
+      "updatedAt": "2026-10-30T20:24:10Z"
+    },
+    {
       "fullName": "yjh051108/dsh-routing-suite",
       "url": "https://github.com/yjh051108/dsh-routing-suite",
-      "stars": 6997,
-      "updatedAt": "2026-10-31T11:43:30Z"
+      "stars": 6996,
+      "updatedAt": "2026-10-31T14:17:35Z"
     },
     {
       "fullName": "redstonedust/dsh-solidworks-copilot",
       "url": "https://github.com/redstonedust/dsh-solidworks-copilot",
       "stars": 1,
       "updatedAt": "2026-10-31T12:09:55Z"
-    },
-    {
-      "fullName": "kenryu42/cc-safety-net",
-      "url": "https://github.com/kenryu42/cc-safety-net",
-      "stars": 1865,
-      "updatedAt": "2026-10-31T12:54:13Z"
-    },
-    {
-      "fullName": "flyHZJ/dsh-turn-nav",
-      "url": "https://github.com/flyHZJ/dsh-turn-nav",
-      "stars": 1,
-      "updatedAt": "2026-08-16T13:42:26Z"
     },
     {
       "fullName": "V1ki/dsh-plugin-subscriptions",
@@ -366,10 +324,52 @@
       "updatedAt": "2026-09-09T05:35:31Z"
     },
     {
-      "fullName": "Ebony-Vinyl/EAC-Desktop",
-      "url": "https://github.com/Ebony-Vinyl/EAC-Desktop",
-      "stars": 2327,
-      "updatedAt": "2026-10-31T12:05:18Z"
+      "fullName": "omdsh-dev/dsh_workflow",
+      "url": "https://github.com/omdsh-dev/dsh_workflow",
+      "stars": 154,
+      "updatedAt": "2026-10-31T10:09:47Z"
+    },
+    {
+      "fullName": "shanliuling/dsh-image-gen",
+      "url": "https://github.com/shanliuling/dsh-image-gen",
+      "stars": 1028,
+      "updatedAt": "2026-10-31T14:18:07Z"
+    },
+    {
+      "fullName": "howmp/dsh-pentest",
+      "url": "https://github.com/howmp/dsh-pentest",
+      "stars": 617,
+      "updatedAt": "2026-10-30T17:05:05Z"
+    },
+    {
+      "fullName": "SeanTolstoyevski/dsh-code-review",
+      "url": "https://github.com/SeanTolstoyevski/dsh-code-review",
+      "stars": 1,
+      "updatedAt": "2026-10-20T16:49:27Z"
+    },
+    {
+      "fullName": "dhicoc/dsh-reverse-skill",
+      "url": "https://github.com/dhicoc/dsh-reverse-skill",
+      "stars": 314,
+      "updatedAt": "2026-10-30T18:56:22Z"
+    },
+    {
+      "fullName": "liustack/modsearch",
+      "url": "https://github.com/liustack/modsearch",
+      "stars": 890,
+      "updatedAt": "2026-10-31T13:52:57Z"
+    },
+    {
+      "fullName": "sopaco/deepwiki-rs",
+      "url": "https://github.com/sopaco/deepwiki-rs",
+      "stars": 3157,
+      "updatedAt": "2026-10-30T15:04:27Z"
+    },
+    {
+      "fullName": "cxzrdxy/dsh-file-explorer",
+      "url": "https://github.com/cxzrdxy/dsh-file-explorer",
+      "stars": 1,
+      "updatedAt": "2026-08-18T06:11:20Z"
     }
   ],
   "lowStar": [
@@ -414,8 +414,8 @@
       "stars": 1
     },
     {
-      "fullName": "Loong-wql/Build-HOS-mcp",
-      "url": "https://github.com/Loong-wql/Build-HOS-mcp",
+      "fullName": "zed1902209846-dotcom/DPwhale-plugin",
+      "url": "https://github.com/zed1902209846-dotcom/DPwhale-plugin",
       "stars": 1
     },
     {
@@ -434,6 +434,11 @@
       "stars": 1
     },
     {
+      "fullName": "Ansellwan/DSH-Custom-Wallpaper",
+      "url": "https://github.com/Ansellwan/DSH-Custom-Wallpaper",
+      "stars": 1
+    },
+    {
       "fullName": "xfgil/dsh-hot-reloader",
       "url": "https://github.com/xfgil/dsh-hot-reloader",
       "stars": 1
@@ -441,11 +446,6 @@
     {
       "fullName": "123dbl/dsh-side-session",
       "url": "https://github.com/123dbl/dsh-side-session",
-      "stars": 1
-    },
-    {
-      "fullName": "MerlinShieh/deepseek-herness-desktop",
-      "url": "https://github.com/MerlinShieh/deepseek-herness-desktop",
       "stars": 1
     },
     {
