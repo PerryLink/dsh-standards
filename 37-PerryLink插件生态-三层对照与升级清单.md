@@ -107,3 +107,21 @@ guide 教作者怎么写
 **未改**：`data/certified.json`、badges、任何等级；没有新增认证条目；没有给任何仓库贴“官方/认证”标签。
 
 **仍需注意**：`dsh-standards` 本身仍是私有仓。三份公开文档已改为“私有草案 + 公开教学副本”的写法，避免公开 404；是否把标准仓转 public 需要维护者决定。
+
+---
+
+## 七、实测：两个元仓自己的 level-audit
+
+用 `40-checker/scripts/level-audit.mjs` 对本轮改过的两个 bundle 做静态自检：
+
+| 仓库 | ENTRY | FLOW | BOOST | 说明 |
+|---|---|---|---|---|
+| `dsh-plugin-guide` | `recognized` | `not-run` | `not-measured` | 有 DSC-11/13 过渡 WARN；未跑 `--host`，所以不是 runtime |
+| `dsh-plugin-doctor` | `recognized` | `not-run` | `not-measured` | 同上；doctor 自己的 JSON `standards` 另给 ENTRY 投影 |
+
+`dsh-plugin-certification` 是**数据仓**（`private:true`、无运行时入口），
+ENTRY checker 会把它判成“不是可安装插件”；这是正确的形态判断，不应写成
+`failed`。证据：`40-checker/results/levels/`。
+
+这也说明：**“我的插件”要先分清是 plugin / bundle / data repo / 文档仓**；
+三层只对可安装的 `dsh.kind` 生效，data/docs 仓输出 `not-applicable`。

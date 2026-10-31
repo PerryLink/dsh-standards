@@ -1,0 +1,141 @@
+{
+  "schema": "dsh-level-audit/1",
+  "generatedAt": "2026-10-31T17:19:56.700Z",
+  "target": {
+    "dir": "/tmp/pl-work/dsh-plugin-doctor"
+  },
+  "levelsSpec": {
+    "schema": "dsh-levels/1",
+    "version": "1.0.0-rc.1",
+    "status": "draft"
+  },
+  "levels": {
+    "entry": {
+      "state": "recognized",
+      "claim": "static",
+      "checkerStatus": "warn",
+      "checkerLevel": "DSH-ENTRY recognized (warnings)",
+      "failed": [],
+      "warnings": [
+        {
+          "id": "DSC-11",
+          "reason": "C-11.1: dsh.capabilities is not declared (transitional WARN; host does not read it yet)"
+        },
+        {
+          "id": "DSC-12",
+          "reason": "entry treats safety/brand fields as WARN; they do not block loadability"
+        },
+        {
+          "id": "DSC-13",
+          "reason": "C-13.1: dsh.labels is not declared | C-13.2: dsh.capabilities is absent; trigger-to-label mapping cannot be evaluated"
+        }
+      ],
+      "runtimeEvidence": {
+        "result": "NA",
+        "reason": "entry static claim: no runtime evidence"
+      }
+    },
+    "flow": {
+      "state": "not-run",
+      "reason": "no --flow-evidence file; run the J1-J8 journeys and record pass/fail/not-run",
+      "journeys": {
+        "J1": {
+          "status": "not-run"
+        },
+        "J2": {
+          "status": "not-run"
+        },
+        "J3": {
+          "status": "not-run"
+        },
+        "J4": {
+          "status": "not-run"
+        },
+        "J5": {
+          "status": "not-run"
+        },
+        "J6": {
+          "status": "not-run"
+        },
+        "J7": {
+          "status": "not-run"
+        },
+        "J8": {
+          "status": "not-run"
+        }
+      }
+    },
+    "boost": {
+      "state": "not-measured",
+      "reason": "no --boost-evidence file; benchmarks/evidence cards are not run by this tool",
+      "practices": {
+        "LEV-1": {
+          "status": "not-measured"
+        },
+        "LEV-2": {
+          "status": "not-measured"
+        },
+        "LEV-3": {
+          "status": "not-measured"
+        },
+        "LEV-4": {
+          "status": "not-measured"
+        },
+        "LEV-5": {
+          "status": "not-measured"
+        },
+        "LEV-6": {
+          "status": "not-measured"
+        },
+        "LEV-7": {
+          "status": "not-measured"
+        },
+        "LEV-8": {
+          "status": "not-measured"
+        }
+      }
+    }
+  },
+  "nextActions": [
+    "ENTRY: consider DSC-11 — C-11.1: dsh.capabilities is not declared (transitional WARN; host does not read it yet)",
+    "ENTRY: consider DSC-12 — entry treats safety/brand fields as WARN; they do not block loadability",
+    "ENTRY: consider DSC-13 — C-13.1: dsh.labels is not declared | C-13.2: dsh.capabilities is absent; trigger-to-label mapping cannot be evaluated",
+    "ENTRY: run with --host to replace static recognition with a real G0-G3 boot",
+    "FLOW: record J1-J8 in a flow-evidence JSON; do not claim FLOW until they run",
+    "BOOST: attach LEV evidence cards; this tool does not benchmark for you"
+  ],
+  "notClaimed": [
+    "official standard",
+    "certification",
+    "security audit",
+    "ranking",
+    "production baseline"
+  ],
+  "checker": {
+    "invoked": "static",
+    "exit": 0,
+    "schema": "dsh-conformance/1",
+    "anchor": {
+      "repo": "deepseek-ai/deepseek-harness",
+      "commit": "ce7073d51254c26cd63b22a60835b8f948deb447",
+      "scanner": "dsh-plugin-verify@0.1.0",
+      "dsh": "0.2.2-alpha.2",
+      "cordis": "4.0.6-alpha.1",
+      "runtime": null
+    },
+    "coverage": {
+      "mandatory": 5,
+      "pass": 2,
+      "warn": 3,
+      "fail": 0,
+      "na": 0,
+      "notRun": 0,
+      "error": 0,
+      "entryBlocking": {
+        "required": 6,
+        "failed": [],
+        "pass": true
+      }
+    }
+  }
+}
