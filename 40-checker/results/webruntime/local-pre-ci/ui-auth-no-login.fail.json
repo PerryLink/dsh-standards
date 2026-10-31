@@ -1,0 +1,52 @@
+{
+  "schema": "dsh-web-probe/1",
+  "ok": false,
+  "expected": [
+    "dsh-ui-auth"
+  ],
+  "expectedEntries": {
+    "dsh-ui-auth": false
+  },
+  "bootGraph": "missing",
+  "bootRev": null,
+  "bootIds": [],
+  "loadedEntries": [],
+  "missingEntries": [
+    "dsh-ui-auth"
+  ],
+  "entries": [
+    {
+      "id": "dsh-ui-auth",
+      "booted": false,
+      "loaded": false,
+      "url": null,
+      "matchedResource": null
+    }
+  ],
+  "consoleErrors": [
+    {
+      "type": "error",
+      "text": "Failed to load resource: the server responded with a status of 401 (Unauthorized)",
+      "url": "http://127.0.0.1:18770/favicon.ico",
+      "lineNumber": 0
+    }
+  ],
+  "consoleWarnings": [],
+  "pageErrors": [],
+  "failedRequests": [],
+  "login": null,
+  "loginError": null,
+  "navigationStatus": 200,
+  "finalUrl": "http://127.0.0.1:18770/auth/login",
+  "title": "登录 · DeepSeek Harness",
+  "rootChildren": 0,
+  "bootPageVisible": false,
+  "bootPageText": "",
+  "bodyTextLength": 179,
+  "bodyText": "DeepSeek Harness\nSign in to continue\nUsername\nPassword\n👁\nCode (optional)\nSign in\n浏览器不接受 IP 地址作为Passkey域（RP ID）：Use http://localhost:<端口> 打开面板后重试\nProtected access · Create account",
+  "screenshot": "/tmp/probe-ui-nologin.png",
+  "elapsedMs": 30696,
+  "error": null,
+  "url": "http://127.0.0.1:18770/?token=<redacted>",
+  "generatedAt": "2026-10-31T15:56:35.035Z"
+}

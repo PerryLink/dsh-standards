@@ -253,6 +253,7 @@ async function probe(options) {
     bootRev: null,
     bootIds: [],
     loadedEntries: [],
+    notLoadedEntries: [],
     missingEntries: [...expected],
     entries: [],
     consoleErrors: [],
@@ -414,6 +415,7 @@ async function probe(options) {
     const projection = summarizeBootGraph(bootWire, expected, snapshot.resources)
     result.entries = projection.rows
     result.loadedEntries = projection.loadedEntries
+    result.notLoadedEntries = projection.rows.filter(row => row.booted && !row.loaded).map(row => row.id)
     result.missingEntries = projection.missingEntries
     result.expectedEntries = Object.fromEntries(projection.rows.map(row => [row.id, row.booted]))
     result.finalUrl = redactUrl(page.url())
@@ -426,8 +428,10 @@ async function probe(options) {
 
     result.ok = projection.bootGraph === 'ok'
       && projection.missingEntries.length === 0
+      && result.notLoadedEntries.length === 0
       && result.consoleErrors.length === 0
       && result.pageErrors.length === 0
+      && result.failedRequests.length === 0
       && result.rootChildren > 0
       && result.bootPageVisible === false
       && result.loginError === null
@@ -436,6 +440,7 @@ async function probe(options) {
   } finally {
     if (page !== undefined) {
       try {
+        ensureParent(options.screenshot)
         await page.screenshot({ path: options.screenshot, fullPage: true, timeout: 15_000 })
       } catch (error) {
         result.screenshotError = error instanceof Error ? error.message : String(error)
@@ -449,6 +454,8 @@ async function probe(options) {
       // A failed close must not hide the probe result.
     }
     if (result.error !== null) result.ok = false
+    if (typeof result.error === 'string') result.error = redactUrl(result.error)
+    if (typeof result.loginError === 'string') result.loginError = redactUrl(result.loginError)
     result.url = redactUrl(options.url)
     result.generatedAt = new Date().toISOString()
     writeResult(options.out, result)
@@ -477,6 +484,8 @@ async function main() {
     if (result.error) reasons.push(result.error.split('\n')[0])
     if (result.bootGraph !== 'ok') reasons.push(`boot graph ${result.bootGraph}`)
     if (result.missingEntries.length > 0) reasons.push(`missing entries: ${result.missingEntries.join(', ')}`)
+    if (result.notLoadedEntries.length > 0) reasons.push(`no resource observed: ${result.notLoadedEntries.join(', ')}`)
+    if (result.failedRequests.length > 0) reasons.push(`${result.failedRequests.length} failed script request(s)`)
     if (result.consoleErrors.length > 0) reasons.push(`${result.consoleErrors.length} console error(s)`)
     if (result.pageErrors.length > 0) reasons.push(`${result.pageErrors.length} page error(s)`)
     if (result.rootChildren === 0) reasons.push('#root has no children')

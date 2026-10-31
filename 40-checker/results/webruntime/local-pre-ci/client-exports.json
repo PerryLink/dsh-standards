@@ -1,0 +1,158 @@
+{
+  "schema": "dsh-web-runtime/client-exports/1",
+  "source": "installed/checkout package.json at the pinned sample identity",
+  "count": 18,
+  "withClient": 15,
+  "rows": [
+    {
+      "id": "DDDMUC__dsh-free-search",
+      "name": "dsh-free-search",
+      "version": "0.9.26",
+      "hasClientExport": true,
+      "clientExport": "./lib/client.js",
+      "declaresDshClient": true
+    },
+    {
+      "id": "Ebony-Vinyl__dsh-our-free-model",
+      "name": "dsh-our-free-model",
+      "version": "2.1.0",
+      "hasClientExport": true,
+      "clientExport": "./client.js",
+      "declaresDshClient": true
+    },
+    {
+      "id": "SeaOf0__dsh-redteam-model",
+      "name": "@dsh-external/dsh-redteam-model",
+      "version": "1.1.2",
+      "hasClientExport": true,
+      "clientExport": "./lib/client.js",
+      "declaresDshClient": true
+    },
+    {
+      "id": "YuJunZhiXue__dsh-purge",
+      "name": "dsh-purge",
+      "version": "1.1.85",
+      "hasClientExport": true,
+      "clientExport": "./client.js",
+      "declaresDshClient": true
+    },
+    {
+      "id": "ci-diet",
+      "name": "dsh-ci-diet",
+      "version": "0.5.2",
+      "hasClientExport": true,
+      "clientExport": {
+        "types": "./client/index.d.ts",
+        "default": "./client/index.js"
+      },
+      "declaresDshClient": true
+    },
+    {
+      "id": "daily-log",
+      "name": "@zzerx/dsh-plugin-daily-log",
+      "version": "0.4.3",
+      "hasClientExport": true,
+      "clientExport": {
+        "types": "./lib/types/client/index.d.ts",
+        "default": "./lib/client.js"
+      },
+      "declaresDshClient": true
+    },
+    {
+      "id": "howmp__dsh-pentest",
+      "name": "@howmp/dsh-pentest",
+      "version": "0.1.0-rc.37",
+      "hasClientExport": true,
+      "clientExport": "./lib/ui-pentest.client.js",
+      "declaresDshClient": true
+    },
+    {
+      "id": "kingcharleslzy-ai__dsh-purge",
+      "name": "dsh-purge-community",
+      "version": "1.6.67",
+      "hasClientExport": true,
+      "clientExport": "./client.js",
+      "declaresDshClient": true
+    },
+    {
+      "id": "liguobao__ds-harness-remote",
+      "name": "ds-harness-remote",
+      "version": "0.6.0",
+      "hasClientExport": true,
+      "clientExport": "./packages/plugin/dist/client.github.js",
+      "declaresDshClient": true
+    },
+    {
+      "id": "mmparko__dsh-purge",
+      "name": "dsh-purge",
+      "version": "1.1.71",
+      "hasClientExport": true,
+      "clientExport": "./client.js",
+      "declaresDshClient": true
+    },
+    {
+      "id": "project-memory",
+      "name": "@yolk_vat-y/dsh-project-memory",
+      "version": "0.6.7",
+      "hasClientExport": true,
+      "clientExport": "./client/client.js",
+      "declaresDshClient": true
+    },
+    {
+      "id": "qiushi",
+      "name": "qiushi-dsh-evidence-audit",
+      "version": "0.1.0",
+      "hasClientExport": false,
+      "clientExport": null,
+      "declaresDshClient": false
+    },
+    {
+      "id": "shaobeichen__dsh-pocket",
+      "name": "dsh-pocket",
+      "version": "2.12.0",
+      "hasClientExport": true,
+      "clientExport": "./client/client.js",
+      "declaresDshClient": true
+    },
+    {
+      "id": "status-rotator",
+      "name": "dsh-status-rotator",
+      "version": "0.38.0",
+      "hasClientExport": true,
+      "clientExport": "./lib/client.js",
+      "declaresDshClient": true
+    },
+    {
+      "id": "telemetry",
+      "name": "dsh-telemetry-redactor",
+      "version": "0.1.0",
+      "hasClientExport": false,
+      "clientExport": null,
+      "declaresDshClient": false
+    },
+    {
+      "id": "ui-auth",
+      "name": "dsh-ui-auth",
+      "version": "0.7.1",
+      "hasClientExport": true,
+      "clientExport": "./lib/client.js",
+      "declaresDshClient": true
+    },
+    {
+      "id": "verification",
+      "name": "dsh-verification-receipt",
+      "version": "0.1.0",
+      "hasClientExport": false,
+      "clientExport": null,
+      "declaresDshClient": false
+    },
+    {
+      "id": "ysr666__dsh-vision-router",
+      "name": "dsh-vision-router",
+      "version": "3.1.0",
+      "hasClientExport": true,
+      "clientExport": "./lib/client.js",
+      "declaresDshClient": true
+    }
+  ]
+}

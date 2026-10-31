@@ -20,6 +20,11 @@ name: web-runtime
 # `skipped: "no ./client export"`; the summary job proves the 15/18 denominator.
 #
 # Manual run: Actions -> web-runtime -> Run workflow.
+#
+# VERIFY: the four `github:` specs are pinned to commit SHAs because those
+# packages are not published on npm. Their package.json contents were validated
+# from checkouts at the same commits; the GitHub fetch itself is first exercised
+# by CI.
 
 on:
   workflow_dispatch:
