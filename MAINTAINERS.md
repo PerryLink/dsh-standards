@@ -20,8 +20,9 @@ Mitigations:
 - 90-day review; stale evidence is marked `stale`.
 - `.github/CODEOWNERS` names the current owner; `.github/workflows/drift.yml`
   runs the checker tests weekly without a human trigger.
-- We are actively looking for 1–2 co-maintainers from adopters. The publishable
-  ask is `40-checker/results/governance/co-maintainer-packet.md`.
+- We are actively looking for 1–2 co-maintainers from adopters. The ask is
+  pinned as issue [#1](https://github.com/PerryLink/dsh-standards/issues/1);
+  the long form is `40-checker/results/governance/co-maintainer-packet.md`.
 
 ## Becoming a co-maintainer
 

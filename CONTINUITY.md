@@ -44,6 +44,11 @@ how a second maintainer is added without sharing credentials.
 
 ## Adding a co-maintainer
 
+The recruitment issue is pinned at
+<https://github.com/PerryLink/dsh-standards/issues/1>. It does not mean a
+co-maintainer exists; the table above stays accurate until a named person
+accepts and is added to `.github/CODEOWNERS`.
+
 1. Candidate opens an issue with handle, 1–3 concrete contributions, area of
    ownership, and conflict disclosure.
 2. Existing maintainer reviews at least one contribution end-to-end.
