@@ -164,7 +164,10 @@ jobs:
         with:
           name: lev6-capture
           path: ${{ env.OUT_DIR }}/
-          if-no-files-found: warn
+          # OUT_DIR is `.lev6-out`; upload-artifact excludes hidden files by
+          # default, so the capture would silently upload zero files.
+          include-hidden-files: true
+          if-no-files-found: error
           retention-days: 14
 
       - name: Enforce analyzer assertions
