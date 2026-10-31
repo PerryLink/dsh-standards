@@ -1,5 +1,10 @@
 name: web-smoke
 
+# Proves the real `dsh web` profile boots, prints its process-token URL, and
+# serves the GUI only after that token is exchanged for the signed cookie.
+# A bare `GET /` is expected to be 401: that is the authentication boundary,
+# not a failure. The probe therefore follows the printed `dsh web: <url>` line.
+
 on:
   workflow_dispatch:
 
@@ -12,25 +17,83 @@ jobs:
     timeout-minutes: 20
     steps:
       - uses: actions/checkout@v4
+
       - uses: actions/setup-node@v4
         with:
           node-version: 24
+
       - name: Install DSH
         run: npm install -g @deepseek-ai/dsh@0.2.2-alpha.2
-      - name: Create profile
+
+      - name: Create web profile
         run: |
           export DSH_HOME="$RUNNER_TEMP/dsh-home"
           mkdir -p "$DSH_HOME"
           dsh --profile web --dump-config >/dev/null
-      - name: Boot web and probe
+          test -s "$DSH_HOME/profiles/web/package.json"
+
+      - name: Boot web and exchange the launch token
         run: |
+          set -euo pipefail
           export DSH_HOME="$RUNNER_TEMP/dsh-home"
+          rm -f "$RUNNER_TEMP/web.log" "$RUNNER_TEMP/cookies.txt"
           dsh web --no-open --port 18765 >"$RUNNER_TEMP/web.log" 2>&1 &
-          PID=$!
-          for i in $(seq 1 30); do
-            if curl -fsS "http://127.0.0.1:18765/" >"$RUNNER_TEMP/index.html"; then break; fi
-            sleep 1
+          echo $! >"$RUNNER_TEMP/web.pid"
+
+          APP_URL=""
+          for i in $(seq 1 120); do
+            APP_URL=$(sed -n 's/^dsh web: \(http[^ ]*\)$/\1/p' "$RUNNER_TEMP/web.log" | head -1)
+            if [ -n "$APP_URL" ]; then break; fi
+            if ! kill -0 "$(cat "$RUNNER_TEMP/web.pid")" 2>/dev/null; then
+              echo "dsh web exited before printing its URL" >&2
+              break
+            fi
+            sleep 2
           done
-          kill $PID 2>/dev/null || true
+          echo "printed_url_chars=${#APP_URL}"
+          test -n "$APP_URL"
+
+          # The unauthenticated root must stay behind the 401 boundary.
+          UNAUTH=$(curl -sS -o /dev/null -w '%{http_code}' "http://127.0.0.1:18765/")
+          echo "unauthenticated_status=$UNAUTH"
+          test "$UNAUTH" = "401"
+
+          # The printed URL carries the per-process launch token; exchanging it
+          # must mint the signed HttpOnly cookie and redirect to the clean root.
+          curl -sS -D "$RUNNER_TEMP/auth.headers" -c "$RUNNER_TEMP/cookies.txt" \
+            -b "$RUNNER_TEMP/cookies.txt" "$APP_URL" -o /dev/null
+          grep -qi '^set-cookie: dsh-auth-' "$RUNNER_TEMP/auth.headers"
+          grep -qi '^location: \./' "$RUNNER_TEMP/auth.headers"
+
+          # Follow the redirect with the cookie jar and assert the real shell.
+          curl -fsS -L -c "$RUNNER_TEMP/cookies.txt" -b "$RUNNER_TEMP/cookies.txt" \
+            "$APP_URL" -o "$RUNNER_TEMP/index.html"
           test -s "$RUNNER_TEMP/index.html"
-          head -20 "$RUNNER_TEMP/index.html"
+          grep -q '<title>DeepSeek Harness</title>' "$RUNNER_TEMP/index.html"
+          grep -q '<div id="root">' "$RUNNER_TEMP/index.html"
+          echo "authenticated_index_bytes=$(wc -c <"$RUNNER_TEMP/index.html")"
+
+          # A cookie-authenticated clean root must also be 200 with the shell.
+          curl -fsS -b "$RUNNER_TEMP/cookies.txt" "http://127.0.0.1:18765/" \
+            -o "$RUNNER_TEMP/index-cookie.html"
+          grep -q '<div id="root">' "$RUNNER_TEMP/index-cookie.html"
+
+      - name: Stop web
+        if: always()
+        run: |
+          if [ -f "$RUNNER_TEMP/web.pid" ]; then
+            kill "$(cat "$RUNNER_TEMP/web.pid")" 2>/dev/null || true
+          fi
+          echo "--- web.log ---"
+          sed -n '1,80p' "$RUNNER_TEMP/web.log" 2>/dev/null || true
+
+      - name: Upload evidence
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: web-smoke-evidence
+          path: |
+            ${{ runner.temp }}/web.log
+            ${{ runner.temp }}/auth.headers
+            ${{ runner.temp }}/index.html
+          if-no-files-found: warn
