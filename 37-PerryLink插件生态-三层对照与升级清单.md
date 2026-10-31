@@ -16,7 +16,7 @@
 | `dsh-plugin-doctor` | R/K/D/CC/X 检查器 | ENTRY（R/K/D/X） | 有成熟检查器；JSON 无层字段 | **已推送 `2d4adb4`：`lib/standards.mjs` + JSON `standards` 字段 + `STANDARDS.md` + 18 项测试** | 把 `level-audit` 的 FLOW/BOOST 证据文件接进 `--standards` 视图 |
 | `dsh-plugin-portal` | 生态门户 | 展示 | 只显示 star/rating，无层标签 | **已推送 `dfa2586`：README 增加三层入口与公开教学副本链接** | 读 `levels` 字段显示 ENTRY/FLOW/BOOST 徽章；无证据显示 `not-run`（CI 仍有 5 条 pre-existing 数据漂移） |
 | `dsh-catalog` | Desktop Market 目录 | 展示/收录 | 有 curated 条目，无层字段 | **已推送 `aef7bb9`：README 增加三层入口** | 收录时要求 `level-labels`，缺证据不显示 PASS |
-| `dsh-plugin-kit` | 共享 peer 范围 + 骨架 | ENTRY | 有 skeleton/peer-range；无层元数据 | 未改（本轮） | 骨架写入 `dsh.standards` 模板；peer-range 跟随 0.2.x |
+| `dsh-plugin-kit` | 共享 peer 范围 + 骨架 | ENTRY | 有 skeleton/peer-range；无层元数据 | **已推送 `a705646`：`template/standards.json`（not-run 占位）+ README 说明** | 骨架写入 `dsh.standards` 模板；peer-range 跟随 0.2.x |
 | `dsh-checkers` | 53 个 checker 的一键 bundle | ENTRY static | 有 53 项检查；无 runtime G0–G3 | 未改（本轮） | 把 ENTRY static 与 `level-audit` 串联；runtime 另跑 |
 | `dsh-score` | 多维度评分 | 质量（正交） | 消费 test-drive；无层字段 | 未改（本轮） | 明确“score 不是 level”；输出层证据链接而不算分 |
 | `dsh-test-drive` | 隔离安装/冒烟 | ENTRY（安装/加载） | 成熟；可提供 E 证据 | 未改（本轮） | 记录 `levels.entry` 证据，供 doctor/certification 消费 |
