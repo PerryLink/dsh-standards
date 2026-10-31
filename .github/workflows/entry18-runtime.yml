@@ -73,7 +73,7 @@ jobs:
         run: |
           ROW="40-checker/results/entry/18/fullbase/${{ matrix.id }}.json"
           if [ -f "$ROW" ]; then
-            node -e 'const r=require(process.argv[1]); console.log(JSON.stringify({id:r.id,status:r.status,fixture:r.fixture,dshVersion:r.dshVersion,g3:r.g3State,rows:r.g3Active+" / "+r.g3Rows,elapsedMs:r.elapsedMs,error:r.error},null,2))' "$ROW"
+            node -e 'const r=require(process.argv[1].startsWith("/")?process.argv[1]:"./"+process.argv[1]); console.log(JSON.stringify({id:r.id,status:r.status,fixture:r.fixture,dshVersion:r.dshVersion,g3:r.g3State,rows:r.g3Active+" / "+r.g3Rows,elapsedMs:r.elapsedMs,error:r.error},null,2))' "$ROW"
           else
             echo "no row written for ${{ matrix.id }}" >&2
           fi
