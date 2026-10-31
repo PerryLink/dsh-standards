@@ -1,0 +1,234 @@
+{
+  "schema": "dsh-sample20-remote/1",
+  "generatedAt": "2026-10-31T14:39:06.381Z",
+  "action": "remote-manifest static (package.json + declared entry/patch only)",
+  "frame": 20,
+  "completed": 20,
+  "status": {
+    "pass": 0,
+    "warn": 19,
+    "fail": 0,
+    "incomplete": 0,
+    "missing": 0,
+    "noManifest": 1,
+    "error": 0
+  },
+  "rows": [
+    {
+      "id": "gjy1992__dsh-diagram",
+      "fullName": "gjy1992/dsh-diagram",
+      "stars": 1,
+      "status": "warn",
+      "level": "DSH-ENTRY recognized (warnings)",
+      "entryOk": false,
+      "bundleOk": false,
+      "coverage": "remote-manifest",
+      "http": 200
+    },
+    {
+      "id": "RINGOLINK__dsh-desktop-shell",
+      "fullName": "RINGOLINK/dsh-desktop-shell",
+      "stars": 1,
+      "status": "warn",
+      "level": "DSH-ENTRY recognized (warnings)",
+      "entryOk": true,
+      "bundleOk": true,
+      "coverage": "remote-manifest",
+      "http": 200
+    },
+    {
+      "id": "wkfedor__deepseek-harness-voice-input",
+      "fullName": "wkfedor/deepseek-harness-voice-input",
+      "stars": 1,
+      "status": "warn",
+      "level": "DSH-ENTRY recognized (warnings)",
+      "entryOk": true,
+      "bundleOk": false,
+      "coverage": "remote-manifest",
+      "http": 200
+    },
+    {
+      "id": "mrme000m__dsh-prime-orchestrator",
+      "fullName": "mrme000m/dsh-prime-orchestrator",
+      "stars": 1,
+      "status": "warn",
+      "level": "DSH-ENTRY recognized (warnings)",
+      "entryOk": false,
+      "bundleOk": true,
+      "coverage": "remote-manifest",
+      "http": 200
+    },
+    {
+      "id": "Zxznb666__dsh-qoder-cn-subagent",
+      "fullName": "Zxznb666/dsh-qoder-cn-subagent",
+      "stars": 1,
+      "status": "warn",
+      "level": "DSH-ENTRY recognized (warnings)",
+      "entryOk": true,
+      "bundleOk": true,
+      "coverage": "remote-manifest",
+      "http": 200
+    },
+    {
+      "id": "zed1902209846-dotcom__DPwhale-plugin",
+      "fullName": "zed1902209846-dotcom/DPwhale-plugin",
+      "stars": 1,
+      "status": "no-manifest",
+      "http": 404
+    },
+    {
+      "id": "Jamailar__beav-deepseek-harness",
+      "fullName": "Jamailar/beav-deepseek-harness",
+      "stars": 1,
+      "status": "warn",
+      "level": "DSH-ENTRY recognized (warnings)",
+      "entryOk": false,
+      "bundleOk": true,
+      "coverage": "remote-manifest",
+      "http": 200
+    },
+    {
+      "id": "173787247__dsh-wsl-dns",
+      "fullName": "173787247/dsh-wsl-dns",
+      "stars": 1,
+      "status": "warn",
+      "level": "DSH-ENTRY recognized (warnings)",
+      "entryOk": true,
+      "bundleOk": true,
+      "coverage": "remote-manifest",
+      "http": 200
+    },
+    {
+      "id": "fangqiing__dsh-knowledge-lite",
+      "fullName": "fangqiing/dsh-knowledge-lite",
+      "stars": 1,
+      "status": "warn",
+      "level": "DSH-ENTRY recognized (warnings)",
+      "entryOk": true,
+      "bundleOk": true,
+      "coverage": "remote-manifest",
+      "http": 200
+    },
+    {
+      "id": "863683348__dsh-insight",
+      "fullName": "863683348/dsh-insight",
+      "stars": 1,
+      "status": "warn",
+      "level": "DSH-ENTRY recognized (warnings)",
+      "entryOk": true,
+      "bundleOk": true,
+      "coverage": "remote-manifest",
+      "http": 200
+    },
+    {
+      "id": "fzy0517__deepseek-harness-session-cleaner",
+      "fullName": "fzy0517/deepseek-harness-session-cleaner",
+      "stars": 1,
+      "status": "warn",
+      "level": "DSH-ENTRY recognized (warnings)",
+      "entryOk": true,
+      "bundleOk": true,
+      "coverage": "remote-manifest",
+      "http": 200
+    },
+    {
+      "id": "Ansellwan__DSH-Custom-Wallpaper",
+      "fullName": "Ansellwan/DSH-Custom-Wallpaper",
+      "stars": 1,
+      "status": "warn",
+      "level": "DSH-ENTRY recognized (warnings)",
+      "entryOk": true,
+      "bundleOk": true,
+      "coverage": "remote-manifest",
+      "http": 200
+    },
+    {
+      "id": "NEAZ71eve__dsh-tool-github",
+      "fullName": "NEAZ71eve/dsh-tool-github",
+      "stars": 1,
+      "status": "warn",
+      "level": "DSH-ENTRY recognized (warnings)",
+      "entryOk": true,
+      "bundleOk": true,
+      "coverage": "remote-manifest",
+      "http": 200
+    },
+    {
+      "id": "agent-mobile__dsh-mobile-gateway",
+      "fullName": "agent-mobile/dsh-mobile-gateway",
+      "stars": 1,
+      "status": "warn",
+      "level": "DSH-ENTRY recognized (warnings)",
+      "entryOk": false,
+      "bundleOk": true,
+      "coverage": "remote-manifest",
+      "http": 200
+    },
+    {
+      "id": "123dbl__dsh-side-session",
+      "fullName": "123dbl/dsh-side-session",
+      "stars": 1,
+      "status": "warn",
+      "level": "DSH-ENTRY recognized (warnings)",
+      "entryOk": true,
+      "bundleOk": true,
+      "coverage": "remote-manifest",
+      "http": 200
+    },
+    {
+      "id": "ManoloRemiddi__DSH-Metafolder-Plugin",
+      "fullName": "ManoloRemiddi/DSH-Metafolder-Plugin",
+      "stars": 1,
+      "status": "warn",
+      "level": "DSH-ENTRY recognized (warnings)",
+      "entryOk": true,
+      "bundleOk": true,
+      "coverage": "remote-manifest",
+      "http": 200
+    },
+    {
+      "id": "w2112515__dsh-remote-host",
+      "fullName": "w2112515/dsh-remote-host",
+      "stars": 1,
+      "status": "warn",
+      "level": "DSH-ENTRY recognized (warnings)",
+      "entryOk": false,
+      "bundleOk": true,
+      "coverage": "remote-manifest",
+      "http": 200
+    },
+    {
+      "id": "xfgil__dsh-hot-reloader",
+      "fullName": "xfgil/dsh-hot-reloader",
+      "stars": 1,
+      "status": "warn",
+      "level": "DSH-ENTRY recognized (warnings)",
+      "entryOk": true,
+      "bundleOk": true,
+      "coverage": "remote-manifest",
+      "http": 200
+    },
+    {
+      "id": "yizhiyizhi0128__dsh-peak-scheduler",
+      "fullName": "yizhiyizhi0128/dsh-peak-scheduler",
+      "stars": 1,
+      "status": "warn",
+      "level": "DSH-ENTRY recognized (warnings)",
+      "entryOk": true,
+      "bundleOk": true,
+      "coverage": "remote-manifest",
+      "http": 200
+    },
+    {
+      "id": "redstonedust__dsh-solidworks-copilot",
+      "fullName": "redstonedust/dsh-solidworks-copilot",
+      "stars": 1,
+      "status": "warn",
+      "level": "DSH-ENTRY recognized (warnings)",
+      "entryOk": true,
+      "bundleOk": true,
+      "coverage": "remote-manifest",
+      "http": 200
+    }
+  ]
+}
