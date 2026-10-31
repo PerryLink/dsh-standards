@@ -1,0 +1,39 @@
+# LEV-6 experiment overlay for the shipped `headless` profile.
+#
+# Applied after the profile's own layers (bundle patches, then the profile's
+# cordis.patch.yml), i.e. it is the last word on these rows:
+#
+#   dsh --profile headless --patch examples/boost/lev6-arm.patch.yml "task"
+#
+# Environment inputs (the overlay reads them; nothing is hard-coded per run):
+#
+#   LEV6_PERSONA_PREFIX  the deployment persona prefix — after
+#                        `includeHarnessIdentity: false` this is the FIRST byte of
+#                        the system prompt. Arm A sends a constant sentence; arm B
+#                        sends the same sentence behind a per-run nonce, which is
+#                        the deliberately volatile prefix.
+#
+# The endpoint is NOT set here. The provider already honors the launch
+# environment variable `DEEPSEEK_BASE_URL`
+# (`packages/llm/llm-deepseek/src/config.ts`, `BASE_URL_ENV`), which keeps this
+# overlay free of per-run ports; the workflow points each arm at
+# `http://127.0.0.1:<port>/<arm>`.
+#
+# `session-title-llm` is switched off deliberately: it issues its own unrelated
+# model request per fresh session (a title, with a different system prompt), which
+# would add a second, non-comparable request to every arm. The capture server
+# records every request it receives, so this isolates the measurement, not the
+# assembly.
+- id: system-prompt
+  config:
+    # Turn the fixed harness-identity opener off so the configurable persona
+    # prefix is the first system-prompt section (section order 0; only
+    # HARNESS_IDENTITY at -1000 precedes it).
+    includeHarnessIdentity: false
+    personaPrefix: !!js process.env.LEV6_PERSONA_PREFIX
+- id: session-title-llm
+  disabled: true
+- id: agent-default-model
+  config:
+    provider: deepseek-official
+    model: deepseek-flash

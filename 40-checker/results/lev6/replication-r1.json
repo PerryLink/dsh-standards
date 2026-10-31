@@ -1,0 +1,245 @@
+{
+  "method": "provider-capture (synthetic model, not billing)",
+  "generatedAt": "2026-10-31T16:08:55.653Z",
+  "capture": {
+    "file": "replication R1 — standalone local run (raw capture not committed)",
+    "resolvedPath": "/mnt/c/Users/zzhdz/WorkBuddy/2026-10-30-16-02-58/dsh-standard/_lev6-local/local-capture.jsonl",
+    "sha256": "9fae249c21a8ad52b9372cd5f8116b2b4354f6b5086ffd86b19148b688f787b1",
+    "messagesRequests": 4,
+    "otherRequests": 0,
+    "otherPaths": [],
+    "problems": []
+  },
+  "tokenEstimate": "ceil(bytes / 4); CHARS_PER_TOKEN = 4 from packages/llm/token-meter/src/estimate.ts (per-block structural overheads excluded)",
+  "arms": [
+    {
+      "arm": "arm-a",
+      "requestCount": 2,
+      "distinctSessions": 2,
+      "totalInputBytes": 127164,
+      "totalInputTokens": 31791,
+      "wire": {
+        "prefixReusedBytes": 26063,
+        "prefixReusedTokens": 6516,
+        "reuseRatio": 0.40991161020414585,
+        "firstDivergenceOffset": 26063,
+        "firstDivergenceField": "dsh_session_log",
+        "firstDivergenceInsideSystemPrefix": null,
+        "systemValueStart": 4102,
+        "baseRequestBytes": 25970,
+        "baseRequestReusedBytes": 25970,
+        "baseRequestFullyReused": true,
+        "pairs": [
+          {
+            "fromSeq": 1,
+            "toSeq": 2,
+            "previousBytes": 63582,
+            "currentBytes": 63582,
+            "reusedBytes": 26063,
+            "reusedTokens": 6516,
+            "reuseRatio": 0.40991161020414585,
+            "divergenceOffset": 26063,
+            "divergenceField": "dsh_session_log",
+            "divergenceInsideSystemPrefix": null,
+            "previousBaseRequestBytes": 25970,
+            "baseRequestReusedBytes": 25970,
+            "baseRequestFullyReused": true
+          }
+        ]
+      },
+      "promptOrder": {
+        "totalBytes": 25789,
+        "prefixReusedBytes": 25789,
+        "prefixReusedTokens": 6448,
+        "reuseRatio": 1,
+        "firstDivergenceOffset": null,
+        "firstDivergenceComponent": null,
+        "pairs": [
+          {
+            "fromSeq": 1,
+            "toSeq": 2,
+            "promptBytes": 25789,
+            "reusedBytes": 25789,
+            "reusedTokens": 6448,
+            "reuseRatio": 1,
+            "divergenceOffset": null,
+            "divergenceComponent": null
+          }
+        ]
+      },
+      "sameCanonicalMessages": true,
+      "requests": [
+        {
+          "seq": 1,
+          "sessionId": "session-e83de35e-b57f-4c10-ae98-21c61b9db662",
+          "model": "deepseek-flash",
+          "bytes": 63582,
+          "tokens": 15896,
+          "baseRequestBytes": 25970,
+          "systemValueStart": 4102,
+          "bodySha256": "1f96003607edd342f84adb4d1d2dfa221efa966a1284a780aa222e05a8080753",
+          "promptBytes": 25789,
+          "parseError": null
+        },
+        {
+          "seq": 2,
+          "sessionId": "session-888d1ce2-9ba6-42c2-856e-9bb488269fe1",
+          "model": "deepseek-flash",
+          "bytes": 63582,
+          "tokens": 15896,
+          "baseRequestBytes": 25970,
+          "systemValueStart": 4102,
+          "bodySha256": "4174b9bbddc3db6fad8fca8e1bd72317569d3294e29e8a6dafef932d822f2632",
+          "promptBytes": 25789,
+          "parseError": null
+        }
+      ]
+    },
+    {
+      "arm": "arm-b",
+      "requestCount": 2,
+      "distinctSessions": 2,
+      "totalInputBytes": 127312,
+      "totalInputTokens": 31828,
+      "wire": {
+        "prefixReusedBytes": 4102,
+        "prefixReusedTokens": 1026,
+        "reuseRatio": 0.06444011562146537,
+        "firstDivergenceOffset": 4102,
+        "firstDivergenceField": "system",
+        "firstDivergenceInsideSystemPrefix": 0,
+        "systemValueStart": 4102,
+        "baseRequestBytes": 26007,
+        "baseRequestReusedBytes": 4102,
+        "baseRequestFullyReused": false,
+        "pairs": [
+          {
+            "fromSeq": 3,
+            "toSeq": 4,
+            "previousBytes": 63656,
+            "currentBytes": 63656,
+            "reusedBytes": 4102,
+            "reusedTokens": 1026,
+            "reuseRatio": 0.06444011562146537,
+            "divergenceOffset": 4102,
+            "divergenceField": "system",
+            "divergenceInsideSystemPrefix": 0,
+            "previousBaseRequestBytes": 26007,
+            "baseRequestReusedBytes": 4102,
+            "baseRequestFullyReused": false
+          }
+        ]
+      },
+      "promptOrder": {
+        "totalBytes": 25826,
+        "prefixReusedBytes": 0,
+        "prefixReusedTokens": 0,
+        "reuseRatio": 0,
+        "firstDivergenceOffset": 0,
+        "firstDivergenceComponent": "system",
+        "pairs": [
+          {
+            "fromSeq": 3,
+            "toSeq": 4,
+            "promptBytes": 25826,
+            "reusedBytes": 0,
+            "reusedTokens": 0,
+            "reuseRatio": 0,
+            "divergenceOffset": 0,
+            "divergenceComponent": "system"
+          }
+        ]
+      },
+      "sameCanonicalMessages": true,
+      "requests": [
+        {
+          "seq": 3,
+          "sessionId": "session-ce9ad17c-7ad7-4334-84e7-3088fd439a90",
+          "model": "deepseek-flash",
+          "bytes": 63656,
+          "tokens": 15914,
+          "baseRequestBytes": 26007,
+          "systemValueStart": 4102,
+          "bodySha256": "25f201a5469e901b328ba67b78b5141a04402bae6d4a1dc59f94db427f1990d2",
+          "promptBytes": 25826,
+          "parseError": null
+        },
+        {
+          "seq": 4,
+          "sessionId": "session-c34b229b-d64b-4f98-be0f-20f734211294",
+          "model": "deepseek-flash",
+          "bytes": 63656,
+          "tokens": 15914,
+          "baseRequestBytes": 26007,
+          "systemValueStart": 4102,
+          "bodySha256": "a245a05735a60d40f4f83ef9e9d485da5fe9bec0bfb37b641a86828cb420538e",
+          "promptBytes": 25826,
+          "parseError": null
+        }
+      ]
+    }
+  ],
+  "assertions": [
+    {
+      "id": "captures-two-arms",
+      "ok": true,
+      "detail": "arms seen: arm-a(2), arm-b(2)"
+    },
+    {
+      "id": "two-requests-per-arm",
+      "ok": true,
+      "detail": "arm-a=2, arm-b=2"
+    },
+    {
+      "id": "fresh-session-per-request",
+      "ok": true,
+      "detail": "arm-a: 2/2, arm-b: 2/2 distinct sessions"
+    },
+    {
+      "id": "same-task-text-per-arm",
+      "ok": true,
+      "detail": "arm-a: true, arm-b: true"
+    },
+    {
+      "id": "stable-prompt-prefix-reuse",
+      "ok": true,
+      "detail": "arm-a promptOrder reuse 100.00% (expected >= 95%)"
+    },
+    {
+      "id": "stable-base-request-reused",
+      "ok": true,
+      "detail": "arm-a base request (everything before the plugin extension fields) reused 25970/25970 bytes; the wire prefix stops only at dsh_session_log (wire reuse overall 40.99%)"
+    },
+    {
+      "id": "volatile-diverges-at-prompt-byte-zero",
+      "ok": true,
+      "detail": "arm-b promptOrder first divergence 0 in system (expected <= 16, i.e. the volatile prefix itself)"
+    },
+    {
+      "id": "volatile-prompt-reuse-is-small",
+      "ok": true,
+      "detail": "arm-b promptOrder reuse 0.00% (expected <= 5%)"
+    },
+    {
+      "id": "volatile-wire-diverges-at-system-prefix-start",
+      "ok": true,
+      "detail": "arm-b wire first divergence 4102 in system, 0 bytes into the system value (expected <= 16; the wire offset itself is ~4102, because DSH serializes `system` after `messages`)"
+    },
+    {
+      "id": "volatile-wire-diverges-at-system-field",
+      "ok": true,
+      "detail": "arm-b wire first divergence field system (expected \"system\")"
+    },
+    {
+      "id": "arms-are-distinguishable",
+      "ok": true,
+      "detail": "promptOrder reuse gap 100.00pp (expected >= 50pp)"
+    }
+  ],
+  "nonClaims": [
+    "Assembled request prefix bytes/tokens only. No provider cache was hit and no cache hit rate is claimed.",
+    "No billing, price, or money-saving claim: the model server is synthetic and reports no real usage.",
+    "The `promptOrder` prefix is a derived canonicalization of the captured request, not a second capture.",
+    "`syntheticUsage` in the capture JSONL is derived from request bytes and exists only to drive DSH usage plumbing."
+  ]
+}

@@ -1,0 +1,241 @@
+{
+  "note": "Anatomy of one recorded request. This is the exact body DSH assembled; rawBodyExcerpt is truncated, the full bytes are in capture.jsonl.",
+  "method": "provider-capture (synthetic model, not billing)",
+  "record": {
+    "seq": 1,
+    "arm": "arm-a",
+    "path": "/arm-a/v1/messages",
+    "receivedAt": "2026-10-31T16:04:20.978Z",
+    "bodyBytes": 63568,
+    "bodySha256": "912b86a49d57984bb4c295351be4b20e58122699705748b77a3968b48f037701",
+    "sessionId": "session-83128dee-a158-411f-8ed1-9e60b07ffea7",
+    "model": "deepseek-flash",
+    "syntheticUsage": {
+      "basis": "ceil(bodyBytes / 4)",
+      "input_tokens": 15892,
+      "output_tokens": 11,
+      "cache_read_input_tokens": 0,
+      "cache_creation_input_tokens": 0
+    }
+  },
+  "headers": {
+    "host": "127.0.0.1:8787",
+    "connection": "keep-alive",
+    "user-agent": "deepseek-harness/0.2.2-alpha.2 (+https://github.com/deepseek-ai/deepseek-harness)",
+    "content-type": "application/json",
+    "accept": "text/event-stream",
+    "x-api-key": "<redacted>",
+    "anthropic-version": "2023-06-01",
+    "x-deepseek-harness-user-id": "ff34d592-c014-43a0-aacd-fae009d599c7",
+    "x-deepseek-harness-session-id": "session-83128dee-a158-411f-8ed1-9e60b07ffea7",
+    "accept-language": "*",
+    "sec-fetch-mode": "cors",
+    "accept-encoding": "gzip, deflate",
+    "content-length": "63568"
+  },
+  "topLevelFields": [
+    {
+      "key": "model",
+      "offset": 1,
+      "bytes": 16,
+      "extension": false
+    },
+    {
+      "key": "stream",
+      "offset": 26,
+      "bytes": 4,
+      "extension": false
+    },
+    {
+      "key": "messages",
+      "offset": 40,
+      "bytes": 3952,
+      "extension": false
+    },
+    {
+      "key": "max_tokens",
+      "offset": 4004,
+      "bytes": 6,
+      "extension": false
+    },
+    {
+      "key": "thinking",
+      "offset": 4024,
+      "bytes": 18,
+      "extension": false
+    },
+    {
+      "key": "output_config",
+      "offset": 4054,
+      "bytes": 17,
+      "extension": false
+    },
+    {
+      "key": "system",
+      "offset": 4088,
+      "bytes": 2665,
+      "extension": false
+    },
+    {
+      "key": "tools",
+      "offset": 6763,
+      "bytes": 19194,
+      "extension": false
+    },
+    {
+      "key": "dsh_session_log",
+      "offset": 25966,
+      "bytes": 31509,
+      "extension": true
+    },
+    {
+      "key": "dsh_plugin_packages",
+      "offset": 57494,
+      "bytes": 6051,
+      "extension": true
+    }
+  ],
+  "baseRequestBytes": 25966,
+  "system": {
+    "bytes": 2639,
+    "head": "LEV6 persona prefix: stable benchmark persona.\n\nCheck the [exit code: N] marker on every bash result; investigate failures before moving on.\n\nUse the read tool — not shell commands like cat — to inspect text files. Use offset and limit to c",
+    "tail": "only waiting for their results remains, end your turn instead of sleeping or polling; the next result starts a new turn."
+  },
+  "tools": {
+    "count": 24,
+    "bytes": 19194,
+    "names": [
+      "bash",
+      "create_goal",
+      "edit",
+      "get_goal",
+      "glob",
+      "grep",
+      "interrupt_agent",
+      "job_kill",
+      "job_list",
+      "job_output",
+      "list_agents",
+      "read",
+      "read_image",
+      "send_message",
+      "skill",
+      "subagent",
+      "subagent_fork",
+      "todo_write",
+      "update_goal",
+      "web_fetch",
+      "web_search",
+      "workflow",
+      "working_directory",
+      "write"
+    ]
+  },
+  "messages": [
+    {
+      "role": "user",
+      "blocks": [
+        "text",
+        "text",
+        "text"
+      ],
+      "textBytes": 3787,
+      "head": "Reply with one short sentence.\nCurrent runtime context. This snapshot supersedes earlier runtime-context snapshots.\n\nCur"
+    }
+  ],
+  "extensions": {
+    "dsh_session_log": {
+      "bytes": 31509,
+      "envelope": {
+        "version": 1,
+        "sessionFormatVersion": 4,
+        "session": {
+          "version": 4,
+          "id": "session-83128dee-a158-411f-8ed1-9e60b07ffea7",
+          "createdAt": 1793462660706,
+          "cwd": "/mnt/c/Users/zzhdz/WorkBuddy/2026-10-30-16-02-58/dsh-standard/.lev6-out/workspace"
+        },
+        "afterSeq": -1,
+        "throughSeq": 13
+      },
+      "events": [
+        {
+          "seq": 0,
+          "type": "permission/preset",
+          "bytes": 28
+        },
+        {
+          "seq": 1,
+          "type": "sandbox/mode",
+          "bytes": 26
+        },
+        {
+          "seq": 2,
+          "type": "approval/policy",
+          "bytes": 16
+        },
+        {
+          "seq": 3,
+          "type": "agent/inbox/spliced",
+          "bytes": 198
+        },
+        {
+          "seq": 4,
+          "type": "turn/start",
+          "bytes": 10
+        },
+        {
+          "seq": 5,
+          "type": "agent/inbox/spliced",
+          "bytes": 63
+        },
+        {
+          "seq": 6,
+          "type": "step/start",
+          "bytes": 19
+        },
+        {
+          "seq": 7,
+          "type": "system/message",
+          "bytes": 2826
+        },
+        {
+          "seq": 8,
+          "type": "user/message",
+          "bytes": 152
+        },
+        {
+          "seq": 9,
+          "type": "user/message",
+          "bytes": 1526
+        },
+        {
+          "seq": 10,
+          "type": "user/message",
+          "bytes": 5845
+        },
+        {
+          "seq": 11,
+          "type": "request/header",
+          "bytes": 19357
+        },
+        {
+          "seq": 12,
+          "type": "request/context",
+          "bytes": 115
+        },
+        {
+          "seq": 13,
+          "type": "session/title",
+          "bytes": 89
+        }
+      ]
+    },
+    "dsh_plugin_packages": {
+      "bytes": 6051,
+      "version": 1,
+      "packageCount": 87
+    }
+  },
+  "rawBodyExcerpt": "{\"model\":\"deepseek-flash\",\"stream\":true,\"messages\":[{\"role\":\"user\",\"content\":[{\"type\":\"text\",\"text\":\"Reply with one short sentence.\"},{\"type\":\"text\",\"text\":\"Current runtime context. This snapshot supersedes earlier runtime-context snapshots.\\n\\nCurrent working directory: \\\"/mnt/c/Users/zzhdz/WorkBuddy/2026-10-30-16-02-58/dsh-standard/.lev6-out/workspace\\\".\\n\\nCurrent DSH file policy: workspace-write. Any available operation enforced by the DSH file sandbox may modify files under the session workspace: \\\"/mnt/c/Users/zzhdz/WorkBuddy/2026-10-30-16-02-58/dsh-standard/.lev6-out/workspace\\\". Some platform temporary areas may also be writable.\\n\\nApproval prompts are enabled in this session: operations that require approval may ask through the configured answerers; without an available answerer, the request fails closed.\"},{\"type\":\"text\",\"text\":\"<system-reminder>\\nA skill is a reusable set of task-specific instructions. The following skills are available in this session:\\n\\n<available_skills>\\n- `alipay-aipay`: 支付宝 AI 付接入 Skill。当用户选择完成 AI 按量付费、AI 网页应用收款、AI 移动应用收款三类支付宝收单产品的代码开发、产品开通或全流程同时完成两者时，使用此 Skill。 触发关键词：\\\"AI支付\\\"、\\\"接支付宝\\\"、\\\"一站式接支付宝\\\"、\\\"接个支付\\\"、\\\"开发支付\\\"、\\\"402收款\\\"、\\\"AI按量付费\\\"、\\\"AI网页应用收款\\\"、\\\"AI移动应用收款\\\"、\\\"按量付费\\\"、\\\"快捷收款\\\"、\\\"快捷收单\\\"、\\\"网站支付\\\"、\\\"APP 支付\\\"、\\\"产品开通\\\"、\\\"商家开通\\\"、\\\"签约入驻\\\"等。\\n- `alipay-authenticate-wallet`: 支付宝官方 AI 支付能力开通与授权技能。用于独立钱包申请开通、查询授权状态、提交开通口令、提交授权码、确认支付宝侧操作结果、关闭授权，以及支付命令明确转交的钱包处理；“用户账号 token”“账号 token”“口令码”“开通码”“enrollment code”也触发。收银台、订单或协议支付仍由支付技能处理。关键词：开通、授权、绑定、解绑、支付能力、支付功能、用户账号token、口令码、开通码、enrollment code、验证码、授权码、钱包、AI钱包\\n- `alipay-payment-skill`: 支付宝官方支付处理技能。覆盖收...[truncated: 58074 characters]"
+}

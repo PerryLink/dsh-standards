@@ -1,0 +1,182 @@
+name: lev6-capture
+
+# LEV-6 "stable prefix / assembly reuse" — provider-capture evidence.
+#
+# What this measures: the exact request bytes DSH assembles for one short
+# headless task, captured by a **synthetic** local Messages endpoint
+# (`examples/boost/lev6-capture-server.mjs`). It is not billing and not a
+# provider cache hit rate; the analyzer only reports assembled prefix bytes and
+# tokens. Method and limitations: 40-checker/results/lev6/REPORT.md
+#
+# Two arms, two fresh sessions each, same task text:
+#   arm-a  stable persona prefix      → the base request must be byte-identical
+#   arm-b  per-run nonce prefix       → the prompt prefix must diverge at byte 0
+#
+# The endpoint is selected with the provider's own launch-environment override
+# `DEEPSEEK_BASE_URL` (packages/llm/llm-deepseek/src/config.ts, BASE_URL_ENV).
+# The arm name is the URL path prefix: /arm-a/v1/messages, /arm-b/v1/messages.
+# The profile overlay is examples/boost/lev6-arm.patch.yml; the isolated profile
+# lives in a fresh $DSH_HOME under the runner temp dir, so no user state is read.
+#
+# Manual run: Actions → lev6-capture → Run workflow.
+
+on:
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+env:
+  DSH_VERSION: 0.2.2-alpha.2
+  CAPTURE_PORT: '8787'
+  OUT_DIR: ${{ github.workspace }}/.lev6-out
+
+jobs:
+  capture:
+    runs-on: ubuntu-latest
+    timeout-minutes: 25
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Set up Node 24
+        uses: actions/setup-node@v4
+        with:
+          node-version: 24
+
+      - name: Record toolchain
+        run: |
+          mkdir -p "$OUT_DIR"
+          node --version | tee "$OUT_DIR/node-version.txt"
+          npm --version | tee "$OUT_DIR/npm-version.txt"
+
+      - name: Install DSH ${{ env.DSH_VERSION }}
+        run: |
+          npm install --global "@deepseek-ai/dsh@${DSH_VERSION}"
+          dsh --version | tee "$OUT_DIR/dsh-version.txt"
+
+      - name: Start synthetic capture server
+        run: |
+          set -euo pipefail
+          mkdir -p "$OUT_DIR/workspace" "$OUT_DIR/homes"
+          nohup node examples/boost/lev6-capture-server.mjs \
+            --port "$CAPTURE_PORT" \
+            --out "$OUT_DIR/capture.jsonl" \
+            --reset \
+            > "$OUT_DIR/server.out" 2> "$OUT_DIR/server.err" &
+          echo $! > "$OUT_DIR/server.pid"
+          for attempt in $(seq 1 50); do
+            if curl -fsS "http://127.0.0.1:${CAPTURE_PORT}/health" > "$OUT_DIR/health.json"; then
+              cat "$OUT_DIR/health.json"
+              exit 0
+            fi
+            sleep 0.2
+          done
+          echo "capture server did not answer /health" >&2
+          cat "$OUT_DIR/server.err" >&2 || true
+          exit 1
+
+      - name: Run two fresh sessions per arm
+        id: sessions
+        run: |
+          set -uo pipefail
+          PATCH="$GITHUB_WORKSPACE/examples/boost/lev6-arm.patch.yml"
+          WORKSPACE="$OUT_DIR/workspace"
+          BASE_PERSONA="LEV6 persona prefix: stable benchmark persona."
+          TASK="Reply with one short sentence."
+          failures=0
+
+          # $1 tag, $2 arm (URL path prefix), $3 DSH_HOME, $4 persona prefix, $5 task
+          run_session() {
+            local tag="$1" arm="$2" home="$3" persona="$4" task="$5"
+            (
+              cd "$WORKSPACE"
+              DSH_HOME="$home" \
+              DEEPSEEK_API_KEY="sk-lev6-fixture-no-real-key" \
+              DEEPSEEK_BASE_URL="http://127.0.0.1:${CAPTURE_PORT}/${arm}" \
+              DSH_TELEMETRY_DISABLED=1 \
+              LEV6_PERSONA_PREFIX="$persona" \
+              dsh --profile headless --patch "$PATCH" "$task"
+            ) > "$OUT_DIR/stdout-${tag}.txt" 2> "$OUT_DIR/stderr-${tag}.txt"
+            local code=$?
+            echo "${tag} arm=${arm} exit=${code} out=$(tr -d '\n' < "$OUT_DIR/stdout-${tag}.txt" | head -c 200)"
+            if [ "$code" -ne 0 ]; then
+              echo "${tag} failed; stderr:" >&2
+              tail -40 "$OUT_DIR/stderr-${tag}.txt" >&2
+              failures=$((failures + 1))
+            fi
+          }
+
+          # Arm A: one constant persona prefix, two fresh sessions.
+          run_session a1 arm-a "$OUT_DIR/homes/home-a" "$BASE_PERSONA" "$TASK"
+          run_session a2 arm-a "$OUT_DIR/homes/home-a" "$BASE_PERSONA" "$TASK"
+
+          # Arm B: the same sentence behind a fresh per-run nonce, so the very
+          # first prompt byte differs between the two sessions.
+          NONCE_1="$(node -p 'crypto.randomUUID()')"
+          NONCE_2="$(node -p 'crypto.randomUUID()')"
+          printf 'arm-b run1 nonce=%s\narm-b run2 nonce=%s\n' "$NONCE_1" "$NONCE_2" | tee "$OUT_DIR/nonces.txt"
+          run_session b1 arm-b "$OUT_DIR/homes/home-b" "$NONCE_1 $BASE_PERSONA" "$TASK"
+          run_session b2 arm-b "$OUT_DIR/homes/home-b" "$NONCE_2 $BASE_PERSONA" "$TASK"
+
+          echo "session-failures=${failures}" >> "$GITHUB_OUTPUT"
+          if [ "$failures" -ne 0 ]; then
+            echo "::error::${failures} headless session(s) failed against the synthetic endpoint"
+            exit 1
+          fi
+
+      - name: Stop capture server
+        if: always()
+        run: |
+          if [ -f "$OUT_DIR/server.pid" ]; then
+            kill "$(cat "$OUT_DIR/server.pid")" 2>/dev/null || true
+            sleep 0.5
+          fi
+          [ -f "$OUT_DIR/server.err" ] && cat "$OUT_DIR/server.err" || true
+
+      - name: Analyze capture (pure)
+        id: analyze
+        if: always()
+        run: |
+          set +e
+          node examples/boost/lev6-analyze.mjs \
+            --capture "$OUT_DIR/capture.jsonl" \
+            --out "$OUT_DIR/summary.json" \
+            --markdown "$OUT_DIR/summary.md" \
+            --assert
+          code=$?
+          echo "exit=${code}" >> "$GITHUB_OUTPUT"
+          echo "analyzer exit=${code}"
+          exit 0
+
+      - name: Publish summary to the job page
+        if: always()
+        run: |
+          if [ -f "$OUT_DIR/summary.md" ]; then
+            cat "$OUT_DIR/summary.md" >> "$GITHUB_STEP_SUMMARY"
+          else
+            echo "no summary.md was produced" >> "$GITHUB_STEP_SUMMARY"
+          fi
+
+      - name: Upload capture and summary
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: lev6-capture
+          path: ${{ env.OUT_DIR }}/
+          if-no-files-found: warn
+          retention-days: 14
+
+      - name: Enforce analyzer assertions
+        if: always()
+        run: |
+          set -euo pipefail
+          if [ "${{ steps.sessions.outcome }}" != "success" ]; then
+            echo "::error::session step did not succeed, so the capture is incomplete"
+            exit 1
+          fi
+          if [ "${{ steps.analyze.outputs.exit }}" != "0" ]; then
+            echo "::error::LEV-6 assertions failed (analyzer exit ${{ steps.analyze.outputs.exit }}); see summary.md in the artifact"
+            exit 1
+          fi
+          echo "LEV-6 assertions passed"
