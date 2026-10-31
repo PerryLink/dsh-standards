@@ -442,3 +442,19 @@ done
 node examples/boost/lev6-analyze.mjs \
   --capture capture.jsonl --out lev6.json --markdown summary.md --assert
 ```
+
+---
+
+## CI replication (2026-11-01)
+
+`lev6-capture` run [41218936165](https://github.com/PerryLink/dsh-standards/actions/runs/41218936165)
+completed with the analyzer's 11/11 assertions:
+
+| arm | wire reuse | base request fully reused | prompt-order reuse | prompt first divergence |
+|---|---|---|---|---|
+| arm-a (stable) | 42.05% (22,855 B) | yes, 22,762/22,762 B | **100.00%** (22,581 B) | none |
+| arm-b (per-run nonce) | 1.64% (894 B) | no | **0.00%** (0 B) | **0 (`system`)** |
+
+Absolute byte counts differ from the committed capture because the CI workspace
+path and profile layers change the serialized prefix; the relative result and the
+falsification are identical. Artifact: `lev6-capture` (run 41218936165).
