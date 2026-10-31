@@ -1,0 +1,16 @@
+# LEV-3 fixture composition.
+#
+# The benchmark copies this file to a temporary directory, rewrites the mutable
+# `greeting` / `mode` values there, and triggers `Include.refresh()` — the same
+# reload entry point `@deepseek-ai/dsh-hmr` calls when the watched YAML changes.
+#
+# `probe` is listed first so its service exists before the fixture activates;
+# the fixture also declares `inject = ['lev3Probe']`, so Loader ordering is
+# enforced by the service registry rather than by line order.
+- id: lev3-probe
+  name: ./probe.mjs
+- id: lev3-fixture
+  name: ./plugin.mjs
+  config:
+    mode: mode-0
+    greeting: greeting-0

@@ -1,0 +1,62 @@
+# dsh-purge 1.1.85 — install-time profile writes (postinstall) evidence
+# Source clone: /tmp/yj-purge @ 9716ca3e8711c7bb680668d34cc2e93e184028ad (2026-10-31)
+# No tokens appear in any command output below.
+
+## A. Direct postinstall run against a synthetic profile
+# package.json: {"name":"dsh-profile-web",...,"dsh":{"profile":{"bundles":[]}}}
+# cordis.patch.yml before: []
+$ cd /tmp/triage-farm/plugins/dsh-purge
+$ INIT_CWD=/tmp/triage-profile node scripts/ensure-profile-bundle.mjs
+dsh-purge: appended to bundles (/tmp/triage-profile)
+dsh-purge: wrote body insert (/tmp/triage-profile/cordis.patch.yml)
+dsh-purge: allowed pnpm build for dsh-purge
+exit=0
+
+# /tmp/triage-profile/cordis.patch.yml after:
+- insert:
+    - id: dsh-purge
+      name: dsh-purge
+      inject: [systemPrompt, tools]
+      config:
+        enabled: true
+        stripMnemon: true
+        capabilityProtocol: true
+        hooksDenyBypass: true
+
+# /tmp/triage-profile/package.json after:
+#   "dsh": { "profile": { "bundles": ["dsh-purge"] } }
+
+# /tmp/triage-profile/pnpm-workspace.yaml after:
+allowBuilds:
+  dsh-purge: true
+
+## B. Real `dsh plugin add` (documented codeload command + documented allow-build flags)
+$ DSH_HOME=/tmp/triage-dsh-home3 dsh plugin --profile web add \
+    --allow-build=dsh-purge \
+    --allow-build='dsh-purge@https://codeload.github.com/YuJunZhiXue/dsh-purge/tar.gz/refs/heads/master' \
+    'https://codeload.github.com/YuJunZhiXue/dsh-purge/tar.gz/refs/heads/master'
+...
+node_modules/dsh-purge postinstall$ node scripts/ensure-profile-bundle.mjs
+node_modules/dsh-purge postinstall: dsh-purge: appended to bundles (/tmp/triage-dsh-home3/profiles/web)
+node_modules/dsh-purge postinstall: dsh-purge: wrote body insert (/tmp/triage-dsh-home3/profiles/web/cordis.patch.yml)
+node_modules/dsh-purge postinstall: dsh-purge: allowed pnpm build for dsh-purge
+node_modules/dsh-purge postinstall: Done
+...
+exit=0
+
+# Installed profile state:
+# dsh.profile.bundles = ["@deepseek-ai/dsh-base", "@deepseek-ai/dsh-web-app", "dsh-purge"]
+# cordis.patch.yml = host header comments + the same `- insert: id: dsh-purge` block
+# node_modules/dsh-purge/package.json = dsh-purge 1.1.85
+
+## C. Negative control: plain add without allow-build
+$ DSH_HOME=/tmp/triage-dsh-home dsh plugin --profile web add /tmp/yj-purge/dsh-purge-1.1.85.tgz
+Error: ERR_PNPM_IGNORED_BUILDS
+  x adding a new package
+  `- Ignored build scripts: dsh-purge@file:../../../yj-purge/dsh-purge-1.1.85.tgz
+exit=1
+# Profile after: bundles unchanged, cordis.patch.yml still `[]` -> no root insert.
+
+# Also failed: file-tarball + --allow-build=dsh-purge (pnpm's key for a file
+# tarball is the full spec, not the bare name). The documented codeload URL
+# plus both documented allow-build keys is the invocation that works (B).

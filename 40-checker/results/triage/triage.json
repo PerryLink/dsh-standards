@@ -1,0 +1,295 @@
+{
+  "schema": "dsh-triage/1",
+  "generatedAt": "2026-10-31T15:59:33Z",
+  "scope": "Three non-web blocked/failed items of the 18-package runtime set",
+  "environment": {
+    "localDshVersion": "0.2.1-rc.5",
+    "localAppBoot": "/mnt/c/Users/zzhdz/AppData/Roaming/npm/node_modules/@deepseek-ai/dsh/node_modules/@deepseek-ai/dsh-app-boot/lib/index.js",
+    "anchorDshVersion": "0.2.2-alpha.2",
+    "anchorAppBoot": "/tmp/dsh022/node_modules/@deepseek-ai/dsh-app-boot/lib/index.js",
+    "anchorBasePatch": "/tmp/dsh022/node_modules/@deepseek-ai/dsh-base/cordis.patch.yml",
+    "node": "v24.22.1",
+    "pnpm": "12.15.0",
+    "purgeClone": "/tmp/yj-purge",
+    "purgeCommit": "9716ca3e8711c7bb680668d34cc2e93e184028ad",
+    "purgeVersion": "1.1.85"
+  },
+  "items": [
+    {
+      "id": "YuJunZhiXue/dsh-purge",
+      "package": "dsh-purge",
+      "version": "1.1.85",
+      "priorClassification": "plugin FAIL — cordis.patch.yml allegedly never inserts the root dsh-purge row, so the main plugin never mounts (92-兼容运行时实测.md §三-A; §二 row FAIL; §一 明确不可运行 3/18).",
+      "verifiedClassification": "fixture-limitation",
+      "verifiedSubtype": "install-time profile mutation skipped by the checker fixture",
+      "claimRefuted": true,
+      "confidence": "high",
+      "whatActuallyHappens": "scripts.postinstall runs scripts/ensure-profile-bundle.mjs. With INIT_CWD pointing at a profile directory it (1) appends \"dsh-purge\" to dsh.profile.bundles in <profile>/package.json, (2) inserts '- id: dsh-purge / name: dsh-purge / inject: [systemPrompt, tools]' into <profile>/cordis.patch.yml, and (3) writes allowBuilds: dsh-purge: true to <profile>/pnpm-workspace.yaml. The bundle overlay intentionally contains only an id-targeted override plus the three redteam inserts; its own comments state the body insert is written by postinstall or the market.",
+      "evidence": [
+        {
+          "kind": "source",
+          "path": "/tmp/yj-purge/package.json",
+          "fact": "scripts.postinstall = node scripts/ensure-profile-bundle.mjs"
+        },
+        {
+          "kind": "source",
+          "path": "/tmp/yj-purge/scripts/ensure-profile-bundle.mjs",
+          "fact": "findProfileDir() uses INIT_CWD / npm_config_local_prefix / cwd and accepts a package.json with name dsh-profile-* or dsh.profile.bundles; then calls ensureProfileBundles, ensureProfileBodyInsert, ensurePnpmAllowBuild."
+        },
+        {
+          "kind": "source",
+          "path": "/tmp/yj-purge/cordis.patch.yml",
+          "fact": "Comment states: the root insert is written to the user-layer profile/cordis.patch.yml by postinstall; inserting again would duplicate (#152/#154/#159)."
+        },
+        {
+          "kind": "command",
+          "command": "cd /tmp/triage-farm/plugins/dsh-purge && INIT_CWD=/tmp/triage-profile node scripts/ensure-profile-bundle.mjs",
+          "result": "exit 0; wrote bundles + body insert + allowBuilds"
+        },
+        {
+          "kind": "command",
+          "command": "DSH_HOME=/tmp/triage-dsh-home3 dsh plugin --profile web add --allow-build=dsh-purge --allow-build='dsh-purge@https://codeload.github.com/YuJunZhiXue/dsh-purge/tar.gz/refs/heads/master' 'https://codeload.github.com/YuJunZhiXue/dsh-purge/tar.gz/refs/heads/master'",
+          "result": "exit 0; real postinstall ran; profile bundles gained dsh-purge and cordis.patch.yml gained the root insert"
+        },
+        {
+          "kind": "artifact",
+          "path": "40-checker/results/entry/18/fullbase/YuJunZhiXue__dsh-purge.json",
+          "fact": "The parent's current fullbase shard records \"installScripts\": \"skipped\", installCommand includes --ignore-scripts, and \"manifestRewrite\": \"removed scripts\" — the fixture deliberately cannot run the postinstall."
+        },
+        {
+          "kind": "measurement",
+          "name": "baseline (bundle patch only, no profile layer)",
+          "runtime": "0.2.2-alpha.2",
+          "result": "g1 targetRows=3; g3 active=2/3; g4 rootRows=[] ok=false; warning 'patch: entry \"dsh-purge\" not found'"
+        },
+        {
+          "kind": "measurement",
+          "name": "with the postinstall profile layer",
+          "runtime": "0.2.2-alpha.2",
+          "result": "g1 targetRows=4; g3 rows include include:dsh-purge state=2 (ACTIVE), active=3/4; g4 rootRows=[dsh-purge] ok=true; only redteam-ui is pending (webServer)"
+        },
+        {
+          "kind": "measurement",
+          "name": "with the postinstall profile layer",
+          "runtime": "0.2.1-rc.5",
+          "result": "same: include:dsh-purge state=2, active=3/4, g4 ok=true"
+        }
+      ],
+      "commands": [
+        "node 40-checker/scripts/bundle-smoke.mjs --package /tmp/triage-farm022/plugins/dsh-purge --host /tmp/dsh022/node_modules/@deepseek-ai/dsh-app-boot/lib/index.js --base /tmp/dsh022/node_modules/@deepseek-ai/dsh-base/cordis.patch.yml --bare /tmp/triage-farm022 --json --timeout 200000",
+        "node /tmp/triage/bundle-smoke-profile.mjs --package /tmp/triage-farm022/plugins/dsh-purge --host /tmp/dsh022/node_modules/@deepseek-ai/dsh-app-boot/lib/index.js --base /tmp/dsh022/node_modules/@deepseek-ai/dsh-base/cordis.patch.yml --profile /tmp/triage-dsh-home3/profiles/web/cordis.patch.yml --bare /tmp/triage-farm022 --json --timeout 200000"
+      ],
+      "artifacts": [
+        "40-checker/results/triage/evidence/purge-baseline-0.2.2-alpha.2.json",
+        "40-checker/results/triage/evidence/purge-with-profile-0.2.2-alpha.2.json",
+        "40-checker/results/triage/evidence/purge-baseline-0.2.1-rc.5.json",
+        "40-checker/results/triage/evidence/purge-with-profile-0.2.1-rc.5.json",
+        "40-checker/results/triage/evidence/purge-postinstall.txt"
+      ],
+      "secondaryFindings": [
+        {
+          "severity": "info",
+          "finding": "On the postinstall path, the package overlay's '- id: dsh-purge' override is skipped with 'patch: entry \"dsh-purge\" not found' because bundle layers are applied before the profile user layer. All 16 overlay config values equal lib/index.js DEFAULTS, so behavior is unchanged; the overlay config is merely ineffective on this path (a minor authoring inconsistency, not the claimed failure)."
+        },
+        {
+          "severity": "warning",
+          "finding": "The postinstall is pnpm-build-gated. Plain `dsh plugin add` under pnpm 12.15.0 exits 1 with ERR_PNPM_IGNORED_BUILDS and leaves no root insert; the README documents --allow-build and a manual `node .../ensure-profile-bundle.mjs` fallback. The documented codeload command with both allow-build keys succeeds. This is an install prerequisite, not a patch-composition defect."
+        },
+        {
+          "severity": "info",
+          "finding": "redteam-ui remains pending on webServer in base-only composition; that is the same host/base-only limitation as the other purge packages, not a plugin defect."
+        }
+      ],
+      "minimalUpstreamChange": "No upstream change is required to fix the claimed defect. The checker fixture should model the package's install-time profile write (run the postinstall in the fixture, or add the generated profile cordis.patch.yml as a final layer). Optional plugin polish: put the full config block into INSERT_BLOCK (or drop the ineffective overlay override) so the postinstall path carries the same config as the market path; functionally equivalent today because every omitted key defaults to the same value.",
+      "verdictNote": "The prior prose is refuted as stated ('patch never inserts the root row' is true only of the bundle patch file, false of the installed package). The package is not self-contained by design; its root row is an install-time profile artifact."
+    },
+    {
+      "id": "dsh-telemetry-redactor@0.1.0",
+      "package": "dsh-telemetry-redactor",
+      "version": "0.1.0",
+      "priorClassification": "host/gate blocked (G2 compatibility reject); 92-*.md labels the gate result SKIP and lists it under 明确不可运行 3/18.",
+      "verifiedClassification": "host-incompatible",
+      "verifiedSubtype": "upstream peer range too narrow; host gate correctly rejects",
+      "claimRefuted": false,
+      "confidence": "high",
+      "rejection": {
+        "runtimeA": {
+          "runtimeVersion": "0.2.1-rc.5",
+          "result": {
+            "name": "dsh-telemetry-redactor",
+            "version": "0.1.0",
+            "runtimeVersion": "0.2.1-rc.5",
+            "requirements": {
+              "@deepseek-ai/dsh-session-telemetry": ">=0.1.0-rc.5 <0.2.0"
+            },
+            "exempted": false
+          }
+        },
+        "runtimeB": {
+          "runtimeVersion": "0.2.2-alpha.2",
+          "result": {
+            "name": "dsh-telemetry-redactor",
+            "version": "0.1.0",
+            "runtimeVersion": "0.2.2-alpha.2",
+            "requirements": {
+              "@deepseek-ai/dsh-session-telemetry": ">=0.1.0-rc.5 <0.2.0"
+            },
+            "exempted": false
+          }
+        },
+        "message": "Plugin dsh-telemetry-redactor@0.1.0 is incompatible with dsh 0.2.2-alpha.2: requirements {\"@deepseek-ai/dsh-session-telemetry\":\">=0.1.0-rc.5 <0.2.0\"}. Running it may cause crashes or data loss. ... Exact-version exemption: not active."
+      },
+      "why": "The local runtime ships @deepseek-ai/dsh-session-telemetry 0.2.1-rc.5 and the anchor install ships 0.2.2-alpha.2; both are outside the range. The declared peer range stops below 0.2.0, so no 0.2.x stable version can satisfy it. The plugin does not import the peer module at runtime (lib/index.js imports only @deepseek-ai/schemastery and listens to the 'session-telemetry/record' event), so the peer is a compatibility declaration, not a module link; the declaration is stale relative to the 0.2.x runtime.",
+      "semver": {
+        "range": ">=0.1.0-rc.5 <0.2.0",
+        "note": "with includePrerelease:true the range admits 0.1.x and even 0.2.0-rc.*, but excludes 0.2.0 final and every 0.2.1+ runtime"
+      },
+      "evidence": [
+        {
+          "kind": "command",
+          "command": "npm pack dsh-telemetry-redactor@0.1.0 dsh-verification-receipt@0.1.0 --json",
+          "result": "tarballs extracted under /tmp/triage-pkgs/{telemetry,verification}"
+        },
+        {
+          "kind": "artifact",
+          "path": "40-checker/results/triage/evidence/g2-rejections.txt",
+          "fact": "real evaluatePluginCompatibility output for both runtimes"
+        },
+        {
+          "kind": "artifact",
+          "path": "40-checker/results/triage/evidence/semver-matrix.json",
+          "fact": "semver satisfaction matrix for both ranges"
+        }
+      ],
+      "minimalUpstreamChange": "Widen the peer range after testing on 0.2.x: \"@deepseek-ai/dsh-session-telemetry\": \">=0.1.0-rc.5 <0.3.0\" (or \">=0.2.1-rc.5 <0.3.0\" if only modern runtimes are supported). Do not grant a version exemption; the gate rejection is the correct host behavior.",
+      "verdictNote": "Keep the host/gate-blocked label, but write REJECT (not SKIP): evaluatePluginCompatibility returns a structured rejection object, and the gate is doing what it is designed to do."
+    },
+    {
+      "id": "dsh-verification-receipt@0.1.0",
+      "package": "dsh-verification-receipt",
+      "version": "0.1.0",
+      "priorClassification": "host/gate blocked (G2 compatibility reject); 92-*.md labels the gate result SKIP and lists it under 明确不可运行 3/18.",
+      "verifiedClassification": "host-incompatible",
+      "verifiedSubtype": "upstream peer range bug (cannot admit 0.1.0 final, let alone 0.2.x); host gate correctly rejects",
+      "claimRefuted": false,
+      "confidence": "high",
+      "rejection": {
+        "runtimeA": {
+          "runtimeVersion": "0.2.1-rc.5",
+          "result": {
+            "name": "dsh-verification-receipt",
+            "version": "0.1.0",
+            "runtimeVersion": "0.2.1-rc.5",
+            "requirements": {
+              "@deepseek-ai/dsh-session": ">=0.1.0-rc.5 <0.1.0"
+            },
+            "exempted": false
+          }
+        },
+        "runtimeB": {
+          "runtimeVersion": "0.2.2-alpha.2",
+          "result": {
+            "name": "dsh-verification-receipt",
+            "version": "0.1.0",
+            "runtimeVersion": "0.2.2-alpha.2",
+            "requirements": {
+              "@deepseek-ai/dsh-session": ">=0.1.0-rc.5 <0.1.0"
+            },
+            "exempted": false
+          }
+        },
+        "message": "Plugin dsh-verification-receipt@0.1.0 is incompatible with dsh 0.2.2-alpha.2: requirements {\"@deepseek-ai/dsh-session\":\">=0.1.0-rc.5 <0.1.0\"}. Running it may cause crashes or data loss. ... Exact-version exemption: not active."
+      },
+      "why": "With includePrerelease:true, '>=0.1.0-rc.5 <0.1.0' admits only 0.1.0 prereleases (e.g. 0.1.0-rc.8); it excludes 0.1.0 final and every 0.1.x/0.2.x release. npm never published a dsh-session 0.1.0 final (the 0.1.0 line is rc.2/3/6/7/8), so at publication time the range matched the then-current prerelease line, but it can never admit a later version. This is an over-tight upper bound (metadata bug), not an intentional hard stop against 0.2.x — 0.2.x did not exist when the package was published (2026-08-14). The package marks the peer optional in peerDependenciesMeta, but the host evaluates every @deepseek-ai/dsh* peer regardless of optionality (app-boot unmetRequirements, lib/index.js line ~291), so the gate still fires. The plugin does not import @deepseek-ai/dsh-session at runtime (lib/index.js imports node builtins and @deepseek-ai/schemastery only; it uses the 'sessions' service and 'session/event').",
+      "semver": {
+        "range": ">=0.1.0-rc.5 <0.1.0",
+        "note": "admits 0.1.0-rc.* only; rejects 0.1.0 final, 0.1.x, and 0.2.x under includePrerelease:true (without includePrerelease the range would be empty)"
+      },
+      "evidence": [
+        {
+          "kind": "artifact",
+          "path": "40-checker/results/triage/evidence/g2-rejections.txt",
+          "fact": "real evaluatePluginCompatibility output for both runtimes"
+        },
+        {
+          "kind": "artifact",
+          "path": "40-checker/results/triage/evidence/semver-matrix.json",
+          "fact": "0.1.0-rc.5/rc.8 true; 0.1.0, 0.1.7-rc.2, 0.2.x all false"
+        },
+        {
+          "kind": "command",
+          "command": "npm view @deepseek-ai/dsh-session versions --json",
+          "result": "no 0.1.0 final; 0.1.0-rc.2/3/6/7/8 then 0.1.1-rc.1 ...; 0.2.x line exists only from 0.2.0-rc.1"
+        }
+      ],
+      "minimalUpstreamChange": "Fix the upper bound: \"@deepseek-ai/dsh-session\": \">=0.1.0-rc.5 <0.3.0\" after testing on 0.2.x. (Changing <0.1.0 to <0.2.0 is the minimal typo fix but still rejects the 0.2.1/0.2.2 anchor; deleting the peer is also defensible because it is optional and not imported at runtime, but then the package loses its declared compatibility contract.) Do not grant a version exemption.",
+      "verdictNote": "Keep the host/gate-blocked label, but write REJECT (not SKIP) and attribute the cause to upstream peer metadata, not to the host."
+    }
+  ],
+  "summaryCorrection": {
+    "note": "Derived from the three verified items plus the parent's existing fullbase shard; counts that depend on a full 18-package rerun are marked derived.",
+    "statements": [
+      {
+        "doc": "92-兼容运行时实测.md §一 总表",
+        "current": "明确不可用 3/18：1 个 plugin FAIL（YuJun patch）+ 2 个 host/gate blocked（telemetry/verification）",
+        "proposed": "明确不可用 2/18：0 个 plugin FAIL + 2 个 host/gate REJECT（telemetry/verification）；YuJun 移入「无法判定/partial（等 webServer）」",
+        "basis": "verified purge composition with the postinstall profile layer"
+      },
+      {
+        "doc": "92-兼容运行时实测.md §一 总表",
+        "current": "无法判定（缺 web-app） 4/18（SeaOf0、liguobao、shaobeichen、ui-auth）",
+        "proposed": "无法判定（缺 web-app） 5/18（上述 4 个 + YuJun；YuJun 的 redteam-ui 等 webServer）",
+        "basis": "purge root row ACTIVE, only redteam-ui pending webServer"
+      },
+      {
+        "doc": "92-兼容运行时实测.md §二 明细 YuJun 行",
+        "current": "FAIL | PASS | ADMIT | 2/3 | FAIL（plugin；主行未插入）",
+        "proposed": "核心真跑 | PASS | ADMIT | root row ACTIVE（含 install-time profile layer）；3/4 active，redteam-ui 等 webServer | fixture-limitation（非 plugin FAIL）",
+        "basis": "profile-aware smoke 0.2.2-alpha.2: include:dsh-purge state=2"
+      },
+      {
+        "doc": "92-兼容运行时实测.md §一 总表",
+        "current": "主行（root row）ACTIVE 11/18",
+        "proposed": "主行（root row）ACTIVE 12/18（derived；+YuJun）",
+        "basis": "YuJun root row now ACTIVE when the install-time profile layer is modeled; needs full rerun to confirm the count"
+      },
+      {
+        "doc": "92-兼容运行时实测.md §四 本轮结果",
+        "current": "G4 14/15 有 client 的包有 root row（YuJun 无）",
+        "proposed": "G4 15/15（YuJun 有 root row；前提是组合包含 install-time profile layer）",
+        "basis": "g4.rootRows=[dsh-purge], ok=true"
+      },
+      {
+        "doc": "92-兼容运行时实测.md §一 总表 / §二 gate 列",
+        "current": "真实 profile gate 16/18 ADMIT；2 个 SKIP（telemetry、verification）",
+        "proposed": "真实 profile gate 16/18 ADMIT；2 个 REJECT（telemetry、verification）。SKIP 是与宿主 gate 语义不符的措辞",
+        "basis": "evaluatePluginCompatibility returns a rejection object, not undefined"
+      },
+      {
+        "doc": "92-兼容运行时实测.md §六 最小验收",
+        "current": "interop-failed 3，interop-unavailable 4，interop-runtime (root only) 11/18",
+        "proposed": "interop-failed 2（均为 host-gate REJECT），interop-unavailable 5（+YuJun, install-time profile mutation not modeled），interop-runtime (root only) 12/18（derived）",
+        "basis": "same as above"
+      },
+      {
+        "doc": "92-兼容运行时实测.md §三-A",
+        "current": "A. 补丁本身（唯一“装完也不能跑”的补丁类）… 从未插入 name: dsh-purge 根行 … 不是宿主/noise，是 patch 形态缺陷。",
+        "proposed": "改为「A. 安装期 profile 写入（fixture 未建模）」：bundle patch 只负责 redteam 子行与已入队行的 override；根行由 postinstall 写入 profile 的 cordis.patch.yml，bundle-smoke 以 --ignore-scripts 安装、并移除 scripts，所以看不到该行。含该行后根行 ACTIVE。",
+        "basis": "installScripts: skipped in fullbase shard; postinstall + profile-aware boot"
+      }
+    ],
+    "unchanged": [
+      "真实 boot 18/18 BOOT_OK",
+      "G3 base-only 全行 ACTIVE 9/18（YuJun 由 2/3 变 3/4，仍非全 ACTIVE，计数不变）",
+      "施加 gate 后全 ACTIVE 7/18（YuJun 仍有一行等 webServer）",
+      "interop-runtime 7/18"
+    ]
+  },
+  "limitations": [
+    "The full web profile was not booted (it would bind ports/start the frontend). The root row activating is proven in base-only composition; redteam-ui remains pending on webServer and is not claimed ACTIVE.",
+    "The real `dsh plugin add` run used the local 0.2.1-rc.5 CLI and bundled pnpm 12.15.0 on Linux. Windows/pnpm 11 allow-build key matching was not tested; the README documents both keys.",
+    "The 0.2.2-alpha.2 host at /tmp/dsh022 is the parent's install; its app-boot and base patch were used as-is.",
+    "No upstream repo was modified. /tmp/yj-purge is a local clone; the npm pack tarball was moved out of it.",
+    "No version exemption was granted or requested."
+  ]
+}

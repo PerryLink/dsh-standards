@@ -1,0 +1,4835 @@
+{
+  "schema": "dsh-boost-lev3/1",
+  "practice": "LEV-3",
+  "generatedAt": "2026-10-31T15:53:03.695Z",
+  "level": "loader-level",
+  "config": {
+    "runs": 20,
+    "warmup": 2,
+    "volatileField": "greeting",
+    "controlField": "mode",
+    "trigger": "rewrite fixture cordis.yml, call Include.refresh(), await loader.await()",
+    "triggerCallSite": "packages/boot/hmr/src/index.ts:472 calls include.refresh() from the watched-file handler",
+    "composition": "real Cordis Context + Loader + Include; two YAML rows (probe service, fixture plugin)"
+  },
+  "summary": {
+    "status": "supported",
+    "level": "loader-level",
+    "byHost": {
+      "installed": {
+        "status": "supported",
+        "bootMode": "app-boot",
+        "versions": {
+          "dsh": "0.2.1-rc.5",
+          "cordis": "4.0.5",
+          "loader": "1.0.6",
+          "include": "1.0.10",
+          "schemastery": "3.18.5",
+          "appBoot": "0.2.1-rc.5"
+        },
+        "volatile": {
+          "n": 20,
+          "remounts": 0,
+          "restarts": 0,
+          "pluginReapplied": 0,
+          "effectsTornDown": 0,
+          "configUpdates": 20,
+          "fiberUidChanged": 0,
+          "fiberObjectChanged": 0,
+          "appliesDeltaTotal": 0,
+          "effectInstallsTotal": 0,
+          "effectDisposalsTotal": 0,
+          "volatileUpdatesTotal": 20,
+          "writeMs": {
+            "n": 20,
+            "min": 0.052,
+            "max": 0.129,
+            "median": 0.063,
+            "p50": 0.063,
+            "p95": 0.108,
+            "mean": 0.074
+          },
+          "reloadMs": {
+            "n": 20,
+            "min": 0.53,
+            "max": 0.871,
+            "median": 0.668,
+            "p50": 0.668,
+            "p95": 0.863,
+            "mean": 0.67
+          }
+        },
+        "control": {
+          "n": 20,
+          "remounts": 20,
+          "restarts": 20,
+          "pluginReapplied": 20,
+          "effectsTornDown": 20,
+          "configUpdates": 20,
+          "fiberUidChanged": 0,
+          "fiberObjectChanged": 0,
+          "appliesDeltaTotal": 20,
+          "effectInstallsTotal": 20,
+          "effectDisposalsTotal": 20,
+          "volatileUpdatesTotal": 0,
+          "writeMs": {
+            "n": 20,
+            "min": 0.05,
+            "max": 0.143,
+            "median": 0.067,
+            "p50": 0.067,
+            "p95": 0.095,
+            "mean": 0.071
+          },
+          "reloadMs": {
+            "n": 20,
+            "min": 0.632,
+            "max": 1.041,
+            "median": 0.775,
+            "p50": 0.775,
+            "p95": 1,
+            "mean": 0.794
+          }
+        },
+        "checks": {
+          "fixtureActive": true,
+          "probeRegistered": true,
+          "volatileReference": true,
+          "controlValueIsPlain": true,
+          "initialApplyOnce": true,
+          "initialEffectsInstalled": true,
+          "controlRestarts": true,
+          "volatileNoRemount": true,
+          "volatileConfigUpdated": true,
+          "armsDistinguishable": true,
+          "falsifiable": true
+        }
+      },
+      "checkout": {
+        "status": "supported",
+        "bootMode": "direct-loader",
+        "versions": {
+          "dsh": "0.2.2-alpha.2",
+          "cordis": "4.0.6-alpha.1",
+          "loader": "1.0.7-alpha.1",
+          "include": "1.0.11-alpha.1",
+          "schemastery": "3.18.6-alpha.1"
+        },
+        "volatile": {
+          "n": 20,
+          "remounts": 0,
+          "restarts": 0,
+          "pluginReapplied": 0,
+          "effectsTornDown": 0,
+          "configUpdates": 20,
+          "fiberUidChanged": 0,
+          "fiberObjectChanged": 0,
+          "appliesDeltaTotal": 0,
+          "effectInstallsTotal": 0,
+          "effectDisposalsTotal": 0,
+          "volatileUpdatesTotal": 20,
+          "writeMs": {
+            "n": 20,
+            "min": 0.053,
+            "max": 0.24,
+            "median": 0.074,
+            "p50": 0.074,
+            "p95": 0.182,
+            "mean": 0.088
+          },
+          "reloadMs": {
+            "n": 20,
+            "min": 0.488,
+            "max": 0.793,
+            "median": 0.682,
+            "p50": 0.682,
+            "p95": 0.793,
+            "mean": 0.659
+          }
+        },
+        "control": {
+          "n": 20,
+          "remounts": 20,
+          "restarts": 20,
+          "pluginReapplied": 20,
+          "effectsTornDown": 20,
+          "configUpdates": 20,
+          "fiberUidChanged": 0,
+          "fiberObjectChanged": 0,
+          "appliesDeltaTotal": 20,
+          "effectInstallsTotal": 20,
+          "effectDisposalsTotal": 20,
+          "volatileUpdatesTotal": 0,
+          "writeMs": {
+            "n": 20,
+            "min": 0.05,
+            "max": 0.102,
+            "median": 0.066,
+            "p50": 0.066,
+            "p95": 0.095,
+            "mean": 0.068
+          },
+          "reloadMs": {
+            "n": 20,
+            "min": 0.601,
+            "max": 1.4,
+            "median": 0.738,
+            "p50": 0.738,
+            "p95": 0.935,
+            "mean": 0.773
+          }
+        },
+        "checks": {
+          "fixtureActive": true,
+          "probeRegistered": true,
+          "volatileReference": true,
+          "controlValueIsPlain": true,
+          "initialApplyOnce": true,
+          "initialEffectsInstalled": true,
+          "controlRestarts": true,
+          "volatileNoRemount": true,
+          "volatileConfigUpdated": true,
+          "armsDistinguishable": true,
+          "falsifiable": true
+        }
+      }
+    },
+    "volatileRuns": [
+      20,
+      20
+    ],
+    "controlRuns": [
+      20,
+      20
+    ],
+    "volatileRemounts": {
+      "installed": 0,
+      "checkout": 0
+    },
+    "controlRemounts": {
+      "installed": 20,
+      "checkout": 20
+    },
+    "volatileMedianReloadMs": {
+      "installed": 0.668,
+      "checkout": 0.682
+    },
+    "controlMedianReloadMs": {
+      "installed": 0.775,
+      "checkout": 0.738
+    },
+    "volatileRestarts": {
+      "installed": 0,
+      "checkout": 0
+    },
+    "controlRestarts": {
+      "installed": 20,
+      "checkout": 20
+    },
+    "allFalsifiable": true
+  },
+  "hosts": {
+    "installed": {
+      "host": "installed",
+      "status": "supported",
+      "runtime": {
+        "host": "installed",
+        "node": "v24.22.1",
+        "platform": "linux x64",
+        "mode": "app-boot",
+        "versions": {
+          "dsh": "0.2.1-rc.5",
+          "cordis": "4.0.5",
+          "loader": "1.0.6",
+          "include": "1.0.10",
+          "schemastery": "3.18.5",
+          "appBoot": "0.2.1-rc.5"
+        },
+        "paths": {
+          "context": "/mnt/c/Users/zzhdz/AppData/Roaming/npm/node_modules/@deepseek-ai/dsh/node_modules/@deepseek-ai/cordis/lib/index.js",
+          "loader": "/mnt/c/Users/zzhdz/AppData/Roaming/npm/node_modules/@deepseek-ai/dsh/node_modules/@deepseek-ai/cordis-plugin-loader/lib/index.js",
+          "include": "/mnt/c/Users/zzhdz/AppData/Roaming/npm/node_modules/@deepseek-ai/dsh/node_modules/@deepseek-ai/cordis-plugin-include/lib/index.js",
+          "schemastery": "/mnt/c/Users/zzhdz/AppData/Roaming/npm/node_modules/@deepseek-ai/dsh/node_modules/@deepseek-ai/schemastery/lib/index.mjs",
+          "appBoot": "/mnt/c/Users/zzhdz/AppData/Roaming/npm/node_modules/@deepseek-ai/dsh/node_modules/@deepseek-ai/dsh-app-boot/lib/index.js",
+          "bareBaseUrl": "file:///mnt/c/Users/zzhdz/AppData/Roaming/npm/node_modules/@deepseek-ai/dsh/node_modules/@deepseek-ai/"
+        },
+        "includeBoot": {
+          "kind": "bundled-in-app-boot",
+          "file": "/mnt/c/Users/zzhdz/AppData/Roaming/npm/node_modules/@deepseek-ai/dsh/node_modules/@deepseek-ai/dsh-app-boot/lib/index.js",
+          "sha256": "5135179ac810e4f626f32ec3bdc3293dc7d2028e8aa92e5e0c006f1a33b78e76",
+          "note": "the installed app-boot statically bundles Include; versions.include is the installed standalone package version of the same release"
+        },
+        "source": {
+          "entry": {
+            "file": "/mnt/c/Users/zzhdz/AppData/Roaming/npm/node_modules/@deepseek-ai/dsh/node_modules/@deepseek-ai/cordis-plugin-loader/src/config/entry.ts",
+            "sha256": "6a061f1d3c2cdaac19409bf8ec6956ec5a0a457c4f1689be658d50af7c9ee294",
+            "hasVolatileOnlyGate": true,
+            "hasCommitVolatile": true,
+            "checksActiveFiber": true,
+            "checksEqualExceptVolatile": true
+          },
+          "diff": {
+            "file": "/mnt/c/Users/zzhdz/AppData/Roaming/npm/node_modules/@deepseek-ai/dsh/node_modules/@deepseek-ai/cordis-plugin-loader/src/config/diff.ts",
+            "sha256": "6025a6b9798a0a16af017bb7d8d6394bbe345685b2ace56b15975add5843edb3",
+            "hasVolatileMeta": true,
+            "hasEqualExceptVolatile": true
+          },
+          "index": {
+            "file": "/mnt/c/Users/zzhdz/AppData/Roaming/npm/node_modules/@deepseek-ai/dsh/node_modules/@deepseek-ai/cordis-plugin-loader/src/index.ts",
+            "sha256": "a135e2189a0feb0af08ff79de761698fb8ce7b41c96fefda1d4a299e5982fef3",
+            "declaresVolatileUpdateEvent": true
+          }
+        }
+      },
+      "fixture": {
+        "directory": "examples/boost/lev3-fixture",
+        "files": [
+          {
+            "name": "plugin.mjs",
+            "path": "examples/boost/lev3-fixture/plugin.mjs",
+            "sha256": "fec44add01e90c7c99dcde5e4a7b6090b878d420c7f564019ee5aaecd93a4a2d"
+          },
+          {
+            "name": "probe.mjs",
+            "path": "examples/boost/lev3-fixture/probe.mjs",
+            "sha256": "8dda527a87989a4641c0106423d30d17e5a3e9723516a032e2033bfbd0839f1e"
+          },
+          {
+            "name": "cordis.yml",
+            "path": "examples/boost/lev3-fixture/cordis.yml",
+            "sha256": "7a9ca76b81f577a64191a965a7dacb6d8841c63d5b02947c158fa444c56874ea"
+          }
+        ]
+      },
+      "boot": {
+        "bootMs": 1343.276,
+        "bootMode": "app-boot",
+        "entries": [
+          {
+            "id": "include",
+            "name": "cordis:include",
+            "state": 2,
+            "uid": 3,
+            "disabled": false
+          },
+          {
+            "id": "include:lev3-probe",
+            "name": "./probe.mjs",
+            "state": 2,
+            "uid": 4,
+            "disabled": false
+          },
+          {
+            "id": "include:lev3-fixture",
+            "name": "./plugin.mjs",
+            "state": 2,
+            "uid": 5,
+            "disabled": false
+          }
+        ],
+        "fixture": {
+          "id": "include:lev3-fixture",
+          "uid": 5,
+          "state": 2,
+          "config": {
+            "greeting": "greeting-0",
+            "mode": "mode-0"
+          },
+          "volatileReference": true,
+          "controlValueIsPlain": true
+        },
+        "probe": {
+          "applies": 1,
+          "effectInstalls": 1,
+          "effectDisposals": 0,
+          "volatileUpdates": 0,
+          "instances": [
+            {
+              "instanceId": 1,
+              "uid": 5,
+              "state": 1,
+              "greeting": "greeting-0",
+              "mode": "mode-0"
+            }
+          ]
+        }
+      },
+      "arms": {
+        "volatile": {
+          "field": "greeting",
+          "declaredVolatile": true,
+          "warmup": 2,
+          "rows": [
+            {
+              "i": 1,
+              "arm": "volatile",
+              "field": "greeting",
+              "from": "warmup-greeting-2",
+              "to": "greeting-1",
+              "writeMs": 0.091,
+              "reloadMs": 0.871,
+              "uidBefore": 5,
+              "uidAfter": 5,
+              "fiberUidSame": true,
+              "fiberObjectSame": true,
+              "stateBefore": 2,
+              "stateAfter": 2,
+              "configBefore": {
+                "greeting": "warmup-greeting-2",
+                "mode": "mode-0"
+              },
+              "configAfter": {
+                "greeting": "greeting-1",
+                "mode": "mode-0"
+              },
+              "configUpdated": true,
+              "appliesDelta": 0,
+              "effectInstallsDelta": 0,
+              "effectDisposalsDelta": 0,
+              "volatileUpdatesDelta": 1,
+              "pluginReapplied": false,
+              "effectsTornDown": false,
+              "remounted": false,
+              "events": [
+                {
+                  "seq": 5,
+                  "type": "volatile-update",
+                  "at": 1468.174179,
+                  "uid": 5,
+                  "instanceId": 1,
+                  "paths": [
+                    "greeting"
+                  ],
+                  "greeting": "greeting-1",
+                  "mode": "mode-0"
+                }
+              ]
+            },
+            {
+              "i": 2,
+              "arm": "volatile",
+              "field": "greeting",
+              "from": "greeting-1",
+              "to": "greeting-2",
+              "writeMs": 0.062,
+              "reloadMs": 0.763,
+              "uidBefore": 5,
+              "uidAfter": 5,
+              "fiberUidSame": true,
+              "fiberObjectSame": true,
+              "stateBefore": 2,
+              "stateAfter": 2,
+              "configBefore": {
+                "greeting": "greeting-1",
+                "mode": "mode-0"
+              },
+              "configAfter": {
+                "greeting": "greeting-2",
+                "mode": "mode-0"
+              },
+              "configUpdated": true,
+              "appliesDelta": 0,
+              "effectInstallsDelta": 0,
+              "effectDisposalsDelta": 0,
+              "volatileUpdatesDelta": 1,
+              "pluginReapplied": false,
+              "effectsTornDown": false,
+              "remounted": false,
+              "events": [
+                {
+                  "seq": 6,
+                  "type": "volatile-update",
+                  "at": 1471.394396,
+                  "uid": 5,
+                  "instanceId": 1,
+                  "paths": [
+                    "greeting"
+                  ],
+                  "greeting": "greeting-2",
+                  "mode": "mode-0"
+                }
+              ]
+            },
+            {
+              "i": 3,
+              "arm": "volatile",
+              "field": "greeting",
+              "from": "greeting-2",
+              "to": "greeting-3",
+              "writeMs": 0.061,
+              "reloadMs": 0.708,
+              "uidBefore": 5,
+              "uidAfter": 5,
+              "fiberUidSame": true,
+              "fiberObjectSame": true,
+              "stateBefore": 2,
+              "stateAfter": 2,
+              "configBefore": {
+                "greeting": "greeting-2",
+                "mode": "mode-0"
+              },
+              "configAfter": {
+                "greeting": "greeting-3",
+                "mode": "mode-0"
+              },
+              "configUpdated": true,
+              "appliesDelta": 0,
+              "effectInstallsDelta": 0,
+              "effectDisposalsDelta": 0,
+              "volatileUpdatesDelta": 1,
+              "pluginReapplied": false,
+              "effectsTornDown": false,
+              "remounted": false,
+              "events": [
+                {
+                  "seq": 7,
+                  "type": "volatile-update",
+                  "at": 1474.463098,
+                  "uid": 5,
+                  "instanceId": 1,
+                  "paths": [
+                    "greeting"
+                  ],
+                  "greeting": "greeting-3",
+                  "mode": "mode-0"
+                }
+              ]
+            },
+            {
+              "i": 4,
+              "arm": "volatile",
+              "field": "greeting",
+              "from": "greeting-3",
+              "to": "greeting-4",
+              "writeMs": 0.061,
+              "reloadMs": 0.612,
+              "uidBefore": 5,
+              "uidAfter": 5,
+              "fiberUidSame": true,
+              "fiberObjectSame": true,
+              "stateBefore": 2,
+              "stateAfter": 2,
+              "configBefore": {
+                "greeting": "greeting-3",
+                "mode": "mode-0"
+              },
+              "configAfter": {
+                "greeting": "greeting-4",
+                "mode": "mode-0"
+              },
+              "configUpdated": true,
+              "appliesDelta": 0,
+              "effectInstallsDelta": 0,
+              "effectDisposalsDelta": 0,
+              "volatileUpdatesDelta": 1,
+              "pluginReapplied": false,
+              "effectsTornDown": false,
+              "remounted": false,
+              "events": [
+                {
+                  "seq": 8,
+                  "type": "volatile-update",
+                  "at": 1477.4949,
+                  "uid": 5,
+                  "instanceId": 1,
+                  "paths": [
+                    "greeting"
+                  ],
+                  "greeting": "greeting-4",
+                  "mode": "mode-0"
+                }
+              ]
+            },
+            {
+              "i": 5,
+              "arm": "volatile",
+              "field": "greeting",
+              "from": "greeting-4",
+              "to": "greeting-5",
+              "writeMs": 0.072,
+              "reloadMs": 0.79,
+              "uidBefore": 5,
+              "uidAfter": 5,
+              "fiberUidSame": true,
+              "fiberObjectSame": true,
+              "stateBefore": 2,
+              "stateAfter": 2,
+              "configBefore": {
+                "greeting": "greeting-4",
+                "mode": "mode-0"
+              },
+              "configAfter": {
+                "greeting": "greeting-5",
+                "mode": "mode-0"
+              },
+              "configUpdated": true,
+              "appliesDelta": 0,
+              "effectInstallsDelta": 0,
+              "effectDisposalsDelta": 0,
+              "volatileUpdatesDelta": 1,
+              "pluginReapplied": false,
+              "effectsTornDown": false,
+              "remounted": false,
+              "events": [
+                {
+                  "seq": 9,
+                  "type": "volatile-update",
+                  "at": 1480.610425,
+                  "uid": 5,
+                  "instanceId": 1,
+                  "paths": [
+                    "greeting"
+                  ],
+                  "greeting": "greeting-5",
+                  "mode": "mode-0"
+                }
+              ]
+            },
+            {
+              "i": 6,
+              "arm": "volatile",
+              "field": "greeting",
+              "from": "greeting-5",
+              "to": "greeting-6",
+              "writeMs": 0.129,
+              "reloadMs": 0.863,
+              "uidBefore": 5,
+              "uidAfter": 5,
+              "fiberUidSame": true,
+              "fiberObjectSame": true,
+              "stateBefore": 2,
+              "stateAfter": 2,
+              "configBefore": {
+                "greeting": "greeting-5",
+                "mode": "mode-0"
+              },
+              "configAfter": {
+                "greeting": "greeting-6",
+                "mode": "mode-0"
+              },
+              "configUpdated": true,
+              "appliesDelta": 0,
+              "effectInstallsDelta": 0,
+              "effectDisposalsDelta": 0,
+              "volatileUpdatesDelta": 1,
+              "pluginReapplied": false,
+              "effectsTornDown": false,
+              "remounted": false,
+              "events": [
+                {
+                  "seq": 10,
+                  "type": "volatile-update",
+                  "at": 1483.918231,
+                  "uid": 5,
+                  "instanceId": 1,
+                  "paths": [
+                    "greeting"
+                  ],
+                  "greeting": "greeting-6",
+                  "mode": "mode-0"
+                }
+              ]
+            },
+            {
+              "i": 7,
+              "arm": "volatile",
+              "field": "greeting",
+              "from": "greeting-6",
+              "to": "greeting-7",
+              "writeMs": 0.107,
+              "reloadMs": 0.811,
+              "uidBefore": 5,
+              "uidAfter": 5,
+              "fiberUidSame": true,
+              "fiberObjectSame": true,
+              "stateBefore": 2,
+              "stateAfter": 2,
+              "configBefore": {
+                "greeting": "greeting-6",
+                "mode": "mode-0"
+              },
+              "configAfter": {
+                "greeting": "greeting-7",
+                "mode": "mode-0"
+              },
+              "configUpdated": true,
+              "appliesDelta": 0,
+              "effectInstallsDelta": 0,
+              "effectDisposalsDelta": 0,
+              "volatileUpdatesDelta": 1,
+              "pluginReapplied": false,
+              "effectsTornDown": false,
+              "remounted": false,
+              "events": [
+                {
+                  "seq": 11,
+                  "type": "volatile-update",
+                  "at": 1487.123195,
+                  "uid": 5,
+                  "instanceId": 1,
+                  "paths": [
+                    "greeting"
+                  ],
+                  "greeting": "greeting-7",
+                  "mode": "mode-0"
+                }
+              ]
+            },
+            {
+              "i": 8,
+              "arm": "volatile",
+              "field": "greeting",
+              "from": "greeting-7",
+              "to": "greeting-8",
+              "writeMs": 0.064,
+              "reloadMs": 0.571,
+              "uidBefore": 5,
+              "uidAfter": 5,
+              "fiberUidSame": true,
+              "fiberObjectSame": true,
+              "stateBefore": 2,
+              "stateAfter": 2,
+              "configBefore": {
+                "greeting": "greeting-7",
+                "mode": "mode-0"
+              },
+              "configAfter": {
+                "greeting": "greeting-8",
+                "mode": "mode-0"
+              },
+              "configUpdated": true,
+              "appliesDelta": 0,
+              "effectInstallsDelta": 0,
+              "effectDisposalsDelta": 0,
+              "volatileUpdatesDelta": 1,
+              "pluginReapplied": false,
+              "effectsTornDown": false,
+              "remounted": false,
+              "events": [
+                {
+                  "seq": 12,
+                  "type": "volatile-update",
+                  "at": 1490.090404,
+                  "uid": 5,
+                  "instanceId": 1,
+                  "paths": [
+                    "greeting"
+                  ],
+                  "greeting": "greeting-8",
+                  "mode": "mode-0"
+                }
+              ]
+            },
+            {
+              "i": 9,
+              "arm": "volatile",
+              "field": "greeting",
+              "from": "greeting-8",
+              "to": "greeting-9",
+              "writeMs": 0.052,
+              "reloadMs": 0.635,
+              "uidBefore": 5,
+              "uidAfter": 5,
+              "fiberUidSame": true,
+              "fiberObjectSame": true,
+              "stateBefore": 2,
+              "stateAfter": 2,
+              "configBefore": {
+                "greeting": "greeting-8",
+                "mode": "mode-0"
+              },
+              "configAfter": {
+                "greeting": "greeting-9",
+                "mode": "mode-0"
+              },
+              "configUpdated": true,
+              "appliesDelta": 0,
+              "effectInstallsDelta": 0,
+              "effectDisposalsDelta": 0,
+              "volatileUpdatesDelta": 1,
+              "pluginReapplied": false,
+              "effectsTornDown": false,
+              "remounted": false,
+              "events": [
+                {
+                  "seq": 13,
+                  "type": "volatile-update",
+                  "at": 1493.053787,
+                  "uid": 5,
+                  "instanceId": 1,
+                  "paths": [
+                    "greeting"
+                  ],
+                  "greeting": "greeting-9",
+                  "mode": "mode-0"
+                }
+              ]
+            },
+            {
+              "i": 10,
+              "arm": "volatile",
+              "field": "greeting",
+              "from": "greeting-9",
+              "to": "greeting-10",
+              "writeMs": 0.057,
+              "reloadMs": 0.53,
+              "uidBefore": 5,
+              "uidAfter": 5,
+              "fiberUidSame": true,
+              "fiberObjectSame": true,
+              "stateBefore": 2,
+              "stateAfter": 2,
+              "configBefore": {
+                "greeting": "greeting-9",
+                "mode": "mode-0"
+              },
+              "configAfter": {
+                "greeting": "greeting-10",
+                "mode": "mode-0"
+              },
+              "configUpdated": true,
+              "appliesDelta": 0,
+              "effectInstallsDelta": 0,
+              "effectDisposalsDelta": 0,
+              "volatileUpdatesDelta": 1,
+              "pluginReapplied": false,
+              "effectsTornDown": false,
+              "remounted": false,
+              "events": [
+                {
+                  "seq": 14,
+                  "type": "volatile-update",
+                  "at": 1495.828403,
+                  "uid": 5,
+                  "instanceId": 1,
+                  "paths": [
+                    "greeting"
+                  ],
+                  "greeting": "greeting-10",
+                  "mode": "mode-0"
+                }
+              ]
+            },
+            {
+              "i": 11,
+              "arm": "volatile",
+              "field": "greeting",
+              "from": "greeting-10",
+              "to": "greeting-11",
+              "writeMs": 0.077,
+              "reloadMs": 0.701,
+              "uidBefore": 5,
+              "uidAfter": 5,
+              "fiberUidSame": true,
+              "fiberObjectSame": true,
+              "stateBefore": 2,
+              "stateAfter": 2,
+              "configBefore": {
+                "greeting": "greeting-10",
+                "mode": "mode-0"
+              },
+              "configAfter": {
+                "greeting": "greeting-11",
+                "mode": "mode-0"
+              },
+              "configUpdated": true,
+              "appliesDelta": 0,
+              "effectInstallsDelta": 0,
+              "effectDisposalsDelta": 0,
+              "volatileUpdatesDelta": 1,
+              "pluginReapplied": false,
+              "effectsTornDown": false,
+              "remounted": false,
+              "events": [
+                {
+                  "seq": 15,
+                  "type": "volatile-update",
+                  "at": 1498.890389,
+                  "uid": 5,
+                  "instanceId": 1,
+                  "paths": [
+                    "greeting"
+                  ],
+                  "greeting": "greeting-11",
+                  "mode": "mode-0"
+                }
+              ]
+            },
+            {
+              "i": 12,
+              "arm": "volatile",
+              "field": "greeting",
+              "from": "greeting-11",
+              "to": "greeting-12",
+              "writeMs": 0.096,
+              "reloadMs": 0.751,
+              "uidBefore": 5,
+              "uidAfter": 5,
+              "fiberUidSame": true,
+              "fiberObjectSame": true,
+              "stateBefore": 2,
+              "stateAfter": 2,
+              "configBefore": {
+                "greeting": "greeting-11",
+                "mode": "mode-0"
+              },
+              "configAfter": {
+                "greeting": "greeting-12",
+                "mode": "mode-0"
+              },
+              "configUpdated": true,
+              "appliesDelta": 0,
+              "effectInstallsDelta": 0,
+              "effectDisposalsDelta": 0,
+              "volatileUpdatesDelta": 1,
+              "pluginReapplied": false,
+              "effectsTornDown": false,
+              "remounted": false,
+              "events": [
+                {
+                  "seq": 16,
+                  "type": "volatile-update",
+                  "at": 1501.627563,
+                  "uid": 5,
+                  "instanceId": 1,
+                  "paths": [
+                    "greeting"
+                  ],
+                  "greeting": "greeting-12",
+                  "mode": "mode-0"
+                }
+              ]
+            },
+            {
+              "i": 13,
+              "arm": "volatile",
+              "field": "greeting",
+              "from": "greeting-12",
+              "to": "greeting-13",
+              "writeMs": 0.058,
+              "reloadMs": 0.547,
+              "uidBefore": 5,
+              "uidAfter": 5,
+              "fiberUidSame": true,
+              "fiberObjectSame": true,
+              "stateBefore": 2,
+              "stateAfter": 2,
+              "configBefore": {
+                "greeting": "greeting-12",
+                "mode": "mode-0"
+              },
+              "configAfter": {
+                "greeting": "greeting-13",
+                "mode": "mode-0"
+              },
+              "configUpdated": true,
+              "appliesDelta": 0,
+              "effectInstallsDelta": 0,
+              "effectDisposalsDelta": 0,
+              "volatileUpdatesDelta": 1,
+              "pluginReapplied": false,
+              "effectsTornDown": false,
+              "remounted": false,
+              "events": [
+                {
+                  "seq": 17,
+                  "type": "volatile-update",
+                  "at": 1504.449491,
+                  "uid": 5,
+                  "instanceId": 1,
+                  "paths": [
+                    "greeting"
+                  ],
+                  "greeting": "greeting-13",
+                  "mode": "mode-0"
+                }
+              ]
+            },
+            {
+              "i": 14,
+              "arm": "volatile",
+              "field": "greeting",
+              "from": "greeting-13",
+              "to": "greeting-14",
+              "writeMs": 0.056,
+              "reloadMs": 0.555,
+              "uidBefore": 5,
+              "uidAfter": 5,
+              "fiberUidSame": true,
+              "fiberObjectSame": true,
+              "stateBefore": 2,
+              "stateAfter": 2,
+              "configBefore": {
+                "greeting": "greeting-13",
+                "mode": "mode-0"
+              },
+              "configAfter": {
+                "greeting": "greeting-14",
+                "mode": "mode-0"
+              },
+              "configUpdated": true,
+              "appliesDelta": 0,
+              "effectInstallsDelta": 0,
+              "effectDisposalsDelta": 0,
+              "volatileUpdatesDelta": 1,
+              "pluginReapplied": false,
+              "effectsTornDown": false,
+              "remounted": false,
+              "events": [
+                {
+                  "seq": 18,
+                  "type": "volatile-update",
+                  "at": 1507.200269,
+                  "uid": 5,
+                  "instanceId": 1,
+                  "paths": [
+                    "greeting"
+                  ],
+                  "greeting": "greeting-14",
+                  "mode": "mode-0"
+                }
+              ]
+            },
+            {
+              "i": 15,
+              "arm": "volatile",
+              "field": "greeting",
+              "from": "greeting-14",
+              "to": "greeting-15",
+              "writeMs": 0.054,
+              "reloadMs": 0.548,
+              "uidBefore": 5,
+              "uidAfter": 5,
+              "fiberUidSame": true,
+              "fiberObjectSame": true,
+              "stateBefore": 2,
+              "stateAfter": 2,
+              "configBefore": {
+                "greeting": "greeting-14",
+                "mode": "mode-0"
+              },
+              "configAfter": {
+                "greeting": "greeting-15",
+                "mode": "mode-0"
+              },
+              "configUpdated": true,
+              "appliesDelta": 0,
+              "effectInstallsDelta": 0,
+              "effectDisposalsDelta": 0,
+              "volatileUpdatesDelta": 1,
+              "pluginReapplied": false,
+              "effectsTornDown": false,
+              "remounted": false,
+              "events": [
+                {
+                  "seq": 19,
+                  "type": "volatile-update",
+                  "at": 1510.046013,
+                  "uid": 5,
+                  "instanceId": 1,
+                  "paths": [
+                    "greeting"
+                  ],
+                  "greeting": "greeting-15",
+                  "mode": "mode-0"
+                }
+              ]
+            },
+            {
+              "i": 16,
+              "arm": "volatile",
+              "field": "greeting",
+              "from": "greeting-15",
+              "to": "greeting-16",
+              "writeMs": 0.06,
+              "reloadMs": 0.587,
+              "uidBefore": 5,
+              "uidAfter": 5,
+              "fiberUidSame": true,
+              "fiberObjectSame": true,
+              "stateBefore": 2,
+              "stateAfter": 2,
+              "configBefore": {
+                "greeting": "greeting-15",
+                "mode": "mode-0"
+              },
+              "configAfter": {
+                "greeting": "greeting-16",
+                "mode": "mode-0"
+              },
+              "configUpdated": true,
+              "appliesDelta": 0,
+              "effectInstallsDelta": 0,
+              "effectDisposalsDelta": 0,
+              "volatileUpdatesDelta": 1,
+              "pluginReapplied": false,
+              "effectsTornDown": false,
+              "remounted": false,
+              "events": [
+                {
+                  "seq": 20,
+                  "type": "volatile-update",
+                  "at": 1512.940604,
+                  "uid": 5,
+                  "instanceId": 1,
+                  "paths": [
+                    "greeting"
+                  ],
+                  "greeting": "greeting-16",
+                  "mode": "mode-0"
+                }
+              ]
+            },
+            {
+              "i": 17,
+              "arm": "volatile",
+              "field": "greeting",
+              "from": "greeting-16",
+              "to": "greeting-17",
+              "writeMs": 0.084,
+              "reloadMs": 0.712,
+              "uidBefore": 5,
+              "uidAfter": 5,
+              "fiberUidSame": true,
+              "fiberObjectSame": true,
+              "stateBefore": 2,
+              "stateAfter": 2,
+              "configBefore": {
+                "greeting": "greeting-16",
+                "mode": "mode-0"
+              },
+              "configAfter": {
+                "greeting": "greeting-17",
+                "mode": "mode-0"
+              },
+              "configUpdated": true,
+              "appliesDelta": 0,
+              "effectInstallsDelta": 0,
+              "effectDisposalsDelta": 0,
+              "volatileUpdatesDelta": 1,
+              "pluginReapplied": false,
+              "effectsTornDown": false,
+              "remounted": false,
+              "events": [
+                {
+                  "seq": 21,
+                  "type": "volatile-update",
+                  "at": 1515.939766,
+                  "uid": 5,
+                  "instanceId": 1,
+                  "paths": [
+                    "greeting"
+                  ],
+                  "greeting": "greeting-17",
+                  "mode": "mode-0"
+                }
+              ]
+            },
+            {
+              "i": 18,
+              "arm": "volatile",
+              "field": "greeting",
+              "from": "greeting-17",
+              "to": "greeting-18",
+              "writeMs": 0.106,
+              "reloadMs": 0.708,
+              "uidBefore": 5,
+              "uidAfter": 5,
+              "fiberUidSame": true,
+              "fiberObjectSame": true,
+              "stateBefore": 2,
+              "stateAfter": 2,
+              "configBefore": {
+                "greeting": "greeting-17",
+                "mode": "mode-0"
+              },
+              "configAfter": {
+                "greeting": "greeting-18",
+                "mode": "mode-0"
+              },
+              "configUpdated": true,
+              "appliesDelta": 0,
+              "effectInstallsDelta": 0,
+              "effectDisposalsDelta": 0,
+              "volatileUpdatesDelta": 1,
+              "pluginReapplied": false,
+              "effectsTornDown": false,
+              "remounted": false,
+              "events": [
+                {
+                  "seq": 22,
+                  "type": "volatile-update",
+                  "at": 1519.082298,
+                  "uid": 5,
+                  "instanceId": 1,
+                  "paths": [
+                    "greeting"
+                  ],
+                  "greeting": "greeting-18",
+                  "mode": "mode-0"
+                }
+              ]
+            },
+            {
+              "i": 19,
+              "arm": "volatile",
+              "field": "greeting",
+              "from": "greeting-18",
+              "to": "greeting-19",
+              "writeMs": 0.064,
+              "reloadMs": 0.596,
+              "uidBefore": 5,
+              "uidAfter": 5,
+              "fiberUidSame": true,
+              "fiberObjectSame": true,
+              "stateBefore": 2,
+              "stateAfter": 2,
+              "configBefore": {
+                "greeting": "greeting-18",
+                "mode": "mode-0"
+              },
+              "configAfter": {
+                "greeting": "greeting-19",
+                "mode": "mode-0"
+              },
+              "configUpdated": true,
+              "appliesDelta": 0,
+              "effectInstallsDelta": 0,
+              "effectDisposalsDelta": 0,
+              "volatileUpdatesDelta": 1,
+              "pluginReapplied": false,
+              "effectsTornDown": false,
+              "remounted": false,
+              "events": [
+                {
+                  "seq": 23,
+                  "type": "volatile-update",
+                  "at": 1522.010389,
+                  "uid": 5,
+                  "instanceId": 1,
+                  "paths": [
+                    "greeting"
+                  ],
+                  "greeting": "greeting-19",
+                  "mode": "mode-0"
+                }
+              ]
+            },
+            {
+              "i": 20,
+              "arm": "volatile",
+              "field": "greeting",
+              "from": "greeting-19",
+              "to": "greeting-20",
+              "writeMs": 0.06,
+              "reloadMs": 0.536,
+              "uidBefore": 5,
+              "uidAfter": 5,
+              "fiberUidSame": true,
+              "fiberObjectSame": true,
+              "stateBefore": 2,
+              "stateAfter": 2,
+              "configBefore": {
+                "greeting": "greeting-19",
+                "mode": "mode-0"
+              },
+              "configAfter": {
+                "greeting": "greeting-20",
+                "mode": "mode-0"
+              },
+              "configUpdated": true,
+              "appliesDelta": 0,
+              "effectInstallsDelta": 0,
+              "effectDisposalsDelta": 0,
+              "volatileUpdatesDelta": 1,
+              "pluginReapplied": false,
+              "effectsTornDown": false,
+              "remounted": false,
+              "events": [
+                {
+                  "seq": 24,
+                  "type": "volatile-update",
+                  "at": 1524.860755,
+                  "uid": 5,
+                  "instanceId": 1,
+                  "paths": [
+                    "greeting"
+                  ],
+                  "greeting": "greeting-20",
+                  "mode": "mode-0"
+                }
+              ]
+            }
+          ],
+          "summary": {
+            "n": 20,
+            "remounts": 0,
+            "restarts": 0,
+            "pluginReapplied": 0,
+            "effectsTornDown": 0,
+            "configUpdates": 20,
+            "fiberUidChanged": 0,
+            "fiberObjectChanged": 0,
+            "appliesDeltaTotal": 0,
+            "effectInstallsTotal": 0,
+            "effectDisposalsTotal": 0,
+            "volatileUpdatesTotal": 20,
+            "writeMs": {
+              "n": 20,
+              "min": 0.052,
+              "max": 0.129,
+              "median": 0.063,
+              "p50": 0.063,
+              "p95": 0.108,
+              "mean": 0.074
+            },
+            "reloadMs": {
+              "n": 20,
+              "min": 0.53,
+              "max": 0.871,
+              "median": 0.668,
+              "p50": 0.668,
+              "p95": 0.863,
+              "mean": 0.67
+            }
+          }
+        },
+        "control": {
+          "field": "mode",
+          "declaredVolatile": false,
+          "warmup": 2,
+          "rows": [
+            {
+              "i": 1,
+              "arm": "control",
+              "field": "mode",
+              "from": "warmup-mode-2",
+              "to": "mode-1",
+              "writeMs": 0.062,
+              "reloadMs": 0.693,
+              "uidBefore": 5,
+              "uidAfter": 5,
+              "fiberUidSame": true,
+              "fiberObjectSame": true,
+              "stateBefore": 2,
+              "stateAfter": 2,
+              "configBefore": {
+                "greeting": "greeting-20",
+                "mode": "warmup-mode-2"
+              },
+              "configAfter": {
+                "greeting": "greeting-20",
+                "mode": "mode-1"
+              },
+              "configUpdated": true,
+              "appliesDelta": 1,
+              "effectInstallsDelta": 1,
+              "effectDisposalsDelta": 1,
+              "volatileUpdatesDelta": 0,
+              "pluginReapplied": true,
+              "effectsTornDown": true,
+              "remounted": true,
+              "events": [
+                {
+                  "seq": 31,
+                  "type": "effect-dispose",
+                  "at": 1533.093303,
+                  "uid": 5,
+                  "instanceId": 3
+                },
+                {
+                  "seq": 32,
+                  "type": "apply",
+                  "at": 1533.131677,
+                  "instanceId": 4,
+                  "uid": 5,
+                  "state": 1,
+                  "greeting": "greeting-20",
+                  "mode": "mode-1"
+                },
+                {
+                  "seq": 33,
+                  "type": "effect-install",
+                  "at": 1533.145393,
+                  "uid": 5,
+                  "instanceId": 4
+                }
+              ]
+            },
+            {
+              "i": 2,
+              "arm": "control",
+              "field": "mode",
+              "from": "mode-1",
+              "to": "mode-2",
+              "writeMs": 0.088,
+              "reloadMs": 0.906,
+              "uidBefore": 5,
+              "uidAfter": 5,
+              "fiberUidSame": true,
+              "fiberObjectSame": true,
+              "stateBefore": 2,
+              "stateAfter": 2,
+              "configBefore": {
+                "greeting": "greeting-20",
+                "mode": "mode-1"
+              },
+              "configAfter": {
+                "greeting": "greeting-20",
+                "mode": "mode-2"
+              },
+              "configUpdated": true,
+              "appliesDelta": 1,
+              "effectInstallsDelta": 1,
+              "effectDisposalsDelta": 1,
+              "volatileUpdatesDelta": 0,
+              "pluginReapplied": true,
+              "effectsTornDown": true,
+              "remounted": true,
+              "events": [
+                {
+                  "seq": 34,
+                  "type": "effect-dispose",
+                  "at": 1536.323699,
+                  "uid": 5,
+                  "instanceId": 4
+                },
+                {
+                  "seq": 35,
+                  "type": "apply",
+                  "at": 1536.398041,
+                  "instanceId": 5,
+                  "uid": 5,
+                  "state": 1,
+                  "greeting": "greeting-20",
+                  "mode": "mode-2"
+                },
+                {
+                  "seq": 36,
+                  "type": "effect-install",
+                  "at": 1536.435927,
+                  "uid": 5,
+                  "instanceId": 5
+                }
+              ]
+            },
+            {
+              "i": 3,
+              "arm": "control",
+              "field": "mode",
+              "from": "mode-2",
+              "to": "mode-3",
+              "writeMs": 0.069,
+              "reloadMs": 0.795,
+              "uidBefore": 5,
+              "uidAfter": 5,
+              "fiberUidSame": true,
+              "fiberObjectSame": true,
+              "stateBefore": 2,
+              "stateAfter": 2,
+              "configBefore": {
+                "greeting": "greeting-20",
+                "mode": "mode-2"
+              },
+              "configAfter": {
+                "greeting": "greeting-20",
+                "mode": "mode-3"
+              },
+              "configUpdated": true,
+              "appliesDelta": 1,
+              "effectInstallsDelta": 1,
+              "effectDisposalsDelta": 1,
+              "volatileUpdatesDelta": 0,
+              "pluginReapplied": true,
+              "effectsTornDown": true,
+              "remounted": true,
+              "events": [
+                {
+                  "seq": 37,
+                  "type": "effect-dispose",
+                  "at": 1539.3824,
+                  "uid": 5,
+                  "instanceId": 5
+                },
+                {
+                  "seq": 38,
+                  "type": "apply",
+                  "at": 1539.435948,
+                  "instanceId": 6,
+                  "uid": 5,
+                  "state": 1,
+                  "greeting": "greeting-20",
+                  "mode": "mode-3"
+                },
+                {
+                  "seq": 39,
+                  "type": "effect-install",
+                  "at": 1539.452102,
+                  "uid": 5,
+                  "instanceId": 6
+                }
+              ]
+            },
+            {
+              "i": 4,
+              "arm": "control",
+              "field": "mode",
+              "from": "mode-3",
+              "to": "mode-4",
+              "writeMs": 0.054,
+              "reloadMs": 0.726,
+              "uidBefore": 5,
+              "uidAfter": 5,
+              "fiberUidSame": true,
+              "fiberObjectSame": true,
+              "stateBefore": 2,
+              "stateAfter": 2,
+              "configBefore": {
+                "greeting": "greeting-20",
+                "mode": "mode-3"
+              },
+              "configAfter": {
+                "greeting": "greeting-20",
+                "mode": "mode-4"
+              },
+              "configUpdated": true,
+              "appliesDelta": 1,
+              "effectInstallsDelta": 1,
+              "effectDisposalsDelta": 1,
+              "volatileUpdatesDelta": 0,
+              "pluginReapplied": true,
+              "effectsTornDown": true,
+              "remounted": true,
+              "events": [
+                {
+                  "seq": 40,
+                  "type": "effect-dispose",
+                  "at": 1542.441014,
+                  "uid": 5,
+                  "instanceId": 6
+                },
+                {
+                  "seq": 41,
+                  "type": "apply",
+                  "at": 1542.514577,
+                  "instanceId": 7,
+                  "uid": 5,
+                  "state": 1,
+                  "greeting": "greeting-20",
+                  "mode": "mode-4"
+                },
+                {
+                  "seq": 42,
+                  "type": "effect-install",
+                  "at": 1542.531351,
+                  "uid": 5,
+                  "instanceId": 7
+                }
+              ]
+            },
+            {
+              "i": 5,
+              "arm": "control",
+              "field": "mode",
+              "from": "mode-4",
+              "to": "mode-5",
+              "writeMs": 0.143,
+              "reloadMs": 0.708,
+              "uidBefore": 5,
+              "uidAfter": 5,
+              "fiberUidSame": true,
+              "fiberObjectSame": true,
+              "stateBefore": 2,
+              "stateAfter": 2,
+              "configBefore": {
+                "greeting": "greeting-20",
+                "mode": "mode-4"
+              },
+              "configAfter": {
+                "greeting": "greeting-20",
+                "mode": "mode-5"
+              },
+              "configUpdated": true,
+              "appliesDelta": 1,
+              "effectInstallsDelta": 1,
+              "effectDisposalsDelta": 1,
+              "volatileUpdatesDelta": 0,
+              "pluginReapplied": true,
+              "effectsTornDown": true,
+              "remounted": true,
+              "events": [
+                {
+                  "seq": 43,
+                  "type": "effect-dispose",
+                  "at": 1545.574911,
+                  "uid": 5,
+                  "instanceId": 7
+                },
+                {
+                  "seq": 44,
+                  "type": "apply",
+                  "at": 1545.615393,
+                  "instanceId": 8,
+                  "uid": 5,
+                  "state": 1,
+                  "greeting": "greeting-20",
+                  "mode": "mode-5"
+                },
+                {
+                  "seq": 45,
+                  "type": "effect-install",
+                  "at": 1545.6303,
+                  "uid": 5,
+                  "instanceId": 8
+                }
+              ]
+            },
+            {
+              "i": 6,
+              "arm": "control",
+              "field": "mode",
+              "from": "mode-5",
+              "to": "mode-6",
+              "writeMs": 0.073,
+              "reloadMs": 0.807,
+              "uidBefore": 5,
+              "uidAfter": 5,
+              "fiberUidSame": true,
+              "fiberObjectSame": true,
+              "stateBefore": 2,
+              "stateAfter": 2,
+              "configBefore": {
+                "greeting": "greeting-20",
+                "mode": "mode-5"
+              },
+              "configAfter": {
+                "greeting": "greeting-20",
+                "mode": "mode-6"
+              },
+              "configUpdated": true,
+              "appliesDelta": 1,
+              "effectInstallsDelta": 1,
+              "effectDisposalsDelta": 1,
+              "volatileUpdatesDelta": 0,
+              "pluginReapplied": true,
+              "effectsTornDown": true,
+              "remounted": true,
+              "events": [
+                {
+                  "seq": 46,
+                  "type": "effect-dispose",
+                  "at": 1548.665827,
+                  "uid": 5,
+                  "instanceId": 8
+                },
+                {
+                  "seq": 47,
+                  "type": "apply",
+                  "at": 1548.718431,
+                  "instanceId": 9,
+                  "uid": 5,
+                  "state": 1,
+                  "greeting": "greeting-20",
+                  "mode": "mode-6"
+                },
+                {
+                  "seq": 48,
+                  "type": "effect-install",
+                  "at": 1548.746509,
+                  "uid": 5,
+                  "instanceId": 9
+                }
+              ]
+            },
+            {
+              "i": 7,
+              "arm": "control",
+              "field": "mode",
+              "from": "mode-6",
+              "to": "mode-7",
+              "writeMs": 0.072,
+              "reloadMs": 0.96,
+              "uidBefore": 5,
+              "uidAfter": 5,
+              "fiberUidSame": true,
+              "fiberObjectSame": true,
+              "stateBefore": 2,
+              "stateAfter": 2,
+              "configBefore": {
+                "greeting": "greeting-20",
+                "mode": "mode-6"
+              },
+              "configAfter": {
+                "greeting": "greeting-20",
+                "mode": "mode-7"
+              },
+              "configUpdated": true,
+              "appliesDelta": 1,
+              "effectInstallsDelta": 1,
+              "effectDisposalsDelta": 1,
+              "volatileUpdatesDelta": 0,
+              "pluginReapplied": true,
+              "effectsTornDown": true,
+              "remounted": true,
+              "events": [
+                {
+                  "seq": 49,
+                  "type": "effect-dispose",
+                  "at": 1551.881744,
+                  "uid": 5,
+                  "instanceId": 9
+                },
+                {
+                  "seq": 50,
+                  "type": "apply",
+                  "at": 1551.949616,
+                  "instanceId": 10,
+                  "uid": 5,
+                  "state": 1,
+                  "greeting": "greeting-20",
+                  "mode": "mode-7"
+                },
+                {
+                  "seq": 51,
+                  "type": "effect-install",
+                  "at": 1551.971295,
+                  "uid": 5,
+                  "instanceId": 10
+                }
+              ]
+            },
+            {
+              "i": 8,
+              "arm": "control",
+              "field": "mode",
+              "from": "mode-7",
+              "to": "mode-8",
+              "writeMs": 0.083,
+              "reloadMs": 0.888,
+              "uidBefore": 5,
+              "uidAfter": 5,
+              "fiberUidSame": true,
+              "fiberObjectSame": true,
+              "stateBefore": 2,
+              "stateAfter": 2,
+              "configBefore": {
+                "greeting": "greeting-20",
+                "mode": "mode-7"
+              },
+              "configAfter": {
+                "greeting": "greeting-20",
+                "mode": "mode-8"
+              },
+              "configUpdated": true,
+              "appliesDelta": 1,
+              "effectInstallsDelta": 1,
+              "effectDisposalsDelta": 1,
+              "volatileUpdatesDelta": 0,
+              "pluginReapplied": true,
+              "effectsTornDown": true,
+              "remounted": true,
+              "events": [
+                {
+                  "seq": 52,
+                  "type": "effect-dispose",
+                  "at": 1555.153652,
+                  "uid": 5,
+                  "instanceId": 10
+                },
+                {
+                  "seq": 53,
+                  "type": "apply",
+                  "at": 1555.207115,
+                  "instanceId": 11,
+                  "uid": 5,
+                  "state": 1,
+                  "greeting": "greeting-20",
+                  "mode": "mode-8"
+                },
+                {
+                  "seq": 54,
+                  "type": "effect-install",
+                  "at": 1555.227376,
+                  "uid": 5,
+                  "instanceId": 11
+                }
+              ]
+            },
+            {
+              "i": 9,
+              "arm": "control",
+              "field": "mode",
+              "from": "mode-8",
+              "to": "mode-9",
+              "writeMs": 0.054,
+              "reloadMs": 1.041,
+              "uidBefore": 5,
+              "uidAfter": 5,
+              "fiberUidSame": true,
+              "fiberObjectSame": true,
+              "stateBefore": 2,
+              "stateAfter": 2,
+              "configBefore": {
+                "greeting": "greeting-20",
+                "mode": "mode-8"
+              },
+              "configAfter": {
+                "greeting": "greeting-20",
+                "mode": "mode-9"
+              },
+              "configUpdated": true,
+              "appliesDelta": 1,
+              "effectInstallsDelta": 1,
+              "effectDisposalsDelta": 1,
+              "volatileUpdatesDelta": 0,
+              "pluginReapplied": true,
+              "effectsTornDown": true,
+              "remounted": true,
+              "events": [
+                {
+                  "seq": 55,
+                  "type": "effect-dispose",
+                  "at": 1558.546278,
+                  "uid": 5,
+                  "instanceId": 11
+                },
+                {
+                  "seq": 56,
+                  "type": "apply",
+                  "at": 1558.589704,
+                  "instanceId": 12,
+                  "uid": 5,
+                  "state": 1,
+                  "greeting": "greeting-20",
+                  "mode": "mode-9"
+                },
+                {
+                  "seq": 57,
+                  "type": "effect-install",
+                  "at": 1558.60555,
+                  "uid": 5,
+                  "instanceId": 12
+                }
+              ]
+            },
+            {
+              "i": 10,
+              "arm": "control",
+              "field": "mode",
+              "from": "mode-9",
+              "to": "mode-10",
+              "writeMs": 0.056,
+              "reloadMs": 0.755,
+              "uidBefore": 5,
+              "uidAfter": 5,
+              "fiberUidSame": true,
+              "fiberObjectSame": true,
+              "stateBefore": 2,
+              "stateAfter": 2,
+              "configBefore": {
+                "greeting": "greeting-20",
+                "mode": "mode-9"
+              },
+              "configAfter": {
+                "greeting": "greeting-20",
+                "mode": "mode-10"
+              },
+              "configUpdated": true,
+              "appliesDelta": 1,
+              "effectInstallsDelta": 1,
+              "effectDisposalsDelta": 1,
+              "volatileUpdatesDelta": 0,
+              "pluginReapplied": true,
+              "effectsTornDown": true,
+              "remounted": true,
+              "events": [
+                {
+                  "seq": 58,
+                  "type": "effect-dispose",
+                  "at": 1561.671693,
+                  "uid": 5,
+                  "instanceId": 12
+                },
+                {
+                  "seq": 59,
+                  "type": "apply",
+                  "at": 1561.713499,
+                  "instanceId": 13,
+                  "uid": 5,
+                  "state": 1,
+                  "greeting": "greeting-20",
+                  "mode": "mode-10"
+                },
+                {
+                  "seq": 60,
+                  "type": "effect-install",
+                  "at": 1561.73117,
+                  "uid": 5,
+                  "instanceId": 13
+                }
+              ]
+            },
+            {
+              "i": 11,
+              "arm": "control",
+              "field": "mode",
+              "from": "mode-10",
+              "to": "mode-11",
+              "writeMs": 0.052,
+              "reloadMs": 0.753,
+              "uidBefore": 5,
+              "uidAfter": 5,
+              "fiberUidSame": true,
+              "fiberObjectSame": true,
+              "stateBefore": 2,
+              "stateAfter": 2,
+              "configBefore": {
+                "greeting": "greeting-20",
+                "mode": "mode-10"
+              },
+              "configAfter": {
+                "greeting": "greeting-20",
+                "mode": "mode-11"
+              },
+              "configUpdated": true,
+              "appliesDelta": 1,
+              "effectInstallsDelta": 1,
+              "effectDisposalsDelta": 1,
+              "volatileUpdatesDelta": 0,
+              "pluginReapplied": true,
+              "effectsTornDown": true,
+              "remounted": true,
+              "events": [
+                {
+                  "seq": 61,
+                  "type": "effect-dispose",
+                  "at": 1564.71387,
+                  "uid": 5,
+                  "instanceId": 13
+                },
+                {
+                  "seq": 62,
+                  "type": "apply",
+                  "at": 1564.755495,
+                  "instanceId": 14,
+                  "uid": 5,
+                  "state": 1,
+                  "greeting": "greeting-20",
+                  "mode": "mode-11"
+                },
+                {
+                  "seq": 63,
+                  "type": "effect-install",
+                  "at": 1564.771754,
+                  "uid": 5,
+                  "instanceId": 14
+                }
+              ]
+            },
+            {
+              "i": 12,
+              "arm": "control",
+              "field": "mode",
+              "from": "mode-11",
+              "to": "mode-12",
+              "writeMs": 0.051,
+              "reloadMs": 0.69,
+              "uidBefore": 5,
+              "uidAfter": 5,
+              "fiberUidSame": true,
+              "fiberObjectSame": true,
+              "stateBefore": 2,
+              "stateAfter": 2,
+              "configBefore": {
+                "greeting": "greeting-20",
+                "mode": "mode-11"
+              },
+              "configAfter": {
+                "greeting": "greeting-20",
+                "mode": "mode-12"
+              },
+              "configUpdated": true,
+              "appliesDelta": 1,
+              "effectInstallsDelta": 1,
+              "effectDisposalsDelta": 1,
+              "volatileUpdatesDelta": 0,
+              "pluginReapplied": true,
+              "effectsTornDown": true,
+              "remounted": true,
+              "events": [
+                {
+                  "seq": 64,
+                  "type": "effect-dispose",
+                  "at": 1567.650245,
+                  "uid": 5,
+                  "instanceId": 14
+                },
+                {
+                  "seq": 65,
+                  "type": "apply",
+                  "at": 1567.688102,
+                  "instanceId": 15,
+                  "uid": 5,
+                  "state": 1,
+                  "greeting": "greeting-20",
+                  "mode": "mode-12"
+                },
+                {
+                  "seq": 66,
+                  "type": "effect-install",
+                  "at": 1567.70356,
+                  "uid": 5,
+                  "instanceId": 15
+                }
+              ]
+            },
+            {
+              "i": 13,
+              "arm": "control",
+              "field": "mode",
+              "from": "mode-12",
+              "to": "mode-13",
+              "writeMs": 0.087,
+              "reloadMs": 0.998,
+              "uidBefore": 5,
+              "uidAfter": 5,
+              "fiberUidSame": true,
+              "fiberObjectSame": true,
+              "stateBefore": 2,
+              "stateAfter": 2,
+              "configBefore": {
+                "greeting": "greeting-20",
+                "mode": "mode-12"
+              },
+              "configAfter": {
+                "greeting": "greeting-20",
+                "mode": "mode-13"
+              },
+              "configUpdated": true,
+              "appliesDelta": 1,
+              "effectInstallsDelta": 1,
+              "effectDisposalsDelta": 1,
+              "volatileUpdatesDelta": 0,
+              "pluginReapplied": true,
+              "effectsTornDown": true,
+              "remounted": true,
+              "events": [
+                {
+                  "seq": 67,
+                  "type": "effect-dispose",
+                  "at": 1571.024381,
+                  "uid": 5,
+                  "instanceId": 15
+                },
+                {
+                  "seq": 68,
+                  "type": "apply",
+                  "at": 1571.068789,
+                  "instanceId": 16,
+                  "uid": 5,
+                  "state": 1,
+                  "greeting": "greeting-20",
+                  "mode": "mode-13"
+                },
+                {
+                  "seq": 69,
+                  "type": "effect-install",
+                  "at": 1571.088459,
+                  "uid": 5,
+                  "instanceId": 16
+                }
+              ]
+            },
+            {
+              "i": 14,
+              "arm": "control",
+              "field": "mode",
+              "from": "mode-13",
+              "to": "mode-14",
+              "writeMs": 0.073,
+              "reloadMs": 0.911,
+              "uidBefore": 5,
+              "uidAfter": 5,
+              "fiberUidSame": true,
+              "fiberObjectSame": true,
+              "stateBefore": 2,
+              "stateAfter": 2,
+              "configBefore": {
+                "greeting": "greeting-20",
+                "mode": "mode-13"
+              },
+              "configAfter": {
+                "greeting": "greeting-20",
+                "mode": "mode-14"
+              },
+              "configUpdated": true,
+              "appliesDelta": 1,
+              "effectInstallsDelta": 1,
+              "effectDisposalsDelta": 1,
+              "volatileUpdatesDelta": 0,
+              "pluginReapplied": true,
+              "effectsTornDown": true,
+              "remounted": true,
+              "events": [
+                {
+                  "seq": 70,
+                  "type": "effect-dispose",
+                  "at": 1574.309651,
+                  "uid": 5,
+                  "instanceId": 16
+                },
+                {
+                  "seq": 71,
+                  "type": "apply",
+                  "at": 1574.369069,
+                  "instanceId": 17,
+                  "uid": 5,
+                  "state": 1,
+                  "greeting": "greeting-20",
+                  "mode": "mode-14"
+                },
+                {
+                  "seq": 72,
+                  "type": "effect-install",
+                  "at": 1574.403075,
+                  "uid": 5,
+                  "instanceId": 17
+                }
+              ]
+            },
+            {
+              "i": 15,
+              "arm": "control",
+              "field": "mode",
+              "from": "mode-14",
+              "to": "mode-15",
+              "writeMs": 0.064,
+              "reloadMs": 0.673,
+              "uidBefore": 5,
+              "uidAfter": 5,
+              "fiberUidSame": true,
+              "fiberObjectSame": true,
+              "stateBefore": 2,
+              "stateAfter": 2,
+              "configBefore": {
+                "greeting": "greeting-20",
+                "mode": "mode-14"
+              },
+              "configAfter": {
+                "greeting": "greeting-20",
+                "mode": "mode-15"
+              },
+              "configUpdated": true,
+              "appliesDelta": 1,
+              "effectInstallsDelta": 1,
+              "effectDisposalsDelta": 1,
+              "volatileUpdatesDelta": 0,
+              "pluginReapplied": true,
+              "effectsTornDown": true,
+              "remounted": true,
+              "events": [
+                {
+                  "seq": 73,
+                  "type": "effect-dispose",
+                  "at": 1577.776726,
+                  "uid": 5,
+                  "instanceId": 17
+                },
+                {
+                  "seq": 74,
+                  "type": "apply",
+                  "at": 1577.809745,
+                  "instanceId": 18,
+                  "uid": 5,
+                  "state": 1,
+                  "greeting": "greeting-20",
+                  "mode": "mode-15"
+                },
+                {
+                  "seq": 75,
+                  "type": "effect-install",
+                  "at": 1577.822739,
+                  "uid": 5,
+                  "instanceId": 18
+                }
+              ]
+            },
+            {
+              "i": 16,
+              "arm": "control",
+              "field": "mode",
+              "from": "mode-15",
+              "to": "mode-16",
+              "writeMs": 0.057,
+              "reloadMs": 0.797,
+              "uidBefore": 5,
+              "uidAfter": 5,
+              "fiberUidSame": true,
+              "fiberObjectSame": true,
+              "stateBefore": 2,
+              "stateAfter": 2,
+              "configBefore": {
+                "greeting": "greeting-20",
+                "mode": "mode-15"
+              },
+              "configAfter": {
+                "greeting": "greeting-20",
+                "mode": "mode-16"
+              },
+              "configUpdated": true,
+              "appliesDelta": 1,
+              "effectInstallsDelta": 1,
+              "effectDisposalsDelta": 1,
+              "volatileUpdatesDelta": 0,
+              "pluginReapplied": true,
+              "effectsTornDown": true,
+              "remounted": true,
+              "events": [
+                {
+                  "seq": 76,
+                  "type": "effect-dispose",
+                  "at": 1580.838171,
+                  "uid": 5,
+                  "instanceId": 18
+                },
+                {
+                  "seq": 77,
+                  "type": "apply",
+                  "at": 1580.871544,
+                  "instanceId": 19,
+                  "uid": 5,
+                  "state": 1,
+                  "greeting": "greeting-20",
+                  "mode": "mode-16"
+                },
+                {
+                  "seq": 78,
+                  "type": "effect-install",
+                  "at": 1580.885909,
+                  "uid": 5,
+                  "instanceId": 19
+                }
+              ]
+            },
+            {
+              "i": 17,
+              "arm": "control",
+              "field": "mode",
+              "from": "mode-16",
+              "to": "mode-17",
+              "writeMs": 0.059,
+              "reloadMs": 0.632,
+              "uidBefore": 5,
+              "uidAfter": 5,
+              "fiberUidSame": true,
+              "fiberObjectSame": true,
+              "stateBefore": 2,
+              "stateAfter": 2,
+              "configBefore": {
+                "greeting": "greeting-20",
+                "mode": "mode-16"
+              },
+              "configAfter": {
+                "greeting": "greeting-20",
+                "mode": "mode-17"
+              },
+              "configUpdated": true,
+              "appliesDelta": 1,
+              "effectInstallsDelta": 1,
+              "effectDisposalsDelta": 1,
+              "volatileUpdatesDelta": 0,
+              "pluginReapplied": true,
+              "effectsTornDown": true,
+              "remounted": true,
+              "events": [
+                {
+                  "seq": 79,
+                  "type": "effect-dispose",
+                  "at": 1583.727627,
+                  "uid": 5,
+                  "instanceId": 19
+                },
+                {
+                  "seq": 80,
+                  "type": "apply",
+                  "at": 1583.756997,
+                  "instanceId": 20,
+                  "uid": 5,
+                  "state": 1,
+                  "greeting": "greeting-20",
+                  "mode": "mode-17"
+                },
+                {
+                  "seq": 81,
+                  "type": "effect-install",
+                  "at": 1583.768557,
+                  "uid": 5,
+                  "instanceId": 20
+                }
+              ]
+            },
+            {
+              "i": 18,
+              "arm": "control",
+              "field": "mode",
+              "from": "mode-17",
+              "to": "mode-18",
+              "writeMs": 0.073,
+              "reloadMs": 0.821,
+              "uidBefore": 5,
+              "uidAfter": 5,
+              "fiberUidSame": true,
+              "fiberObjectSame": true,
+              "stateBefore": 2,
+              "stateAfter": 2,
+              "configBefore": {
+                "greeting": "greeting-20",
+                "mode": "mode-17"
+              },
+              "configAfter": {
+                "greeting": "greeting-20",
+                "mode": "mode-18"
+              },
+              "configUpdated": true,
+              "appliesDelta": 1,
+              "effectInstallsDelta": 1,
+              "effectDisposalsDelta": 1,
+              "volatileUpdatesDelta": 0,
+              "pluginReapplied": true,
+              "effectsTornDown": true,
+              "remounted": true,
+              "events": [
+                {
+                  "seq": 82,
+                  "type": "effect-dispose",
+                  "at": 1586.879729,
+                  "uid": 5,
+                  "instanceId": 20
+                },
+                {
+                  "seq": 83,
+                  "type": "apply",
+                  "at": 1586.922781,
+                  "instanceId": 21,
+                  "uid": 5,
+                  "state": 1,
+                  "greeting": "greeting-20",
+                  "mode": "mode-18"
+                },
+                {
+                  "seq": 84,
+                  "type": "effect-install",
+                  "at": 1586.939338,
+                  "uid": 5,
+                  "instanceId": 21
+                }
+              ]
+            },
+            {
+              "i": 19,
+              "arm": "control",
+              "field": "mode",
+              "from": "mode-18",
+              "to": "mode-19",
+              "writeMs": 0.092,
+              "reloadMs": 0.696,
+              "uidBefore": 5,
+              "uidAfter": 5,
+              "fiberUidSame": true,
+              "fiberObjectSame": true,
+              "stateBefore": 2,
+              "stateAfter": 2,
+              "configBefore": {
+                "greeting": "greeting-20",
+                "mode": "mode-18"
+              },
+              "configAfter": {
+                "greeting": "greeting-20",
+                "mode": "mode-19"
+              },
+              "configUpdated": true,
+              "appliesDelta": 1,
+              "effectInstallsDelta": 1,
+              "effectDisposalsDelta": 1,
+              "volatileUpdatesDelta": 0,
+              "pluginReapplied": true,
+              "effectsTornDown": true,
+              "remounted": true,
+              "events": [
+                {
+                  "seq": 85,
+                  "type": "effect-dispose",
+                  "at": 1589.98412,
+                  "uid": 5,
+                  "instanceId": 21
+                },
+                {
+                  "seq": 86,
+                  "type": "apply",
+                  "at": 1590.021225,
+                  "instanceId": 22,
+                  "uid": 5,
+                  "state": 1,
+                  "greeting": "greeting-20",
+                  "mode": "mode-19"
+                },
+                {
+                  "seq": 87,
+                  "type": "effect-install",
+                  "at": 1590.035995,
+                  "uid": 5,
+                  "instanceId": 22
+                }
+              ]
+            },
+            {
+              "i": 20,
+              "arm": "control",
+              "field": "mode",
+              "from": "mode-19",
+              "to": "mode-20",
+              "writeMs": 0.05,
+              "reloadMs": 0.634,
+              "uidBefore": 5,
+              "uidAfter": 5,
+              "fiberUidSame": true,
+              "fiberObjectSame": true,
+              "stateBefore": 2,
+              "stateAfter": 2,
+              "configBefore": {
+                "greeting": "greeting-20",
+                "mode": "mode-19"
+              },
+              "configAfter": {
+                "greeting": "greeting-20",
+                "mode": "mode-20"
+              },
+              "configUpdated": true,
+              "appliesDelta": 1,
+              "effectInstallsDelta": 1,
+              "effectDisposalsDelta": 1,
+              "volatileUpdatesDelta": 0,
+              "pluginReapplied": true,
+              "effectsTornDown": true,
+              "remounted": true,
+              "events": [
+                {
+                  "seq": 88,
+                  "type": "effect-dispose",
+                  "at": 1592.913051,
+                  "uid": 5,
+                  "instanceId": 22
+                },
+                {
+                  "seq": 89,
+                  "type": "apply",
+                  "at": 1592.942654,
+                  "instanceId": 23,
+                  "uid": 5,
+                  "state": 1,
+                  "greeting": "greeting-20",
+                  "mode": "mode-20"
+                },
+                {
+                  "seq": 90,
+                  "type": "effect-install",
+                  "at": 1592.954844,
+                  "uid": 5,
+                  "instanceId": 23
+                }
+              ]
+            }
+          ],
+          "summary": {
+            "n": 20,
+            "remounts": 20,
+            "restarts": 20,
+            "pluginReapplied": 20,
+            "effectsTornDown": 20,
+            "configUpdates": 20,
+            "fiberUidChanged": 0,
+            "fiberObjectChanged": 0,
+            "appliesDeltaTotal": 20,
+            "effectInstallsTotal": 20,
+            "effectDisposalsTotal": 20,
+            "volatileUpdatesTotal": 0,
+            "writeMs": {
+              "n": 20,
+              "min": 0.05,
+              "max": 0.143,
+              "median": 0.067,
+              "p50": 0.067,
+              "p95": 0.095,
+              "mean": 0.071
+            },
+            "reloadMs": {
+              "n": 20,
+              "min": 0.632,
+              "max": 1.041,
+              "median": 0.775,
+              "p50": 0.775,
+              "p95": 1,
+              "mean": 0.794
+            }
+          }
+        }
+      },
+      "checks": {
+        "fixtureActive": true,
+        "probeRegistered": true,
+        "volatileReference": true,
+        "controlValueIsPlain": true,
+        "initialApplyOnce": true,
+        "initialEffectsInstalled": true,
+        "controlRestarts": true,
+        "volatileNoRemount": true,
+        "volatileConfigUpdated": true,
+        "armsDistinguishable": true,
+        "falsifiable": true
+      },
+      "errors": [],
+      "final": {
+        "config": {
+          "greeting": "greeting-20",
+          "mode": "mode-20"
+        },
+        "probe": {
+          "applies": 23,
+          "effectInstalls": 23,
+          "effectDisposals": 22,
+          "volatileUpdates": 22,
+          "instanceCount": 23,
+          "eventCount": 90
+        }
+      }
+    },
+    "checkout": {
+      "host": "checkout",
+      "status": "supported",
+      "runtime": {
+        "host": "checkout",
+        "node": "v24.22.1",
+        "platform": "linux x64",
+        "mode": "direct-loader",
+        "checkout": "/home/yy/deepseek-harness",
+        "sandbox": "/tmp/lev3-checkout-nEMdxt",
+        "sandboxNote": "temporary node_modules copy, removed after the run",
+        "versions": {
+          "dsh": "0.2.2-alpha.2",
+          "cordis": "4.0.6-alpha.1",
+          "loader": "1.0.7-alpha.1",
+          "include": "1.0.11-alpha.1",
+          "schemastery": "3.18.6-alpha.1"
+        },
+        "paths": {
+          "context": "/tmp/lev3-checkout-nEMdxt/node_modules/@deepseek-ai/cordis/lib/index.js",
+          "loader": "/tmp/lev3-checkout-nEMdxt/node_modules/@deepseek-ai/cordis-plugin-loader/lib/index.js",
+          "include": "/tmp/lev3-checkout-nEMdxt/node_modules/@deepseek-ai/cordis-plugin-include/lib/index.js",
+          "schemastery": "/tmp/lev3-checkout-nEMdxt/node_modules/@deepseek-ai/schemastery/lib/index.mjs"
+        },
+        "includeBoot": {
+          "kind": "standalone-copied-package",
+          "file": "/tmp/lev3-checkout-nEMdxt/node_modules/@deepseek-ai/cordis-plugin-include/lib/index.js",
+          "sha256": "e4093b77894acb23fd5809d02c4f0721c78f594b91dd9f3aa824426062cbaf30"
+        },
+        "source": {
+          "entry": {
+            "file": "/home/yy/deepseek-harness/vendor/loader/src/config/entry.ts",
+            "sha256": "ee57422010f5aa82a25365b2f54dd346a51a0c924c92a5dabbd19b36899b2ef0",
+            "hasVolatileOnlyGate": true,
+            "hasCommitVolatile": true,
+            "checksActiveFiber": true,
+            "checksEqualExceptVolatile": true
+          },
+          "diff": {
+            "file": "/home/yy/deepseek-harness/vendor/loader/src/config/diff.ts",
+            "sha256": "6025a6b9798a0a16af017bb7d8d6394bbe345685b2ace56b15975add5843edb3",
+            "hasVolatileMeta": true,
+            "hasEqualExceptVolatile": true
+          },
+          "index": {
+            "file": "/home/yy/deepseek-harness/vendor/loader/src/index.ts",
+            "sha256": "d43047083e6489a841e620fe78b45802329dbecdcdbca1b7af7de92a7a055b80",
+            "declaresVolatileUpdateEvent": true
+          }
+        },
+        "git": {
+          "commit": "ce7073d51254c26cd63b22a60835b8f948deb447",
+          "dirty": true,
+          "dirtyEntries": 3
+        },
+        "pathsNote": "paths point into a temporary copy removed after the run; versions, source hashes, and checkout root above are stable"
+      },
+      "fixture": {
+        "directory": "examples/boost/lev3-fixture",
+        "files": [
+          {
+            "name": "plugin.mjs",
+            "path": "examples/boost/lev3-fixture/plugin.mjs",
+            "sha256": "fec44add01e90c7c99dcde5e4a7b6090b878d420c7f564019ee5aaecd93a4a2d"
+          },
+          {
+            "name": "probe.mjs",
+            "path": "examples/boost/lev3-fixture/probe.mjs",
+            "sha256": "8dda527a87989a4641c0106423d30d17e5a3e9723516a032e2033bfbd0839f1e"
+          },
+          {
+            "name": "cordis.yml",
+            "path": "examples/boost/lev3-fixture/cordis.yml",
+            "sha256": "7a9ca76b81f577a64191a965a7dacb6d8841c63d5b02947c158fa444c56874ea"
+          }
+        ]
+      },
+      "boot": {
+        "bootMs": 19.795,
+        "bootMode": "direct-loader",
+        "entries": [
+          {
+            "id": "include",
+            "name": "cordis:include",
+            "state": 2,
+            "uid": 3,
+            "disabled": false
+          },
+          {
+            "id": "include:lev3-probe",
+            "name": "./probe.mjs",
+            "state": 2,
+            "uid": 4,
+            "disabled": false
+          },
+          {
+            "id": "include:lev3-fixture",
+            "name": "./plugin.mjs",
+            "state": 2,
+            "uid": 5,
+            "disabled": false
+          }
+        ],
+        "fixture": {
+          "id": "include:lev3-fixture",
+          "uid": 5,
+          "state": 2,
+          "config": {
+            "greeting": "greeting-0",
+            "mode": "mode-0"
+          },
+          "volatileReference": true,
+          "controlValueIsPlain": true
+        },
+        "probe": {
+          "applies": 1,
+          "effectInstalls": 1,
+          "effectDisposals": 0,
+          "volatileUpdates": 0,
+          "instances": [
+            {
+              "instanceId": 1,
+              "uid": 5,
+              "state": 1,
+              "greeting": "greeting-0",
+              "mode": "mode-0"
+            }
+          ]
+        }
+      },
+      "arms": {
+        "volatile": {
+          "field": "greeting",
+          "declaredVolatile": true,
+          "warmup": 2,
+          "rows": [
+            {
+              "i": 1,
+              "arm": "volatile",
+              "field": "greeting",
+              "from": "warmup-greeting-2",
+              "to": "greeting-1",
+              "writeMs": 0.072,
+              "reloadMs": 0.689,
+              "uidBefore": 5,
+              "uidAfter": 5,
+              "fiberUidSame": true,
+              "fiberObjectSame": true,
+              "stateBefore": 2,
+              "stateAfter": 2,
+              "configBefore": {
+                "greeting": "warmup-greeting-2",
+                "mode": "mode-0"
+              },
+              "configAfter": {
+                "greeting": "greeting-1",
+                "mode": "mode-0"
+              },
+              "configUpdated": true,
+              "appliesDelta": 0,
+              "effectInstallsDelta": 0,
+              "effectDisposalsDelta": 0,
+              "volatileUpdatesDelta": 1,
+              "pluginReapplied": false,
+              "effectsTornDown": false,
+              "remounted": false,
+              "events": [
+                {
+                  "seq": 5,
+                  "type": "volatile-update",
+                  "at": 133.658329,
+                  "uid": 5,
+                  "instanceId": 1,
+                  "paths": [
+                    "greeting"
+                  ],
+                  "greeting": "greeting-1",
+                  "mode": "mode-0"
+                }
+              ]
+            },
+            {
+              "i": 2,
+              "arm": "volatile",
+              "field": "greeting",
+              "from": "greeting-1",
+              "to": "greeting-2",
+              "writeMs": 0.063,
+              "reloadMs": 0.793,
+              "uidBefore": 5,
+              "uidAfter": 5,
+              "fiberUidSame": true,
+              "fiberObjectSame": true,
+              "stateBefore": 2,
+              "stateAfter": 2,
+              "configBefore": {
+                "greeting": "greeting-1",
+                "mode": "mode-0"
+              },
+              "configAfter": {
+                "greeting": "greeting-2",
+                "mode": "mode-0"
+              },
+              "configUpdated": true,
+              "appliesDelta": 0,
+              "effectInstallsDelta": 0,
+              "effectDisposalsDelta": 0,
+              "volatileUpdatesDelta": 1,
+              "pluginReapplied": false,
+              "effectsTornDown": false,
+              "remounted": false,
+              "events": [
+                {
+                  "seq": 6,
+                  "type": "volatile-update",
+                  "at": 136.625067,
+                  "uid": 5,
+                  "instanceId": 1,
+                  "paths": [
+                    "greeting"
+                  ],
+                  "greeting": "greeting-2",
+                  "mode": "mode-0"
+                }
+              ]
+            },
+            {
+              "i": 3,
+              "arm": "volatile",
+              "field": "greeting",
+              "from": "greeting-2",
+              "to": "greeting-3",
+              "writeMs": 0.056,
+              "reloadMs": 0.682,
+              "uidBefore": 5,
+              "uidAfter": 5,
+              "fiberUidSame": true,
+              "fiberObjectSame": true,
+              "stateBefore": 2,
+              "stateAfter": 2,
+              "configBefore": {
+                "greeting": "greeting-2",
+                "mode": "mode-0"
+              },
+              "configAfter": {
+                "greeting": "greeting-3",
+                "mode": "mode-0"
+              },
+              "configUpdated": true,
+              "appliesDelta": 0,
+              "effectInstallsDelta": 0,
+              "effectDisposalsDelta": 0,
+              "volatileUpdatesDelta": 1,
+              "pluginReapplied": false,
+              "effectsTornDown": false,
+              "remounted": false,
+              "events": [
+                {
+                  "seq": 7,
+                  "type": "volatile-update",
+                  "at": 139.698617,
+                  "uid": 5,
+                  "instanceId": 1,
+                  "paths": [
+                    "greeting"
+                  ],
+                  "greeting": "greeting-3",
+                  "mode": "mode-0"
+                }
+              ]
+            },
+            {
+              "i": 4,
+              "arm": "volatile",
+              "field": "greeting",
+              "from": "greeting-3",
+              "to": "greeting-4",
+              "writeMs": 0.102,
+              "reloadMs": 0.768,
+              "uidBefore": 5,
+              "uidAfter": 5,
+              "fiberUidSame": true,
+              "fiberObjectSame": true,
+              "stateBefore": 2,
+              "stateAfter": 2,
+              "configBefore": {
+                "greeting": "greeting-3",
+                "mode": "mode-0"
+              },
+              "configAfter": {
+                "greeting": "greeting-4",
+                "mode": "mode-0"
+              },
+              "configUpdated": true,
+              "appliesDelta": 0,
+              "effectInstallsDelta": 0,
+              "effectDisposalsDelta": 0,
+              "volatileUpdatesDelta": 1,
+              "pluginReapplied": false,
+              "effectsTornDown": false,
+              "remounted": false,
+              "events": [
+                {
+                  "seq": 8,
+                  "type": "volatile-update",
+                  "at": 143.432361,
+                  "uid": 5,
+                  "instanceId": 1,
+                  "paths": [
+                    "greeting"
+                  ],
+                  "greeting": "greeting-4",
+                  "mode": "mode-0"
+                }
+              ]
+            },
+            {
+              "i": 5,
+              "arm": "volatile",
+              "field": "greeting",
+              "from": "greeting-4",
+              "to": "greeting-5",
+              "writeMs": 0.105,
+              "reloadMs": 0.694,
+              "uidBefore": 5,
+              "uidAfter": 5,
+              "fiberUidSame": true,
+              "fiberObjectSame": true,
+              "stateBefore": 2,
+              "stateAfter": 2,
+              "configBefore": {
+                "greeting": "greeting-4",
+                "mode": "mode-0"
+              },
+              "configAfter": {
+                "greeting": "greeting-5",
+                "mode": "mode-0"
+              },
+              "configUpdated": true,
+              "appliesDelta": 0,
+              "effectInstallsDelta": 0,
+              "effectDisposalsDelta": 0,
+              "volatileUpdatesDelta": 1,
+              "pluginReapplied": false,
+              "effectsTornDown": false,
+              "remounted": false,
+              "events": [
+                {
+                  "seq": 9,
+                  "type": "volatile-update",
+                  "at": 146.614012,
+                  "uid": 5,
+                  "instanceId": 1,
+                  "paths": [
+                    "greeting"
+                  ],
+                  "greeting": "greeting-5",
+                  "mode": "mode-0"
+                }
+              ]
+            },
+            {
+              "i": 6,
+              "arm": "volatile",
+              "field": "greeting",
+              "from": "greeting-5",
+              "to": "greeting-6",
+              "writeMs": 0.084,
+              "reloadMs": 0.648,
+              "uidBefore": 5,
+              "uidAfter": 5,
+              "fiberUidSame": true,
+              "fiberObjectSame": true,
+              "stateBefore": 2,
+              "stateAfter": 2,
+              "configBefore": {
+                "greeting": "greeting-5",
+                "mode": "mode-0"
+              },
+              "configAfter": {
+                "greeting": "greeting-6",
+                "mode": "mode-0"
+              },
+              "configUpdated": true,
+              "appliesDelta": 0,
+              "effectInstallsDelta": 0,
+              "effectDisposalsDelta": 0,
+              "volatileUpdatesDelta": 1,
+              "pluginReapplied": false,
+              "effectsTornDown": false,
+              "remounted": false,
+              "events": [
+                {
+                  "seq": 10,
+                  "type": "volatile-update",
+                  "at": 149.589136,
+                  "uid": 5,
+                  "instanceId": 1,
+                  "paths": [
+                    "greeting"
+                  ],
+                  "greeting": "greeting-6",
+                  "mode": "mode-0"
+                }
+              ]
+            },
+            {
+              "i": 7,
+              "arm": "volatile",
+              "field": "greeting",
+              "from": "greeting-6",
+              "to": "greeting-7",
+              "writeMs": 0.076,
+              "reloadMs": 0.793,
+              "uidBefore": 5,
+              "uidAfter": 5,
+              "fiberUidSame": true,
+              "fiberObjectSame": true,
+              "stateBefore": 2,
+              "stateAfter": 2,
+              "configBefore": {
+                "greeting": "greeting-6",
+                "mode": "mode-0"
+              },
+              "configAfter": {
+                "greeting": "greeting-7",
+                "mode": "mode-0"
+              },
+              "configUpdated": true,
+              "appliesDelta": 0,
+              "effectInstallsDelta": 0,
+              "effectDisposalsDelta": 0,
+              "volatileUpdatesDelta": 1,
+              "pluginReapplied": false,
+              "effectsTornDown": false,
+              "remounted": false,
+              "events": [
+                {
+                  "seq": 11,
+                  "type": "volatile-update",
+                  "at": 152.696939,
+                  "uid": 5,
+                  "instanceId": 1,
+                  "paths": [
+                    "greeting"
+                  ],
+                  "greeting": "greeting-7",
+                  "mode": "mode-0"
+                }
+              ]
+            },
+            {
+              "i": 8,
+              "arm": "volatile",
+              "field": "greeting",
+              "from": "greeting-7",
+              "to": "greeting-8",
+              "writeMs": 0.071,
+              "reloadMs": 0.678,
+              "uidBefore": 5,
+              "uidAfter": 5,
+              "fiberUidSame": true,
+              "fiberObjectSame": true,
+              "stateBefore": 2,
+              "stateAfter": 2,
+              "configBefore": {
+                "greeting": "greeting-7",
+                "mode": "mode-0"
+              },
+              "configAfter": {
+                "greeting": "greeting-8",
+                "mode": "mode-0"
+              },
+              "configUpdated": true,
+              "appliesDelta": 0,
+              "effectInstallsDelta": 0,
+              "effectDisposalsDelta": 0,
+              "volatileUpdatesDelta": 1,
+              "pluginReapplied": false,
+              "effectsTornDown": false,
+              "remounted": false,
+              "events": [
+                {
+                  "seq": 12,
+                  "type": "volatile-update",
+                  "at": 155.777689,
+                  "uid": 5,
+                  "instanceId": 1,
+                  "paths": [
+                    "greeting"
+                  ],
+                  "greeting": "greeting-8",
+                  "mode": "mode-0"
+                }
+              ]
+            },
+            {
+              "i": 9,
+              "arm": "volatile",
+              "field": "greeting",
+              "from": "greeting-8",
+              "to": "greeting-9",
+              "writeMs": 0.06,
+              "reloadMs": 0.582,
+              "uidBefore": 5,
+              "uidAfter": 5,
+              "fiberUidSame": true,
+              "fiberObjectSame": true,
+              "stateBefore": 2,
+              "stateAfter": 2,
+              "configBefore": {
+                "greeting": "greeting-8",
+                "mode": "mode-0"
+              },
+              "configAfter": {
+                "greeting": "greeting-9",
+                "mode": "mode-0"
+              },
+              "configUpdated": true,
+              "appliesDelta": 0,
+              "effectInstallsDelta": 0,
+              "effectDisposalsDelta": 0,
+              "volatileUpdatesDelta": 1,
+              "pluginReapplied": false,
+              "effectsTornDown": false,
+              "remounted": false,
+              "events": [
+                {
+                  "seq": 13,
+                  "type": "volatile-update",
+                  "at": 158.710698,
+                  "uid": 5,
+                  "instanceId": 1,
+                  "paths": [
+                    "greeting"
+                  ],
+                  "greeting": "greeting-9",
+                  "mode": "mode-0"
+                }
+              ]
+            },
+            {
+              "i": 10,
+              "arm": "volatile",
+              "field": "greeting",
+              "from": "greeting-9",
+              "to": "greeting-10",
+              "writeMs": 0.094,
+              "reloadMs": 0.699,
+              "uidBefore": 5,
+              "uidAfter": 5,
+              "fiberUidSame": true,
+              "fiberObjectSame": true,
+              "stateBefore": 2,
+              "stateAfter": 2,
+              "configBefore": {
+                "greeting": "greeting-9",
+                "mode": "mode-0"
+              },
+              "configAfter": {
+                "greeting": "greeting-10",
+                "mode": "mode-0"
+              },
+              "configUpdated": true,
+              "appliesDelta": 0,
+              "effectInstallsDelta": 0,
+              "effectDisposalsDelta": 0,
+              "volatileUpdatesDelta": 1,
+              "pluginReapplied": false,
+              "effectsTornDown": false,
+              "remounted": false,
+              "events": [
+                {
+                  "seq": 14,
+                  "type": "volatile-update",
+                  "at": 161.75201,
+                  "uid": 5,
+                  "instanceId": 1,
+                  "paths": [
+                    "greeting"
+                  ],
+                  "greeting": "greeting-10",
+                  "mode": "mode-0"
+                }
+              ]
+            },
+            {
+              "i": 11,
+              "arm": "volatile",
+              "field": "greeting",
+              "from": "greeting-10",
+              "to": "greeting-11",
+              "writeMs": 0.074,
+              "reloadMs": 0.57,
+              "uidBefore": 5,
+              "uidAfter": 5,
+              "fiberUidSame": true,
+              "fiberObjectSame": true,
+              "stateBefore": 2,
+              "stateAfter": 2,
+              "configBefore": {
+                "greeting": "greeting-10",
+                "mode": "mode-0"
+              },
+              "configAfter": {
+                "greeting": "greeting-11",
+                "mode": "mode-0"
+              },
+              "configUpdated": true,
+              "appliesDelta": 0,
+              "effectInstallsDelta": 0,
+              "effectDisposalsDelta": 0,
+              "volatileUpdatesDelta": 1,
+              "pluginReapplied": false,
+              "effectsTornDown": false,
+              "remounted": false,
+              "events": [
+                {
+                  "seq": 15,
+                  "type": "volatile-update",
+                  "at": 164.579144,
+                  "uid": 5,
+                  "instanceId": 1,
+                  "paths": [
+                    "greeting"
+                  ],
+                  "greeting": "greeting-11",
+                  "mode": "mode-0"
+                }
+              ]
+            },
+            {
+              "i": 12,
+              "arm": "volatile",
+              "field": "greeting",
+              "from": "greeting-11",
+              "to": "greeting-12",
+              "writeMs": 0.058,
+              "reloadMs": 0.522,
+              "uidBefore": 5,
+              "uidAfter": 5,
+              "fiberUidSame": true,
+              "fiberObjectSame": true,
+              "stateBefore": 2,
+              "stateAfter": 2,
+              "configBefore": {
+                "greeting": "greeting-11",
+                "mode": "mode-0"
+              },
+              "configAfter": {
+                "greeting": "greeting-12",
+                "mode": "mode-0"
+              },
+              "configUpdated": true,
+              "appliesDelta": 0,
+              "effectInstallsDelta": 0,
+              "effectDisposalsDelta": 0,
+              "volatileUpdatesDelta": 1,
+              "pluginReapplied": false,
+              "effectsTornDown": false,
+              "remounted": false,
+              "events": [
+                {
+                  "seq": 16,
+                  "type": "volatile-update",
+                  "at": 167.452356,
+                  "uid": 5,
+                  "instanceId": 1,
+                  "paths": [
+                    "greeting"
+                  ],
+                  "greeting": "greeting-12",
+                  "mode": "mode-0"
+                }
+              ]
+            },
+            {
+              "i": 13,
+              "arm": "volatile",
+              "field": "greeting",
+              "from": "greeting-12",
+              "to": "greeting-13",
+              "writeMs": 0.058,
+              "reloadMs": 0.556,
+              "uidBefore": 5,
+              "uidAfter": 5,
+              "fiberUidSame": true,
+              "fiberObjectSame": true,
+              "stateBefore": 2,
+              "stateAfter": 2,
+              "configBefore": {
+                "greeting": "greeting-12",
+                "mode": "mode-0"
+              },
+              "configAfter": {
+                "greeting": "greeting-13",
+                "mode": "mode-0"
+              },
+              "configUpdated": true,
+              "appliesDelta": 0,
+              "effectInstallsDelta": 0,
+              "effectDisposalsDelta": 0,
+              "volatileUpdatesDelta": 1,
+              "pluginReapplied": false,
+              "effectsTornDown": false,
+              "remounted": false,
+              "events": [
+                {
+                  "seq": 17,
+                  "type": "volatile-update",
+                  "at": 170.309286,
+                  "uid": 5,
+                  "instanceId": 1,
+                  "paths": [
+                    "greeting"
+                  ],
+                  "greeting": "greeting-13",
+                  "mode": "mode-0"
+                }
+              ]
+            },
+            {
+              "i": 14,
+              "arm": "volatile",
+              "field": "greeting",
+              "from": "greeting-13",
+              "to": "greeting-14",
+              "writeMs": 0.053,
+              "reloadMs": 0.488,
+              "uidBefore": 5,
+              "uidAfter": 5,
+              "fiberUidSame": true,
+              "fiberObjectSame": true,
+              "stateBefore": 2,
+              "stateAfter": 2,
+              "configBefore": {
+                "greeting": "greeting-13",
+                "mode": "mode-0"
+              },
+              "configAfter": {
+                "greeting": "greeting-14",
+                "mode": "mode-0"
+              },
+              "configUpdated": true,
+              "appliesDelta": 0,
+              "effectInstallsDelta": 0,
+              "effectDisposalsDelta": 0,
+              "volatileUpdatesDelta": 1,
+              "pluginReapplied": false,
+              "effectsTornDown": false,
+              "remounted": false,
+              "events": [
+                {
+                  "seq": 18,
+                  "type": "volatile-update",
+                  "at": 173.013127,
+                  "uid": 5,
+                  "instanceId": 1,
+                  "paths": [
+                    "greeting"
+                  ],
+                  "greeting": "greeting-14",
+                  "mode": "mode-0"
+                }
+              ]
+            },
+            {
+              "i": 15,
+              "arm": "volatile",
+              "field": "greeting",
+              "from": "greeting-14",
+              "to": "greeting-15",
+              "writeMs": 0.179,
+              "reloadMs": 0.582,
+              "uidBefore": 5,
+              "uidAfter": 5,
+              "fiberUidSame": true,
+              "fiberObjectSame": true,
+              "stateBefore": 2,
+              "stateAfter": 2,
+              "configBefore": {
+                "greeting": "greeting-14",
+                "mode": "mode-0"
+              },
+              "configAfter": {
+                "greeting": "greeting-15",
+                "mode": "mode-0"
+              },
+              "configUpdated": true,
+              "appliesDelta": 0,
+              "effectInstallsDelta": 0,
+              "effectDisposalsDelta": 0,
+              "volatileUpdatesDelta": 1,
+              "pluginReapplied": false,
+              "effectsTornDown": false,
+              "remounted": false,
+              "events": [
+                {
+                  "seq": 19,
+                  "type": "volatile-update",
+                  "at": 176.012428,
+                  "uid": 5,
+                  "instanceId": 1,
+                  "paths": [
+                    "greeting"
+                  ],
+                  "greeting": "greeting-15",
+                  "mode": "mode-0"
+                }
+              ]
+            },
+            {
+              "i": 16,
+              "arm": "volatile",
+              "field": "greeting",
+              "from": "greeting-15",
+              "to": "greeting-16",
+              "writeMs": 0.094,
+              "reloadMs": 0.762,
+              "uidBefore": 5,
+              "uidAfter": 5,
+              "fiberUidSame": true,
+              "fiberObjectSame": true,
+              "stateBefore": 2,
+              "stateAfter": 2,
+              "configBefore": {
+                "greeting": "greeting-15",
+                "mode": "mode-0"
+              },
+              "configAfter": {
+                "greeting": "greeting-16",
+                "mode": "mode-0"
+              },
+              "configUpdated": true,
+              "appliesDelta": 0,
+              "effectInstallsDelta": 0,
+              "effectDisposalsDelta": 0,
+              "volatileUpdatesDelta": 1,
+              "pluginReapplied": false,
+              "effectsTornDown": false,
+              "remounted": false,
+              "events": [
+                {
+                  "seq": 20,
+                  "type": "volatile-update",
+                  "at": 179.154316,
+                  "uid": 5,
+                  "instanceId": 1,
+                  "paths": [
+                    "greeting"
+                  ],
+                  "greeting": "greeting-16",
+                  "mode": "mode-0"
+                }
+              ]
+            },
+            {
+              "i": 17,
+              "arm": "volatile",
+              "field": "greeting",
+              "from": "greeting-16",
+              "to": "greeting-17",
+              "writeMs": 0.087,
+              "reloadMs": 0.694,
+              "uidBefore": 5,
+              "uidAfter": 5,
+              "fiberUidSame": true,
+              "fiberObjectSame": true,
+              "stateBefore": 2,
+              "stateAfter": 2,
+              "configBefore": {
+                "greeting": "greeting-16",
+                "mode": "mode-0"
+              },
+              "configAfter": {
+                "greeting": "greeting-17",
+                "mode": "mode-0"
+              },
+              "configUpdated": true,
+              "appliesDelta": 0,
+              "effectInstallsDelta": 0,
+              "effectDisposalsDelta": 0,
+              "volatileUpdatesDelta": 1,
+              "pluginReapplied": false,
+              "effectsTornDown": false,
+              "remounted": false,
+              "events": [
+                {
+                  "seq": 21,
+                  "type": "volatile-update",
+                  "at": 182.172518,
+                  "uid": 5,
+                  "instanceId": 1,
+                  "paths": [
+                    "greeting"
+                  ],
+                  "greeting": "greeting-17",
+                  "mode": "mode-0"
+                }
+              ]
+            },
+            {
+              "i": 18,
+              "arm": "volatile",
+              "field": "greeting",
+              "from": "greeting-17",
+              "to": "greeting-18",
+              "writeMs": 0.074,
+              "reloadMs": 0.591,
+              "uidBefore": 5,
+              "uidAfter": 5,
+              "fiberUidSame": true,
+              "fiberObjectSame": true,
+              "stateBefore": 2,
+              "stateAfter": 2,
+              "configBefore": {
+                "greeting": "greeting-17",
+                "mode": "mode-0"
+              },
+              "configAfter": {
+                "greeting": "greeting-18",
+                "mode": "mode-0"
+              },
+              "configUpdated": true,
+              "appliesDelta": 0,
+              "effectInstallsDelta": 0,
+              "effectDisposalsDelta": 0,
+              "volatileUpdatesDelta": 1,
+              "pluginReapplied": false,
+              "effectsTornDown": false,
+              "remounted": false,
+              "events": [
+                {
+                  "seq": 22,
+                  "type": "volatile-update",
+                  "at": 185.063854,
+                  "uid": 5,
+                  "instanceId": 1,
+                  "paths": [
+                    "greeting"
+                  ],
+                  "greeting": "greeting-18",
+                  "mode": "mode-0"
+                }
+              ]
+            },
+            {
+              "i": 19,
+              "arm": "volatile",
+              "field": "greeting",
+              "from": "greeting-18",
+              "to": "greeting-19",
+              "writeMs": 0.24,
+              "reloadMs": 0.712,
+              "uidBefore": 5,
+              "uidAfter": 5,
+              "fiberUidSame": true,
+              "fiberObjectSame": true,
+              "stateBefore": 2,
+              "stateAfter": 2,
+              "configBefore": {
+                "greeting": "greeting-18",
+                "mode": "mode-0"
+              },
+              "configAfter": {
+                "greeting": "greeting-19",
+                "mode": "mode-0"
+              },
+              "configUpdated": true,
+              "appliesDelta": 0,
+              "effectInstallsDelta": 0,
+              "effectDisposalsDelta": 0,
+              "volatileUpdatesDelta": 1,
+              "pluginReapplied": false,
+              "effectsTornDown": false,
+              "remounted": false,
+              "events": [
+                {
+                  "seq": 23,
+                  "type": "volatile-update",
+                  "at": 188.801739,
+                  "uid": 5,
+                  "instanceId": 1,
+                  "paths": [
+                    "greeting"
+                  ],
+                  "greeting": "greeting-19",
+                  "mode": "mode-0"
+                }
+              ]
+            },
+            {
+              "i": 20,
+              "arm": "volatile",
+              "field": "greeting",
+              "from": "greeting-19",
+              "to": "greeting-20",
+              "writeMs": 0.064,
+              "reloadMs": 0.682,
+              "uidBefore": 5,
+              "uidAfter": 5,
+              "fiberUidSame": true,
+              "fiberObjectSame": true,
+              "stateBefore": 2,
+              "stateAfter": 2,
+              "configBefore": {
+                "greeting": "greeting-19",
+                "mode": "mode-0"
+              },
+              "configAfter": {
+                "greeting": "greeting-20",
+                "mode": "mode-0"
+              },
+              "configUpdated": true,
+              "appliesDelta": 0,
+              "effectInstallsDelta": 0,
+              "effectDisposalsDelta": 0,
+              "volatileUpdatesDelta": 1,
+              "pluginReapplied": false,
+              "effectsTornDown": false,
+              "remounted": false,
+              "events": [
+                {
+                  "seq": 24,
+                  "type": "volatile-update",
+                  "at": 191.824192,
+                  "uid": 5,
+                  "instanceId": 1,
+                  "paths": [
+                    "greeting"
+                  ],
+                  "greeting": "greeting-20",
+                  "mode": "mode-0"
+                }
+              ]
+            }
+          ],
+          "summary": {
+            "n": 20,
+            "remounts": 0,
+            "restarts": 0,
+            "pluginReapplied": 0,
+            "effectsTornDown": 0,
+            "configUpdates": 20,
+            "fiberUidChanged": 0,
+            "fiberObjectChanged": 0,
+            "appliesDeltaTotal": 0,
+            "effectInstallsTotal": 0,
+            "effectDisposalsTotal": 0,
+            "volatileUpdatesTotal": 20,
+            "writeMs": {
+              "n": 20,
+              "min": 0.053,
+              "max": 0.24,
+              "median": 0.074,
+              "p50": 0.074,
+              "p95": 0.182,
+              "mean": 0.088
+            },
+            "reloadMs": {
+              "n": 20,
+              "min": 0.488,
+              "max": 0.793,
+              "median": 0.682,
+              "p50": 0.682,
+              "p95": 0.793,
+              "mean": 0.659
+            }
+          }
+        },
+        "control": {
+          "field": "mode",
+          "declaredVolatile": false,
+          "warmup": 2,
+          "rows": [
+            {
+              "i": 1,
+              "arm": "control",
+              "field": "mode",
+              "from": "warmup-mode-2",
+              "to": "mode-1",
+              "writeMs": 0.067,
+              "reloadMs": 0.804,
+              "uidBefore": 5,
+              "uidAfter": 5,
+              "fiberUidSame": true,
+              "fiberObjectSame": true,
+              "stateBefore": 2,
+              "stateAfter": 2,
+              "configBefore": {
+                "greeting": "greeting-20",
+                "mode": "warmup-mode-2"
+              },
+              "configAfter": {
+                "greeting": "greeting-20",
+                "mode": "mode-1"
+              },
+              "configUpdated": true,
+              "appliesDelta": 1,
+              "effectInstallsDelta": 1,
+              "effectDisposalsDelta": 1,
+              "volatileUpdatesDelta": 0,
+              "pluginReapplied": true,
+              "effectsTornDown": true,
+              "remounted": true,
+              "events": [
+                {
+                  "seq": 31,
+                  "type": "effect-dispose",
+                  "at": 202.393397,
+                  "uid": 5,
+                  "instanceId": 3
+                },
+                {
+                  "seq": 32,
+                  "type": "apply",
+                  "at": 202.45687,
+                  "instanceId": 4,
+                  "uid": 5,
+                  "state": 1,
+                  "greeting": "greeting-20",
+                  "mode": "mode-1"
+                },
+                {
+                  "seq": 33,
+                  "type": "effect-install",
+                  "at": 202.473781,
+                  "uid": 5,
+                  "instanceId": 4
+                }
+              ]
+            },
+            {
+              "i": 2,
+              "arm": "control",
+              "field": "mode",
+              "from": "mode-1",
+              "to": "mode-2",
+              "writeMs": 0.064,
+              "reloadMs": 0.734,
+              "uidBefore": 5,
+              "uidAfter": 5,
+              "fiberUidSame": true,
+              "fiberObjectSame": true,
+              "stateBefore": 2,
+              "stateAfter": 2,
+              "configBefore": {
+                "greeting": "greeting-20",
+                "mode": "mode-1"
+              },
+              "configAfter": {
+                "greeting": "greeting-20",
+                "mode": "mode-2"
+              },
+              "configUpdated": true,
+              "appliesDelta": 1,
+              "effectInstallsDelta": 1,
+              "effectDisposalsDelta": 1,
+              "volatileUpdatesDelta": 0,
+              "pluginReapplied": true,
+              "effectsTornDown": true,
+              "remounted": true,
+              "events": [
+                {
+                  "seq": 34,
+                  "type": "effect-dispose",
+                  "at": 205.474581,
+                  "uid": 5,
+                  "instanceId": 4
+                },
+                {
+                  "seq": 35,
+                  "type": "apply",
+                  "at": 205.529869,
+                  "instanceId": 5,
+                  "uid": 5,
+                  "state": 1,
+                  "greeting": "greeting-20",
+                  "mode": "mode-2"
+                },
+                {
+                  "seq": 36,
+                  "type": "effect-install",
+                  "at": 205.54502,
+                  "uid": 5,
+                  "instanceId": 5
+                }
+              ]
+            },
+            {
+              "i": 3,
+              "arm": "control",
+              "field": "mode",
+              "from": "mode-2",
+              "to": "mode-3",
+              "writeMs": 0.06,
+              "reloadMs": 0.742,
+              "uidBefore": 5,
+              "uidAfter": 5,
+              "fiberUidSame": true,
+              "fiberObjectSame": true,
+              "stateBefore": 2,
+              "stateAfter": 2,
+              "configBefore": {
+                "greeting": "greeting-20",
+                "mode": "mode-2"
+              },
+              "configAfter": {
+                "greeting": "greeting-20",
+                "mode": "mode-3"
+              },
+              "configUpdated": true,
+              "appliesDelta": 1,
+              "effectInstallsDelta": 1,
+              "effectDisposalsDelta": 1,
+              "volatileUpdatesDelta": 0,
+              "pluginReapplied": true,
+              "effectsTornDown": true,
+              "remounted": true,
+              "events": [
+                {
+                  "seq": 37,
+                  "type": "effect-dispose",
+                  "at": 208.469848,
+                  "uid": 5,
+                  "instanceId": 5
+                },
+                {
+                  "seq": 38,
+                  "type": "apply",
+                  "at": 208.53761,
+                  "instanceId": 6,
+                  "uid": 5,
+                  "state": 1,
+                  "greeting": "greeting-20",
+                  "mode": "mode-3"
+                },
+                {
+                  "seq": 39,
+                  "type": "effect-install",
+                  "at": 208.555546,
+                  "uid": 5,
+                  "instanceId": 6
+                }
+              ]
+            },
+            {
+              "i": 4,
+              "arm": "control",
+              "field": "mode",
+              "from": "mode-3",
+              "to": "mode-4",
+              "writeMs": 0.065,
+              "reloadMs": 0.677,
+              "uidBefore": 5,
+              "uidAfter": 5,
+              "fiberUidSame": true,
+              "fiberObjectSame": true,
+              "stateBefore": 2,
+              "stateAfter": 2,
+              "configBefore": {
+                "greeting": "greeting-20",
+                "mode": "mode-3"
+              },
+              "configAfter": {
+                "greeting": "greeting-20",
+                "mode": "mode-4"
+              },
+              "configUpdated": true,
+              "appliesDelta": 1,
+              "effectInstallsDelta": 1,
+              "effectDisposalsDelta": 1,
+              "volatileUpdatesDelta": 0,
+              "pluginReapplied": true,
+              "effectsTornDown": true,
+              "remounted": true,
+              "events": [
+                {
+                  "seq": 40,
+                  "type": "effect-dispose",
+                  "at": 211.510067,
+                  "uid": 5,
+                  "instanceId": 6
+                },
+                {
+                  "seq": 41,
+                  "type": "apply",
+                  "at": 211.560683,
+                  "instanceId": 7,
+                  "uid": 5,
+                  "state": 1,
+                  "greeting": "greeting-20",
+                  "mode": "mode-4"
+                },
+                {
+                  "seq": 42,
+                  "type": "effect-install",
+                  "at": 211.579146,
+                  "uid": 5,
+                  "instanceId": 7
+                }
+              ]
+            },
+            {
+              "i": 5,
+              "arm": "control",
+              "field": "mode",
+              "from": "mode-4",
+              "to": "mode-5",
+              "writeMs": 0.087,
+              "reloadMs": 0.807,
+              "uidBefore": 5,
+              "uidAfter": 5,
+              "fiberUidSame": true,
+              "fiberObjectSame": true,
+              "stateBefore": 2,
+              "stateAfter": 2,
+              "configBefore": {
+                "greeting": "greeting-20",
+                "mode": "mode-4"
+              },
+              "configAfter": {
+                "greeting": "greeting-20",
+                "mode": "mode-5"
+              },
+              "configUpdated": true,
+              "appliesDelta": 1,
+              "effectInstallsDelta": 1,
+              "effectDisposalsDelta": 1,
+              "volatileUpdatesDelta": 0,
+              "pluginReapplied": true,
+              "effectsTornDown": true,
+              "remounted": true,
+              "events": [
+                {
+                  "seq": 43,
+                  "type": "effect-dispose",
+                  "at": 214.717033,
+                  "uid": 5,
+                  "instanceId": 7
+                },
+                {
+                  "seq": 44,
+                  "type": "apply",
+                  "at": 214.781761,
+                  "instanceId": 8,
+                  "uid": 5,
+                  "state": 1,
+                  "greeting": "greeting-20",
+                  "mode": "mode-5"
+                },
+                {
+                  "seq": 45,
+                  "type": "effect-install",
+                  "at": 214.798733,
+                  "uid": 5,
+                  "instanceId": 8
+                }
+              ]
+            },
+            {
+              "i": 6,
+              "arm": "control",
+              "field": "mode",
+              "from": "mode-5",
+              "to": "mode-6",
+              "writeMs": 0.073,
+              "reloadMs": 0.675,
+              "uidBefore": 5,
+              "uidAfter": 5,
+              "fiberUidSame": true,
+              "fiberObjectSame": true,
+              "stateBefore": 2,
+              "stateAfter": 2,
+              "configBefore": {
+                "greeting": "greeting-20",
+                "mode": "mode-5"
+              },
+              "configAfter": {
+                "greeting": "greeting-20",
+                "mode": "mode-6"
+              },
+              "configUpdated": true,
+              "appliesDelta": 1,
+              "effectInstallsDelta": 1,
+              "effectDisposalsDelta": 1,
+              "volatileUpdatesDelta": 0,
+              "pluginReapplied": true,
+              "effectsTornDown": true,
+              "remounted": true,
+              "events": [
+                {
+                  "seq": 46,
+                  "type": "effect-dispose",
+                  "at": 217.688777,
+                  "uid": 5,
+                  "instanceId": 8
+                },
+                {
+                  "seq": 47,
+                  "type": "apply",
+                  "at": 217.739269,
+                  "instanceId": 9,
+                  "uid": 5,
+                  "state": 1,
+                  "greeting": "greeting-20",
+                  "mode": "mode-6"
+                },
+                {
+                  "seq": 48,
+                  "type": "effect-install",
+                  "at": 217.755329,
+                  "uid": 5,
+                  "instanceId": 9
+                }
+              ]
+            },
+            {
+              "i": 7,
+              "arm": "control",
+              "field": "mode",
+              "from": "mode-6",
+              "to": "mode-7",
+              "writeMs": 0.056,
+              "reloadMs": 0.722,
+              "uidBefore": 5,
+              "uidAfter": 5,
+              "fiberUidSame": true,
+              "fiberObjectSame": true,
+              "stateBefore": 2,
+              "stateAfter": 2,
+              "configBefore": {
+                "greeting": "greeting-20",
+                "mode": "mode-6"
+              },
+              "configAfter": {
+                "greeting": "greeting-20",
+                "mode": "mode-7"
+              },
+              "configUpdated": true,
+              "appliesDelta": 1,
+              "effectInstallsDelta": 1,
+              "effectDisposalsDelta": 1,
+              "volatileUpdatesDelta": 0,
+              "pluginReapplied": true,
+              "effectsTornDown": true,
+              "remounted": true,
+              "events": [
+                {
+                  "seq": 49,
+                  "type": "effect-dispose",
+                  "at": 220.619987,
+                  "uid": 5,
+                  "instanceId": 9
+                },
+                {
+                  "seq": 50,
+                  "type": "apply",
+                  "at": 220.670284,
+                  "instanceId": 10,
+                  "uid": 5,
+                  "state": 1,
+                  "greeting": "greeting-20",
+                  "mode": "mode-7"
+                },
+                {
+                  "seq": 51,
+                  "type": "effect-install",
+                  "at": 220.688555,
+                  "uid": 5,
+                  "instanceId": 10
+                }
+              ]
+            },
+            {
+              "i": 8,
+              "arm": "control",
+              "field": "mode",
+              "from": "mode-7",
+              "to": "mode-8",
+              "writeMs": 0.05,
+              "reloadMs": 0.91,
+              "uidBefore": 5,
+              "uidAfter": 5,
+              "fiberUidSame": true,
+              "fiberObjectSame": true,
+              "stateBefore": 2,
+              "stateAfter": 2,
+              "configBefore": {
+                "greeting": "greeting-20",
+                "mode": "mode-7"
+              },
+              "configAfter": {
+                "greeting": "greeting-20",
+                "mode": "mode-8"
+              },
+              "configUpdated": true,
+              "appliesDelta": 1,
+              "effectInstallsDelta": 1,
+              "effectDisposalsDelta": 1,
+              "volatileUpdatesDelta": 0,
+              "pluginReapplied": true,
+              "effectsTornDown": true,
+              "remounted": true,
+              "events": [
+                {
+                  "seq": 52,
+                  "type": "effect-dispose",
+                  "at": 223.841198,
+                  "uid": 5,
+                  "instanceId": 10
+                },
+                {
+                  "seq": 53,
+                  "type": "apply",
+                  "at": 223.89063,
+                  "instanceId": 11,
+                  "uid": 5,
+                  "state": 1,
+                  "greeting": "greeting-20",
+                  "mode": "mode-8"
+                },
+                {
+                  "seq": 54,
+                  "type": "effect-install",
+                  "at": 223.905426,
+                  "uid": 5,
+                  "instanceId": 11
+                }
+              ]
+            },
+            {
+              "i": 9,
+              "arm": "control",
+              "field": "mode",
+              "from": "mode-8",
+              "to": "mode-9",
+              "writeMs": 0.055,
+              "reloadMs": 0.601,
+              "uidBefore": 5,
+              "uidAfter": 5,
+              "fiberUidSame": true,
+              "fiberObjectSame": true,
+              "stateBefore": 2,
+              "stateAfter": 2,
+              "configBefore": {
+                "greeting": "greeting-20",
+                "mode": "mode-8"
+              },
+              "configAfter": {
+                "greeting": "greeting-20",
+                "mode": "mode-9"
+              },
+              "configUpdated": true,
+              "appliesDelta": 1,
+              "effectInstallsDelta": 1,
+              "effectDisposalsDelta": 1,
+              "volatileUpdatesDelta": 0,
+              "pluginReapplied": true,
+              "effectsTornDown": true,
+              "remounted": true,
+              "events": [
+                {
+                  "seq": 55,
+                  "type": "effect-dispose",
+                  "at": 226.734026,
+                  "uid": 5,
+                  "instanceId": 11
+                },
+                {
+                  "seq": 56,
+                  "type": "apply",
+                  "at": 226.766405,
+                  "instanceId": 12,
+                  "uid": 5,
+                  "state": 1,
+                  "greeting": "greeting-20",
+                  "mode": "mode-9"
+                },
+                {
+                  "seq": 57,
+                  "type": "effect-install",
+                  "at": 226.813258,
+                  "uid": 5,
+                  "instanceId": 12
+                }
+              ]
+            },
+            {
+              "i": 10,
+              "arm": "control",
+              "field": "mode",
+              "from": "mode-9",
+              "to": "mode-10",
+              "writeMs": 0.058,
+              "reloadMs": 0.722,
+              "uidBefore": 5,
+              "uidAfter": 5,
+              "fiberUidSame": true,
+              "fiberObjectSame": true,
+              "stateBefore": 2,
+              "stateAfter": 2,
+              "configBefore": {
+                "greeting": "greeting-20",
+                "mode": "mode-9"
+              },
+              "configAfter": {
+                "greeting": "greeting-20",
+                "mode": "mode-10"
+              },
+              "configUpdated": true,
+              "appliesDelta": 1,
+              "effectInstallsDelta": 1,
+              "effectDisposalsDelta": 1,
+              "volatileUpdatesDelta": 0,
+              "pluginReapplied": true,
+              "effectsTornDown": true,
+              "remounted": true,
+              "events": [
+                {
+                  "seq": 58,
+                  "type": "effect-dispose",
+                  "at": 229.737774,
+                  "uid": 5,
+                  "instanceId": 12
+                },
+                {
+                  "seq": 59,
+                  "type": "apply",
+                  "at": 229.779587,
+                  "instanceId": 13,
+                  "uid": 5,
+                  "state": 1,
+                  "greeting": "greeting-20",
+                  "mode": "mode-10"
+                },
+                {
+                  "seq": 60,
+                  "type": "effect-install",
+                  "at": 229.794135,
+                  "uid": 5,
+                  "instanceId": 13
+                }
+              ]
+            },
+            {
+              "i": 11,
+              "arm": "control",
+              "field": "mode",
+              "from": "mode-10",
+              "to": "mode-11",
+              "writeMs": 0.095,
+              "reloadMs": 1.4,
+              "uidBefore": 5,
+              "uidAfter": 5,
+              "fiberUidSame": true,
+              "fiberObjectSame": true,
+              "stateBefore": 2,
+              "stateAfter": 2,
+              "configBefore": {
+                "greeting": "greeting-20",
+                "mode": "mode-10"
+              },
+              "configAfter": {
+                "greeting": "greeting-20",
+                "mode": "mode-11"
+              },
+              "configUpdated": true,
+              "appliesDelta": 1,
+              "effectInstallsDelta": 1,
+              "effectDisposalsDelta": 1,
+              "volatileUpdatesDelta": 0,
+              "pluginReapplied": true,
+              "effectsTornDown": true,
+              "remounted": true,
+              "events": [
+                {
+                  "seq": 61,
+                  "type": "effect-dispose",
+                  "at": 233.420063,
+                  "uid": 5,
+                  "instanceId": 13
+                },
+                {
+                  "seq": 62,
+                  "type": "apply",
+                  "at": 233.460041,
+                  "instanceId": 14,
+                  "uid": 5,
+                  "state": 1,
+                  "greeting": "greeting-20",
+                  "mode": "mode-11"
+                },
+                {
+                  "seq": 63,
+                  "type": "effect-install",
+                  "at": 233.475327,
+                  "uid": 5,
+                  "instanceId": 14
+                }
+              ]
+            },
+            {
+              "i": 12,
+              "arm": "control",
+              "field": "mode",
+              "from": "mode-11",
+              "to": "mode-12",
+              "writeMs": 0.072,
+              "reloadMs": 0.768,
+              "uidBefore": 5,
+              "uidAfter": 5,
+              "fiberUidSame": true,
+              "fiberObjectSame": true,
+              "stateBefore": 2,
+              "stateAfter": 2,
+              "configBefore": {
+                "greeting": "greeting-20",
+                "mode": "mode-11"
+              },
+              "configAfter": {
+                "greeting": "greeting-20",
+                "mode": "mode-12"
+              },
+              "configUpdated": true,
+              "appliesDelta": 1,
+              "effectInstallsDelta": 1,
+              "effectDisposalsDelta": 1,
+              "volatileUpdatesDelta": 0,
+              "pluginReapplied": true,
+              "effectsTornDown": true,
+              "remounted": true,
+              "events": [
+                {
+                  "seq": 64,
+                  "type": "effect-dispose",
+                  "at": 236.616499,
+                  "uid": 5,
+                  "instanceId": 14
+                },
+                {
+                  "seq": 65,
+                  "type": "apply",
+                  "at": 236.655422,
+                  "instanceId": 15,
+                  "uid": 5,
+                  "state": 1,
+                  "greeting": "greeting-20",
+                  "mode": "mode-12"
+                },
+                {
+                  "seq": 66,
+                  "type": "effect-install",
+                  "at": 236.669115,
+                  "uid": 5,
+                  "instanceId": 15
+                }
+              ]
+            },
+            {
+              "i": 13,
+              "arm": "control",
+              "field": "mode",
+              "from": "mode-12",
+              "to": "mode-13",
+              "writeMs": 0.062,
+              "reloadMs": 0.703,
+              "uidBefore": 5,
+              "uidAfter": 5,
+              "fiberUidSame": true,
+              "fiberObjectSame": true,
+              "stateBefore": 2,
+              "stateAfter": 2,
+              "configBefore": {
+                "greeting": "greeting-20",
+                "mode": "mode-12"
+              },
+              "configAfter": {
+                "greeting": "greeting-20",
+                "mode": "mode-13"
+              },
+              "configUpdated": true,
+              "appliesDelta": 1,
+              "effectInstallsDelta": 1,
+              "effectDisposalsDelta": 1,
+              "volatileUpdatesDelta": 0,
+              "pluginReapplied": true,
+              "effectsTornDown": true,
+              "remounted": true,
+              "events": [
+                {
+                  "seq": 67,
+                  "type": "effect-dispose",
+                  "at": 239.593301,
+                  "uid": 5,
+                  "instanceId": 15
+                },
+                {
+                  "seq": 68,
+                  "type": "apply",
+                  "at": 239.673084,
+                  "instanceId": 16,
+                  "uid": 5,
+                  "state": 1,
+                  "greeting": "greeting-20",
+                  "mode": "mode-13"
+                },
+                {
+                  "seq": 69,
+                  "type": "effect-install",
+                  "at": 239.69082,
+                  "uid": 5,
+                  "instanceId": 16
+                }
+              ]
+            },
+            {
+              "i": 14,
+              "arm": "control",
+              "field": "mode",
+              "from": "mode-13",
+              "to": "mode-14",
+              "writeMs": 0.073,
+              "reloadMs": 0.66,
+              "uidBefore": 5,
+              "uidAfter": 5,
+              "fiberUidSame": true,
+              "fiberObjectSame": true,
+              "stateBefore": 2,
+              "stateAfter": 2,
+              "configBefore": {
+                "greeting": "greeting-20",
+                "mode": "mode-13"
+              },
+              "configAfter": {
+                "greeting": "greeting-20",
+                "mode": "mode-14"
+              },
+              "configUpdated": true,
+              "appliesDelta": 1,
+              "effectInstallsDelta": 1,
+              "effectDisposalsDelta": 1,
+              "volatileUpdatesDelta": 0,
+              "pluginReapplied": true,
+              "effectsTornDown": true,
+              "remounted": true,
+              "events": [
+                {
+                  "seq": 70,
+                  "type": "effect-dispose",
+                  "at": 242.65365,
+                  "uid": 5,
+                  "instanceId": 16
+                },
+                {
+                  "seq": 71,
+                  "type": "apply",
+                  "at": 242.693057,
+                  "instanceId": 17,
+                  "uid": 5,
+                  "state": 1,
+                  "greeting": "greeting-20",
+                  "mode": "mode-14"
+                },
+                {
+                  "seq": 72,
+                  "type": "effect-install",
+                  "at": 242.706878,
+                  "uid": 5,
+                  "instanceId": 17
+                }
+              ]
+            },
+            {
+              "i": 15,
+              "arm": "control",
+              "field": "mode",
+              "from": "mode-14",
+              "to": "mode-15",
+              "writeMs": 0.066,
+              "reloadMs": 0.807,
+              "uidBefore": 5,
+              "uidAfter": 5,
+              "fiberUidSame": true,
+              "fiberObjectSame": true,
+              "stateBefore": 2,
+              "stateAfter": 2,
+              "configBefore": {
+                "greeting": "greeting-20",
+                "mode": "mode-14"
+              },
+              "configAfter": {
+                "greeting": "greeting-20",
+                "mode": "mode-15"
+              },
+              "configUpdated": true,
+              "appliesDelta": 1,
+              "effectInstallsDelta": 1,
+              "effectDisposalsDelta": 1,
+              "volatileUpdatesDelta": 0,
+              "pluginReapplied": true,
+              "effectsTornDown": true,
+              "remounted": true,
+              "events": [
+                {
+                  "seq": 73,
+                  "type": "effect-dispose",
+                  "at": 245.697025,
+                  "uid": 5,
+                  "instanceId": 17
+                },
+                {
+                  "seq": 74,
+                  "type": "apply",
+                  "at": 245.766697,
+                  "instanceId": 18,
+                  "uid": 5,
+                  "state": 1,
+                  "greeting": "greeting-20",
+                  "mode": "mode-15"
+                },
+                {
+                  "seq": 75,
+                  "type": "effect-install",
+                  "at": 245.781014,
+                  "uid": 5,
+                  "instanceId": 18
+                }
+              ]
+            },
+            {
+              "i": 16,
+              "arm": "control",
+              "field": "mode",
+              "from": "mode-15",
+              "to": "mode-16",
+              "writeMs": 0.067,
+              "reloadMs": 0.816,
+              "uidBefore": 5,
+              "uidAfter": 5,
+              "fiberUidSame": true,
+              "fiberObjectSame": true,
+              "stateBefore": 2,
+              "stateAfter": 2,
+              "configBefore": {
+                "greeting": "greeting-20",
+                "mode": "mode-15"
+              },
+              "configAfter": {
+                "greeting": "greeting-20",
+                "mode": "mode-16"
+              },
+              "configUpdated": true,
+              "appliesDelta": 1,
+              "effectInstallsDelta": 1,
+              "effectDisposalsDelta": 1,
+              "volatileUpdatesDelta": 0,
+              "pluginReapplied": true,
+              "effectsTornDown": true,
+              "remounted": true,
+              "events": [
+                {
+                  "seq": 76,
+                  "type": "effect-dispose",
+                  "at": 248.762555,
+                  "uid": 5,
+                  "instanceId": 18
+                },
+                {
+                  "seq": 77,
+                  "type": "apply",
+                  "at": 248.803964,
+                  "instanceId": 19,
+                  "uid": 5,
+                  "state": 1,
+                  "greeting": "greeting-20",
+                  "mode": "mode-16"
+                },
+                {
+                  "seq": 78,
+                  "type": "effect-install",
+                  "at": 248.819894,
+                  "uid": 5,
+                  "instanceId": 19
+                }
+              ]
+            },
+            {
+              "i": 17,
+              "arm": "control",
+              "field": "mode",
+              "from": "mode-16",
+              "to": "mode-17",
+              "writeMs": 0.102,
+              "reloadMs": 0.823,
+              "uidBefore": 5,
+              "uidAfter": 5,
+              "fiberUidSame": true,
+              "fiberObjectSame": true,
+              "stateBefore": 2,
+              "stateAfter": 2,
+              "configBefore": {
+                "greeting": "greeting-20",
+                "mode": "mode-16"
+              },
+              "configAfter": {
+                "greeting": "greeting-20",
+                "mode": "mode-17"
+              },
+              "configUpdated": true,
+              "appliesDelta": 1,
+              "effectInstallsDelta": 1,
+              "effectDisposalsDelta": 1,
+              "volatileUpdatesDelta": 0,
+              "pluginReapplied": true,
+              "effectsTornDown": true,
+              "remounted": true,
+              "events": [
+                {
+                  "seq": 79,
+                  "type": "effect-dispose",
+                  "at": 252.002297,
+                  "uid": 5,
+                  "instanceId": 19
+                },
+                {
+                  "seq": 80,
+                  "type": "apply",
+                  "at": 252.043661,
+                  "instanceId": 20,
+                  "uid": 5,
+                  "state": 1,
+                  "greeting": "greeting-20",
+                  "mode": "mode-17"
+                },
+                {
+                  "seq": 81,
+                  "type": "effect-install",
+                  "at": 252.058221,
+                  "uid": 5,
+                  "instanceId": 20
+                }
+              ]
+            },
+            {
+              "i": 18,
+              "arm": "control",
+              "field": "mode",
+              "from": "mode-17",
+              "to": "mode-18",
+              "writeMs": 0.057,
+              "reloadMs": 0.686,
+              "uidBefore": 5,
+              "uidAfter": 5,
+              "fiberUidSame": true,
+              "fiberObjectSame": true,
+              "stateBefore": 2,
+              "stateAfter": 2,
+              "configBefore": {
+                "greeting": "greeting-20",
+                "mode": "mode-17"
+              },
+              "configAfter": {
+                "greeting": "greeting-20",
+                "mode": "mode-18"
+              },
+              "configUpdated": true,
+              "appliesDelta": 1,
+              "effectInstallsDelta": 1,
+              "effectDisposalsDelta": 1,
+              "volatileUpdatesDelta": 0,
+              "pluginReapplied": true,
+              "effectsTornDown": true,
+              "remounted": true,
+              "events": [
+                {
+                  "seq": 82,
+                  "type": "effect-dispose",
+                  "at": 255.29605,
+                  "uid": 5,
+                  "instanceId": 20
+                },
+                {
+                  "seq": 83,
+                  "type": "apply",
+                  "at": 255.338475,
+                  "instanceId": 21,
+                  "uid": 5,
+                  "state": 1,
+                  "greeting": "greeting-20",
+                  "mode": "mode-18"
+                },
+                {
+                  "seq": 84,
+                  "type": "effect-install",
+                  "at": 255.355431,
+                  "uid": 5,
+                  "instanceId": 21
+                }
+              ]
+            },
+            {
+              "i": 19,
+              "arm": "control",
+              "field": "mode",
+              "from": "mode-18",
+              "to": "mode-19",
+              "writeMs": 0.068,
+              "reloadMs": 0.663,
+              "uidBefore": 5,
+              "uidAfter": 5,
+              "fiberUidSame": true,
+              "fiberObjectSame": true,
+              "stateBefore": 2,
+              "stateAfter": 2,
+              "configBefore": {
+                "greeting": "greeting-20",
+                "mode": "mode-18"
+              },
+              "configAfter": {
+                "greeting": "greeting-20",
+                "mode": "mode-19"
+              },
+              "configUpdated": true,
+              "appliesDelta": 1,
+              "effectInstallsDelta": 1,
+              "effectDisposalsDelta": 1,
+              "volatileUpdatesDelta": 0,
+              "pluginReapplied": true,
+              "effectsTornDown": true,
+              "remounted": true,
+              "events": [
+                {
+                  "seq": 85,
+                  "type": "effect-dispose",
+                  "at": 258.286472,
+                  "uid": 5,
+                  "instanceId": 21
+                },
+                {
+                  "seq": 86,
+                  "type": "apply",
+                  "at": 258.324135,
+                  "instanceId": 22,
+                  "uid": 5,
+                  "state": 1,
+                  "greeting": "greeting-20",
+                  "mode": "mode-19"
+                },
+                {
+                  "seq": 87,
+                  "type": "effect-install",
+                  "at": 258.338506,
+                  "uid": 5,
+                  "instanceId": 22
+                }
+              ]
+            },
+            {
+              "i": 20,
+              "arm": "control",
+              "field": "mode",
+              "from": "mode-19",
+              "to": "mode-20",
+              "writeMs": 0.055,
+              "reloadMs": 0.745,
+              "uidBefore": 5,
+              "uidAfter": 5,
+              "fiberUidSame": true,
+              "fiberObjectSame": true,
+              "stateBefore": 2,
+              "stateAfter": 2,
+              "configBefore": {
+                "greeting": "greeting-20",
+                "mode": "mode-19"
+              },
+              "configAfter": {
+                "greeting": "greeting-20",
+                "mode": "mode-20"
+              },
+              "configUpdated": true,
+              "appliesDelta": 1,
+              "effectInstallsDelta": 1,
+              "effectDisposalsDelta": 1,
+              "volatileUpdatesDelta": 0,
+              "pluginReapplied": true,
+              "effectsTornDown": true,
+              "remounted": true,
+              "events": [
+                {
+                  "seq": 88,
+                  "type": "effect-dispose",
+                  "at": 261.243824,
+                  "uid": 5,
+                  "instanceId": 22
+                },
+                {
+                  "seq": 89,
+                  "type": "apply",
+                  "at": 261.279791,
+                  "instanceId": 23,
+                  "uid": 5,
+                  "state": 1,
+                  "greeting": "greeting-20",
+                  "mode": "mode-20"
+                },
+                {
+                  "seq": 90,
+                  "type": "effect-install",
+                  "at": 261.293763,
+                  "uid": 5,
+                  "instanceId": 23
+                }
+              ]
+            }
+          ],
+          "summary": {
+            "n": 20,
+            "remounts": 20,
+            "restarts": 20,
+            "pluginReapplied": 20,
+            "effectsTornDown": 20,
+            "configUpdates": 20,
+            "fiberUidChanged": 0,
+            "fiberObjectChanged": 0,
+            "appliesDeltaTotal": 20,
+            "effectInstallsTotal": 20,
+            "effectDisposalsTotal": 20,
+            "volatileUpdatesTotal": 0,
+            "writeMs": {
+              "n": 20,
+              "min": 0.05,
+              "max": 0.102,
+              "median": 0.066,
+              "p50": 0.066,
+              "p95": 0.095,
+              "mean": 0.068
+            },
+            "reloadMs": {
+              "n": 20,
+              "min": 0.601,
+              "max": 1.4,
+              "median": 0.738,
+              "p50": 0.738,
+              "p95": 0.935,
+              "mean": 0.773
+            }
+          }
+        }
+      },
+      "checks": {
+        "fixtureActive": true,
+        "probeRegistered": true,
+        "volatileReference": true,
+        "controlValueIsPlain": true,
+        "initialApplyOnce": true,
+        "initialEffectsInstalled": true,
+        "controlRestarts": true,
+        "volatileNoRemount": true,
+        "volatileConfigUpdated": true,
+        "armsDistinguishable": true,
+        "falsifiable": true
+      },
+      "errors": [],
+      "final": {
+        "config": {
+          "greeting": "greeting-20",
+          "mode": "mode-20"
+        },
+        "probe": {
+          "applies": 23,
+          "effectInstalls": 23,
+          "effectDisposals": 22,
+          "volatileUpdates": 22,
+          "instanceCount": 23,
+          "eventCount": 90
+        }
+      }
+    }
+  },
+  "provenance": {
+    "workspace": "/mnt/c/Users/zzhdz/WorkBuddy/2026-10-30-16-02-58/dsh-standard",
+    "fixture": {
+      "directory": "examples/boost/lev3-fixture",
+      "files": [
+        {
+          "name": "plugin.mjs",
+          "path": "examples/boost/lev3-fixture/plugin.mjs",
+          "sha256": "fec44add01e90c7c99dcde5e4a7b6090b878d420c7f564019ee5aaecd93a4a2d"
+        },
+        {
+          "name": "probe.mjs",
+          "path": "examples/boost/lev3-fixture/probe.mjs",
+          "sha256": "8dda527a87989a4641c0106423d30d17e5a3e9723516a032e2033bfbd0839f1e"
+        },
+        {
+          "name": "cordis.yml",
+          "path": "examples/boost/lev3-fixture/cordis.yml",
+          "sha256": "7a9ca76b81f577a64191a965a7dacb6d8841c63d5b02947c158fa444c56874ea"
+        }
+      ]
+    },
+    "harness": {
+      "file": "examples/boost/lev3-loader-bench.mjs",
+      "sha256": "dd40d361ed58557064a67083b8aa611dc87a8d8c05ff9d9ab70e5b091e9887b1"
+    },
+    "workers": [
+      {
+        "host": "installed",
+        "exit": 0,
+        "status": "supported"
+      },
+      {
+        "host": "checkout",
+        "exit": 0,
+        "status": "supported"
+      }
+    ]
+  },
+  "limitations": [
+    "loader-level only: a real Context + Loader + Include over a two-entry fixture YAML, not a DSH CLI profile; no app plugins, profile patch layers, client UI, or CLI process participate.",
+    "Reload trigger is Include.refresh() directly (the function dsh-hmr calls from its chokidar handler); chokidar debounce and awaitWriteFinish are excluded from the latency numbers.",
+    "The fixture plugin is synthetic (Schemastery .volatile() field + one named effect). Shipped volatile consumers such as ui-theme and llm-pi-ai need browser/LLM services and are not booted here.",
+    "Single WSL2 machine, single process, warm filesystem, Node 24.22.1; reload latency is not a production profile number.",
+    "Cordis reuses the same Fiber object and uid across a config restart. \"Remount\" below means apply() ran again and the plugin effect was disposed, not that a new Fiber was created.",
+    "Installed DSH 0.2.1-rc.5 ships Cordis 4.0.5 / loader 1.0.6; the checkout is DSH 0.2.2-alpha.2 with vendored Cordis 4.0.6-alpha.1 / loader 1.0.7-alpha.1. Both are reported separately; no upstream Cordis compatibility is claimed.",
+    "The checkout host copies vendored packages into a temp node_modules sandbox before booting, because the checkout has no linked node_modules for those packages. Copied source hashes are recorded.",
+    "The local dsh CLI hangs in this environment; app-boot and Cordis are imported directly instead of launching a profile."
+  ]
+}

@@ -1,0 +1,32 @@
+{
+  "dsh-telemetry-redactor": {
+    "range": ">=0.1.0-rc.5 <0.2.0",
+    "validRange": ">=0.1.0-rc.5 <0.2.0",
+    "matrix": {
+      "0.1.0-rc.5": true,
+      "0.1.0-rc.8": true,
+      "0.1.0": true,
+      "0.1.7-rc.2": true,
+      "0.2.0-rc.1": true,
+      "0.2.0": false,
+      "0.2.1-rc.5": false,
+      "0.2.2-alpha.2": false,
+      "0.3.0": false
+    }
+  },
+  "dsh-verification-receipt": {
+    "range": ">=0.1.0-rc.5 <0.1.0",
+    "validRange": ">=0.1.0-rc.5 <0.1.0",
+    "matrix": {
+      "0.1.0-rc.5": true,
+      "0.1.0-rc.8": true,
+      "0.1.0": false,
+      "0.1.7-rc.2": false,
+      "0.2.0-rc.1": false,
+      "0.2.0": false,
+      "0.2.1-rc.5": false,
+      "0.2.2-alpha.2": false,
+      "0.3.0": false
+    }
+  }
+}
