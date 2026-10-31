@@ -1,8 +1,17 @@
-# Entry static results (18)
+# Entry results (18)
 
-Generated: 2026-10-31T13:24:19.371Z
+Generated: 2026-10-31T13:24:19.371Z (static) · 2026-11-01 (runtime)
 
-- 18/18 recognized; 0 clean pass; warnings are expected (C-2.1/C-11/C-13).
-- **Static-only**: no G0–G3 runtime claim.
-- Runtime attempt `ci-diet.runtime-attempt.json` timed out at 120s, target row 0/1 ACTIVE; marked `not-run`, not pass.
-- Do not cite this directory as 7/18 runtime; runtime JSON is still missing.
+- **Static** (`<id>.json`): 18/18 `recognized`; 0 clean pass; the warnings are expected
+  transitional claims (C-2.1 / C-11 / C-13). Static is not a runtime pass.
+- **Runtime base-only** (`fullbase/`): 18/18 rows written against
+  `dsh@0.2.2-alpha.2` + `dsh-base`; G3 `verified` 10, `partial` 8, `error` 0;
+  after the host gate, clean `verified` 8, `gate-reject` 2 (`telemetry`,
+  `verification`), `partial` 8. See `fullbase/REPORT.md` and `fullbase/summary.json`.
+- **Target-only** (`targetonly/`): earlier attempt without the base layer; it is
+  retained only as an intermediate artifact, not as the runtime result.
+- The old "runtime JSON is still missing / 7/18" note is obsolete. The
+  reproducible runner is `../scripts/entry18-ci.mjs`; the CI matrix is
+  `.github/workflows/entry18-runtime.yml`.
+- The 4 web-app packages are **not** upgraded on base-only evidence; their web
+  profile result lives in `../../webruntime/`.

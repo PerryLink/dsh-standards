@@ -223,6 +223,6 @@ node scripts/m2-runner.mjs \
 
 ## 11. 下一步（T2 phase 2）
 
-1. 把 `--scope entry` + `DSC-14` + `bundle-smoke.mjs`（G0–G3）接进 CI；G4 client root 仍是静态，base+web-app 的 4 个 unavailable 待补。
-2. 18 包真实基线：7/18 全行 ACTIVE（`92`）；先补 base+web-app 的 4 个 unavailable，再谈更多。
+1. `--scope entry` + `DSC-14` + `bundle-smoke.mjs`（G0–G3）已接进 `entry18-runtime` CI；G4 client root 是组合静态，client 运行时由 `web-runtime` 的真实浏览器 probe 提供。
+2. 18 包 base-only 真实基线：`results/entry/18/fullbase/`，10/18 G3 `verified`、8 `partial`、0 `error`；host gate 后 8 clean `verified` + 2 `reject` + 8 `partial`（`92` §七）。web profile 的 4 个 web-app 看 `results/webruntime/`。
 3. M2 OCI 化、LEV-6/证据卡、三份开发建议。
