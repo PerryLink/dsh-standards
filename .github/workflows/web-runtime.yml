@@ -1,0 +1,153 @@
+name: web-runtime
+
+# Real Web-profile runtime evidence for the 18 ENTRY packages.
+#
+# Each shard creates a custom profile from the shipped `web` template, installs
+# one sample with `dsh plugin add`, boots the real Web app, exchanges the
+# process launch token in a real Chromium, and probes:
+#   - `window.__DSH_BOOT__` contains the package when it declares `./client`;
+#   - the shell mounts (#root has children);
+#   - no console errors / page errors / failed script requests.
+#
+# This is `client-module-loaded`, not a visual UI review. A package without a
+# client export still gets a boot + shell check, so the run also covers the
+# server-side rows that need `webServer` / `connection`.
+#
+# Manual run: Actions -> web-runtime -> Run workflow.
+
+on:
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  runtime:
+    name: web-${{ matrix.id }}
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+    strategy:
+      fail-fast: false
+      max-parallel: 4
+      matrix:
+        include:
+          - { id: dsh-free-search, pkg: dsh-free-search, spec: 'dsh-free-search@0.9.26', kind: npm }
+          - { id: dsh-our-free-model, pkg: dsh-our-free-model, spec: 'dsh-our-free-model@2.1.0', kind: npm }
+          - { id: redteam-model, pkg: '@dsh-external/dsh-redteam-model', spec: 'github:SeaOf0/dsh-redteam-model', kind: webapp-git }
+          - { id: YuJun-purge, pkg: dsh-purge, spec: 'github:YuJunZhiXue/dsh-purge', kind: webapp-git }
+          - { id: ci-diet, pkg: dsh-ci-diet, spec: 'dsh-ci-diet@0.5.2', kind: npm }
+          - { id: daily-log, pkg: '@zzerx/dsh-plugin-daily-log', spec: '@zzerx/dsh-plugin-daily-log@0.4.3', kind: npm }
+          - { id: howmp-pentest, pkg: '@howmp/dsh-pentest', spec: '@howmp/dsh-pentest@0.1.0-rc.37', kind: npm }
+          - { id: king-purge, pkg: dsh-purge-community, spec: 'github:kingcharleslzy-ai/dsh-purge', kind: webapp-git }
+          - { id: liguobao-remote, pkg: ds-harness-remote, spec: 'ds-harness-remote@0.6.0', kind: webapp }
+          - { id: mmparko-purge, pkg: dsh-purge, spec: 'github:mmparko/dsh-purge', kind: webapp-git }
+          - { id: project-memory, pkg: '@yolk_vat-y/dsh-project-memory', spec: '@yolk_vat-y/dsh-project-memory@0.6.7', kind: npm }
+          - { id: qiushi, pkg: qiushi-dsh-evidence-audit, spec: 'qiushi-dsh-evidence-audit@0.1.0', kind: npm }
+          - { id: dsh-pocket, pkg: dsh-pocket, spec: 'dsh-pocket@2.12.0', kind: webapp }
+          - { id: status-rotator, pkg: dsh-status-rotator, spec: 'dsh-status-rotator@0.38.0', kind: npm }
+          - { id: telemetry, pkg: dsh-telemetry-redactor, spec: 'dsh-telemetry-redactor@0.1.0', kind: npm }
+          - { id: ui-auth, pkg: dsh-ui-auth, spec: 'dsh-ui-auth@0.7.1', kind: webapp }
+          - { id: verification, pkg: dsh-verification-receipt, spec: 'dsh-verification-receipt@0.1.0', kind: npm }
+          - { id: vision-router, pkg: dsh-vision-router, spec: 'dsh-vision-router@3.1.0', kind: npm }
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 24
+
+      - name: Install DSH, pnpm, Playwright
+        run: |
+          npm install -g @deepseek-ai/dsh@0.2.2-alpha.2 pnpm@10 playwright@1.49.1
+          playwright install --with-deps chromium
+
+      - name: Create web-backed profile
+        run: |
+          export DSH_HOME="$RUNNER_TEMP/dsh-home"
+          mkdir -p "$DSH_HOME"
+          dsh --profile wr --from-default-profile web --dump-config >/dev/null
+          test -s "$DSH_HOME/profiles/wr/package.json"
+
+      - name: Install sample
+        run: |
+          export DSH_HOME="$RUNNER_TEMP/dsh-home"
+          # Third-party install scripts are not executed in CI. Packages that
+          # require a postinstall build are recorded as their published/git
+          # artifact allows; the boot log shows any missing entry.
+          dsh plugin --profile wr add --ignore-scripts "${{ matrix.spec }}"
+          echo "installed ${{ matrix.pkg }}"
+
+      - name: Detect client export
+        id: client
+        run: |
+          export DSH_HOME="$RUNNER_TEMP/dsh-home"
+          PKGJSON="$DSH_HOME/profiles/wr/node_modules/${{ matrix.pkg }}/package.json"
+          test -f "$PKGJSON"
+          HAS=$(node -e "const p=require(process.argv[1]);const e=p.exports&&p.exports['./client'];process.stdout.write(e?'1':'0')" "$PKGJSON")
+          echo "has_client=$HAS"
+          echo "has=$HAS" >> "$GITHUB_OUTPUT"
+
+      - name: Boot web
+        id: boot
+        run: |
+          set -euo pipefail
+          export DSH_HOME="$RUNNER_TEMP/dsh-home"
+          rm -f "$RUNNER_TEMP/web.log"
+          dsh --profile wr --no-open --port 18770 >"$RUNNER_TEMP/web.log" 2>&1 &
+          echo $! >"$RUNNER_TEMP/web.pid"
+          APP_URL=""
+          for i in $(seq 1 90); do
+            APP_URL=$(sed -n 's/^dsh web: \(http[^ ]*\)$/\1/p' "$RUNNER_TEMP/web.log" | head -1)
+            [ -n "$APP_URL" ] && break
+            if ! kill -0 "$(cat "$RUNNER_TEMP/web.pid")" 2>/dev/null; then
+              echo "web exited before printing a URL" >&2
+              break
+            fi
+            sleep 2
+          done
+          test -n "$APP_URL"
+          echo "app_url=$APP_URL" >> "$GITHUB_OUTPUT"
+          echo "--- boot log ---"
+          sed -n '1,120p' "$RUNNER_TEMP/web.log"
+
+      - name: Probe in Chromium
+        id: probe
+        run: |
+          set -euo pipefail
+          export DSH_HOME="$RUNNER_TEMP/dsh-home"
+          EXPECT=""
+          if [ "${{ steps.client.outputs.has }}" = "1" ]; then EXPECT="${{ matrix.pkg }}"; fi
+          mkdir -p 40-checker/results/webruntime/${{ matrix.id }}
+          node 40-checker/scripts/web-probe.mjs \
+            --url "${{ steps.boot.outputs.app_url }}" \
+            --expect "$EXPECT" \
+            --out "40-checker/results/webruntime/${{ matrix.id }}/probe.json" \
+            --screenshot "40-checker/results/webruntime/${{ matrix.id }}/shot.png" \
+            --timeout 90000
+
+      - name: Scan boot log for target failures
+        if: always()
+        run: |
+          export DSH_HOME="$RUNNER_TEMP/dsh-home"
+          LOG="$RUNNER_TEMP/web.log"
+          FAIL=0
+          if grep -Eiq "(failed to import|did not activate|failed to apply).*(${{ matrix.pkg }}|${{ matrix.id }})" "$LOG"; then FAIL=1; fi
+          if grep -Eiq "(${{ matrix.pkg }}).*(failed to import|did not activate|failed to apply)" "$LOG"; then FAIL=1; fi
+          node -e "const fs=require('fs');const p='40-checker/results/webruntime/${{ matrix.id }}/probe.json';const r=fs.existsSync(p)?JSON.parse(fs.readFileSync(p)):{};r.bootLogScan={failed:process.argv[1]==='1'};fs.writeFileSync(p,JSON.stringify(r,null,2)+'\n')" "$FAIL"
+          test "$FAIL" = "0"
+
+      - name: Stop web
+        if: always()
+        run: |
+          if [ -f "$RUNNER_TEMP/web.pid" ]; then kill "$(cat "$RUNNER_TEMP/web.pid")" 2>/dev/null || true; fi
+
+      - name: Upload evidence
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: web-runtime-${{ matrix.id }}
+          path: |
+            40-checker/results/webruntime/${{ matrix.id }}/
+            ${{ runner.temp }}/web.log
+          if-no-files-found: warn
+          retention-days: 14
