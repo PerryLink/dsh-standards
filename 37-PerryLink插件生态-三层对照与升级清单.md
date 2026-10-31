@@ -11,9 +11,9 @@
 
 | 仓库 | 角色 | 能支撑的层 | 当前状态（2026-11-01） | 本轮动作 | 下一轮 |
 |---|---|---|---|---|---|
-| `dsh-plugin-guide` | 作者知识库 + skill + CLI | ENTRY/FLOW/BOOST 教学 | 有 10 章开发指南，但无三层章节 | **新增 `guide/standards.md` + 中文版 + `data/standards.json`；侧栏/SKILL/§8 路由** | 把 J1–J8、LEV 证据卡做成可复制的模板 |
-| `dsh-plugin-certification` | A–E 质量证据 + A–D 等级 | ENTRY（A/E/veto） | 有认证 registry；无层 crosswalk | **新增 `STANDARDS.md` + `data/standards-crosswalk.json`** | 给 FLOW 增加“用户旅程证据”维度（可选，不混入 A–D） |
-| `dsh-plugin-doctor` | R/K/D/CC/X 检查器 | ENTRY（R/K/D/X） | 有成熟检查器；JSON 无层字段 | **新增 `lib/standards.mjs` + JSON `standards` 字段 + `STANDARDS.md` + 测试** | 把 `level-audit` 的 FLOW/BOOST 证据文件接进 `--standards` 视图 |
+| `dsh-plugin-guide` | 作者知识库 + skill + CLI | ENTRY/FLOW/BOOST 教学 | 有 10 章开发指南，但无三层章节 | **已推送 `c86aef3`：`guide/standards.md` + 中文版 + `data/standards.json` + 侧栏/SKILL/§8 路由** | 把 J1–J8、LEV 证据卡做成可复制的模板 |
+| `dsh-plugin-certification` | A–E 质量证据 + A–D 等级 | ENTRY（A/E/veto） | 有认证 registry；无层 crosswalk | **已推送 `c280680`：`STANDARDS.md` + `data/standards-crosswalk.json`** | 给 FLOW 增加“用户旅程证据”维度（可选，不混入 A–D） |
+| `dsh-plugin-doctor` | R/K/D/CC/X 检查器 | ENTRY（R/K/D/X） | 有成熟检查器；JSON 无层字段 | **已推送 `2d4adb4`：`lib/standards.mjs` + JSON `standards` 字段 + `STANDARDS.md` + 18 项测试** | 把 `level-audit` 的 FLOW/BOOST 证据文件接进 `--standards` 视图 |
 | `dsh-plugin-portal` | 生态门户 | 展示 | 只显示 star/rating，无层标签 | 未改（本轮） | 读 `levels` 字段显示 ENTRY/FLOW/BOOST 徽章；无证据显示 `not-run` |
 | `dsh-catalog` | Desktop Market 目录 | 展示/收录 | 有 curated 条目，无层字段 | 未改（本轮） | 收录时要求 `level-labels`，缺证据不显示 PASS |
 | `dsh-plugin-kit` | 共享 peer 范围 + 骨架 | ENTRY | 有 skeleton/peer-range；无层元数据 | 未改（本轮） | 骨架写入 `dsh.standards` 模板；peer-range 跟随 0.2.x |
@@ -28,21 +28,21 @@
 
 ## 二、这轮真正改了什么
 
-### 2.1 `dsh-plugin-guide`
+### 2.1 `dsh-plugin-guide`（c86aef3）
 
 - 新增 `guide/standards.md`（EN）与 `guide/standards.zh-CN.md`（ZH）：三层定义、GB 类比、两轴、升级路径、评审清单。
 - 新增 `data/standards.json`：层→章节/命令的机器映射。
 - `_sidebar.md`、`SKILL.md`、`guide/plugin-dev-guide.md` §8、`README.md` 增加路由（不新增 README `##` 标题，避免五语 README 同步门禁失败）。
 - 定位：**教学层**，不判定、不发证。
 
-### 2.2 `dsh-plugin-certification`
+### 2.2 `dsh-plugin-certification`（c280680）
 
 - 新增 `STANDARDS.md`：A–E 维度 → ENTRY 的“必要不充分”映射；FLOW/BOOST 明确 `not-covered`。
 - 新增 `data/standards-crosswalk.json`：机器可读。
 - 明确：**A–D 是质量等级，不是 ENTRY/FLOW/BOOST**；认证 A 不能替代 G0–G5。
 - 未改 registry / badges / freshness gate。
 
-### 2.3 `dsh-plugin-doctor`
+### 2.3 `dsh-plugin-doctor`（2d4adb4）
 
 - 新增 `lib/standards.mjs`：纯函数 `deriveStandards(results, groups)`。
 - `doctor.mjs` JSON envelope 新增 `standards` 字段；**不改** stdout 文本、退出码、verdict、`--format check`。
@@ -90,3 +90,17 @@ guide 教作者怎么写
 - 这些仓库的“official-grade”“certified”等历史措辞，是各自 README 的自我描述；本文件不将其视为官方/认证。
 - 三层标签必须带 scope（dsh/cordis 版本、commit、日期）和证据链接；没有证据就是 `not-run` / `not-measured`。
 - 任何“把 A–D 等级换算成 ENTRY/FLOW/BOOST”的算法都不在本项目内。
+
+---
+
+## 六、推送后的验证（2026-11-01）
+
+| 仓库 | 提交 | CI/验证 |
+|---|---|---|
+| `dsh-plugin-guide` | `c86aef3` | `plugin-doctor`、`verify-kit`、Scorecard、Pages 四组 workflow **全部 success**；本地 `check-readme-sync` / `check-readme-parity` / `check-facts` 通过 |
+| `dsh-plugin-certification` | `c280680` | 本地 `check-freshness` 仍失败（4 条均为 **pre-existing**：registry 54 天未刷新、roster 94→98 漂移；mirror 已 ok）。已修 `checks.yml` 的 `dsh-plugin-kit` checkout 分支（master→main，`7f9946a`）；远端 `Checks` 现在只失败在同样的 4 条数据断言，不是本次文件 |
+| `dsh-plugin-doctor` | `2d4adb4`（+ 文案修正） | 远端 `ci` 与 `plugin-doctor` **success**；`npm test` 全绿，其中 `standards: 21/21`、contract 58/58、compat 25/25；JSON `standards` 字段已实测 |
+
+**未改**：`data/certified.json`、badges、任何等级；没有新增认证条目；没有给任何仓库贴“官方/认证”标签。
+
+**仍需注意**：`dsh-standards` 本身仍是私有仓。三份公开文档已改为“私有草案 + 公开教学副本”的写法，避免公开 404；是否把标准仓转 public 需要维护者决定。
