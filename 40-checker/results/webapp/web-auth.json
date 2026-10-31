@@ -1,0 +1,19 @@
+{
+  "schema": "dsh-web-auth/1",
+  "generatedAt": "2026-10-31T15:43:11.592771+00:00",
+  "run": 41215756898,
+  "url": "https://github.com/PerryLink/dsh-standards/actions/runs/41215756898",
+  "workflow": ".github/workflows/web-smoke.yml",
+  "commit": "c0cc157",
+  "printedUrlShape": "http://127.0.0.1:<port>/?token=<process-launch-token>",
+  "unauthenticatedStatus": 401,
+  "tokenExchangeStatus": 303,
+  "setCookieShape": "dsh-auth-*; Max-Age=2592000; HttpOnly; SameSite=Strict",
+  "authenticatedIndexBytes": 38645,
+  "assertions": [
+    "<title>DeepSeek Harness</title>",
+    "<div id=\"root\">",
+    "cookie-authenticated / = 200"
+  ],
+  "conclusion": "The old 401 was the intended auth boundary, not a boot failure. The real web profile is reachable with the URL printed by dsh web."
+}

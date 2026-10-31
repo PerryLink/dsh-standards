@@ -72,7 +72,14 @@ async function main() {
     const bare = options.bare ? pathToFileURL(path.resolve(options.bare)).href + '/' : pathToFileURL(path.join(root)).href + '/'
     ctx = await withTimeout(boot('bundle-smoke', config, layers.flat(), undefined, bare), options.timeout, 'bundle boot')
     const entries = [...ctx.loader.entries()]
-    rows = entries.filter(entry => [...targetIds].some(id => entry.id === id || String(entry.id).endsWith(`:${id}`))).map(entry => ({ id: entry.id, name: entry.name, state: entry.fiber?.state ?? null, disabled: entry.disabled === true }))
+    // A bundle insert is composed under an `include:` group, so the group's
+    // fiber can stay null while the inserted plugin row activates. Match the
+    // inserted row's package name as well as its id, never only the wrapper.
+    const targetNames = new Set(composed
+      .filter(row => row.id && !baseIds.has(row.id) && typeof row.name === 'string')
+      .map(row => row.name))
+    rows = entries.filter(entry => [...targetIds].some(id => entry.id === id || String(entry.id).endsWith(`:${id}`))
+      || targetNames.has(entry.name)).map(entry => ({ id: entry.id, name: entry.name, state: entry.fiber?.state ?? null, disabled: entry.disabled === true }))
     const active = rows.filter(row => row.state === 2 || row.disabled).length
     state = rows.length > 0 && active === rows.length ? 'verified' : rows.length > 0 ? 'partial' : 'failed'
   } finally {
@@ -85,8 +92,14 @@ async function main() {
     ? (() => { try { return evaluatePluginCompatibility(manifest, {}, getDshRuntimeVersion()) === undefined ? 'admit' : 'reject' } catch { return 'error' } })()
     : 'unknown'
   const hasClient = Boolean(manifest.dsh?.client)
-  const clientExport = typeof manifest.exports?.['./client'] === 'string'
-  const rootRows = rows.filter(row => row.name === manifest.name || row.name === '.' || row.name === './')
+  const clientEntry = manifest.exports?.['./client']
+  const clientExport = typeof clientEntry === 'string'
+    || (typeof clientEntry === 'object' && clientEntry !== null && typeof clientEntry.default === 'string')
+  // G4 is a composition property: the package's own root row must exist in
+  // the composed layer. Runtime `entries` names an `include:` wrapper instead,
+  // so reading only activated entries produced false negatives for bundles
+  // whose insert is wrapped in an include group.
+  const rootRows = composed.filter(row => row.name === manifest.name || row.name === '.' || row.name === './')
   const result = {
     schema: 'dsh-bundle-smoke/1',
     package: manifest.name,
@@ -98,9 +111,16 @@ async function main() {
     g4: { hasClient, clientExport, rootRows, ok: !hasClient || (clientExport && rootRows.length > 0) },
   }
   const output = JSON.stringify(result, null, 2)
-  if (options.json || !process.stdout.isTTY) process.stdout.write(`${output}\n`)
-  process.exitCode = state === 'verified' ? 0 : state === 'partial' ? 2 : 1
+  const exitCode = state === 'verified' ? 0 : state === 'partial' ? 2 : 1
+  // A real boot can leave host-owned timers, sockets, or workers referenced
+  // after dispose. This smoke owns the whole process, so terminate once the
+  // result is flushed instead of making the caller wait for a handle it cannot
+  // see. Without this, a completed boot looks like a timeout to CI.
+  process.stdout.write(`${output}\n`, () => process.exit(exitCode))
 }
 
 const warnings = []
-try { await main() } catch (error) { console.error(`bundle-smoke: ${error.message}`); process.exitCode = 3 }
+try { await main() } catch (error) {
+  console.error(`bundle-smoke: ${error.message}`)
+  process.exit(3)
+}

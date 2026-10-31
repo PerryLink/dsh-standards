@@ -10,14 +10,18 @@ committee.
 
 ## Bus factor
 
-Bus factor = **1**. This is a known risk.
+Bus factor = **1**. This is a known risk. See `CONTINUITY.md` for decision
+rights, release steps, succession, and the access-granting checklist.
 
 Mitigations:
 
 - Everything is forkable; no CLA.
 - Every claim/evidence is bound to a commit and expires.
 - 90-day review; stale evidence is marked `stale`.
-- We are actively looking for 1–2 co-maintainers from adopters.
+- `.github/CODEOWNERS` names the current owner; `.github/workflows/drift.yml`
+  runs the checker tests weekly without a human trigger.
+- We are actively looking for 1–2 co-maintainers from adopters. The publishable
+  ask is `40-checker/results/governance/co-maintainer-packet.md`.
 
 ## Becoming a co-maintainer
 

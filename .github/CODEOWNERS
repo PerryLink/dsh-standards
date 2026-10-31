@@ -1,0 +1,8 @@
+# CODEOWNERS
+#
+# One owner today. When a co-maintainer is recruited, add a second line, e.g.
+#   /40-checker/  @PerryLink @new-handle
+# and update MAINTAINERS.md in the same commit. Do not add an owner who has not
+# accepted the role in writing.
+
+* @PerryLink

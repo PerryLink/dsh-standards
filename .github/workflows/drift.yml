@@ -1,0 +1,36 @@
+name: drift
+
+# Cheap, scheduled drift check. It does not clone the 60/20 sample (that is the
+# manual sample60/sample20 workflow); it re-runs the checker's own tests and one
+# good fixture so a change in Node or the checker is caught without a human
+# remembering to look.
+
+on:
+  schedule:
+    - cron: '17 3 * * 1'
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  checker:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 24
+      - name: Checker tests
+        run: node --test 40-checker/test/*.test.mjs
+      - name: Good fixture stays recognized
+        run: |
+          node 40-checker/bin/dsh-plugin-verify.mjs 40-checker/fixtures/good \
+            --scope entry --entry-claim static --format json \
+            --out "$RUNNER_TEMP/good.json"
+          node -e "const r=require('$RUNNER_TEMP/good.json');console.log(r.conclusion.status, r.conclusion.level)"
+      - name: Version and CLI surface
+        run: |
+          node 40-checker/bin/dsh-plugin-verify.mjs --version
+          node 40-checker/bin/dsh-plugin-verify.mjs --help | head -5
