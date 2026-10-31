@@ -1,7 +1,18 @@
-# Runtime G0–G3: not-run
+# Runtime G0–G3: run (base-only)
 
-- The 7 runtime candidates were attempted with `bundle-smoke.mjs` and the host base patch.
-- The host boot exceeded the 160s per-process budget; target rows did not become ACTIVE.
-- Empty/partial attempts were removed. `ci-diet.runtime-attempt.json` is retained as a failed attempt, not a pass.
-- Do not cite this directory as 7/18 runtime raw evidence. The 7/18 figure remains a manual/base-only summary, not a reproducible raw JSON set.
-- Next: reduce host boot cost or run a real profile with a fixed host farm.
+Status: **run** — 18/18 shards executed against `@deepseek-ai/dsh@0.2.2-alpha.2`
+on 2026-10-31, base-only (`dsh-base` patch, no web layer).
+
+- Evidence: `fullbase/<id>.json` (raw `bundle-smoke` JSON embedded) + `<id>.log`,
+  aggregate `fullbase/summary.json`.
+- Method, exact commands, per-package table, limitations: `fullbase/REPORT.md`.
+- Result: **10 G3-verified** (8 gate-admit + 2 gate-reject), **8 partial**,
+  0 failed, 0 runner errors.
+- Scope: `dsh-base` only. The four web-app-dependent packages (SeaOf0, liguobao,
+  shaobeichen, ui-auth) are **not** upgraded to web-profile runtime by this
+  evidence; no client runtime was measured.
+- History: `ci-diet.runtime-attempt.json` is the earlier 120s-timeout attempt
+  (G3 partial, target row pending). It is superseded by `fullbase/ci-diet.json`
+  (G3 verified) and retained as a historical failure, not a pass.
+- CI: `.github/workflows/entry18-runtime.yml` reproduces the 18 shards; artifacts
+  are uploaded, not committed.

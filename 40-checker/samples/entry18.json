@@ -1,0 +1,139 @@
+{
+  "schema": "dsh-entry18-manifest/1",
+  "description": "The 18 deduplicated ENTRY packages: 10 GitHub + 8 npm. id/name/version come from 40-checker/results/entry/18/summary.json. source/spec select the installable artifact: a published npm tarball at the exact version when it exists, otherwise a shallow clone of the repo.",
+  "profile": "base",
+  "targetDshVersion": "0.2.2-alpha.2",
+  "count": 18,
+  "sources": {
+    "github": 10,
+    "npm": 8
+  },
+  "rows": [
+    {
+      "id": "DDDMUC__dsh-free-search",
+      "name": "dsh-free-search",
+      "version": "0.9.26",
+      "source": "github",
+      "spec": "DDDMUC/dsh-free-search"
+    },
+    {
+      "id": "Ebony-Vinyl__dsh-our-free-model",
+      "name": "dsh-our-free-model",
+      "version": "2.1.0",
+      "source": "github",
+      "spec": "Ebony-Vinyl/dsh-our-free-model"
+    },
+    {
+      "id": "SeaOf0__dsh-redteam-model",
+      "name": "@dsh-external/dsh-redteam-model",
+      "version": "1.1.2",
+      "source": "github",
+      "spec": "SeaOf0/dsh-redteam-model"
+    },
+    {
+      "id": "YuJunZhiXue__dsh-purge",
+      "name": "dsh-purge",
+      "version": "1.1.85",
+      "source": "github",
+      "spec": "YuJunZhiXue/dsh-purge"
+    },
+    {
+      "id": "ci-diet",
+      "name": "dsh-ci-diet",
+      "version": "0.5.2",
+      "source": "npm",
+      "spec": "dsh-ci-diet"
+    },
+    {
+      "id": "daily-log",
+      "name": "@zzerx/dsh-plugin-daily-log",
+      "version": "0.4.3",
+      "source": "npm",
+      "spec": "@zzerx/dsh-plugin-daily-log"
+    },
+    {
+      "id": "howmp__dsh-pentest",
+      "name": "@howmp/dsh-pentest",
+      "version": "0.1.0-rc.37",
+      "source": "github",
+      "spec": "howmp/dsh-pentest"
+    },
+    {
+      "id": "kingcharleslzy-ai__dsh-purge",
+      "name": "dsh-purge-community",
+      "version": "1.6.67",
+      "source": "github",
+      "spec": "kingcharleslzy-ai/dsh-purge"
+    },
+    {
+      "id": "liguobao__ds-harness-remote",
+      "name": "ds-harness-remote",
+      "version": "0.6.0",
+      "source": "github",
+      "spec": "liguobao/ds-harness-remote"
+    },
+    {
+      "id": "mmparko__dsh-purge",
+      "name": "dsh-purge",
+      "version": "1.1.71",
+      "source": "github",
+      "spec": "mmparko/dsh-purge"
+    },
+    {
+      "id": "project-memory",
+      "name": "@yolk_vat-y/dsh-project-memory",
+      "version": "0.6.7",
+      "source": "npm",
+      "spec": "@yolk_vat-y/dsh-project-memory"
+    },
+    {
+      "id": "qiushi",
+      "name": "qiushi-dsh-evidence-audit",
+      "version": "0.1.0",
+      "source": "npm",
+      "spec": "qiushi-dsh-evidence-audit"
+    },
+    {
+      "id": "shaobeichen__dsh-pocket",
+      "name": "dsh-pocket",
+      "version": "2.12.0",
+      "source": "github",
+      "spec": "shaobeichen/dsh-pocket"
+    },
+    {
+      "id": "status-rotator",
+      "name": "dsh-status-rotator",
+      "version": "0.38.0",
+      "source": "npm",
+      "spec": "dsh-status-rotator"
+    },
+    {
+      "id": "telemetry",
+      "name": "dsh-telemetry-redactor",
+      "version": "0.1.0",
+      "source": "npm",
+      "spec": "dsh-telemetry-redactor"
+    },
+    {
+      "id": "ui-auth",
+      "name": "dsh-ui-auth",
+      "version": "0.7.1",
+      "source": "npm",
+      "spec": "dsh-ui-auth"
+    },
+    {
+      "id": "verification",
+      "name": "dsh-verification-receipt",
+      "version": "0.1.0",
+      "source": "npm",
+      "spec": "dsh-verification-receipt"
+    },
+    {
+      "id": "ysr666__dsh-vision-router",
+      "name": "dsh-vision-router",
+      "version": "3.1.0",
+      "source": "github",
+      "spec": "ysr666/dsh-vision-router"
+    }
+  ]
+}

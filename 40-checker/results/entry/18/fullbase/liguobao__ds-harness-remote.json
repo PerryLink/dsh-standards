@@ -1,0 +1,134 @@
+{
+  "schema": "dsh-entry18-fullbase/1",
+  "id": "liguobao__ds-harness-remote",
+  "name": "ds-harness-remote",
+  "version": "0.6.0",
+  "source": "github",
+  "spec": "liguobao/ds-harness-remote",
+  "profile": "base",
+  "base": {
+    "layer": "dsh-base/cordis.patch.yml",
+    "webLayer": false
+  },
+  "environment": "local",
+  "dshVersion": "0.2.2-alpha.2",
+  "dshVersionExpected": "0.2.2-alpha.2",
+  "host": {
+    "packageRoot": "/tmp/dsh022/node_modules/@deepseek-ai/dsh",
+    "depsRoot": "/tmp/dsh022/node_modules",
+    "appBoot": "/tmp/dsh022/node_modules/@deepseek-ai/dsh-app-boot/lib/index.js",
+    "basePatch": "/tmp/dsh022/node_modules/@deepseek-ai/dsh-base/cordis.patch.yml"
+  },
+  "startedAt": "2026-10-31T15:54:51.272Z",
+  "finishedAt": "2026-10-31T15:54:53.920Z",
+  "elapsedMs": 2648,
+  "fixture": "published-tarball",
+  "artifact": {
+    "requested": "liguobao/ds-harness-remote",
+    "resolved": "published-tarball",
+    "reason": "published tarball repository matches liguobao/ds-harness-remote",
+    "manifestName": "ds-harness-remote",
+    "manifestVersion": "0.6.0",
+    "versionMatches": true,
+    "nameMatches": true,
+    "publishedRepository": "git+https://github.com/liguobao/ds-harness-remote.git",
+    "tarball": "ds-harness-remote-0.6.0.tgz",
+    "repository": null
+  },
+  "installScripts": "skipped",
+  "installCommand": "npm install --omit=dev --ignore-scripts --legacy-peer-deps --no-package-lock --no-audit --no-fund",
+  "manifestRewrite": "removed devDependencies+scripts",
+  "install": {
+    "command": "npm install --omit=dev --ignore-scripts --legacy-peer-deps --no-package-lock --no-audit --no-fund",
+    "status": "ok",
+    "elapsedMs": 942,
+    "scripts": "skipped"
+  },
+  "status": "verified",
+  "verdict": "verified",
+  "g3State": "verified",
+  "g3Rows": 2,
+  "g3Active": 2,
+  "compatibility": "admit",
+  "exitCode": 0,
+  "smoke": {
+    "schema": "dsh-bundle-smoke/1",
+    "package": "ds-harness-remote",
+    "version": "0.6.0",
+    "g0": {
+      "patchFiles": 1,
+      "parsed": true
+    },
+    "g1": {
+      "rows": 99,
+      "targetRows": 2,
+      "warnings": []
+    },
+    "g2": {
+      "compatibility": "admit"
+    },
+    "g3": {
+      "state": "verified",
+      "rows": [
+        {
+          "id": "include:ds-harness-remote",
+          "state": 2,
+          "disabled": false
+        },
+        {
+          "id": "include:ds-harness-remote-tui",
+          "state": null,
+          "disabled": true
+        }
+      ],
+      "active": 2
+    },
+    "g4": {
+      "hasClient": true,
+      "clientExport": true,
+      "rootRows": [
+        {
+          "id": "ds-harness-remote",
+          "name": "ds-harness-remote",
+          "disabled": {
+            "__jsExpr": "[...ctx.loader.entries()].some(entry =>\n  (entry.options.id === 'dsh-tui' || entry.options.name === '@deepseek-harness-tui/dsh-tui')\n  && !entry.disabled\n)"
+          },
+          "config": {
+            "enabled": true,
+            "role": "host",
+            "serverUrl": "https://dsh.r2049.cn",
+            "codex": {
+              "enabled": true,
+              "binary": "codex"
+            }
+          }
+        },
+        {
+          "id": "ds-harness-remote-tui",
+          "name": "ds-harness-remote",
+          "disabled": {
+            "__jsExpr": "![...ctx.loader.entries()].some(entry =>\n  (entry.options.id === 'dsh-tui' || entry.options.name === '@deepseek-harness-tui/dsh-tui')\n  && !entry.disabled\n)"
+          },
+          "inject": [
+            "settings",
+            "typertGateway",
+            "commands",
+            "tuiCommandTrees",
+            "tuiScenes"
+          ],
+          "config": {
+            "enabled": true,
+            "role": "host",
+            "serverUrl": "https://dsh.r2049.cn",
+            "codex": {
+              "enabled": true,
+              "binary": "codex"
+            }
+          }
+        }
+      ],
+      "ok": true
+    }
+  },
+  "error": null
+}

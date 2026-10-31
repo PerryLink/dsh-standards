@@ -1,0 +1,131 @@
+name: entry18-runtime
+
+# Full base-profile G0–G3 runtime evidence for the 18 ENTRY packages.
+#
+# Each shard installs the published DSH anchor from npm, builds a disposable
+# farm (real node_modules dir of symlinks to the global install), installs the
+# sample with --ignore-scripts, and runs bundle-smoke with dsh-base as the only
+# base layer. This is BASE-ONLY: it does not boot the web profile, so packages
+# that need the web-app bundle (connection / webServer) may stay `partial`.
+# Method, table and limitations: 40-checker/results/entry/18/fullbase/REPORT.md
+#
+# Manual run: Actions → entry18-runtime → Run workflow.
+
+on:
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  runtime:
+    name: shard-${{ matrix.id }}
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    strategy:
+      fail-fast: false
+      max-parallel: 6
+      matrix:
+        id:
+          - DDDMUC__dsh-free-search
+          - Ebony-Vinyl__dsh-our-free-model
+          - SeaOf0__dsh-redteam-model
+          - YuJunZhiXue__dsh-purge
+          - ci-diet
+          - daily-log
+          - howmp__dsh-pentest
+          - kingcharleslzy-ai__dsh-purge
+          - liguobao__ds-harness-remote
+          - mmparko__dsh-purge
+          - project-memory
+          - qiushi
+          - shaobeichen__dsh-pocket
+          - status-rotator
+          - telemetry
+          - ui-auth
+          - verification
+          - ysr666__dsh-vision-router
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Set up Node 24
+        uses: actions/setup-node@v4
+        with:
+          node-version: 24
+
+      - name: Install DSH 0.2.2-alpha.2
+        run: npm install -g @deepseek-ai/dsh@0.2.2-alpha.2
+
+      # Committed local rows are inputs to the checkout, not CI evidence. Remove
+      # this shard's pair before the run so a preflight failure uploads nothing
+      # rather than a stale local row.
+      - name: Remove stale row for this shard
+        run: |
+          rm -f "40-checker/results/entry/18/fullbase/${{ matrix.id }}.json"
+          rm -f "40-checker/results/entry/18/fullbase/${{ matrix.id }}.log"
+
+      - name: Run base-profile G0–G3 shard
+        run: node 40-checker/scripts/entry18-ci.mjs --only "${{ matrix.id }}" --expected-dsh-version 0.2.2-alpha.2
+
+      - name: Show shard row
+        if: always()
+        run: |
+          ROW="40-checker/results/entry/18/fullbase/${{ matrix.id }}.json"
+          if [ -f "$ROW" ]; then
+            node -e 'const r=require(process.argv[1]); console.log(JSON.stringify({id:r.id,status:r.status,fixture:r.fixture,dshVersion:r.dshVersion,g3:r.g3State,rows:r.g3Active+" / "+r.g3Rows,elapsedMs:r.elapsedMs,error:r.error},null,2))' "$ROW"
+          else
+            echo "no row written for ${{ matrix.id }}" >&2
+          fi
+
+      - name: Upload shard evidence
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: entry18-fullbase-${{ matrix.id }}
+          path: |
+            40-checker/results/entry/18/fullbase/${{ matrix.id }}.json
+            40-checker/results/entry/18/fullbase/${{ matrix.id }}.log
+          if-no-files-found: warn
+          retention-days: 14
+
+  summary:
+    name: aggregate
+    needs: runtime
+    if: always()
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Set up Node 24
+        uses: actions/setup-node@v4
+        with:
+          node-version: 24
+
+      - name: Reset result directory
+        run: |
+          rm -rf 40-checker/results/entry/18/fullbase
+          mkdir -p 40-checker/results/entry/18/fullbase
+
+      - name: Download shard evidence
+        continue-on-error: true
+        uses: actions/download-artifact@v4
+        with:
+          pattern: entry18-fullbase-*
+          path: 40-checker/results/entry/18/fullbase
+          merge-multiple: true
+
+      - name: Aggregate 18 shards
+        run: node 40-checker/scripts/entry18-ci.mjs --summary
+
+      - name: Upload summary
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: entry18-fullbase-summary
+          path: |
+            40-checker/results/entry/18/fullbase/summary.json
+          if-no-files-found: warn
+          retention-days: 14

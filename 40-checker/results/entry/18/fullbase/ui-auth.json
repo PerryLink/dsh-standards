@@ -1,0 +1,94 @@
+{
+  "schema": "dsh-entry18-fullbase/1",
+  "id": "ui-auth",
+  "name": "dsh-ui-auth",
+  "version": "0.7.1",
+  "source": "npm",
+  "spec": "dsh-ui-auth",
+  "profile": "base",
+  "base": {
+    "layer": "dsh-base/cordis.patch.yml",
+    "webLayer": false
+  },
+  "environment": "local",
+  "dshVersion": "0.2.2-alpha.2",
+  "dshVersionExpected": "0.2.2-alpha.2",
+  "host": {
+    "packageRoot": "/tmp/dsh022/node_modules/@deepseek-ai/dsh",
+    "depsRoot": "/tmp/dsh022/node_modules",
+    "appBoot": "/tmp/dsh022/node_modules/@deepseek-ai/dsh-app-boot/lib/index.js",
+    "basePatch": "/tmp/dsh022/node_modules/@deepseek-ai/dsh-base/cordis.patch.yml"
+  },
+  "startedAt": "2026-10-31T15:55:20.732Z",
+  "finishedAt": "2026-10-31T15:55:23.083Z",
+  "elapsedMs": 2351,
+  "fixture": "published-tarball",
+  "artifact": {
+    "requested": "dsh-ui-auth@0.7.1",
+    "resolved": "published-tarball",
+    "reason": "source=npm: the registry tarball is the installable artifact",
+    "manifestName": "dsh-ui-auth",
+    "manifestVersion": "0.7.1",
+    "versionMatches": true,
+    "nameMatches": true,
+    "publishedRepository": null,
+    "tarball": "dsh-ui-auth-0.7.1.tgz",
+    "repository": null
+  },
+  "installScripts": "skipped",
+  "installCommand": "npm install --omit=dev --ignore-scripts --legacy-peer-deps --no-package-lock --no-audit --no-fund",
+  "manifestRewrite": "removed devDependencies+scripts",
+  "install": {
+    "command": "npm install --omit=dev --ignore-scripts --legacy-peer-deps --no-package-lock --no-audit --no-fund",
+    "status": "ok",
+    "elapsedMs": 912,
+    "scripts": "skipped"
+  },
+  "status": "partial",
+  "verdict": "partial",
+  "g3State": "partial",
+  "g3Rows": 1,
+  "g3Active": 0,
+  "compatibility": "admit",
+  "exitCode": 2,
+  "smoke": {
+    "schema": "dsh-bundle-smoke/1",
+    "package": "dsh-ui-auth",
+    "version": "0.7.1",
+    "g0": {
+      "patchFiles": 1,
+      "parsed": true
+    },
+    "g1": {
+      "rows": 98,
+      "targetRows": 1,
+      "warnings": []
+    },
+    "g2": {
+      "compatibility": "admit"
+    },
+    "g3": {
+      "state": "partial",
+      "rows": [
+        {
+          "id": "include:dsh-ui-auth",
+          "state": 0,
+          "disabled": false
+        }
+      ],
+      "active": 0
+    },
+    "g4": {
+      "hasClient": true,
+      "clientExport": true,
+      "rootRows": [
+        {
+          "id": "dsh-ui-auth",
+          "name": "dsh-ui-auth"
+        }
+      ],
+      "ok": true
+    }
+  },
+  "error": null
+}
