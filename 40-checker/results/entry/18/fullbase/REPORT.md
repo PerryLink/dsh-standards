@@ -7,7 +7,7 @@
 
 - **Profile:** `dsh-base` only — `node_modules/@deepseek-ai/dsh-base/cordis.patch.yml`.
   No web-app layer, no `dsh web`, no client runtime.
-- **Run window:** 2026-10-31T15:54:46Z – 15:58:11Z (23:54–23:58 Asia/Shanghai).
+- **Run window:** 2026-10-31T15:54:46Z – 15:58:11Z (23:54–23:58 Asia/Shanghai). CI rerun: [41219602842](https://github.com/PerryLink/dsh-standards/actions/runs/41219602842), 19/19 jobs success; aggregate identical to the local run.
 - **Host:** WSL2 Ubuntu 24.04.4 LTS, Node v24.22.1, npm 11.19.1.
 - **Anchor:** `@deepseek-ai/dsh@0.2.2-alpha.2`, WSL-local install at
   `/tmp/dsh022/node_modules/@deepseek-ai/dsh` (hoisted dependency layout). The CI
