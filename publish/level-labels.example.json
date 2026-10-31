@@ -1,0 +1,58 @@
+{
+  "schema": "dsh-level-labels/1",
+  "version": "1.0.0-rc.1",
+  "nonOfficial": true,
+  "description": "Machine-readable level labels for a format-1 market index. A label is a claim with a scope; it is not a certification and the host does not verify it.",
+  "axes": {
+    "depth": ["entry", "flow", "boost"],
+    "evidence": ["not-run", "recognized", "static", "runtime", "measured", "blocked", "failed", "stale"]
+  },
+  "labels": {
+    "entry": {
+      "recognized": "dsh-entry:recognized",
+      "static": "dsh-entry:static",
+      "runtime": "dsh-entry:runtime",
+      "blocked": "dsh-entry:blocked",
+      "failed": "dsh-entry:failed",
+      "not-run": "dsh-entry:not-run"
+    },
+    "flow": {
+      "manual": "dsh-flow:manual",
+      "runtime": "dsh-flow:runtime",
+      "not-run": "dsh-flow:not-run"
+    },
+    "boost": {
+      "measured": "dsh-boost:measured",
+      "not-measured": "dsh-boost:not-measured"
+    }
+  },
+  "pluginExample": {
+    "name": "@example/plugin",
+    "levels": {
+      "entry": {
+        "status": "runtime",
+        "evidence": "https://github.com/PerryLink/dsh-standards/actions/runs/41219602842",
+        "dsh": "0.2.2-alpha.2",
+        "cordis": "4.0.6-alpha.1",
+        "generatedAt": "2026-11-01"
+      },
+      "flow": {
+        "status": "not-run",
+        "evidence": null,
+        "note": "J1-J8 not run"
+      },
+      "boost": {
+        "status": "not-measured",
+        "evidence": null,
+        "note": "no LEV evidence card"
+      }
+    }
+  },
+  "forbiddenWords": ["official", "certified", "secure", "recommended", "guaranteed"],
+  "rules": [
+    "A label must carry a status, a scope (dsh/cordis versions), and an evidence link or an explicit not-run/not-measured.",
+    "Never emit both dsh-entry:runtime and dsh-boost:measured without separate evidence.",
+    "Never turn a certification grade A-D into dsh-entry:* or dsh-flow:*.",
+    "Stale evidence must be relabeled stale or removed; do not keep a PASS label."
+  ]
+}

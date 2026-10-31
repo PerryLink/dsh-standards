@@ -18,6 +18,9 @@
 - [99-DSH-ENTRY 兼容性画像（对外版）](99-DSH-ENTRY兼容性画像-对外版.md) — 4–6 页对外版
 - [32-DSH-FLOW 顺畅规范](32-DSH-FLOW顺畅规范.md) — J1–J8
 - [33-DSH-BOOST 加速实践](33-DSH-BOOST加速实践.md) — 8 条 LEV
+- [34-三层分级模型（GB/GB-T/GB-Z 类比）](34-三层分级模型-GB-GBT-GBZ类比.md) — 为什么是三层、怎么读
+- [35-三层开发建议与验收清单](35-三层开发建议与验收清单.md) — 作者最短路径 / 评审清单
+- [36-插件全生命周期与工具链](36-插件全生命周期与工具链.md) — 从脚手架到退役
 - [97-采纳可行性评估](97-采纳可行性评估.md) — 官方路径、缺口、90 天
 - [98-内测群与官方沟通包](98-内测群与官方沟通包.md) — 对外话术
 
@@ -33,6 +36,9 @@ node bin/dsh-plugin-verify.mjs <plugin-dir> --scope entry --entry-claim static
 # 声明运行（bundle 需要 host）
 node bin/dsh-plugin-verify.mjs <bundle-dir> --scope entry \
   --host /path/to/@deepseek-ai/dsh-app-boot/lib/index.js
+
+# 三层自检（ENTRY 自动；FLOW/BOOST 证据文件）
+node scripts/level-audit.mjs <dir> --format json
 
 # J1 安装/卸载旅程
 node scripts/journey-runtime.mjs --package <dir> --json

@@ -9,6 +9,12 @@ the glossary, evidence anchor, and checker.
 | FLOW | [../32-DSH-FLOW顺畅规范.md](../32-DSH-FLOW顺畅规范.md) | draft | J1 real; J2–J8 not-run |
 | BOOST | [../33-DSH-BOOST加速实践.md](../33-DSH-BOOST加速实践.md) | draft | LEV-3/6/7 measured (loader / provider-capture / synthetic timer) |
 
+Machine-readable:
+
+- [levels.json](levels.json) — levels, gates, evidence states, crosswalk.
+- [../40-checker/scripts/level-audit.mjs](../40-checker/scripts/level-audit.mjs) — one-command audit.
+- [../publish/level-labels.example.json](../publish/level-labels.example.json) — market labels.
+
 Rules:
 
 - Levels depend on `common` only; do not import each other.

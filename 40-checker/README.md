@@ -105,6 +105,23 @@ node bin/dsh-plugin-verify.mjs ./my-bundle --scope entry \
 - `--entry-runtime server-entry` 只给 `DSH-ENTRY runtime (server-entry)`，**不是 bundle pass**。
 - C-2.2/C-2.3 在 entry 是 blocking；C-2.1 只 WARN。
 
+### 三层自检 `level-audit.mjs`
+
+```bash
+# 只做 ENTRY 静态；FLOW/BOOST 明确 not-run/not-measured
+node scripts/level-audit.mjs ./my-plugin
+
+# ENTRY 真跑 + 可选的 FLOW/BOOST 证据
+node scripts/level-audit.mjs ./my-bundle \
+  --host /path/to/app-boot/lib/index.js \
+  --base /path/to/dsh-base/cordis.patch.yml --bare /tmp/farm \
+  --flow-evidence flow.json --boost-evidence boost.json --format json
+```
+
+- 机器源：`spec/levels.json`；标签格式：`publish/level-labels.example.json`。
+- ENTRY 自动；FLOW 只读 `--flow-evidence`（J1–J8），BOOST 只读 `--boost-evidence`（LEV-1–8）。
+- 没有证据就写 `not-run` / `not-measured`，工具不会替作者升级。
+
 ## 4. 运行 L1–L3
 
 需要一个**已构建**的 `@deepseek-ai/cordis` 入口。检查器不修改宿主，也不从源码构建宿主：

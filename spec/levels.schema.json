@@ -1,0 +1,45 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://github.com/PerryLink/dsh-standards/spec/levels.schema.json",
+  "title": "DSH levels (non-official)",
+  "type": "object",
+  "required": ["schema", "version", "nonOfficial", "levels"],
+  "properties": {
+    "schema": { "const": "dsh-levels/1" },
+    "version": { "type": "string" },
+    "status": { "enum": ["draft", "provisional", "stable", "stale"] },
+    "nonOfficial": { "const": true },
+    "disclaimer": { "type": "string" },
+    "axes": { "type": "object" },
+    "levels": {
+      "type": "array",
+      "minItems": 3,
+      "items": {
+        "type": "object",
+        "required": ["id", "label", "analogy", "question", "claim", "gates", "evidenceStates"],
+        "properties": {
+          "id": { "enum": ["entry", "flow", "boost"] },
+          "label": { "enum": ["DSH-ENTRY", "DSH-FLOW", "DSH-BOOST"] },
+          "analogy": { "enum": ["GB", "GB/T", "GB/Z"] },
+          "question": { "type": "string" },
+          "claim": { "type": "string" },
+          "gates": {
+            "type": "array",
+            "items": {
+              "type": "object",
+              "required": ["id", "check"],
+              "properties": { "id": { "type": "string" }, "check": { "type": "string" }, "owner": { "type": "string" } }
+            }
+          },
+          "evidenceStates": { "type": "array", "items": { "type": "string" } },
+          "notClaimed": { "type": "array", "items": { "type": "string" } }
+        },
+        "additionalProperties": true
+      }
+    },
+    "crosswalk": { "type": "object" },
+    "labels": { "type": "object" },
+    "review": { "type": "object" }
+  },
+  "additionalProperties": true
+}

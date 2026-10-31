@@ -14,3 +14,25 @@ Label grammar (free-form strings; the host drops undefined metadata members):
 
 Do **not** put `official`, `certified`, `secure`, or `recommended` in labels.
 The host validates index format, not the truth of these claims.
+
+## Three-level labels
+
+`level-labels.example.json` is the machine-readable companion to `34`/`35`.
+A label is a **claim with a scope**, not a certification:
+
+| Label | Meaning |
+|---|---|
+| `dsh-entry:recognized` / `static` | ENTRY static only; no runtime claim |
+| `dsh-entry:runtime` | ENTRY G0–G3 passed at the recorded dsh/cordis versions |
+| `dsh-entry:blocked` / `failed` / `not-run` | the real state; never upgrade to pass |
+| `dsh-flow:manual` / `runtime` / `not-run` | J1–J8 recorded manually / automated / not run |
+| `dsh-boost:measured` / `not-measured` | LEV evidence card exists / not measured |
+
+Rules:
+
+- Every label carries a status, scope (`dsh`, `cordis`), and an evidence link,
+  or an explicit `not-run` / `not-measured`.
+- Certification grades A–D are **orthogonal**; never emit `dsh-entry:*` from a
+  grade.
+- The host validates the index format, not the truth of a label. A market that
+  displays these labels must link the evidence.

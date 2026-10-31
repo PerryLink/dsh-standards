@@ -5,7 +5,8 @@
 > **依据**：`92-兼容运行时实测.md`（18 包真实 boot）、`90-兼容运行时保证.md`（G0–G3）、`40-checker`（`--scope entry`/`DSC-14`）。
 > **不是**：认证、排名、完整 DSH-ENTRY 的 11/12 条强制；`interop-static` 不是通过。
 > **对外版**：4–6 页画像见 `99-DSH-ENTRY兼容性画像-对外版.md`；本文件是内部条款。
-> **已知未完成**：G4 client 只静态；base+web-app 的 4 个样本仍 `unavailable`；完整 web profile 未跑。
+> **当前证据（2026-11-01）**：18/18 base-only JSON，10 G3 verified / 8 partial / 0 error；gate 后 8 clean + 2 reject + 8 partial；web profile client 15/15 loaded。
+> **三层模型**：`34-三层分级模型-GB-GBT-GBZ类比.md`；作者清单：`35`。
 
 ---
 
