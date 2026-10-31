@@ -92,9 +92,9 @@ Thank you,
 
 ## 五、备用方案（已落地）
 
-- `dsh-standards@0.0.1` 已发布（建议升级为有最小功能的 0.0.2，避免 squatting 判定）
-- `@perrylink/dsh-standard@0.0.1` 已发布
-- `@perrylink/dsh-standards@0.0.1` 已发布
+- `dsh-standards@0.0.3` 已发布（有 `bin`/`canonical()`，registry 直连 200；避免 squatting 判定）
+- `@perrylink/dsh-standard@0.0.2` 已发布（功能包）
+- `@perrylink/dsh-standards@0.0.3` 已发布
 - PyPI：`dsh-standard` / `dsh-standards` 0.0.1
 - GitHub/Gitee/GitCode：双仓占位，canonical 已切到 `dsh-standards`
 
