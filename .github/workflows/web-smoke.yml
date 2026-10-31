@@ -1,0 +1,36 @@
+name: web-smoke
+
+on:
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  web:
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 24
+      - name: Install DSH
+        run: npm install -g @deepseek-ai/dsh@0.2.2-alpha.2
+      - name: Create profile
+        run: |
+          export DSH_HOME="$RUNNER_TEMP/dsh-home"
+          mkdir -p "$DSH_HOME"
+          dsh --profile web --from-default-profile web --dump-config >/dev/null
+      - name: Boot web and probe
+        run: |
+          export DSH_HOME="$RUNNER_TEMP/dsh-home"
+          dsh web --no-open --port 18765 >"$RUNNER_TEMP/web.log" 2>&1 &
+          PID=$!
+          for i in $(seq 1 30); do
+            if curl -fsS "http://127.0.0.1:18765/" >"$RUNNER_TEMP/index.html"; then break; fi
+            sleep 1
+          done
+          kill $PID 2>/dev/null || true
+          test -s "$RUNNER_TEMP/index.html"
+          head -20 "$RUNNER_TEMP/index.html"
