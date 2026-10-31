@@ -1,0 +1,555 @@
+{
+  "schema": "dsh-sample60-ci/1",
+  "generatedAt": "2026-10-31T15:01:38.977Z",
+  "frame": 60,
+  "rows": [
+    {
+      "id": "gjy1992__dsh-diagram",
+      "fullName": "gjy1992/dsh-diagram",
+      "stars": 1,
+      "clone": "ok",
+      "status": "warn",
+      "level": "DSH-ENTRY recognized (warnings)",
+      "exit": 0
+    },
+    {
+      "id": "NEAZ71eve__dsh-tool-github",
+      "fullName": "NEAZ71eve/dsh-tool-github",
+      "stars": 1,
+      "clone": "ok",
+      "status": "warn",
+      "level": "DSH-ENTRY recognized (warnings)",
+      "exit": 0
+    },
+    {
+      "id": "Tyan66666__billion-context-dsh",
+      "fullName": "Tyan66666/billion-context-dsh",
+      "stars": 167,
+      "clone": "ok",
+      "status": "warn",
+      "level": "DSH-ENTRY recognized (warnings)",
+      "exit": 0
+    },
+    {
+      "id": "LiarMTTT__TavernWeave",
+      "fullName": "LiarMTTT/TavernWeave",
+      "stars": 197,
+      "clone": "ok",
+      "status": "fail",
+      "level": null,
+      "exit": 1
+    },
+    {
+      "id": "Zxznb666__dsh-qoder-cn-subagent",
+      "fullName": "Zxznb666/dsh-qoder-cn-subagent",
+      "stars": 1,
+      "clone": "ok",
+      "status": "warn",
+      "level": "DSH-ENTRY recognized (warnings)",
+      "exit": 0
+    },
+    {
+      "id": "tinqiao-oss__engramory",
+      "fullName": "tinqiao-oss/engramory",
+      "stars": 198,
+      "clone": "ok",
+      "status": "warn",
+      "level": "DSH-ENTRY recognized (warnings)",
+      "exit": 0
+    },
+    {
+      "id": "MichengAI__dsh-im-connect",
+      "fullName": "MichengAI/dsh-im-connect",
+      "stars": 111,
+      "clone": "ok",
+      "status": "warn",
+      "level": "DSH-ENTRY recognized (warnings)",
+      "exit": 0
+    },
+    {
+      "id": "RINGOLINK__dsh-desktop-shell",
+      "fullName": "RINGOLINK/dsh-desktop-shell",
+      "stars": 1,
+      "clone": "ok",
+      "status": "warn",
+      "level": "DSH-ENTRY recognized (warnings)",
+      "exit": 0
+    },
+    {
+      "id": "wkfedor__deepseek-harness-voice-input",
+      "fullName": "wkfedor/deepseek-harness-voice-input",
+      "stars": 1,
+      "clone": "ok",
+      "status": "warn",
+      "level": "DSH-ENTRY recognized (warnings)",
+      "exit": 0
+    },
+    {
+      "id": "mrme000m__dsh-prime-orchestrator",
+      "fullName": "mrme000m/dsh-prime-orchestrator",
+      "stars": 1,
+      "clone": "ok",
+      "status": "warn",
+      "level": "DSH-ENTRY recognized (warnings)",
+      "exit": 0
+    },
+    {
+      "id": "MichengAI__dsh-archive-manager",
+      "fullName": "MichengAI/dsh-archive-manager",
+      "stars": 270,
+      "clone": "ok",
+      "status": "warn",
+      "level": "DSH-ENTRY recognized (warnings)",
+      "exit": 0
+    },
+    {
+      "id": "plastic-labs__honcho",
+      "fullName": "plastic-labs/honcho",
+      "stars": 7850,
+      "clone": "ok",
+      "status": "fail",
+      "level": null,
+      "exit": 1
+    },
+    {
+      "id": "sopaco__terrain",
+      "fullName": "sopaco/terrain",
+      "stars": 276,
+      "clone": "ok",
+      "status": "warn",
+      "level": "DSH-ENTRY recognized (warnings)",
+      "exit": 0
+    },
+    {
+      "id": "Ebony-Vinyl__EAC-Pack",
+      "fullName": "Ebony-Vinyl/EAC-Pack",
+      "stars": 179,
+      "clone": "ok",
+      "status": "warn",
+      "level": "DSH-ENTRY recognized (warnings)",
+      "exit": 0
+    },
+    {
+      "id": "Jamailar__beav-deepseek-harness",
+      "fullName": "Jamailar/beav-deepseek-harness",
+      "stars": 1,
+      "clone": "ok",
+      "status": "warn",
+      "level": "DSH-ENTRY recognized (warnings)",
+      "exit": 0
+    },
+    {
+      "id": "863683348__dsh-insight",
+      "fullName": "863683348/dsh-insight",
+      "stars": 1,
+      "clone": "ok",
+      "status": "warn",
+      "level": "DSH-ENTRY recognized (warnings)",
+      "exit": 0
+    },
+    {
+      "id": "sjh9714__dsh-win32",
+      "fullName": "sjh9714/dsh-win32",
+      "stars": 152,
+      "clone": "ok",
+      "status": "warn",
+      "level": "DSH-ENTRY recognized (warnings)",
+      "exit": 0
+    },
+    {
+      "id": "mmparko__dsh-purge",
+      "fullName": "mmparko/dsh-purge",
+      "stars": 2797,
+      "clone": "ok",
+      "status": "warn",
+      "level": "DSH-ENTRY recognized (warnings)",
+      "exit": 0
+    },
+    {
+      "id": "EricWang1358__dsh-web-studyhub",
+      "fullName": "EricWang1358/dsh-web-studyhub",
+      "stars": 159,
+      "clone": "ok",
+      "status": "warn",
+      "level": "DSH-ENTRY recognized (warnings)",
+      "exit": 0
+    },
+    {
+      "id": "tong-io__tongflow",
+      "fullName": "tong-io/tongflow",
+      "stars": 1049,
+      "clone": "ok",
+      "status": "warn",
+      "level": "DSH-ENTRY recognized (warnings)",
+      "exit": 0
+    },
+    {
+      "id": "vibeinging__dsh-desktop",
+      "fullName": "vibeinging/dsh-desktop",
+      "stars": 486,
+      "clone": "ok",
+      "status": "warn",
+      "level": "DSH-ENTRY recognized (warnings)",
+      "exit": 0
+    },
+    {
+      "id": "fwerkor__local-shell-mcp",
+      "fullName": "fwerkor/local-shell-mcp",
+      "stars": 106,
+      "clone": "ok",
+      "status": "warn",
+      "level": "DSH-ENTRY recognized (warnings)",
+      "exit": 0
+    },
+    {
+      "id": "Anionex__dsh-turn-rewind",
+      "fullName": "Anionex/dsh-turn-rewind",
+      "stars": 142,
+      "clone": "ok",
+      "status": "warn",
+      "level": "DSH-ENTRY recognized (warnings)",
+      "exit": 0
+    },
+    {
+      "id": "c3cvld7aag__fujiang-dsh",
+      "fullName": "c3cvld7aag/fujiang-dsh",
+      "stars": 413,
+      "clone": "ok",
+      "status": "warn",
+      "level": "DSH-ENTRY recognized (warnings)",
+      "exit": 0
+    },
+    {
+      "id": "MindLab-Research__dsh-generative-ui",
+      "fullName": "MindLab-Research/dsh-generative-ui",
+      "stars": 102,
+      "clone": "ok",
+      "status": "warn",
+      "level": "DSH-ENTRY recognized (warnings)",
+      "exit": 0
+    },
+    {
+      "id": "seriousz158__dsh-memory",
+      "fullName": "seriousz158/dsh-memory",
+      "stars": 169,
+      "clone": "ok",
+      "status": "warn",
+      "level": "DSH-ENTRY recognized (warnings)",
+      "exit": 0
+    },
+    {
+      "id": "shanliuling__skills-link",
+      "fullName": "shanliuling/skills-link",
+      "stars": 197,
+      "clone": "ok",
+      "status": "warn",
+      "level": "DSH-ENTRY recognized (warnings)",
+      "exit": 0
+    },
+    {
+      "id": "skymecode__deepseek-harness-for-vscode",
+      "fullName": "skymecode/deepseek-harness-for-vscode",
+      "stars": 162,
+      "clone": "ok",
+      "status": "warn",
+      "level": "DSH-ENTRY recognized (warnings)",
+      "exit": 0
+    },
+    {
+      "id": "zed1902209846-dotcom__DPwhale-plugin",
+      "fullName": "zed1902209846-dotcom/DPwhale-plugin",
+      "stars": 1,
+      "clone": "ok",
+      "status": "fail",
+      "level": null,
+      "exit": 1
+    },
+    {
+      "id": "fangqiing__dsh-knowledge-lite",
+      "fullName": "fangqiing/dsh-knowledge-lite",
+      "stars": 1,
+      "clone": "ok",
+      "status": "warn",
+      "level": "DSH-ENTRY recognized (warnings)",
+      "exit": 0
+    },
+    {
+      "id": "Tasihi89__dsh-talk-map",
+      "fullName": "Tasihi89/dsh-talk-map",
+      "stars": 104,
+      "clone": "ok",
+      "status": "warn",
+      "level": "DSH-ENTRY recognized (warnings)",
+      "exit": 0
+    },
+    {
+      "id": "Ruler4396__dsh-launcher",
+      "fullName": "Ruler4396/dsh-launcher",
+      "stars": 196,
+      "clone": "ok",
+      "status": "fail",
+      "level": null,
+      "exit": 1
+    },
+    {
+      "id": "fzy0517__deepseek-harness-session-cleaner",
+      "fullName": "fzy0517/deepseek-harness-session-cleaner",
+      "stars": 1,
+      "clone": "ok",
+      "status": "warn",
+      "level": "DSH-ENTRY recognized (warnings)",
+      "exit": 0
+    },
+    {
+      "id": "173787247__dsh-wsl-dns",
+      "fullName": "173787247/dsh-wsl-dns",
+      "stars": 1,
+      "clone": "ok",
+      "status": "warn",
+      "level": "DSH-ENTRY recognized (warnings)",
+      "exit": 0
+    },
+    {
+      "id": "Yu-tao-Li__dsh-computer-use-win",
+      "fullName": "Yu-tao-Li/dsh-computer-use-win",
+      "stars": 377,
+      "clone": "ok",
+      "status": "warn",
+      "level": "DSH-ENTRY recognized (warnings)",
+      "exit": 0
+    },
+    {
+      "id": "Ansellwan__DSH-Custom-Wallpaper",
+      "fullName": "Ansellwan/DSH-Custom-Wallpaper",
+      "stars": 1,
+      "clone": "ok",
+      "status": "warn",
+      "level": "DSH-ENTRY recognized (warnings)",
+      "exit": 0
+    },
+    {
+      "id": "xfgil__dsh-hot-reloader",
+      "fullName": "xfgil/dsh-hot-reloader",
+      "stars": 1,
+      "clone": "ok",
+      "status": "warn",
+      "level": "DSH-ENTRY recognized (warnings)",
+      "exit": 0
+    },
+    {
+      "id": "123dbl__dsh-side-session",
+      "fullName": "123dbl/dsh-side-session",
+      "stars": 1,
+      "clone": "ok",
+      "status": "warn",
+      "level": "DSH-ENTRY recognized (warnings)",
+      "exit": 0
+    },
+    {
+      "id": "agent-mobile__dsh-mobile-gateway",
+      "fullName": "agent-mobile/dsh-mobile-gateway",
+      "stars": 1,
+      "clone": "ok",
+      "status": "warn",
+      "level": "DSH-ENTRY recognized (warnings)",
+      "exit": 0
+    },
+    {
+      "id": "GanyuanRan__Aegis",
+      "fullName": "GanyuanRan/Aegis",
+      "stars": 1408,
+      "clone": "ok",
+      "status": "warn",
+      "level": "DSH-ENTRY recognized (warnings)",
+      "exit": 0
+    },
+    {
+      "id": "ZSeven-W__dsh-ios",
+      "fullName": "ZSeven-W/dsh-ios",
+      "stars": 354,
+      "clone": "ok",
+      "status": "warn",
+      "level": "DSH-ENTRY recognized (warnings)",
+      "exit": 0
+    },
+    {
+      "id": "ManoloRemiddi__DSH-Metafolder-Plugin",
+      "fullName": "ManoloRemiddi/DSH-Metafolder-Plugin",
+      "stars": 1,
+      "clone": "ok",
+      "status": "warn",
+      "level": "DSH-ENTRY recognized (warnings)",
+      "exit": 0
+    },
+    {
+      "id": "yizhiyizhi0128__dsh-peak-scheduler",
+      "fullName": "yizhiyizhi0128/dsh-peak-scheduler",
+      "stars": 1,
+      "clone": "ok",
+      "status": "warn",
+      "level": "DSH-ENTRY recognized (warnings)",
+      "exit": 0
+    },
+    {
+      "id": "w2112515__dsh-remote-host",
+      "fullName": "w2112515/dsh-remote-host",
+      "stars": 1,
+      "clone": "ok",
+      "status": "warn",
+      "level": "DSH-ENTRY recognized (warnings)",
+      "exit": 0
+    },
+    {
+      "id": "yi-yezhiqiu__dsh-prompt-market",
+      "fullName": "yi-yezhiqiu/dsh-prompt-market",
+      "stars": 109,
+      "clone": "ok",
+      "status": "warn",
+      "level": "DSH-ENTRY recognized (warnings)",
+      "exit": 0
+    },
+    {
+      "id": "yjh051108__dsh-routing-suite",
+      "fullName": "yjh051108/dsh-routing-suite",
+      "stars": 6996,
+      "clone": "ok",
+      "status": "warn",
+      "level": "DSH-ENTRY recognized (warnings)",
+      "exit": 0
+    },
+    {
+      "id": "redstonedust__dsh-solidworks-copilot",
+      "fullName": "redstonedust/dsh-solidworks-copilot",
+      "stars": 1,
+      "clone": "ok",
+      "status": "warn",
+      "level": "DSH-ENTRY recognized (warnings)",
+      "exit": 0
+    },
+    {
+      "id": "V1ki__dsh-plugin-subscriptions",
+      "fullName": "V1ki/dsh-plugin-subscriptions",
+      "stars": 539,
+      "clone": "ok",
+      "status": "warn",
+      "level": "DSH-ENTRY recognized (warnings)",
+      "exit": 0
+    },
+    {
+      "id": "shengsheng90__DSH-taskboard",
+      "fullName": "shengsheng90/DSH-taskboard",
+      "stars": 324,
+      "clone": "ok",
+      "status": "warn",
+      "level": "DSH-ENTRY recognized (warnings)",
+      "exit": 0
+    },
+    {
+      "id": "linhay__harmony-next.skills",
+      "fullName": "linhay/harmony-next.skills",
+      "stars": 366,
+      "clone": "ok",
+      "status": "warn",
+      "level": "DSH-ENTRY recognized (warnings)",
+      "exit": 0
+    },
+    {
+      "id": "wz20__dsh-dafeiyu-dot",
+      "fullName": "wz20/dsh-dafeiyu-dot",
+      "stars": 1,
+      "clone": "ok",
+      "status": "warn",
+      "level": "DSH-ENTRY recognized (warnings)",
+      "exit": 0
+    },
+    {
+      "id": "HiSeax__dsh-codely",
+      "fullName": "HiSeax/dsh-codely",
+      "stars": 1,
+      "clone": "ok",
+      "status": "warn",
+      "level": "DSH-ENTRY recognized (warnings)",
+      "exit": 0
+    },
+    {
+      "id": "omdsh-dev__dsh_workflow",
+      "fullName": "omdsh-dev/dsh_workflow",
+      "stars": 154,
+      "clone": "ok",
+      "status": "warn",
+      "level": "DSH-ENTRY recognized (warnings)",
+      "exit": 0
+    },
+    {
+      "id": "shanliuling__dsh-image-gen",
+      "fullName": "shanliuling/dsh-image-gen",
+      "stars": 1028,
+      "clone": "ok",
+      "status": "warn",
+      "level": "DSH-ENTRY recognized (warnings)",
+      "exit": 0
+    },
+    {
+      "id": "howmp__dsh-pentest",
+      "fullName": "howmp/dsh-pentest",
+      "stars": 617,
+      "clone": "ok",
+      "status": "warn",
+      "level": "DSH-ENTRY recognized (warnings)",
+      "exit": 0
+    },
+    {
+      "id": "SeanTolstoyevski__dsh-code-review",
+      "fullName": "SeanTolstoyevski/dsh-code-review",
+      "stars": 1,
+      "clone": "ok",
+      "status": "warn",
+      "level": "DSH-ENTRY recognized (warnings)",
+      "exit": 0
+    },
+    {
+      "id": "dhicoc__dsh-reverse-skill",
+      "fullName": "dhicoc/dsh-reverse-skill",
+      "stars": 314,
+      "clone": "ok",
+      "status": "warn",
+      "level": "DSH-ENTRY recognized (warnings)",
+      "exit": 0
+    },
+    {
+      "id": "liustack__modsearch",
+      "fullName": "liustack/modsearch",
+      "stars": 890,
+      "clone": "ok",
+      "status": "warn",
+      "level": "DSH-ENTRY recognized (warnings)",
+      "exit": 0
+    },
+    {
+      "id": "sopaco__deepwiki-rs",
+      "fullName": "sopaco/deepwiki-rs",
+      "stars": 3157,
+      "clone": "ok",
+      "status": "fail",
+      "level": null,
+      "exit": 1
+    },
+    {
+      "id": "cxzrdxy__dsh-file-explorer",
+      "fullName": "cxzrdxy/dsh-file-explorer",
+      "stars": 1,
+      "clone": "ok",
+      "status": "warn",
+      "level": "DSH-ENTRY recognized (warnings)",
+      "exit": 0
+    }
+  ],
+  "status": {
+    "pass": 0,
+    "warn": 55,
+    "fail": 5,
+    "incomplete": 0,
+    "cloneFail": 0,
+    "error": 0
+  }
+}

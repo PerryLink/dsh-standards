@@ -1,0 +1,231 @@
+{
+  "schema": "dsh-conformance/1",
+  "standard": {
+    "id": "DS-C",
+    "version": "1.0.0"
+  },
+  "subject": {
+    "mode": "package",
+    "profile": "package",
+    "kind": "unknown",
+    "kindEvaluated": "unknown",
+    "name": null,
+    "version": null,
+    "path": "/tmp/dsh-sample60-ci/LiarMTTT__TavernWeave"
+  },
+  "anchor": {
+    "repo": "deepseek-ai/deepseek-harness",
+    "commit": "ce7073d51254c26cd63b22a60835b8f948deb447",
+    "scanner": "dsh-plugin-verify@0.1.0",
+    "dsh": "0.2.2-alpha.2",
+    "cordis": "4.0.6-alpha.1",
+    "runtime": null
+  },
+  "checks": [
+    {
+      "id": "DSC-01",
+      "clause": "C-1",
+      "layer": "L0",
+      "result": "FAIL",
+      "coverage": "full",
+      "reason": "package.json is missing or invalid: ENOENT: no such file or directory, open '/tmp/dsh-sample60-ci/LiarMTTT__TavernWeave/package.json'",
+      "evidence": [
+        "package.json"
+      ],
+      "details": [
+        {
+          "item": "C-1.1",
+          "result": "FAIL",
+          "reason": "ENOENT: no such file or directory, open '/tmp/dsh-sample60-ci/LiarMTTT__TavernWeave/package.json'",
+          "evidence": []
+        }
+      ],
+      "method": "M",
+      "advisory": false
+    },
+    {
+      "id": "DSC-02",
+      "clause": "C-2",
+      "layer": "L0",
+      "result": "ERROR",
+      "coverage": "not-run",
+      "reason": "manifest unavailable",
+      "evidence": [],
+      "details": [],
+      "method": "M",
+      "advisory": false
+    },
+    {
+      "id": "DSC-03",
+      "clause": "C-3",
+      "layer": "L0",
+      "result": "NA",
+      "coverage": "not-run",
+      "reason": "manifest unavailable",
+      "evidence": [],
+      "details": [],
+      "method": "M",
+      "advisory": false
+    },
+    {
+      "id": "DSC-04",
+      "clause": "C-4",
+      "layer": "L1",
+      "result": "ERROR",
+      "coverage": "not-run",
+      "reason": "manifest unavailable",
+      "details": [],
+      "evidence": [],
+      "method": "M",
+      "advisory": false
+    },
+    {
+      "id": "DSC-05",
+      "clause": "C-5",
+      "layer": "L1",
+      "result": "ERROR",
+      "coverage": "not-run",
+      "reason": "manifest unavailable",
+      "details": [],
+      "evidence": [],
+      "method": "M",
+      "advisory": false
+    },
+    {
+      "id": "DSC-06",
+      "clause": "C-6",
+      "layer": "L1+L2",
+      "result": "ERROR",
+      "coverage": "not-run",
+      "reason": "manifest unavailable",
+      "details": [],
+      "evidence": [],
+      "method": "M",
+      "advisory": false
+    },
+    {
+      "id": "DSC-07",
+      "clause": "C-7",
+      "layer": "L2",
+      "result": "ERROR",
+      "coverage": "not-run",
+      "reason": "manifest unavailable",
+      "details": [],
+      "evidence": [],
+      "method": "M",
+      "advisory": false
+    },
+    {
+      "id": "DSC-08",
+      "clause": "C-8",
+      "layer": "L3",
+      "result": "ERROR",
+      "coverage": "not-run",
+      "reason": "manifest unavailable",
+      "details": [],
+      "evidence": [],
+      "method": "M",
+      "advisory": false
+    },
+    {
+      "id": "DSC-09",
+      "clause": "C-9",
+      "layer": "L1",
+      "result": "ERROR",
+      "coverage": "not-run",
+      "reason": "manifest unavailable",
+      "details": [],
+      "evidence": [],
+      "method": "M",
+      "advisory": false
+    },
+    {
+      "id": "DSC-14",
+      "clause": "C-14",
+      "layer": "L1",
+      "method": "M",
+      "advisory": false,
+      "details": [],
+      "evidence": [],
+      "result": "NA",
+      "coverage": "not-run",
+      "reason": "entry static claim: no runtime evidence"
+    },
+    {
+      "id": "DSC-10",
+      "clause": "C-10",
+      "layer": "L0",
+      "result": "PASS",
+      "coverage": "full",
+      "reason": "",
+      "evidence": [],
+      "details": [],
+      "method": "M",
+      "advisory": true
+    },
+    {
+      "id": "DSC-11",
+      "clause": "C-11",
+      "layer": "L0",
+      "result": "ERROR",
+      "coverage": "not-run",
+      "reason": "manifest unavailable",
+      "details": [],
+      "evidence": [],
+      "method": "M",
+      "advisory": false
+    },
+    {
+      "id": "DSC-12",
+      "clause": "C-12",
+      "layer": "L0",
+      "result": "ERROR",
+      "coverage": "not-run",
+      "reason": "manifest unavailable",
+      "details": [],
+      "evidence": [],
+      "method": "M",
+      "advisory": false
+    },
+    {
+      "id": "DSC-13",
+      "clause": "C-13",
+      "layer": "L0",
+      "result": "ERROR",
+      "coverage": "not-run",
+      "reason": "manifest unavailable",
+      "details": [],
+      "evidence": [],
+      "method": "M",
+      "advisory": false
+    }
+  ],
+  "coverage": {
+    "mandatory": 5,
+    "pass": 0,
+    "warn": 0,
+    "fail": 1,
+    "na": 0,
+    "notRun": 4,
+    "error": 4,
+    "entryBlocking": {
+      "required": 6,
+      "failed": [
+        "C-1.1"
+      ],
+      "pass": false
+    }
+  },
+  "conclusion": {
+    "level": null,
+    "status": "fail",
+    "exitCode": 1,
+    "profile": "package",
+    "scope": "entry",
+    "subset": null,
+    "staticOnly": false,
+    "entryRuntime": "require",
+    "entryClaim": "static",
+    "reason": "FAIL: DSC-01; not run: DSC-02, DSC-11, DSC-12, DSC-13"
+  }
+}

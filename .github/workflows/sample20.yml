@@ -1,0 +1,23 @@
+name: sample20-static
+
+on:
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  sample20:
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 24
+      - name: Run 60 ENTRY static
+        run: node 40-checker/scripts/sample20-ci.mjs
+      - uses: actions/upload-artifact@v4
+        with:
+          name: sample20-static
+          path: results/sample20-ci
