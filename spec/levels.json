@@ -7,7 +7,11 @@
   "disclaimer": "Not an official DeepSeek standard, not a certification, not a security audit, and not a legal GB/GB-T/GB-Z instrument. The GB analogy is a communication aid only.",
   "canonical": "https://github.com/PerryLink/dsh-standards",
   "axes": {
-    "depth": ["entry", "flow", "boost"],
+    "depth": [
+      "entry",
+      "flow",
+      "boost"
+    ],
     "evidence": [
       "not-run",
       "recognized",
@@ -33,16 +37,57 @@
       "claim": "compatibility baseline",
       "requiredForClaim": "G0-G5 at the recorded dsh/cordis versions; G4 is static, G5 is freshness",
       "gates": [
-        { "id": "G0", "check": "dsh.bundle.patch parses", "owner": "plugin" },
-        { "id": "G1", "check": "base + sample compose; inserted row names resolve", "owner": "plugin" },
-        { "id": "G2", "check": "evaluatePluginCompatibility admits, or an explicit exact-version exemption applies", "owner": "host" },
-        { "id": "G3", "check": "real boot(): every target row is ACTIVE or disabled", "owner": "plugin/host/fixture" },
-        { "id": "G4", "check": "when dsh.client exists: exports['./client'] and a package-root row", "owner": "plugin" },
-        { "id": "G5", "check": "report carries runtime version/commit/artifact mtime; stale evidence is marked stale", "owner": "process" }
+        {
+          "id": "G0",
+          "check": "dsh.bundle.patch parses",
+          "owner": "plugin"
+        },
+        {
+          "id": "G1",
+          "check": "base + sample compose; inserted row names resolve",
+          "owner": "plugin"
+        },
+        {
+          "id": "G2",
+          "check": "evaluatePluginCompatibility admits, or an explicit exact-version exemption applies",
+          "owner": "host"
+        },
+        {
+          "id": "G3",
+          "check": "real boot(): every target row is ACTIVE or disabled",
+          "owner": "plugin/host/fixture"
+        },
+        {
+          "id": "G4",
+          "check": "when dsh.client exists: exports['./client'] and a package-root row",
+          "owner": "plugin"
+        },
+        {
+          "id": "G5",
+          "check": "report carries runtime version/commit/artifact mtime; stale evidence is marked stale",
+          "owner": "process"
+        }
       ],
-      "evidenceStates": ["recognized", "static", "runtime", "blocked", "failed", "not-run", "stale"],
-      "notClaimed": ["security", "UI correctness", "production readiness", "official endorsement"],
-      "docs": ["31-DSH-ENTRY入门规范.md", "90-兼容运行时保证.md", "92-兼容运行时实测.md"],
+      "evidenceStates": [
+        "recognized",
+        "static",
+        "runtime",
+        "blocked",
+        "failed",
+        "not-run",
+        "stale"
+      ],
+      "notClaimed": [
+        "security",
+        "UI correctness",
+        "production readiness",
+        "official endorsement"
+      ],
+      "docs": [
+        "31-DSH-ENTRY入门规范.md",
+        "90-兼容运行时保证.md",
+        "92-兼容运行时实测.md"
+      ],
       "machine": {
         "checker": "40-checker/bin/dsh-plugin-verify.mjs --scope entry --entry-claim static|runtime",
         "smoke": "40-checker/scripts/bundle-smoke.mjs",
@@ -58,18 +103,56 @@
       "claim": "recommended adoption",
       "requiredForClaim": "J1-J8 with recorded evidence; manual journeys are allowed but must be marked manual",
       "gates": [
-        { "id": "J1", "check": "install and first run" },
-        { "id": "J2", "check": "configuration and validation errors" },
-        { "id": "J3", "check": "error recovery and rollback" },
-        { "id": "J4", "check": "upgrade and migration" },
-        { "id": "J5", "check": "README and discoverability" },
-        { "id": "J6", "check": "uninstall and cleanup" },
-        { "id": "J7", "check": "client states (loading/empty/error/offline)" },
-        { "id": "J8", "check": "long-running and cancellation behavior" }
+        {
+          "id": "J1",
+          "check": "install and remove: add -> dump-config -> remove; no hand-edited profile"
+        },
+        {
+          "id": "J2",
+          "check": "enable and disable: default on/off, stable id, dump diff is correct"
+        },
+        {
+          "id": "J3",
+          "check": "configuration: schema/defaults, invalid value fails loudly with a field path, volatile hot change"
+        },
+        {
+          "id": "J4",
+          "check": "first success: five-minute quickstart, readable error with three elements"
+        },
+        {
+          "id": "J5",
+          "check": "permissions and disclosure: capabilities/labels/commitments match README, forbidden words 0"
+        },
+        {
+          "id": "J6",
+          "check": "upgrade, rollback and uninstall: two versions, data preserved, rollback <=2 commands, no residue"
+        },
+        {
+          "id": "J7",
+          "check": "observability: start line name@version, diagnosable failure/pending, log path"
+        },
+        {
+          "id": "J8",
+          "check": "client/server shapes: headless/web/client-off work or are explicitly refused"
+        }
       ],
-      "evidenceStates": ["manual", "runtime", "not-run", "failed", "stale"],
-      "notClaimed": ["certification", "ranking", "security review", "every UI layout"],
-      "docs": ["32-DSH-FLOW顺畅规范.md", "94-开发建议-顺畅.md"],
+      "evidenceStates": [
+        "manual",
+        "runtime",
+        "not-run",
+        "failed",
+        "stale"
+      ],
+      "notClaimed": [
+        "certification",
+        "ranking",
+        "security review",
+        "every UI layout"
+      ],
+      "docs": [
+        "32-DSH-FLOW顺畅规范.md",
+        "94-开发建议-顺畅.md"
+      ],
       "machine": {
         "journey": "40-checker/scripts/journey.mjs",
         "journeyRuntime": "40-checker/scripts/journey-runtime.mjs",
@@ -84,18 +167,56 @@
       "claim": "guiding practice; evidence cards, no badge",
       "requiredForClaim": "LEV-1..LEV-8 evidence cards with environment, input, command, negative control, result, version anchor, limitations",
       "gates": [
-        { "id": "LEV-1", "check": "effects/timers/connections/watchers/subprocesses are registered as effects and return to baseline" },
-        { "id": "LEV-2", "check": "required services are injected; optional ones use ctx.get; no polling" },
-        { "id": "LEV-3", "check": "hot config uses volatile()/get(); config change does not remount" },
-        { "id": "LEV-4", "check": "event modes match; waterfall observers call next(); notification listeners are isolated" },
-        { "id": "LEV-5", "check": "seam/isolate/group used only when needed; per-agent ctx is honored" },
-        { "id": "LEV-6", "check": "tool/prompt declarations are byte-stable; volatile data goes through systemPrompt.context" },
-        { "id": "LEV-7", "check": "independent calls use bounded parallelism; long work uses jobs; cancellation propagates" },
-        { "id": "LEV-8", "check": "bundle patch/preset expresses differences; every practice has an evidence card" }
+        {
+          "id": "LEV-1",
+          "check": "effects/timers/connections/watchers/subprocesses are registered as effects and return to baseline"
+        },
+        {
+          "id": "LEV-2",
+          "check": "required services are injected; optional ones use ctx.get; no polling"
+        },
+        {
+          "id": "LEV-3",
+          "check": "hot config uses volatile()/get(); config change does not remount"
+        },
+        {
+          "id": "LEV-4",
+          "check": "event modes match; waterfall observers call next(); notification listeners are isolated"
+        },
+        {
+          "id": "LEV-5",
+          "check": "seam/isolate/group used only when needed; per-agent ctx is honored"
+        },
+        {
+          "id": "LEV-6",
+          "check": "tool/prompt declarations are byte-stable; volatile data goes through systemPrompt.context"
+        },
+        {
+          "id": "LEV-7",
+          "check": "independent calls use bounded parallelism; long work uses jobs; cancellation propagates"
+        },
+        {
+          "id": "LEV-8",
+          "check": "bundle patch/preset expresses differences; every practice has an evidence card"
+        }
       ],
-      "evidenceStates": ["measured", "not-measured", "failed", "stale"],
-      "notClaimed": ["production benchmark", "billing/cache-hit rate", "total score", "ranking"],
-      "docs": ["33-DSH-BOOST加速实践.md", "95-开发建议-加速.md", "examples/boost/LEV-3-6.md"],
+      "evidenceStates": [
+        "measured",
+        "not-measured",
+        "failed",
+        "stale"
+      ],
+      "notClaimed": [
+        "production benchmark",
+        "billing/cache-hit rate",
+        "total score",
+        "ranking"
+      ],
+      "docs": [
+        "33-DSH-BOOST加速实践.md",
+        "95-开发建议-加速.md",
+        "examples/boost/LEV-3-6.md"
+      ],
       "machine": {
         "lev3": "examples/boost/lev3-loader-bench.mjs",
         "lev6": "examples/boost/lev6-capture-server.mjs",
@@ -107,42 +228,67 @@
   "crosswalk": {
     "dsh-plugin-doctor": {
       "repo": "https://github.com/PerryLink/dsh-plugin-doctor",
-      "entry": ["R", "K", "D", "X"],
+      "entry": [
+        "R",
+        "K",
+        "D",
+        "X"
+      ],
       "flow": "not-covered",
       "boost": "not-covered",
       "note": "Doctor maps its R/K/D/X results to an ENTRY status; it does not run J1-J8 or LEV benchmarks."
     },
     "dsh-plugin-certification": {
       "repo": "https://github.com/PerryLink/dsh-plugin-certification",
-      "entry": ["manifest", "installSmoke", "securityVeto"],
+      "entry": [
+        "manifest",
+        "installSmoke",
+        "securityVeto"
+      ],
       "flow": "not-covered",
       "boost": "not-covered",
       "note": "Grade A-D is orthogonal; certification evidence is necessary but not sufficient for ENTRY runtime."
     },
     "dsh-plugin-guide": {
       "repo": "https://github.com/PerryLink/dsh-plugin-guide",
-      "entry": ["guide/standards.md", "SKILL.md"],
-      "flow": ["guide/standards.md", "plugin-dev-guide.md"],
-      "boost": ["guide/standards.md", "plugin-dev-guide.md"],
+      "entry": [
+        "guide/standards.md",
+        "SKILL.md"
+      ],
+      "flow": [
+        "guide/standards.md",
+        "plugin-dev-guide.md"
+      ],
+      "boost": [
+        "guide/standards.md",
+        "plugin-dev-guide.md"
+      ],
       "note": "The guide teaches the levels and routes authors to the checker/audit; it does not certify."
     },
     "dsh-plugin-kit": {
       "repo": "https://github.com/PerryLink/dsh-plugin-kit",
-      "entry": ["data/peer-range.json", "skeleton"],
+      "entry": [
+        "data/peer-range.json",
+        "skeleton"
+      ],
       "flow": "not-covered",
       "boost": "not-covered",
       "note": "Kit supplies the shared peer range and skeleton; it can carry level metadata in a future release."
     },
     "dsh-test-drive": {
       "repo": "https://github.com/PerryLink/dsh-test-drive",
-      "entry": ["install smoke"],
+      "entry": [
+        "install smoke"
+      ],
       "flow": "not-covered",
       "boost": "not-covered",
       "note": "Test-drive is the install/load evidence source for ENTRY and certification dimension E."
     },
     "dsh-score": {
       "repo": "https://github.com/PerryLink/dsh-score",
-      "entry": ["consumes test-drive"],
+      "entry": [
+        "consumes test-drive"
+      ],
       "flow": "not-covered",
       "boost": "not-covered",
       "note": "Score is a quality summary; it must not label a plugin with a DSH level."
@@ -167,7 +313,20 @@
   },
   "review": {
     "provisionalWhileSolo": true,
-    "expiryDays": { "entry": 90, "flow": 180, "boost": 365 },
-    "evidenceMustCarry": ["level", "levelVersion", "dshVersion", "cordisVersion", "commit", "generatedAt", "scope", "notClaimed"]
+    "expiryDays": {
+      "entry": 90,
+      "flow": 180,
+      "boost": 365
+    },
+    "evidenceMustCarry": [
+      "level",
+      "levelVersion",
+      "dshVersion",
+      "cordisVersion",
+      "commit",
+      "generatedAt",
+      "scope",
+      "notClaimed"
+    ]
   }
 }
