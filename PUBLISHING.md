@@ -4,8 +4,8 @@
 
 | 平台 | `dsh-standard` | `dsh-standards` | 说明 |
 |---|---|---|---|
-| GitHub | **私有仓** `PerryLink/dsh-standard` | **私有仓** `PerryLink/dsh-standards`（README 指向主仓） | 主仓 245 个 tree 条目；alias 只放 README |
-| npm | **被 npm 拒绝**：名称与 `ts-standard` 过近，403 | **已发布** `dsh-standards@0.0.2` | 备选 **`@perrylink/dsh-standard@0.0.2` 已发布且可见** |
+| GitHub | **私有仓** `PerryLink/dsh-standard` | **私有仓** `PerryLink/dsh-standards`（README 指向主仓） | 主仓 247 个 tree 条目；alias 只放 README |
+| npm | **被 npm 拒绝**：名称与 `ts-standard` 过近，403 | **已发布** `dsh-standards@0.0.3` | 备选 `@perrylink/dsh-standard@0.0.2`、`@perrylink/dsh-standards@0.0.3` 已发布 |
 | PyPI | **已发布** `dsh-standard@0.0.2` | **已发布** `dsh-standards@0.0.2` | wheel 占位 + `canonical()` 指针；不是可用库 |
 | Gitee | **私有仓** `perrylink/dsh-standard` | **私有仓** `perrylink/dsh-standards` | 空仓 + README 指针 |
 | GitCode/AtomGit | **私有仓** `PerryLink/dsh-standard` | **私有仓** `PerryLink/dsh-standards` | 空仓 + README 指针 |
@@ -20,5 +20,5 @@
 ## 更新策略
 
 - 内容只维护 `dsh-standards`；`dsh-standard` 只放指针，不复制。
-- npm/PyPI 占位包只做 0.0.1；正式发布前重新评估包名。
+- npm/PyPI 占位包已升级到有最小功能的 0.0.2/0.0.3；正式发布前重新评估包名。
 - 平台链接不得写成“官方/认证”。
