@@ -5,5 +5,6 @@
   "state": "blocked",
   "reason": "bundle-smoke loader-only cannot provide cmdlineArgs/webApp; web-app requires the real CLI profile",
   "observed": "12-13 plugins wait for webStartup/webServer/connection; no target row ACTIVE",
-  "notAClaim": "not unavailable, not fail, not pass"
+  "notAClaim": "not unavailable, not fail, not pass",
+  "ci": {"run": 41214493225, "status": "failure", "reason": "web boots but GET / returns 401; no auth/trusted-host configured"
 }
