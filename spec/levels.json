@@ -292,6 +292,45 @@
       "flow": "not-covered",
       "boost": "not-covered",
       "note": "Score is a quality summary; it must not label a plugin with a DSH level."
+    },
+    "dsh-plugin-portal": {
+      "repo": "https://github.com/PerryLink/dsh-plugin-portal",
+      "entry": "display-only",
+      "flow": "display-only",
+      "boost": "display-only",
+      "note": "A portal displays labels; it must not derive a level from stars or ratings."
+    },
+    "dsh-catalog": {
+      "repo": "https://github.com/PerryLink/dsh-catalog",
+      "entry": "display-only",
+      "flow": "display-only",
+      "boost": "display-only",
+      "note": "A market catalog may display evidence-backed labels; no label without a link."
+    },
+    "dsh-checkers": {
+      "repo": "https://github.com/PerryLink/dsh-checkers",
+      "entry": [
+        "static checks"
+      ],
+      "flow": "not-covered",
+      "boost": "not-covered",
+      "note": "A 53-checker bundle; it feeds ENTRY static, not runtime G0-G3."
+    },
+    "dsh-policy-ledger": {
+      "repo": "https://github.com/PerryLink/dsh-policy-ledger",
+      "entry": [
+        "install diagnosis"
+      ],
+      "flow": "not-covered",
+      "boost": "not-covered",
+      "note": "Install-only diagnosis; maps failures to G0/G2/G3 attribution."
+    },
+    "dsh-cert-mcp": {
+      "repo": "https://github.com/PerryLink/dsh-cert-mcp",
+      "entry": "not-applicable",
+      "flow": "not-applicable",
+      "boost": "not-applicable",
+      "note": "Read-only MCP over the certification registry; it does not assign levels."
     }
   },
   "labels": {
