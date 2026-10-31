@@ -1,17 +1,23 @@
 name: web-runtime
 
-# Real Web-profile runtime evidence for the 18 ENTRY packages.
+# Real Web-profile evidence for the 18 ENTRY packages.
 #
-# Each shard creates a custom profile from the shipped `web` template, installs
-# one sample with `dsh plugin add`, boots the real Web app, exchanges the
-# process launch token in a real Chromium, and probes:
-#   - `window.__DSH_BOOT__` contains the package when it declares `./client`;
-#   - the shell mounts (#root has children);
-#   - no console errors / page errors / failed script requests.
+# One job per package (18 rows, no package booted twice):
+#   - 4 rows are marked `webapp: true` (SeaOf0/dsh-redteam-model,
+#     liguobao/ds-harness-remote, shaobeichen/dsh-pocket, dsh-ui-auth);
+#   - every row is probed for the client module when the installed package
+#     declares `exports["./client"]`.
+#
+# Each job creates a custom profile from the shipped `web` template, installs
+# one sample with `dsh plugin add --ignore-scripts`, boots the real Web app,
+# exchanges the process launch token in Chromium, and asserts:
+#   - `window.__DSH_BOOT__` is present and contains the expected package id;
+#   - the boot page marker `[data-dsh-boot]` disappeared and `#root` mounted;
+#   - no console errors, page errors, or failed same-origin script requests.
 #
 # This is `client-module-loaded`, not a visual UI review. A package without a
-# client export still gets a boot + shell check, so the run also covers the
-# server-side rows that need `webServer` / `connection`.
+# client export still gets a shell-only probe and is recorded with
+# `skipped: "no ./client export"`; the summary job proves the 15/18 denominator.
 #
 # Manual run: Actions -> web-runtime -> Run workflow.
 
@@ -31,24 +37,140 @@ jobs:
       max-parallel: 4
       matrix:
         include:
-          - { id: dsh-free-search, pkg: dsh-free-search, spec: 'dsh-free-search@0.9.26', kind: npm }
-          - { id: dsh-our-free-model, pkg: dsh-our-free-model, spec: 'dsh-our-free-model@2.1.0', kind: npm }
-          - { id: redteam-model, pkg: '@dsh-external/dsh-redteam-model', spec: 'github:SeaOf0/dsh-redteam-model', kind: webapp-git }
-          - { id: YuJun-purge, pkg: dsh-purge, spec: 'github:YuJunZhiXue/dsh-purge', kind: webapp-git }
-          - { id: ci-diet, pkg: dsh-ci-diet, spec: 'dsh-ci-diet@0.5.2', kind: npm }
-          - { id: daily-log, pkg: '@zzerx/dsh-plugin-daily-log', spec: '@zzerx/dsh-plugin-daily-log@0.4.3', kind: npm }
-          - { id: howmp-pentest, pkg: '@howmp/dsh-pentest', spec: '@howmp/dsh-pentest@0.1.0-rc.37', kind: npm }
-          - { id: king-purge, pkg: dsh-purge-community, spec: 'github:kingcharleslzy-ai/dsh-purge', kind: webapp-git }
-          - { id: liguobao-remote, pkg: ds-harness-remote, spec: 'ds-harness-remote@0.6.0', kind: webapp }
-          - { id: mmparko-purge, pkg: dsh-purge, spec: 'github:mmparko/dsh-purge', kind: webapp-git }
-          - { id: project-memory, pkg: '@yolk_vat-y/dsh-project-memory', spec: '@yolk_vat-y/dsh-project-memory@0.6.7', kind: npm }
-          - { id: qiushi, pkg: qiushi-dsh-evidence-audit, spec: 'qiushi-dsh-evidence-audit@0.1.0', kind: npm }
-          - { id: dsh-pocket, pkg: dsh-pocket, spec: 'dsh-pocket@2.12.0', kind: webapp }
-          - { id: status-rotator, pkg: dsh-status-rotator, spec: 'dsh-status-rotator@0.38.0', kind: npm }
-          - { id: telemetry, pkg: dsh-telemetry-redactor, spec: 'dsh-telemetry-redactor@0.1.0', kind: npm }
-          - { id: ui-auth, pkg: dsh-ui-auth, spec: 'dsh-ui-auth@0.7.1', kind: webapp }
-          - { id: verification, pkg: dsh-verification-receipt, spec: 'dsh-verification-receipt@0.1.0', kind: npm }
-          - { id: vision-router, pkg: dsh-vision-router, spec: 'dsh-vision-router@3.1.0', kind: npm }
+          - id: DDDMUC__dsh-free-search
+            pkg: dsh-free-search
+            version: 0.9.26
+            spec: dsh-free-search@0.9.26
+            repo: DDDMUC/dsh-free-search
+            webapp: false
+            login: false
+          - id: Ebony-Vinyl__dsh-our-free-model
+            pkg: dsh-our-free-model
+            version: 2.1.0
+            spec: dsh-our-free-model@2.1.0
+            repo: Ebony-Vinyl/dsh-our-free-model
+            webapp: false
+            login: false
+          - id: SeaOf0__dsh-redteam-model
+            pkg: '@dsh-external/dsh-redteam-model'
+            version: 1.1.2
+            # Not published on npm (404 on 2026-10-31); pin the repository
+            # commit that carries version 1.1.2 and the built lib/.
+            spec: 'github:SeaOf0/dsh-redteam-model#ce24bb25e35df8c8514e00e0d98f1a36d2e2a562'
+            repo: SeaOf0/dsh-redteam-model
+            webapp: true
+            login: false
+          - id: YuJunZhiXue__dsh-purge
+            pkg: dsh-purge
+            version: 1.1.85
+            # Not published on npm; pin the commit whose package.json says 1.1.85.
+            spec: 'github:YuJunZhiXue/dsh-purge#9716ca3e8711c7bb680668d34cc2e93e184028ad'
+            repo: YuJunZhiXue/dsh-purge
+            webapp: false
+            login: false
+          - id: ci-diet
+            pkg: dsh-ci-diet
+            version: 0.5.2
+            spec: dsh-ci-diet@0.5.2
+            repo: 0disoft/dsh-ci-diet
+            webapp: false
+            login: false
+          - id: daily-log
+            pkg: '@zzerx/dsh-plugin-daily-log'
+            version: 0.4.3
+            spec: '@zzerx/dsh-plugin-daily-log@0.4.3'
+            repo: 0x7A7A6572/dsh-forge-studio
+            webapp: false
+            login: false
+          - id: howmp__dsh-pentest
+            pkg: '@howmp/dsh-pentest'
+            version: 0.1.0-rc.37
+            spec: '@howmp/dsh-pentest@0.1.0-rc.37'
+            repo: howmp/dsh-pentest
+            webapp: false
+            login: false
+          - id: kingcharleslzy-ai__dsh-purge
+            pkg: dsh-purge-community
+            version: 1.6.67
+            # Not published on npm; pin the commit whose package.json says 1.6.67.
+            spec: 'github:kingcharleslzy-ai/dsh-purge#84c7f61a42944cda4dac70c95d6f1233318996e4'
+            repo: kingcharleslzy-ai/dsh-purge
+            webapp: false
+            login: false
+          - id: liguobao__ds-harness-remote
+            pkg: ds-harness-remote
+            version: 0.6.0
+            spec: ds-harness-remote@0.6.0
+            repo: liguobao/ds-harness-remote
+            webapp: true
+            login: false
+          - id: mmparko__dsh-purge
+            pkg: dsh-purge
+            version: 1.1.71
+            # Not published on npm; pin the commit whose package.json says 1.1.71.
+            spec: 'github:mmparko/dsh-purge#033e6bd1e0f101352b39075ecd0d758ffef26b76'
+            repo: mmparko/dsh-purge
+            webapp: false
+            login: false
+          - id: project-memory
+            pkg: '@yolk_vat-y/dsh-project-memory'
+            version: 0.6.7
+            spec: '@yolk_vat-y/dsh-project-memory@0.6.7'
+            repo: 00080000/dsh-project-memory
+            webapp: false
+            login: false
+          - id: qiushi
+            pkg: qiushi-dsh-evidence-audit
+            version: 0.1.0
+            spec: qiushi-dsh-evidence-audit@0.1.0
+            repo: 030611/qiushi-dsh-evidence-audit
+            webapp: false
+            login: false
+          - id: shaobeichen__dsh-pocket
+            pkg: dsh-pocket
+            version: 2.12.0
+            spec: dsh-pocket@2.12.0
+            repo: shaobeichen/dsh-pocket
+            webapp: true
+            login: false
+          - id: status-rotator
+            pkg: dsh-status-rotator
+            version: 0.38.0
+            spec: dsh-status-rotator@0.38.0
+            repo: 01Virex/dsh-status-rotator
+            webapp: false
+            login: false
+          - id: telemetry
+            pkg: dsh-telemetry-redactor
+            version: 0.1.0
+            spec: dsh-telemetry-redactor@0.1.0
+            repo: 030611/dsh-telemetry-redactor
+            webapp: false
+            login: false
+          - id: ui-auth
+            pkg: dsh-ui-auth
+            version: 0.7.1
+            spec: dsh-ui-auth@0.7.1
+            repo: 0QwQ0/dsh-ui-auth
+            webapp: true
+            # dsh-ui-auth gates the whole Web UI behind POST /auth/login. The
+            # job uses the one-time admin credential the plugin writes on first
+            # boot; the probe logs in before opening the token URL.
+            login: true
+          - id: verification
+            pkg: dsh-verification-receipt
+            version: 0.1.0
+            spec: dsh-verification-receipt@0.1.0
+            repo: 030611/dsh-verification-receipt
+            webapp: false
+            login: false
+          - id: ysr666__dsh-vision-router
+            pkg: dsh-vision-router
+            version: 3.1.0
+            spec: dsh-vision-router@3.1.0
+            repo: ysr666/dsh-vision-router
+            webapp: false
+            login: false
     steps:
       - uses: actions/checkout@v4
 
@@ -57,97 +179,312 @@ jobs:
           node-version: 24
 
       - name: Install DSH, pnpm, Playwright
+        env:
+          DSH_VERSION: 0.2.2-alpha.2
+          PLAYWRIGHT_VERSION: 1.49.1
         run: |
-          npm install -g @deepseek-ai/dsh@0.2.2-alpha.2 pnpm@10 playwright@1.49.1
-          playwright install --with-deps chromium
+          set -euo pipefail
+          npm install -g "pnpm@10"
+          npm install -g "@deepseek-ai/dsh@${DSH_VERSION}"
+          # The probe imports bare `playwright`, so it must live in the repo's
+          # node_modules; a global install is not resolvable from ESM.
+          npm install --no-save "playwright@${PLAYWRIGHT_VERSION}" --no-audit --no-fund
+          npx playwright install --with-deps chromium
+          dsh --version
+          node --version
+          pnpm --version
+
+      - name: Prepare evidence directory
+        run: |
+          set -euo pipefail
+          echo "DSH_HOME=$RUNNER_TEMP/dsh-home" >> "$GITHUB_ENV"
+          echo "EVID=$GITHUB_WORKSPACE/40-checker/results/webruntime/${{ matrix.id }}" >> "$GITHUB_ENV"
+          mkdir -p "$RUNNER_TEMP/dsh-home" "$GITHUB_WORKSPACE/40-checker/results/webruntime/${{ matrix.id }}"
 
       - name: Create web-backed profile
         run: |
-          export DSH_HOME="$RUNNER_TEMP/dsh-home"
-          mkdir -p "$DSH_HOME"
-          dsh --profile wr --from-default-profile web --dump-config >/dev/null
+          set -euo pipefail
+          dsh --profile wr --from-default-profile web --dump-config > "$EVID/dump-config.yml"
           test -s "$DSH_HOME/profiles/wr/package.json"
+          cp "$DSH_HOME/profiles/wr/package.json" "$EVID/profile-package.json"
 
       - name: Install sample
         run: |
-          export DSH_HOME="$RUNNER_TEMP/dsh-home"
-          # Third-party install scripts are not executed in CI. Packages that
-          # require a postinstall build are recorded as their published/git
-          # artifact allows; the boot log shows any missing entry.
-          dsh plugin --profile wr add --ignore-scripts "${{ matrix.spec }}"
-          echo "installed ${{ matrix.pkg }}"
+          set -euo pipefail
+          # `--ignore-scripts` is deliberate: a third-party postinstall is
+          # executable code from the sample and is not run in CI. A package
+          # that needs a build script to publish its client entry will fail
+          # the boot-graph check, which is recorded as the measured result.
+          dsh plugin --profile wr add --ignore-scripts "${{ matrix.spec }}" \
+            > "$EVID/plugin-add.log" 2>&1
+          cp "$DSH_HOME/profiles/wr/package.json" "$EVID/profile-package-after.json"
 
-      - name: Detect client export
+      - name: Inspect installed package and client export
         id: client
+        env:
+          EXPECTED_NAME: ${{ matrix.pkg }}
+          EXPECTED_VERSION: ${{ matrix.version }}
         run: |
-          export DSH_HOME="$RUNNER_TEMP/dsh-home"
+          set -euo pipefail
           PKGJSON="$DSH_HOME/profiles/wr/node_modules/${{ matrix.pkg }}/package.json"
-          test -f "$PKGJSON"
-          HAS=$(node -e "const p=require(process.argv[1]);const e=p.exports&&p.exports['./client'];process.stdout.write(e?'1':'0')" "$PKGJSON")
-          echo "has_client=$HAS"
-          echo "has=$HAS" >> "$GITHUB_OUTPUT"
+          if [ ! -f "$PKGJSON" ]; then
+            echo "installed package manifest not found: $PKGJSON" >&2
+            exit 1
+          fi
+          cp "$PKGJSON" "$EVID/installed-package.json"
 
-      - name: Boot web
+          node -e '
+            const fs = require("node:fs")
+            const manifest = JSON.parse(fs.readFileSync(process.argv[1], "utf8"))
+            if (manifest.name !== process.env.EXPECTED_NAME || manifest.version !== process.env.EXPECTED_VERSION) {
+              console.error(`installed ${manifest.name}@${manifest.version}, expected ${process.env.EXPECTED_NAME}@${process.env.EXPECTED_VERSION}`)
+              process.exit(1)
+            }
+          ' "$PKGJSON"
+
+          HAS_CLIENT=$(node -e '
+            const fs = require("node:fs")
+            const manifest = JSON.parse(fs.readFileSync(process.argv[1], "utf8"))
+            const value = manifest.exports && typeof manifest.exports === "object"
+              ? manifest.exports["./client"]
+              : undefined
+            process.stdout.write(value === undefined ? "0" : "1")
+          ' "$PKGJSON")
+          DECLARES_CLIENT=$(node -e '
+            const fs = require("node:fs")
+            const manifest = JSON.parse(fs.readFileSync(process.argv[1], "utf8"))
+            process.stdout.write(manifest.dsh && manifest.dsh.client !== undefined ? "1" : "0")
+          ' "$PKGJSON")
+
+          node -e '
+            const fs = require("node:fs")
+            const manifest = JSON.parse(fs.readFileSync(process.argv[1], "utf8"))
+            const value = manifest.exports && typeof manifest.exports === "object"
+              ? manifest.exports["./client"]
+              : undefined
+            process.stdout.write(JSON.stringify({
+              name: manifest.name,
+              version: manifest.version,
+              hasClientExport: value !== undefined,
+              clientExport: value ?? null,
+              declaresDshClient: Boolean(manifest.dsh && manifest.dsh.client !== undefined),
+            }, null, 2) + "\n")
+          ' "$PKGJSON" > "$EVID/client-export.json"
+
+          if [ "$DECLARES_CLIENT" = "1" ] && [ "$HAS_CLIENT" != "1" ]; then
+            echo "package declares dsh.client but exports no ./client bundle" >&2
+            exit 1
+          fi
+          if [ "${{ matrix.webapp }}" = "true" ] && [ "$HAS_CLIENT" != "1" ]; then
+            echo "webapp row has no ./client export" >&2
+            exit 1
+          fi
+
+          EXPECT=""
+          if [ "$HAS_CLIENT" = "1" ]; then EXPECT="${{ matrix.pkg }}"; fi
+          echo "has_client=$HAS_CLIENT" >> "$GITHUB_OUTPUT"
+          echo "expect=$EXPECT" >> "$GITHUB_OUTPUT"
+          echo "client_export=$HAS_CLIENT declares_client=$DECLARES_CLIENT"
+
+      - name: Boot web profile
         id: boot
         run: |
           set -euo pipefail
-          export DSH_HOME="$RUNNER_TEMP/dsh-home"
-          rm -f "$RUNNER_TEMP/web.log"
-          dsh --profile wr --no-open --port 18770 >"$RUNNER_TEMP/web.log" 2>&1 &
-          echo $! >"$RUNNER_TEMP/web.pid"
+          # Run from $RUNNER_TEMP so dsh-ui-auth writes its one-time bootstrap
+          # credential outside the repository and outside the uploaded artifact.
+          cd "$RUNNER_TEMP"
+          rm -f "$EVID/web.log" "$RUNNER_TEMP/app-url.txt" "$RUNNER_TEMP/web.pid"
+          dsh --profile wr --no-open --port 18770 > "$EVID/web.log" 2>&1 &
+          echo $! > "$RUNNER_TEMP/web.pid"
           APP_URL=""
-          for i in $(seq 1 90); do
-            APP_URL=$(sed -n 's/^dsh web: \(http[^ ]*\)$/\1/p' "$RUNNER_TEMP/web.log" | head -1)
-            [ -n "$APP_URL" ] && break
+          for i in $(seq 1 180); do
+            APP_URL=$(sed -n 's/^dsh web: \(http[^ ]*\)$/\1/p' "$EVID/web.log" | head -1)
+            if [ -n "$APP_URL" ]; then break; fi
             if ! kill -0 "$(cat "$RUNNER_TEMP/web.pid")" 2>/dev/null; then
-              echo "web exited before printing a URL" >&2
+              echo "dsh web exited before printing its URL" >&2
               break
             fi
-            sleep 2
+            sleep 1
           done
-          test -n "$APP_URL"
-          echo "app_url=$APP_URL" >> "$GITHUB_OUTPUT"
-          echo "--- boot log ---"
-          sed -n '1,120p' "$RUNNER_TEMP/web.log"
+          if [ -z "$APP_URL" ]; then
+            echo "dsh web did not print its URL within 180 s" >&2
+            echo "--- boot log (tail) ---" >&2
+            tail -100 "$EVID/web.log" >&2 || true
+            exit 1
+          fi
+          printf '%s' "$APP_URL" > "$RUNNER_TEMP/app-url.txt"
+          chmod 600 "$RUNNER_TEMP/app-url.txt"
+          echo "url_printed=true" >> "$GITHUB_OUTPUT"
 
-      - name: Probe in Chromium
-        id: probe
+      - name: Prepare gated login (dsh-ui-auth)
+        if: matrix.login
         run: |
           set -euo pipefail
-          export DSH_HOME="$RUNNER_TEMP/dsh-home"
-          EXPECT=""
-          if [ "${{ steps.client.outputs.has }}" = "1" ]; then EXPECT="${{ matrix.pkg }}"; fi
-          mkdir -p 40-checker/results/webruntime/${{ matrix.id }}
-          node 40-checker/scripts/web-probe.mjs \
-            --url "${{ steps.boot.outputs.app_url }}" \
-            --expect "$EXPECT" \
-            --out "40-checker/results/webruntime/${{ matrix.id }}/probe.json" \
-            --screenshot "40-checker/results/webruntime/${{ matrix.id }}/shot.png" \
-            --timeout 90000
+          for i in $(seq 1 60); do
+            if [ -s "$RUNNER_TEMP/dsh-ui-auth-bootstrap.txt" ]; then break; fi
+            sleep 1
+          done
+          test -s "$RUNNER_TEMP/dsh-ui-auth-bootstrap.txt"
+          echo "bootstrap credential file present: $RUNNER_TEMP/dsh-ui-auth-bootstrap.txt"
 
-      - name: Scan boot log for target failures
+      - name: Probe in Chromium
+        run: |
+          set -euo pipefail
+          APP_URL=$(cat "$RUNNER_TEMP/app-url.txt")
+          ARGS=(
+            --url "$APP_URL"
+            --expect "${{ steps.client.outputs.expect }}"
+            --out "$EVID/probe.json"
+            --screenshot "$EVID/shot.png"
+            --timeout 90000
+          )
+          if [ "${{ matrix.login }}" = "true" ]; then
+            ARGS+=(--login-file "$RUNNER_TEMP/dsh-ui-auth-bootstrap.txt")
+          fi
+          node 40-checker/scripts/web-probe.mjs "${ARGS[@]}"
+
+      - name: Annotate row result
         if: always()
         run: |
-          export DSH_HOME="$RUNNER_TEMP/dsh-home"
-          LOG="$RUNNER_TEMP/web.log"
-          FAIL=0
-          if grep -Eiq "(failed to import|did not activate|failed to apply).*(${{ matrix.pkg }}|${{ matrix.id }})" "$LOG"; then FAIL=1; fi
-          if grep -Eiq "(${{ matrix.pkg }}).*(failed to import|did not activate|failed to apply)" "$LOG"; then FAIL=1; fi
-          node -e "const fs=require('fs');const p='40-checker/results/webruntime/${{ matrix.id }}/probe.json';const r=fs.existsSync(p)?JSON.parse(fs.readFileSync(p)):{};r.bootLogScan={failed:process.argv[1]==='1'};fs.writeFileSync(p,JSON.stringify(r,null,2)+'\n')" "$FAIL"
-          test "$FAIL" = "0"
+          node - "$EVID" "${{ matrix.id }}" "${{ matrix.pkg }}" "${{ matrix.webapp }}" "${{ matrix.login }}" <<'NODE'
+          const fs = require('node:fs')
+          const path = require('node:path')
+          const [dir, id, pkg, webapp, login] = process.argv.slice(2)
+          const clientPath = path.join(dir, 'client-export.json')
+          const client = fs.existsSync(clientPath) ? JSON.parse(fs.readFileSync(clientPath, 'utf8')) : null
+          const hasClient = client?.hasClientExport === true
+          const probePath = path.join(dir, 'probe.json')
+          let probe
+          if (fs.existsSync(probePath)) {
+            probe = JSON.parse(fs.readFileSync(probePath, 'utf8'))
+          } else {
+            probe = {
+              schema: 'dsh-web-probe/1',
+              ok: false,
+              expected: hasClient ? [pkg] : [],
+              bootGraph: 'missing',
+              bootIds: [],
+              loadedEntries: [],
+              consoleErrors: [],
+              pageErrors: [],
+              failedRequests: [],
+              screenshot: path.join(dir, 'shot.png'),
+              elapsedMs: 0,
+              error: 'probe did not run (boot or install failed)',
+            }
+          }
+          probe.id = id
+          probe.pkg = pkg
+          probe.webapp = webapp === 'true'
+          probe.login = login === 'true'
+          probe.hasClient = hasClient
+          probe.clientClaim = hasClient
+          probe.skipped = hasClient ? null : 'no ./client export'
+          if (client !== null) probe.installed = { name: client.name, version: client.version }
+          fs.writeFileSync(probePath, JSON.stringify(probe, null, 2) + '\n')
+
+          const lines = [
+            `# ${id}`,
+            '',
+            `- package: \`${pkg}\``,
+            `- webapp: ${webapp}`,
+            `- client export: ${hasClient ? 'yes' : 'no (skipped)'}`,
+            `- ok: ${probe.ok === true ? 'yes' : 'no'}`,
+            `- bootGraph: ${probe.bootGraph}`,
+            `- expected: ${(probe.expected || []).join(', ') || '(none)'}`,
+            `- loadedEntries: ${(probe.loadedEntries || []).join(', ') || '(none)'}`,
+            `- missingEntries: ${(probe.missingEntries || []).join(', ') || '(none)'}`,
+            `- consoleErrors: ${probe.consoleErrors?.length ?? 0}`,
+            `- pageErrors: ${probe.pageErrors?.length ?? 0}`,
+            `- failedRequests: ${probe.failedRequests?.length ?? 0}`,
+            `- rootChildren: ${probe.rootChildren}`,
+            `- bootPageVisible: ${probe.bootPageVisible}`,
+          ]
+          if (probe.error) lines.push(`- error: ${probe.error.split('\n')[0]}`)
+          fs.writeFileSync(path.join(dir, 'summary.md'), lines.join('\n') + '\n')
+          if (process.env.GITHUB_STEP_SUMMARY) {
+            fs.appendFileSync(process.env.GITHUB_STEP_SUMMARY, lines.join('\n') + '\n\n')
+          }
+          NODE
 
       - name: Stop web
         if: always()
         run: |
-          if [ -f "$RUNNER_TEMP/web.pid" ]; then kill "$(cat "$RUNNER_TEMP/web.pid")" 2>/dev/null || true; fi
+          if [ -f "$RUNNER_TEMP/web.pid" ]; then
+            kill "$(cat "$RUNNER_TEMP/web.pid")" 2>/dev/null || true
+            sleep 1
+          fi
+          if [ -f "$EVID/web.log" ]; then
+            # Redact the process launch token and the dsh-ui-auth bootstrap password.
+            sed -E -i \
+              -e 's/([?&]token=)[^&[:space:]]+/\1<redacted>/g' \
+              -e 's/(密码[[:space:]]*[:：][[:space:]]*).*/\1<redacted>/g' \
+              "$EVID/web.log"
+          fi
+          rm -f "$RUNNER_TEMP/dsh-ui-auth-bootstrap.txt" "$RUNNER_TEMP/app-url.txt" "$RUNNER_TEMP/web.pid"
 
       - name: Upload evidence
         if: always()
         uses: actions/upload-artifact@v4
         with:
           name: web-runtime-${{ matrix.id }}
-          path: |
-            40-checker/results/webruntime/${{ matrix.id }}/
-            ${{ runner.temp }}/web.log
+          path: 40-checker/results/webruntime/${{ matrix.id }}/
           if-no-files-found: warn
           retention-days: 14
+
+  summary:
+    name: denominator-summary
+    if: always()
+    needs: runtime
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - name: Download row artifacts
+        uses: actions/download-artifact@v4
+        with:
+          pattern: web-runtime-*
+          path: artifacts
+
+      - name: Prove 15/18 client rows and 4 webapp rows
+        run: |
+          node - <<'NODE'
+          const fs = require('node:fs')
+          const path = require('node:path')
+          const root = 'artifacts'
+          const rows = []
+          if (fs.existsSync(root)) {
+            for (const entry of fs.readdirSync(root, { withFileTypes: true })) {
+              if (!entry.isDirectory()) continue
+              const probe = path.join(root, entry.name, 'probe.json')
+              if (!fs.existsSync(probe)) continue
+              try { rows.push(JSON.parse(fs.readFileSync(probe, 'utf8'))) } catch {}
+            }
+          }
+          rows.sort((a, b) => String(a.id).localeCompare(String(b.id)))
+          const clientRows = rows.filter(row => row.hasClient === true)
+          const skippedRows = rows.filter(row => row.hasClient !== true)
+          const webappRows = rows.filter(row => row.webapp === true)
+          const passed = clientRows.filter(row => row.ok === true)
+          const lines = [
+            '## web-runtime denominator',
+            '',
+            `- rows: ${rows.length}`,
+            `- client-bearing rows: ${clientRows.length}/15`,
+            `- skipped (no ./client export): ${skippedRows.length}/3`,
+            `- webapp rows: ${webappRows.length}/4`,
+            `- client-module-loaded: ${passed.length}/${clientRows.length}`,
+            '',
+            '| row | webapp | client | ok | bootGraph | missing | console | page |',
+            '|---|---|---|---|---|---|---|---|',
+            ...rows.map(row => `| ${row.id} | ${row.webapp === true ? 'yes' : ''} | ${row.hasClient === true ? 'yes' : 'skipped'} | ${row.ok === true ? 'yes' : 'no'} | ${row.bootGraph} | ${(row.missingEntries || []).join('<br>') || ''} | ${row.consoleErrors?.length ?? 0} | ${row.pageErrors?.length ?? 0} |`),
+          ]
+          const text = lines.join('\n') + '\n'
+          if (process.env.GITHUB_STEP_SUMMARY) fs.appendFileSync(process.env.GITHUB_STEP_SUMMARY, text)
+          console.log(text)
+          let failed = false
+          if (rows.length !== 18) { console.error(`expected 18 row artifacts, found ${rows.length}`); failed = true }
+          if (clientRows.length !== 15) { console.error(`expected 15 client-bearing rows, found ${clientRows.length}`); failed = true }
+          if (skippedRows.length !== 3) { console.error(`expected 3 skipped rows, found ${skippedRows.length}`); failed = true }
+          if (webappRows.length !== 4) { console.error(`expected 4 webapp rows, found ${webappRows.length}`); failed = true }
+          process.exitCode = failed ? 1 : 0
+          NODE
