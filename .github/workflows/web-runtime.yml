@@ -197,9 +197,11 @@ jobs:
       - name: Prepare evidence directory
         run: |
           set -euo pipefail
+          EVID_LOCAL="$GITHUB_WORKSPACE/40-checker/results/webruntime/${{ matrix.id }}"
           echo "DSH_HOME=$RUNNER_TEMP/dsh-home" >> "$GITHUB_ENV"
-          echo "EVID=$GITHUB_WORKSPACE/40-checker/results/webruntime/${{ matrix.id }}" >> "$GITHUB_ENV"
-          mkdir -p "$RUNNER_TEMP/dsh-home" "$GITHUB_WORKSPACE/40-checker/results/webruntime/${{ matrix.id }}"
+          echo "EVID=$EVID_LOCAL" >> "$GITHUB_ENV"
+          rm -rf "$EVID_LOCAL"
+          mkdir -p "$RUNNER_TEMP/dsh-home" "$EVID_LOCAL"
 
       - name: Create web-backed profile
         run: |
@@ -209,18 +211,60 @@ jobs:
           cp "$DSH_HOME/profiles/wr/package.json" "$EVID/profile-package.json"
 
       - name: Install sample
+        id: install
         run: |
           set -euo pipefail
           # `--ignore-scripts` is deliberate: a third-party postinstall is
           # executable code from the sample and is not run in CI. A package
           # that needs a build script to publish its client entry will fail
           # the boot-graph check, which is recorded as the measured result.
-          dsh plugin --profile wr add --ignore-scripts "${{ matrix.spec }}" \
-            > "$EVID/plugin-add.log" 2>&1
-          cp "$DSH_HOME/profiles/wr/package.json" "$EVID/profile-package-after.json"
+          if dsh plugin --profile wr add --ignore-scripts "${{ matrix.spec }}" \
+            > "$EVID/plugin-add.log" 2>&1; then
+            cp "$DSH_HOME/profiles/wr/package.json" "$EVID/profile-package-after.json"
+            echo "gate_rejected=0" >> "$GITHUB_OUTPUT"
+            exit 0
+          fi
+          # A host-gate rejection is a measured result, not a workflow bug.
+          # The install gate refuses an incompatible peer range before boot.
+          if grep -q "incompatible with dsh" "$EVID/plugin-add.log"; then
+            GATE_MESSAGE=$(grep -m1 "incompatible with dsh" "$EVID/plugin-add.log")
+            node - "$EVID" "${{ matrix.id }}" "${{ matrix.pkg }}" "${{ matrix.webapp }}" "$GATE_MESSAGE" <<'NODE'
+          const fs = require('node:fs')
+          const path = require('node:path')
+          const [dir, id, pkg, webapp, gateMessage] = process.argv.slice(2)
+          const row = {
+            schema: 'dsh-web-probe/1',
+            id,
+            pkg,
+            webapp: webapp === 'true',
+            ok: false,
+            gateRejected: true,
+            skipped: 'host-gate-reject',
+            hasClient: false,
+            bootGraph: 'not-run',
+            bootIds: [],
+            expected: [],
+            loadedEntries: [],
+            consoleErrors: [],
+            pageErrors: [],
+            failedRequests: [],
+            rootChildren: 0,
+            gateMessage,
+            error: gateMessage,
+          }
+          fs.mkdirSync(dir, { recursive: true })
+          fs.writeFileSync(path.join(dir, 'probe.json'), JSON.stringify(row, null, 2) + '\n')
+          fs.writeFileSync(path.join(dir, 'summary.md'), `# ${id}\n\n- gate rejected at install\n- ${gateMessage}\n`)
+          NODE
+            echo "gate_rejected=1" >> "$GITHUB_OUTPUT"
+            exit 0
+          fi
+          cat "$EVID/plugin-add.log" >&2
+          exit 1
 
       - name: Inspect installed package and client export
         id: client
+        if: steps.install.outputs.gate_rejected != '1' 
         env:
           EXPECTED_NAME: ${{ matrix.pkg }}
           EXPECTED_VERSION: ${{ matrix.version }}
@@ -288,6 +332,7 @@ jobs:
 
       - name: Boot web profile
         id: boot
+        if: steps.install.outputs.gate_rejected != '1' 
         run: |
           set -euo pipefail
           # Run from $RUNNER_TEMP so dsh-ui-auth writes its one-time bootstrap
@@ -317,17 +362,27 @@ jobs:
           echo "url_printed=true" >> "$GITHUB_OUTPUT"
 
       - name: Prepare gated login (dsh-ui-auth)
-        if: matrix.login
+        if: matrix.login && steps.install.outputs.gate_rejected != '1' 
         run: |
           set -euo pipefail
+          # VERIFY: dsh-ui-auth writes this file on first boot relative to the
+          # process working directory. The boot step `cd`s to $RUNNER_TEMP, so
+          # the credential never lands in the repository; the fallback covers a
+          # future resolution against the workspace instead.
+          LOGIN_FILE="$RUNNER_TEMP/dsh-ui-auth-bootstrap.txt"
           for i in $(seq 1 60); do
-            if [ -s "$RUNNER_TEMP/dsh-ui-auth-bootstrap.txt" ]; then break; fi
+            if [ -s "$LOGIN_FILE" ]; then break; fi
+            if [ -s "$GITHUB_WORKSPACE/dsh-ui-auth-bootstrap.txt" ]; then
+              mv "$GITHUB_WORKSPACE/dsh-ui-auth-bootstrap.txt" "$LOGIN_FILE"
+              break
+            fi
             sleep 1
           done
-          test -s "$RUNNER_TEMP/dsh-ui-auth-bootstrap.txt"
-          echo "bootstrap credential file present: $RUNNER_TEMP/dsh-ui-auth-bootstrap.txt"
+          test -s "$LOGIN_FILE"
+          echo "bootstrap credential file present: $LOGIN_FILE"
 
       - name: Probe in Chromium
+        if: steps.install.outputs.gate_rejected != '1'
         run: |
           set -euo pipefail
           APP_URL=$(cat "$RUNNER_TEMP/app-url.txt")
@@ -357,6 +412,9 @@ jobs:
           let probe
           if (fs.existsSync(probePath)) {
             probe = JSON.parse(fs.readFileSync(probePath, 'utf8'))
+            // Install-gate rejection already wrote its own row; do not
+            // overwrite the gate message with a generic probe-did-not-run row.
+            if (probe.gateRejected === true) process.exit(0)
           } else {
             probe = {
               schema: 'dsh-web-probe/1',
@@ -394,6 +452,7 @@ jobs:
             `- expected: ${(probe.expected || []).join(', ') || '(none)'}`,
             `- loadedEntries: ${(probe.loadedEntries || []).join(', ') || '(none)'}`,
             `- missingEntries: ${(probe.missingEntries || []).join(', ') || '(none)'}`,
+            `- notLoadedEntries: ${(probe.notLoadedEntries || []).join(', ') || '(none)'}`,
             `- consoleErrors: ${probe.consoleErrors?.length ?? 0}`,
             `- pageErrors: ${probe.pageErrors?.length ?? 0}`,
             `- failedRequests: ${probe.failedRequests?.length ?? 0}`,
@@ -422,6 +481,7 @@ jobs:
               "$EVID/web.log"
           fi
           rm -f "$RUNNER_TEMP/dsh-ui-auth-bootstrap.txt" "$RUNNER_TEMP/app-url.txt" "$RUNNER_TEMP/web.pid"
+          rm -f "$GITHUB_WORKSPACE/dsh-ui-auth-bootstrap.txt"
 
       - name: Upload evidence
         if: always()
@@ -452,14 +512,17 @@ jobs:
           const path = require('node:path')
           const root = 'artifacts'
           const rows = []
-          if (fs.existsSync(root)) {
-            for (const entry of fs.readdirSync(root, { withFileTypes: true })) {
-              if (!entry.isDirectory()) continue
-              const probe = path.join(root, entry.name, 'probe.json')
-              if (!fs.existsSync(probe)) continue
-              try { rows.push(JSON.parse(fs.readFileSync(probe, 'utf8'))) } catch {}
+          function walk(dir) {
+            if (!fs.existsSync(dir)) return
+            for (const entry of fs.readdirSync(dir, { withFileTypes: true })) {
+              const full = path.join(dir, entry.name)
+              if (entry.isDirectory()) walk(full)
+              else if (entry.name === 'probe.json') {
+                try { rows.push(JSON.parse(fs.readFileSync(full, 'utf8'))) } catch {}
+              }
             }
           }
+          walk(root)
           rows.sort((a, b) => String(a.id).localeCompare(String(b.id)))
           const clientRows = rows.filter(row => row.hasClient === true)
           const skippedRows = rows.filter(row => row.hasClient !== true)
