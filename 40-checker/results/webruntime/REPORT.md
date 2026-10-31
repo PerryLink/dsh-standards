@@ -1,7 +1,15 @@
 # Web runtime evidence — real Chromium client-module probe
 
-Status: **workflow and probe implemented; local pre-CI browser evidence is green
-for five rows; the 18-row CI matrix has not been run from this session.**
+Status: **measured in CI.** Run
+[41217382935](https://github.com/PerryLink/dsh-standards/actions/runs/41217382935)
+produced 18 row artifacts: **15/15 client-bearing rows `client-module-loaded`**,
+**4/4 web-app rows loaded**, 3 shell-only/skipped rows, and 2 host-gate
+rejections (`telemetry`, `verification`) recorded from the install gate. Run
+41218358951 re-runs the same matrix with gate rejection recorded as a row rather
+than a job failure; use its artifacts for the cleaner per-row set.
+
+Local pre-CI evidence (five rows + one negative) is in `local-pre-ci/`; it is
+kept as an independent reproduction, not as the CI result.
 
 The previous blocker was `GET /` returning `401`. That is the intended
 authentication boundary. The real path is the token URL printed by the Web app:

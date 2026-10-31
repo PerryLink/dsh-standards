@@ -7,9 +7,9 @@
 
 | 层 | 规范/实践 | 当前状态 |
 |---|---|---|
-| 1 | **DSH-ENTRY 入门规范** | 18/18 `recognized`；7/18 runtime（base-only） |
+| 1 | **DSH-ENTRY 入门规范** | 18/18 `recognized`；10/18 base-only G3 verified，gate 后 8/18 clean；client 15/15 loaded |
 | 2 | **DSH-FLOW 顺畅规范** | draft；J1 真跑，J2–J8 `not-run` |
-| 3 | **DSH-BOOST 加速实践** | draft；LEV-7 有基准，LEV-3/6 未测 |
+| 3 | **DSH-BOOST 加速实践** | draft；LEV-3/6/7 已 measured（loader / provider-capture / synthetic timer） |
 
 ## 先看什么
 
@@ -25,7 +25,7 @@
 
 ```bash
 cd 40-checker
-node --test
+node --test test/*.test.mjs
 
 # 只做结构识别（不声明运行）
 node bin/dsh-plugin-verify.mjs <plugin-dir> --scope entry --entry-claim static
@@ -46,18 +46,18 @@ node lev7-bench.mjs 64 20
 
 - 18 包 entry static：**18/18 recognized，0 clean**；
 - 18 包 DS-C static：**0 PASS / 9 WARN / 9 FAIL**；
-- 18 包 runtime：**7/18**（base-only + gate，全行 ACTIVE）；
-- 不可用：**1 plugin fail + 2 host blocked + 4 unavailable**；
-- client runtime：**0/15**；
+- 18 包 base-only runtime：**18/18 有原始 JSON；10/18 G3 verified，8 partial，0 error**；host gate 后 **8 clean + 2 reject + 8 partial**；
+- client runtime：**15/15 `client-module-loaded`**（真实 Chromium）；web-app **4/4 loaded**；
+- 不可用：**0 plugin code FAIL；2 host-gate reject（telemetry/verification）**；
 - 检查器：**20/20 tests**；
-- J1：**6 PASS + 1 WARN**；LEV-7：**8.24×**（合成，非生产基线）。
+- J1：**6 PASS + 1 WARN**；LEV-3：volatile **0/20** vs control **20/20** remount；LEV-6：稳定 prefix **100%** vs 易变 **0%**；LEV-7：**8.24×**（合成，非生产基线）。
 
 ## 边界
 
 - 不收费、不卖等级、不卖排名；
 - 不做认证/安全审计；
 - 不把 static 写成 runtime；
-- 不把 7/18 写成 18/18；
+- 不把 10/18 base-only 写成 18/18 web/生产；不把 `client-module-loaded` 写成 UI/认证；
 - 不声称官方推荐/采纳。
 
 ## 目录
