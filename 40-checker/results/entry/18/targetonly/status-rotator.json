@@ -1,0 +1,34 @@
+{
+  "schema": "dsh-bundle-smoke/1",
+  "package": "dsh-status-rotator",
+  "version": "0.38.0",
+  "g0": {
+    "patchFiles": 1,
+    "parsed": true
+  },
+  "g1": {
+    "rows": 1,
+    "targetRows": 1,
+    "warnings": []
+  },
+  "g2": {
+    "compatibility": "admit"
+  },
+  "g3": {
+    "state": "verified",
+    "rows": [
+      {
+        "id": "include:status-rotator",
+        "state": 2,
+        "disabled": false
+      }
+    ],
+    "active": 1
+  },
+  "g4": {
+    "hasClient": true,
+    "clientExport": true,
+    "rootRows": [],
+    "ok": false
+  }
+}

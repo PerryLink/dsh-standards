@@ -1,0 +1,39 @@
+{
+  "schema": "dsh-bundle-smoke/1",
+  "package": "ds-harness-remote",
+  "version": "0.6.0",
+  "g0": {
+    "patchFiles": 1,
+    "parsed": true
+  },
+  "g1": {
+    "rows": 2,
+    "targetRows": 2,
+    "warnings": []
+  },
+  "g2": {
+    "compatibility": "admit"
+  },
+  "g3": {
+    "state": "partial",
+    "rows": [
+      {
+        "id": "include:ds-harness-remote",
+        "state": null,
+        "disabled": false
+      },
+      {
+        "id": "include:ds-harness-remote-tui",
+        "state": null,
+        "disabled": true
+      }
+    ],
+    "active": 1
+  },
+  "g4": {
+    "hasClient": true,
+    "clientExport": true,
+    "rootRows": [],
+    "ok": false
+  }
+}

@@ -1,0 +1,43 @@
+{
+  "schema": "dsh-bundle-smoke/1",
+  "package": "dsh-vision-router",
+  "version": "3.1.0",
+  "g0": {
+    "patchFiles": 1,
+    "parsed": true
+  },
+  "g1": {
+    "rows": 2,
+    "targetRows": 2,
+    "warnings": [
+      "patch: entry \"modules\" not found",
+      "patch: entry \"connection\" not found",
+      "patch: entry \"attachment-local\" not found"
+    ]
+  },
+  "g2": {
+    "compatibility": "admit"
+  },
+  "g3": {
+    "state": "partial",
+    "rows": [
+      {
+        "id": "include:vision-router-web-connection-ready",
+        "state": 0,
+        "disabled": false
+      },
+      {
+        "id": "include:vision-router",
+        "state": null,
+        "disabled": false
+      }
+    ],
+    "active": 0
+  },
+  "g4": {
+    "hasClient": true,
+    "clientExport": true,
+    "rootRows": [],
+    "ok": false
+  }
+}

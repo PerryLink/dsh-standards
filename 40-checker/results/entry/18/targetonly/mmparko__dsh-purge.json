@@ -1,0 +1,57 @@
+{
+  "schema": "dsh-bundle-smoke/1",
+  "package": "dsh-purge",
+  "version": "1.1.71",
+  "g0": {
+    "patchFiles": 1,
+    "parsed": true
+  },
+  "g1": {
+    "rows": 4,
+    "targetRows": 4,
+    "warnings": [
+      "patch: entry \"redteam-store\" not found",
+      "patch: entry \"redteam-ui\" not found",
+      "patch: entry \"redteam-mode\" not found",
+      "patch: entry \"redteam-mode-store\" not found",
+      "patch: entry \"redteam-mode-ui\" not found",
+      "patch: entry \"system-prompt\" not found",
+      "patch: entry \"dsh-purge\" not found"
+    ]
+  },
+  "g2": {
+    "compatibility": "admit"
+  },
+  "g3": {
+    "state": "partial",
+    "rows": [
+      {
+        "id": "include:dsh-purge",
+        "state": 0,
+        "disabled": false
+      },
+      {
+        "id": "include:dsh-purge-redteam",
+        "state": 2,
+        "disabled": false
+      },
+      {
+        "id": "include:dsh-purge-redteam-store",
+        "state": 2,
+        "disabled": false
+      },
+      {
+        "id": "include:dsh-purge-redteam-ui",
+        "state": 0,
+        "disabled": false
+      }
+    ],
+    "active": 2
+  },
+  "g4": {
+    "hasClient": true,
+    "clientExport": true,
+    "rootRows": [],
+    "ok": false
+  }
+}

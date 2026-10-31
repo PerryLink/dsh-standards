@@ -1,0 +1,133 @@
+{
+  "schema": "dsh-targetonly/1",
+  "generatedAt": "2026-10-31T14:55:43.469Z",
+  "note": "No base patch; target rows only. Not full profile runtime.",
+  "rows": [
+    {
+      "id": "DDDMUC__dsh-free-search",
+      "state": "partial",
+      "rows": 1,
+      "active": 0,
+      "g2": "admit"
+    },
+    {
+      "id": "Ebony-Vinyl__dsh-our-free-model",
+      "state": "partial",
+      "rows": 1,
+      "active": 0,
+      "g2": "admit"
+    },
+    {
+      "id": "SeaOf0__dsh-redteam-model",
+      "state": "partial",
+      "rows": 11,
+      "active": 0,
+      "g2": "admit"
+    },
+    {
+      "id": "YuJunZhiXue__dsh-purge",
+      "state": "partial",
+      "rows": 3,
+      "active": 2,
+      "g2": "admit"
+    },
+    {
+      "id": "ci-diet",
+      "state": "partial",
+      "rows": 1,
+      "active": 0,
+      "g2": "admit"
+    },
+    {
+      "id": "daily-log",
+      "state": "partial",
+      "rows": 1,
+      "active": 0,
+      "g2": "admit"
+    },
+    {
+      "id": "howmp__dsh-pentest",
+      "state": "partial",
+      "rows": 3,
+      "active": 1,
+      "g2": "admit"
+    },
+    {
+      "id": "kingcharleslzy-ai__dsh-purge",
+      "state": "partial",
+      "rows": 5,
+      "active": 3,
+      "g2": "admit"
+    },
+    {
+      "id": "liguobao__ds-harness-remote",
+      "state": "partial",
+      "rows": 2,
+      "active": 1,
+      "g2": "admit"
+    },
+    {
+      "id": "mmparko__dsh-purge",
+      "state": "partial",
+      "rows": 4,
+      "active": 2,
+      "g2": "admit"
+    },
+    {
+      "id": "project-memory",
+      "state": "partial",
+      "rows": 1,
+      "active": 0,
+      "g2": "admit"
+    },
+    {
+      "id": "qiushi",
+      "state": "partial",
+      "rows": 1,
+      "active": 0,
+      "g2": "admit"
+    },
+    {
+      "id": "shaobeichen__dsh-pocket",
+      "state": "partial",
+      "rows": 1,
+      "active": 0,
+      "g2": "admit"
+    },
+    {
+      "id": "status-rotator",
+      "state": "verified",
+      "rows": 1,
+      "active": 1,
+      "g2": "admit"
+    },
+    {
+      "id": "telemetry",
+      "state": "partial",
+      "rows": 1,
+      "active": 0,
+      "g2": "reject"
+    },
+    {
+      "id": "ui-auth",
+      "state": "partial",
+      "rows": 1,
+      "active": 0,
+      "g2": "admit"
+    },
+    {
+      "id": "verification",
+      "state": "partial",
+      "rows": 1,
+      "active": 0,
+      "g2": "reject"
+    },
+    {
+      "id": "ysr666__dsh-vision-router",
+      "state": "partial",
+      "rows": 2,
+      "active": 0,
+      "g2": "admit"
+    }
+  ]
+}

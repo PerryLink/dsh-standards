@@ -1,0 +1,84 @@
+{
+  "schema": "dsh-bundle-smoke/1",
+  "package": "@dsh-external/dsh-redteam-model",
+  "version": "1.1.2",
+  "g0": {
+    "patchFiles": 1,
+    "parsed": true
+  },
+  "g1": {
+    "rows": 11,
+    "targetRows": 11,
+    "warnings": []
+  },
+  "g2": {
+    "compatibility": "admit"
+  },
+  "g3": {
+    "state": "partial",
+    "rows": [
+      {
+        "id": "include:dsh-redteam-model",
+        "state": null,
+        "disabled": false
+      },
+      {
+        "id": "include:preset-redteam",
+        "state": 0,
+        "disabled": false
+      },
+      {
+        "id": "include:preset-pentest",
+        "state": 0,
+        "disabled": false
+      },
+      {
+        "id": "include:preset-code-audit",
+        "state": 0,
+        "disabled": false
+      },
+      {
+        "id": "include:preset-binary-analysis",
+        "state": 0,
+        "disabled": false
+      },
+      {
+        "id": "include:preset-attack-defense",
+        "state": 0,
+        "disabled": false
+      },
+      {
+        "id": "include:preset-av-evasion",
+        "state": 0,
+        "disabled": false
+      },
+      {
+        "id": "include:preset-incident-response",
+        "state": 0,
+        "disabled": false
+      },
+      {
+        "id": "include:preset-cloud-security",
+        "state": 0,
+        "disabled": false
+      },
+      {
+        "id": "include:preset-ctf-solver",
+        "state": 0,
+        "disabled": false
+      },
+      {
+        "id": "include:preset-asset-mapping",
+        "state": 0,
+        "disabled": false
+      }
+    ],
+    "active": 0
+  },
+  "g4": {
+    "hasClient": true,
+    "clientExport": true,
+    "rootRows": [],
+    "ok": false
+  }
+}
