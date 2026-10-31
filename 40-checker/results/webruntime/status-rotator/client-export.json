@@ -1,0 +1,7 @@
+{
+  "name": "dsh-status-rotator",
+  "version": "0.38.0",
+  "hasClientExport": true,
+  "clientExport": "./lib/client.js",
+  "declaresDshClient": true
+}

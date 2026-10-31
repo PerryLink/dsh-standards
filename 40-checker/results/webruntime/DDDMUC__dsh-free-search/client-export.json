@@ -1,0 +1,7 @@
+{
+  "name": "dsh-free-search",
+  "version": "0.9.26",
+  "hasClientExport": true,
+  "clientExport": "./lib/client.js",
+  "declaresDshClient": true
+}

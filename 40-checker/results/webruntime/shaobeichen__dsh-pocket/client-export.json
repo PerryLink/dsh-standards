@@ -1,0 +1,7 @@
+{
+  "name": "dsh-pocket",
+  "version": "2.12.0",
+  "hasClientExport": true,
+  "clientExport": "./client/client.js",
+  "declaresDshClient": true
+}

@@ -1,8 +1,16 @@
-# client runtime: 0/15
+# client runtime: 15/15 client-module-loaded
 
-The 15 client-bearing samples only prove `exports["./client"]` exists.
-No browser/host page was available; no client runtime result is claimed.
+The 15 client-bearing packages were installed into a real `web` profile and
+opened in Chromium. Each row proves:
 
-Next: run a real Web profile with an isolated `DSH_HOME`, open the host page,
-assert console error 0 and the plugin's slot renders. Until then, client is
-`interop-static (build-only)`.
+- the package id is in `window.__DSH_BOOT__.entries`;
+- the client bundle URL was fetched (resource timing);
+- the boot page marker disappeared and `#root` mounted;
+- there were no console errors, page errors, or failed same-origin scripts.
+
+Evidence: `40-checker/results/webruntime/summary.json` and each `<id>/probe.json`.
+Run: https://github.com/PerryLink/dsh-standards/actions/runs/41218358951
+
+Claim is **`client-module-loaded`**, not `UI-rendered`: plugin-specific slots and
+interactions are not visually reviewed. Three of the 18 have no `./client`
+export (one shell-only, two host-gate rejected).

@@ -1,0 +1,7 @@
+{
+  "name": "dsh-our-free-model",
+  "version": "2.1.0",
+  "hasClientExport": true,
+  "clientExport": "./client.js",
+  "declaresDshClient": true
+}

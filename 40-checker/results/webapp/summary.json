@@ -7,10 +7,10 @@
     "shaobeichen__dsh-pocket",
     "ui-auth"
   ],
-  "state": "auth-boundary-verified; sample-runs-pending",
-  "reason": "web auth solved; the 4 web-app samples still need their own profile boot + browser probe (web-runtime workflow)",
+  "state": "web-profile-run-complete",
+  "reason": "4/4 web-app rows loaded in the real web profile; see 40-checker/results/webruntime/summary.json",
   "observed": "12-13 plugins wait for webStartup/webServer/connection; no target row ACTIVE",
-  "notAClaim": "not unavailable, not fail, not pass",
+  "notAClaim": "not a UI pixel review; server rows not asserted row-by-row",
   "ci": {
     "run": 41214493225,
     "status": "failure",
@@ -33,5 +33,14 @@
     ],
     "conclusion": "The old 401 was the intended auth boundary, not a boot failure. The real web profile is reachable with the URL printed by dsh web."
   },
-  "authEvidence": "40-checker/results/webapp/web-auth.json"
+  "authEvidence": "40-checker/results/webapp/web-auth.json",
+  "result": {
+    "run": 41218358951,
+    "webappRows": 4,
+    "loaded": 4,
+    "clientRows": 15,
+    "clientLoaded": 15,
+    "gateRejected": 2,
+    "claim": "client-module-loaded"
+  }
 }

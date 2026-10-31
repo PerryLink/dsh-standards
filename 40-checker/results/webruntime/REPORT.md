@@ -222,3 +222,32 @@ and has no `__DSH_BOOT__`, which is exactly why the workflow passes
 Push and dispatch the workflow, then collect the 18 artifacts. Only after that
 run may the report claim a CI denominator (expected: 15 client rows, 3 skipped,
 4 webapp rows). Local evidence above is pre-CI only.
+
+---
+
+## 8. Final CI run (2026-11-01)
+
+Run [41218358951](https://github.com/PerryLink/dsh-standards/actions/runs/41218358951)
+(`web-runtime`, commit `d68e817`): **19/19 jobs success** (18 rows + denominator
+summary), 0 failures.
+
+| Metric | Result |
+|---|---|
+| rows | **18/18** |
+| client-bearing rows | **15/15** |
+| client rows `client-module-loaded` | **15/15** |
+| web-app rows | **4/4** |
+| web-app rows loaded | **4/4** |
+| shell-only rows | **1/1** (`qiushi`, no `./client` export) |
+| host-gate rejections | **2/2** (`telemetry`, `verification`) — install gate, recorded as rows |
+| console errors / page errors on the 16 loaded rows | **0 / 0** |
+
+`4/4` web-app rows: `SeaOf0/dsh-redteam-model`, `liguobao/ds-harness-remote`,
+`shaobeichen/dsh-pocket`, `dsh-ui-auth` (the last one after the bootstrap login).
+The two gate rows are **not** probe failures: the host install gate refuses their
+stale peer ranges before boot, which is the correct behavior recorded by the
+`--ignore-scripts` path.
+
+Per-row evidence is in `summary.json`, and each `<id>/` directory has
+`probe.json`, `summary.md`, `shot.png`, `web.log`, `client-export.json`.
+The claim remains **`client-module-loaded`**, not `UI-rendered`.
