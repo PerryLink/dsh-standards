@@ -51,7 +51,7 @@
 
 ### Q6. 标准仓 public 还是 private？
 
-- 当前 `dsh-standards` 是私有草案；公开教学副本在 `dsh-plugin-guide/guide/standards.md`。
+- 决定（2026-11-01）：`dsh-standards` **已转 public**；公开教学副本仍在 `dsh-plugin-guide/guide/standards.md`。
 - 如果转 public：所有证据链接可用，但需要先清理历史文件/凭据/隐私；
 - 如果保持 private：外部只能读教学副本，机器可读 `spec/levels.json` 不可直接访问。
 - **建议**：内测群确认后转 public；转之前做一次 `git grep` 凭据/会话扫描。

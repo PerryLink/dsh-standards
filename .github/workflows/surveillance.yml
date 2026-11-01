@@ -1,0 +1,24 @@
+name: surveillance
+
+on:
+  schedule:
+    - cron: '23 3 1 1,4,7,10 *'
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  report:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+      - name: Quarterly read-only check
+        run: node 40-checker/scripts/surveillance.mjs --out surveillance/current.json
+      - uses: actions/upload-artifact@v4
+        with:
+          name: surveillance
+          path: surveillance/current.json

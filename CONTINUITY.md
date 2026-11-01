@@ -9,7 +9,7 @@ how a second maintainer is added without sharing credentials.
 | Item | State | Risk | Mitigation |
 |---|---|---|---|
 | Maintainer | `PerryLink`, sole | bus factor = 1 | recruit 1–2 co-maintainers; this document |
-| Repository | `PerryLink/dsh-standards`, private | no public audience yet | publish when the beta packet is ready; alias repo points here |
+| Repository | `PerryLink/dsh-standards`, **public** (2026-11-01) | public audience can read/fork; history contains local paths (sanitized in tree, not history) | keep the non-official disclaimer; review before citing |
 | GitHub auth | fine-grained/classic PAT loaded from a local credential file, never committed | token loss blocks pushes | rotate from the credential file; a co-maintainer uses **their own** token |
 | npm | `dsh-standards@0.0.3`, `@perrylink/dsh-standard@0.0.2` | publishing depends on one npm account | add a second npm owner, not a shared password |
 | PyPI | `dsh-standard@0.0.2`, `dsh-standards@0.0.2` | same | add a second PyPI owner |
