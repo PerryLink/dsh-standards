@@ -49,7 +49,7 @@ node bin/dsh-plugin-verify.mjs <bundle-dir> --scope entry \
   --host /path/to/@deepseek-ai/dsh-app-boot/lib/index.js
 
 # 三层自检（ENTRY 自动；FLOW/BOOST 证据文件）
-node scripts/level-audit.mjs <dir> --format json
+node bin/dsh-levels.mjs audit <dir> --format json
 
 # J1 安装/卸载旅程
 node scripts/journey-runtime.mjs --package <dir> --json

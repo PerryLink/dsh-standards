@@ -4,7 +4,8 @@
   "description": "DS-C conformance checker MVP for DeepSeek Harness plugins (standalone, zero dependencies)",
   "type": "module",
   "bin": {
-    "dsh-plugin-verify": "bin/dsh-plugin-verify.mjs"
+    "dsh-plugin-verify": "bin/dsh-plugin-verify.mjs",
+    "dsh-levels": "bin/dsh-levels.mjs"
   },
   "exports": {
     ".": "./src/index.mjs"

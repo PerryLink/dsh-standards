@@ -43,7 +43,7 @@
 | DEV-01 checklists | DONE | `CHECKLIST-{entry,flow,boost}.md` |
 | DEV-03 error catalog | DONE | `ERRORS.md` |
 | DEV-05 kit template | DONE | guide `e75cd9f` scaffolder + kit `9897213` manual template; `dsh.standards` not-run |
-| DEV-06 single CLI | PARTIAL | `level-audit` has `nextActions`; no `dsh-levels audit` |
+| DEV-06 single CLI | DONE | `40-checker/bin/dsh-levels.mjs audit` forwards to `level-audit` |
 | DEV-08 bilingual parity | PARTIAL | translation rules; no parity script |
 | DEV-09 minimal examples | DONE | `examples/boost`, fixtures, `QUICKSTART` |
 | DEV-10 not-claims | DONE | `NOT-CLAIMS.md` |
