@@ -99,7 +99,7 @@ guide 教作者怎么写
 | 仓库 | 提交 | CI/验证 |
 |---|---|---|
 | `dsh-plugin-guide` | `84e384d` | `plugin-doctor`、`verify-kit`、Scorecard、Pages 四组 workflow **全部 success**；本地 `check-readme-sync` / `check-readme-parity` / `check-facts` 通过 |
-| `dsh-plugin-certification` | `0ef6d3c` + mirror `cdc2966` | 已修 sibling 分支、同步 roster 98/87/8/3、按 0.15.0 真实复认证刷新 registry（A–E 证据、snapshot 2026-11-01）；`check-freshness` 全绿，远端 `Checks` **success** |
+| `dsh-plugin-certification` | `0ef6d3c` + mirror `cdc2966` | 已修 sibling 分支、同步 roster 98/87/8/3、按 0.15.0 真实复认证刷新 registry（A–E 证据、snapshot 2026-11-01；`selfAssessed:true`，作者=认证者，非独立第三方）；`check-freshness` 全绿，远端 `Checks` **success** |
 | `dsh-plugin-doctor` | `16051df` | 远端 `ci`、`plugin-doctor`、Scorecard **success**；`npm test` 全绿，其中 `standards: 21/21`、contract 58/58、compat 25/25；JSON `standards` 字段已实测 |
 
 | `dsh-plugin-upgrade` | `52197f4`（含 `735cd09`） | `legD` 三走廊；`npm test` 62 pass / 1 skip，README/artifact gate 绿；远端 `CI`/`plugin-doctor`/Scorecard **success** |
