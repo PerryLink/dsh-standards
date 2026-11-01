@@ -1,0 +1,52 @@
+{
+  "schema": "dsh-round-robin/1",
+  "generatedAt": "2026-11-01T05:49:40.222Z",
+  "a": {
+    "runner": "dsh-plugin-verify@0.1.0 (linux/x64, node v22.23.4)",
+    "anchor": {
+      "dsh": "0.2.2-alpha.2",
+      "cordis": "4.0.6-alpha.1"
+    }
+  },
+  "b": {
+    "runner": "dsh-plugin-verify@0.1.0 (win32/x64, node v22.23.4)",
+    "anchor": {
+      "dsh": "0.2.2-alpha.2",
+      "cordis": "4.0.6-alpha.1"
+    }
+  },
+  "comparable": true,
+  "rows": [
+    {
+      "id": "bad-manifest",
+      "expected": "fail",
+      "ignored": false,
+      "a": "fail",
+      "b": "fail",
+      "comparable": true,
+      "problems": []
+    },
+    {
+      "id": "good",
+      "expected": "pass",
+      "ignored": false,
+      "a": "pass",
+      "b": "pass",
+      "comparable": true,
+      "problems": []
+    },
+    {
+      "id": "skipped",
+      "expected": "not-run",
+      "ignored": true,
+      "a": "not-run",
+      "b": "not-run",
+      "comparable": true,
+      "problems": [
+        "runner A status not-run",
+        "runner B status not-run"
+      ]
+    }
+  ],
+  "note": "Known-answer comparison only; not a proficiency test, not an accreditation, not a certification."
+}
