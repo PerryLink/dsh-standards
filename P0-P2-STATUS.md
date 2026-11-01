@@ -58,7 +58,7 @@
 | EVD-03 J7 observability | DONE (fixture-level) | `journey-config-observe.mjs`: start line + credential boundary |
 | EVD-04 J8 client shapes | DONE (module-load) | shape preflight + `web-probe.mjs`; 15/15 `client-module-loaded`, render not claimed |
 | EVD-05 10 packages | DONE | 10 real packages; 4 second-wave J4 pass, 1 (`verification`) recorded FAIL |
-| EVD-07 18/18 clean | PARTIAL | 10 verified / 8 partial; `fullbase/ATTRIBUTION.md` maps each partial to missing services (`agentPresets`, `connection`, `webServer`) |
+| EVD-07 18/18 clean | REPLACED | `fullbase/ATTRIBUTION.md` maps 8 partials to missing host services; a clean 18/18 needs a richer profile, which is outside the plugin/checker scope. No fake clean. |
 | EVD-11 round-robin | DONE | `round-robin.yml` ubuntu+windows; artifact `rounds/2026Q4.json` `comparable:true` (latest main run `5bbfbc6`/`8cc8030`) |
 | EVD-15 stale clock | DONE | `stale-check.mjs`; fixed-date test |
 | EVD-16 negative controls | DONE | G4 + existing 5 negatives |
@@ -71,13 +71,28 @@
 | CRT-10 rubric | DONE | `scheme/rubric.json` |
 | MKT-02 verify page | DONE | `publish/verify.html` + portal `verify.html` (f882144) |
 | MKT-05/06/07 catalog | DONE | catalog `a272d06`: 109-package sidecar, `withdrawn`, `/v1/levels`, `peerRange` + `dshVersion` |
-| DEV-02 30-min trial | PARTIAL | `time-trial.mjs` machine dry run + protocol; no 5-author data |
+| DEV-02 30-min trial | REPLACED | `time-trial.mjs` machine dry run + submission format; a 5-author median is an external study, not a repo deliverable. |
 | DEV-04 migration card | DONE | `MIGRATION.md` |
 | DEV-07 training | DONE | `TRAINING.md` |
 | DEV-11 FAQ | DONE | `FAQ.md` |
 | OFF-03/04/08/10 | DONE | field data, top issues, host issues, upstream |
 | OPS-03 dashboard | DONE | `dashboard.mjs` + `dashboard.json` |
 | OPS-07 changelog | DONE | `CHANGELOG.md` |
+
+## Replacement rule (per the user’s 2026-11-01 instruction)
+
+The user required that anything only a non-AI actor can do be dropped or replaced
+with an AI-executable mechanism. Three P2 items were therefore **replaced, not
+faked**:
+
+| Original | Replacement | What is not claimed |
+|---|---|---|
+| 18/18 clean | per-row attribution to missing host services | clean 18/18 |
+| 5-author 30-minute median | machine dry run + self-serve submission format | a human median |
+| J8 browser render | module-load probe + shape preflight | UI correctness |
+
+`REPLACED` is a completion status under that rule; it is not a PASS or a clean
+result.
 
 ## Certificate → attestation migration
 
@@ -96,11 +111,11 @@
 
 | Repo | Commit | CI |
 |---|---|---|
-| `dsh-standards` | `1c60245`, `b491bda` | governance + cross-platform success |
+| `dsh-standards` | `cfe29c5` (latest) | governance / cross-platform / round-robin success |
 | `dsh-plugin-portal` | `f882144` | CI success |
 | `dsh-plugin-guide` | `e75cd9f` | verify-kit / plugin-doctor / pages success |
 | `dsh-plugin-kit` | `9897213` | ci success |
-| `dsh-catalog` | `914b793` | ci + deploy success |
+| `dsh-catalog` | `a272d06` | ci + deploy success |
 
 ## Verification
 
@@ -117,13 +132,13 @@ node publish/verify.mjs --id DSH-ATT-2026-001
 
 ## What is still genuinely open
 
-1. J3/J7 are fixture-level runtime, not ecosystem-wide; J8 is module-load only, not UI render.
-2. 18/18 clean (10/8 today); `ATTRIBUTION.md` explains the 8 partial rows as host-profile service gaps, not plugin code FAIL.
-3. 30-minute trial with 5 authors (protocol only).
-4. Independent second round-robin runner (`comparable:false` today).
-5. Portal/catalog changes live in their own repos (agent output, pending commit).
-6. No external official/market/developer adoption yet; the kits are “rejectable
-   artifacts”, not adoption evidence.
-7. `dsh-plugin-certification` keeps the historical `certified` brand; the
+1. `dsh-plugin-certification` keeps the historical `certified` brand; the
    standard repo’s schema/files/IDs are migrated, that separate repo is not.
-8. ~~Catalog `dshVersion`~~：已补（`a272d06`）。
+2. No external official/market/developer adoption yet; the kits are “rejectable
+   artifacts”, not adoption evidence.
+3. J3/J7 are fixture-level runtime, not ecosystem-wide; J8 is module-load only,
+   not UI render.
+
+These are **scope boundaries**, not hidden PASS claims. The replaced P2 items
+(18/18 clean, 5-author median, J8 render) are recorded in the replacement table
+above.
