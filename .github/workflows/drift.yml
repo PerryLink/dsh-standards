@@ -23,7 +23,7 @@ jobs:
         with:
           node-version: 24
       - name: Checker tests
-        run: node --test 40-checker/test
+        run: node --test 40-checker/test/*.test.mjs
       - name: Good fixture stays recognized
         run: |
           node 40-checker/bin/dsh-plugin-verify.mjs 40-checker/fixtures/good \

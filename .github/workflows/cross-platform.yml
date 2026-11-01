@@ -18,10 +18,11 @@ jobs:
     defaults:
       run:
         working-directory: 40-checker
+        shell: bash
     steps:
       - uses: actions/checkout@v4
       - uses: actions/setup-node@v4
         with:
           node-version: 22
       - name: Checker tests on ${{ matrix.os }}
-        run: node --test test
+        run: node --test test/*.test.mjs
