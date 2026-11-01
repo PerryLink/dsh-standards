@@ -1,0 +1,25 @@
+DSH standards — licensing
+
+This repository mixes two kinds of material. They are licensed separately.
+
+1. Text, specifications, checklists, and documentation
+   License: Creative Commons Attribution 4.0 International (CC BY 4.0)
+   Full text: https://creativecommons.org/licenses/by/4.0/legalcode
+   SPDX: CC-BY-4.0
+
+2. Code, scripts, schemas, and machine-readable checkers
+   License: Apache License, Version 2.0
+   Full text: https://www.apache.org/licenses/LICENSE-2.0
+   SPDX: Apache-2.0
+
+3. Marks and badges
+   The words DSH-ENTRY, DSH-FLOW, DSH-BOOST and the level badges are not
+   licensed by 1 or 2. Their use is governed by governance/mark-policy.md.
+   No trademark registration is claimed.
+
+Unless a file says otherwise, the classification above applies. Contributions
+are accepted under governance/contribution-terms.md (DCO 1.1 + a non-exclusive
+copyright licence + an RF patent commitment), not under a copyright assignment.
+
+This file is a notice, not legal advice. A lawyer should review it before the
+repository is made public or used commercially.

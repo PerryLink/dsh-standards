@@ -1,0 +1,39 @@
+{
+  "schema": "dsh-mark-policy/1",
+  "version": "1.0.0-rc.1",
+  "updatedAt": "2026-11-01",
+  "marks": ["DSH-ENTRY", "DSH-FLOW", "DSH-BOOST", "DSH level badge"],
+  "owner": "PerryLink (project steward)",
+  "registration": "none; not a registered trademark; no legal claim of exclusivity beyond ordinary署名/来源标识",
+  "grant": "auto-on-valid-evidence; no application, account, fee, or human approval",
+  "license": "non-exclusive, free, revocable, non-transferable",
+  "requiredDisclaimer": "非官方 · 非认证 · 非安全审计 / Not official, not a certification, not a security audit",
+  "allowed": [
+    "display the level word with status, scope, date, and an evidence link",
+    "link the badge to the evidence record or verify page",
+    "state 'self-declared' or 'tool-verified' exactly as recorded",
+    "reproduce the unmodified clause text with attribution"
+  ],
+  "forbidden": [
+    "official", "national standard", "GB", "CNAS", "accredited", "certified",
+    "security audit", "secure", "recommended", "best", "top", "ranking",
+    "guaranteed", "passed", "approved by DeepSeek"
+  ],
+  "rules": [
+    "A mark must never appear without its evidence status and date.",
+    "A mark must never be sold, bundled with paid ranking, or used as a condition of market access.",
+    "A modified clause must not carry the original mark.",
+    "The disclaimer must be visible in the same view as the mark, not only in a linked page.",
+    "A withdrawn or expired record must show 'withdrawn' or 'stale', not the old PASS."
+  ],
+  "termination": {
+    "trigger": "misuse after a 30-day written cure period",
+    "effect": "withdraw the right to use the marks; public record in governance/decision-log.md",
+    "survival": "accurate historical references may remain with a correction note"
+  },
+  "machine": {
+    "checker": "40-checker/scripts/claim-check.mjs",
+    "forbiddenWords": ["official", "national standard", "cnas", "accredited", "security audit", "recommended", "ranking", "guaranteed", "approved by deepseek"],
+    "requiredDisclaimerAny": ["非官方", "not official", "not a certification", "非认证"]
+  }
+}

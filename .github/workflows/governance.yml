@@ -1,0 +1,52 @@
+name: governance
+
+on:
+  pull_request:
+  push:
+    branches: [main]
+
+permissions:
+  contents: read
+
+jobs:
+  checks:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+
+      - name: Unit tests for the governance checks
+        run: >
+          node --test
+          40-checker/test/governance.test.mjs
+          40-checker/test/dco.test.mjs
+          40-checker/test/certificate.test.mjs
+          40-checker/test/claim.test.mjs
+
+      - name: Roles, contributors, reviewers, COI
+        run: node 40-checker/scripts/governance-check.mjs
+
+      - name: Certificate JSON
+        run: node 40-checker/scripts/certificate-check.mjs
+
+      - name: Public claims
+        run: node 40-checker/scripts/claim-check.mjs
+
+      - name: Fetch the base branch for the DCO range
+        if: github.event_name == 'pull_request'
+        run: git fetch --no-tags origin "${{ github.base_ref }}:refs/remotes/origin/${{ github.base_ref }}"
+
+      - name: DCO and contribution terms
+        if: github.event_name == 'pull_request'
+        env:
+          PR_BODY: ${{ github.event.pull_request.body }}
+        run: >
+          node 40-checker/scripts/dco-check.mjs
+          --range "origin/${{ github.base_ref }}..HEAD"
+          --require-terms
+          --pr-body-env PR_BODY

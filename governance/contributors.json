@@ -1,0 +1,39 @@
+{
+  "schema": "dsh-contributors/1",
+  "terms": "dsh-ct/1",
+  "updatedAt": "2026-11-01",
+  "legend": {
+    "signed": "DCO sign-off + terms attestation",
+    "verified": "signed + at least one merged contribution + handle consistency",
+    "trusted": "verified + at least 3 merged contributions + 2 shadow reviews + human sponsor",
+    "entity-covered": "trusted or verified + a signed Entity CLA on file"
+  },
+  "contributors": [
+    {
+      "handle": "PerryLink",
+      "level": "trusted",
+      "signedOff": true,
+      "terms": "dsh-ct/1",
+      "signedAt": "2026-10-31",
+      "verifiedAt": "2026-11-01",
+      "entityCla": null,
+      "employer": "self",
+      "funding": "self-funded",
+      "ownPlugins": [
+        "dsh-auto-review",
+        "dsh-plugin-guide",
+        "dsh-plugin-doctor",
+        "dsh-plugin-certification",
+        "dsh-plugin-portal",
+        "dsh-catalog",
+        "dsh-plugin-kit",
+        "dsh-plugin-upgrade"
+      ],
+      "coi": [
+        "creator and organizer of this project",
+        "author of the only certified sample (self-assessed)"
+      ],
+      "sponsor": null
+    }
+  ]
+}

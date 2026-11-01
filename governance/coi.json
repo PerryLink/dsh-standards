@@ -1,0 +1,29 @@
+{
+  "schema": "dsh-coi/1",
+  "updatedAt": "2026-11-01",
+  "note": "Public conflict-of-interest declarations. Recusal is required when any rule below matches. A declaration is not a finding of misconduct.",
+  "declarations": [
+    {
+      "handle": "PerryLink",
+      "employer": "self",
+      "funding": ["self-funded", "no sponsorship"],
+      "ownPlugins": [
+        "dsh-auto-review",
+        "dsh-plugin-guide",
+        "dsh-plugin-doctor",
+        "dsh-plugin-certification",
+        "dsh-plugin-portal",
+        "dsh-catalog",
+        "dsh-plugin-kit",
+        "dsh-plugin-upgrade"
+      ],
+      "marketRoles": ["author of the portal and catalog used for display"],
+      "recusalRules": [
+        "does not independently review own plugins",
+        "certificate for own plugin is marked selfAssessed"
+      ],
+      "declaredAt": "2026-11-01",
+      "reviewDue": "2027-02-01"
+    }
+  ]
+}

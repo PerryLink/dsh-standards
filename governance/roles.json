@@ -1,0 +1,590 @@
+{
+  "schema": "dsh-governance/1",
+  "version": "1.0.0-rc.1",
+  "updatedAt": "2026-11-01",
+  "status": "provisional",
+  "nonOfficial": true,
+  "stage": "solo",
+  "creator": "PerryLink",
+  "disclaimer": "Non-official role model for a community draft. It is not a legal entity, not an accreditation, and not a labour or agency relationship. AI roles are software actors, not persons.",
+  "roles": {
+    "organizer": {
+      "label": "创建者/组织者",
+      "humanOnly": true,
+      "bot": false,
+      "maxHolders": 1,
+      "appointment": "creator",
+      "termDays": null,
+      "dormantAfterDays": null,
+      "owns": [
+        "name and scope of the three levels",
+        "final signature on standard text and certificate issuance",
+        "external statements and legal counterparty role",
+        "appointment and removal of maintainers"
+      ],
+      "cannot": [
+        "review own plugin as an independent reviewer",
+        "claim official, accredited, or CNAS status",
+        "issue a certificate without a public evidence record"
+      ]
+    },
+    "maintainer": {
+      "label": "管理者",
+      "humanOnly": true,
+      "bot": false,
+      "maxHolders": 5,
+      "appointment": "organizer",
+      "termDays": 180,
+      "dormantAfterDays": 90,
+      "owns": [
+        "merge and release in an assigned area",
+        "reviewer appointment proposals",
+        "registry and portal data changes",
+        "draft certificates for organizer signature"
+      ],
+      "cannot": [
+        "issue or revoke a certificate alone",
+        "change the meaning of a level alone",
+        "merge their own plugin's certification record",
+        "speak for the project on legal or official matters"
+      ]
+    },
+    "reviewer": {
+      "label": "评审员",
+      "humanOnly": true,
+      "bot": false,
+      "maxHolders": 20,
+      "appointment": "maintainer proposes, organizer confirms",
+      "termDays": 180,
+      "dormantAfterDays": 90,
+      "owns": [
+        "review records with clause IDs and evidence",
+        "shadow reviews and known-answer exercises",
+        "conflict-of-interest declarations"
+      ],
+      "cannot": [
+        "merge to the default branch",
+        "issue a certificate",
+        "review a subject with an undisclosed conflict"
+      ]
+    },
+    "contributor": {
+      "label": "贡献者",
+      "humanOnly": false,
+      "bot": false,
+      "maxHolders": null,
+      "appointment": "self-serve after DCO and terms attestation",
+      "termDays": null,
+      "dormantAfterDays": 365,
+      "owns": [
+        "their contribution and its licensing attestation",
+        "disclosure of AI assistance and employer ownership"
+      ],
+      "cannot": [
+        "merge to the default branch",
+        "approve their own change",
+        "speak for the project"
+      ]
+    },
+    "user": {
+      "label": "使用者",
+      "humanOnly": false,
+      "bot": false,
+      "maxHolders": null,
+      "appointment": "self-serve",
+      "termDays": null,
+      "dormantAfterDays": null,
+      "owns": [
+        "their installation and configuration choices",
+        "reporting reproducible problems"
+      ],
+      "cannot": [
+        "claim that a label is a warranty or a security audit"
+      ]
+    },
+    "ai-steward": {
+      "label": "AI 管家",
+      "humanOnly": false,
+      "bot": true,
+      "maxHolders": null,
+      "appointment": "organizer configures the bot account",
+      "termDays": null,
+      "dormantAfterDays": null,
+      "owns": [
+        "triage, labels, summaries, issue routing",
+        "draft pull requests and documentation updates",
+        "merge only inside the AI merge allowlist after CI"
+      ],
+      "cannot": [
+        "merge spec, governance, checker, or certificate files",
+        "approve its own pull request",
+        "sign the DCO on behalf of a human"
+      ]
+    },
+    "ai-inspector": {
+      "label": "AI 检验员",
+      "humanOnly": false,
+      "bot": true,
+      "maxHolders": null,
+      "appointment": "organizer configures the bot account",
+      "termDays": null,
+      "dormantAfterDays": null,
+      "owns": [
+        "running checks and producing evidence records",
+        "reproducing reported failures",
+        "writing method versions and limitations"
+      ],
+      "cannot": [
+        "write PASS without a command output",
+        "issue or revoke a certificate",
+        "change a gate definition"
+      ]
+    },
+    "ai-registrar": {
+      "label": "AI 登记员",
+      "humanOnly": false,
+      "bot": true,
+      "maxHolders": null,
+      "appointment": "organizer configures the bot account",
+      "termDays": null,
+      "dormantAfterDays": null,
+      "owns": [
+        "validating registry and certificate JSON",
+        "syncing read-only mirrors",
+        "detecting expired or inconsistent records"
+      ],
+      "cannot": [
+        "issue, suspend, or revoke a certificate",
+        "invent a certificate ID",
+        "edit evidence values"
+      ]
+    },
+    "ai-clerk": {
+      "label": "AI 书记员",
+      "humanOnly": false,
+      "bot": true,
+      "maxHolders": null,
+      "appointment": "organizer configures the bot account",
+      "termDays": null,
+      "dormantAfterDays": null,
+      "owns": [
+        "DCO and contribution-terms intake",
+        "appeal intake, deadline tracking, recusal checks",
+        "decision-log and action-log append"
+      ],
+      "cannot": [
+        "decide an appeal",
+        "delete a dispute record",
+        "grant a role"
+      ]
+    },
+    "ai-monitor": {
+      "label": "AI 监督员",
+      "humanOnly": false,
+      "bot": true,
+      "maxHolders": null,
+      "appointment": "organizer configures the bot account",
+      "termDays": null,
+      "dormantAfterDays": null,
+      "owns": [
+        "quarterly link, version, and evidence-expiry checks",
+        "stale and withdrawn status reports",
+        "public surveillance reports"
+      ],
+      "cannot": [
+        "punish, delist, or revoke",
+        "change a status without a human decision"
+      ]
+    },
+    "ai-translator": {
+      "label": "AI 翻译",
+      "humanOnly": false,
+      "bot": true,
+      "maxHolders": null,
+      "appointment": "organizer configures the bot account",
+      "termDays": null,
+      "dormantAfterDays": null,
+      "owns": [
+        "translating documentation and keeping a glossary",
+        "flagging untranslatable normative terms"
+      ],
+      "cannot": [
+        "change normative meaning",
+        "translate a clause without a source link"
+      ]
+    }
+  },
+  "permissions": [
+    "repo.read",
+    "repo.write.docs",
+    "repo.write.code",
+    "repo.merge.main",
+    "spec.propose",
+    "spec.decide",
+    "release.approve",
+    "certificate.draft",
+    "certificate.issue",
+    "certificate.revoke",
+    "registry.write",
+    "appeal.intake",
+    "appeal.decide",
+    "mark.policy",
+    "external.speak",
+    "roles.assign",
+    "finance.manage"
+  ],
+  "matrix": {
+    "organizer": {
+      "repo.read": "allow",
+      "repo.write.docs": "allow",
+      "repo.write.code": "allow",
+      "repo.merge.main": "allow",
+      "spec.propose": "allow",
+      "spec.decide": "allow",
+      "release.approve": "allow",
+      "certificate.draft": "allow",
+      "certificate.issue": "allow",
+      "certificate.revoke": "allow",
+      "registry.write": "allow",
+      "appeal.intake": "allow",
+      "appeal.decide": "allow",
+      "mark.policy": "allow",
+      "external.speak": "allow",
+      "roles.assign": "allow",
+      "finance.manage": "allow"
+    },
+    "maintainer": {
+      "repo.read": "allow",
+      "repo.write.docs": "allow",
+      "repo.write.code": "allow",
+      "repo.merge.main": "allow",
+      "spec.propose": "allow",
+      "spec.decide": "review",
+      "release.approve": "allow",
+      "certificate.draft": "allow",
+      "certificate.issue": "deny",
+      "certificate.revoke": "deny",
+      "registry.write": "allow",
+      "appeal.intake": "allow",
+      "appeal.decide": "review",
+      "mark.policy": "review",
+      "external.speak": "review",
+      "roles.assign": "deny",
+      "finance.manage": "deny"
+    },
+    "reviewer": {
+      "repo.read": "allow",
+      "repo.write.docs": "propose",
+      "repo.write.code": "propose",
+      "repo.merge.main": "deny",
+      "spec.propose": "allow",
+      "spec.decide": "review",
+      "release.approve": "deny",
+      "certificate.draft": "review",
+      "certificate.issue": "deny",
+      "certificate.revoke": "deny",
+      "registry.write": "deny",
+      "appeal.intake": "allow",
+      "appeal.decide": "review",
+      "mark.policy": "deny",
+      "external.speak": "deny",
+      "roles.assign": "deny",
+      "finance.manage": "deny"
+    },
+    "contributor": {
+      "repo.read": "allow",
+      "repo.write.docs": "propose",
+      "repo.write.code": "propose",
+      "repo.merge.main": "deny",
+      "spec.propose": "propose",
+      "spec.decide": "deny",
+      "release.approve": "deny",
+      "certificate.draft": "deny",
+      "certificate.issue": "deny",
+      "certificate.revoke": "deny",
+      "registry.write": "deny",
+      "appeal.intake": "allow",
+      "appeal.decide": "deny",
+      "mark.policy": "deny",
+      "external.speak": "deny",
+      "roles.assign": "deny",
+      "finance.manage": "deny"
+    },
+    "user": {
+      "repo.read": "allow",
+      "repo.write.docs": "deny",
+      "repo.write.code": "deny",
+      "repo.merge.main": "deny",
+      "spec.propose": "propose",
+      "spec.decide": "deny",
+      "release.approve": "deny",
+      "certificate.draft": "deny",
+      "certificate.issue": "deny",
+      "certificate.revoke": "deny",
+      "registry.write": "deny",
+      "appeal.intake": "allow",
+      "appeal.decide": "deny",
+      "mark.policy": "deny",
+      "external.speak": "deny",
+      "roles.assign": "deny",
+      "finance.manage": "deny"
+    },
+    "ai-steward": {
+      "repo.read": "allow",
+      "repo.write.docs": "allow",
+      "repo.write.code": "propose",
+      "repo.merge.main": "allow-with-allowlist",
+      "spec.propose": "propose",
+      "spec.decide": "deny",
+      "release.approve": "deny",
+      "certificate.draft": "propose",
+      "certificate.issue": "deny",
+      "certificate.revoke": "deny",
+      "registry.write": "propose",
+      "appeal.intake": "allow",
+      "appeal.decide": "deny",
+      "mark.policy": "deny",
+      "external.speak": "deny",
+      "roles.assign": "deny",
+      "finance.manage": "deny"
+    },
+    "ai-inspector": {
+      "repo.read": "allow",
+      "repo.write.docs": "propose",
+      "repo.write.code": "deny",
+      "repo.merge.main": "deny",
+      "spec.propose": "propose",
+      "spec.decide": "deny",
+      "release.approve": "deny",
+      "certificate.draft": "propose",
+      "certificate.issue": "deny",
+      "certificate.revoke": "deny",
+      "registry.write": "propose",
+      "appeal.intake": "allow",
+      "appeal.decide": "deny",
+      "mark.policy": "deny",
+      "external.speak": "deny",
+      "roles.assign": "deny",
+      "finance.manage": "deny"
+    },
+    "ai-registrar": {
+      "repo.read": "allow",
+      "repo.write.docs": "propose",
+      "repo.write.code": "deny",
+      "repo.merge.main": "deny",
+      "spec.propose": "deny",
+      "spec.decide": "deny",
+      "release.approve": "deny",
+      "certificate.draft": "deny",
+      "certificate.issue": "deny",
+      "certificate.revoke": "deny",
+      "registry.write": "allow",
+      "appeal.intake": "allow",
+      "appeal.decide": "deny",
+      "mark.policy": "deny",
+      "external.speak": "deny",
+      "roles.assign": "deny",
+      "finance.manage": "deny"
+    },
+    "ai-clerk": {
+      "repo.read": "allow",
+      "repo.write.docs": "propose",
+      "repo.write.code": "deny",
+      "repo.merge.main": "deny",
+      "spec.propose": "deny",
+      "spec.decide": "deny",
+      "release.approve": "deny",
+      "certificate.draft": "deny",
+      "certificate.issue": "deny",
+      "certificate.revoke": "deny",
+      "registry.write": "propose",
+      "appeal.intake": "allow",
+      "appeal.decide": "deny",
+      "mark.policy": "deny",
+      "external.speak": "deny",
+      "roles.assign": "deny",
+      "finance.manage": "deny"
+    },
+    "ai-monitor": {
+      "repo.read": "allow",
+      "repo.write.docs": "propose",
+      "repo.write.code": "deny",
+      "repo.merge.main": "deny",
+      "spec.propose": "deny",
+      "spec.decide": "deny",
+      "release.approve": "deny",
+      "certificate.draft": "deny",
+      "certificate.issue": "deny",
+      "certificate.revoke": "deny",
+      "registry.write": "deny",
+      "appeal.intake": "allow",
+      "appeal.decide": "deny",
+      "mark.policy": "deny",
+      "external.speak": "deny",
+      "roles.assign": "deny",
+      "finance.manage": "deny"
+    },
+    "ai-translator": {
+      "repo.read": "allow",
+      "repo.write.docs": "propose",
+      "repo.write.code": "deny",
+      "repo.merge.main": "deny",
+      "spec.propose": "propose",
+      "spec.decide": "deny",
+      "release.approve": "deny",
+      "certificate.draft": "deny",
+      "certificate.issue": "deny",
+      "certificate.revoke": "deny",
+      "registry.write": "deny",
+      "appeal.intake": "allow",
+      "appeal.decide": "deny",
+      "mark.policy": "deny",
+      "external.speak": "deny",
+      "roles.assign": "deny",
+      "finance.manage": "deny"
+    }
+  },
+  "decisions": {
+    "A": {
+      "label": "不可逆/对外/法律",
+      "examples": [
+        "level definition and name",
+        "certificate issue or revoke",
+        "mark policy",
+        "legal statement or external position",
+        "role appointment"
+      ],
+      "approver": ["organizer"],
+      "aiAllowed": false,
+      "reviewers": [],
+      "commentDays": 0,
+      "provisionalDays": 90,
+      "record": "governance/decision-log.md"
+    },
+    "B": {
+      "label": "标准语义/认证方案",
+      "examples": [
+        "spec text and clause change",
+        "gate semantics",
+        "certification scheme",
+        "new level status or deprecation"
+      ],
+      "approver": ["organizer"],
+      "aiAllowed": true,
+      "aiRole": "draft-only",
+      "reviewers": ["maintainer", "reviewer"],
+      "commentDays": 7,
+      "provisionalDays": 90,
+      "record": "governance/decision-log.md"
+    },
+    "C": {
+      "label": "代码/模式/展示",
+      "examples": [
+        "checker code",
+        "schemas",
+        "portal and catalog display",
+        "CI workflows"
+      ],
+      "approver": ["maintainer"],
+      "aiAllowed": true,
+      "aiRole": "implement-and-propose",
+      "reviewers": ["maintainer"],
+      "commentDays": 0,
+      "provisionalDays": 30,
+      "record": "governance/decision-log.md"
+    },
+    "D": {
+      "label": "例行/可逆",
+      "examples": [
+        "triage and labels",
+        "link and description fixes",
+        "read-only registry sync",
+        "report generation",
+        "translation of non-normative text"
+      ],
+      "approver": ["ai-steward", "ai-registrar", "ai-monitor", "ai-translator"],
+      "aiAllowed": true,
+      "reviewers": [],
+      "commentDays": 0,
+      "provisionalDays": 0,
+      "record": "governance/ai-actions.log"
+    }
+  },
+  "quorum": {
+    "solo": {
+      "humanMaintainers": 1,
+      "classA": "organizer",
+      "classB": "organizer after 7-day public comment; provisional for 90 days",
+      "classC": "organizer",
+      "classD": "AI role; logged; reversible",
+      "claim": "provisional; never 'consensus'"
+    },
+    "team": {
+      "humanMaintainers": 2,
+      "classA": "organizer + 1 maintainer",
+      "classB": "2 of 3 reviewers (organizer counts as one)",
+      "classC": "1 maintainer",
+      "classD": "AI role; logged; reversible",
+      "claim": "reviewed; not official"
+    },
+    "council": {
+      "humanMaintainers": 5,
+      "organizations": 3,
+      "classA": "organizer + 2 maintainers from different organizations",
+      "classB": "2/3 of appointed reviewers",
+      "classC": "1 maintainer",
+      "classD": "AI role; logged; reversible",
+      "claim": "community-reviewed; still not official"
+    }
+  },
+  "coi": {
+    "requiredFields": ["employer", "funding", "ownPlugins", "marketRoles"],
+    "selfAssessedFlag": "required when the organizer or a maintainer is the plugin author",
+    "recusal": [
+      "same GitHub organization as the subject author",
+      "same employer or funder as the subject author",
+      "paid by the subject author in the last 12 months",
+      "author of the subject plugin"
+    ],
+    "record": "governance/coi.json"
+  },
+  "ai": {
+    "trailers": ["AI-Agent", "AI-Model", "AI-Assisted"],
+    "forbiddenPermissions": [
+      "spec.decide",
+      "certificate.issue",
+      "certificate.revoke",
+      "mark.policy",
+      "external.speak",
+      "roles.assign",
+      "finance.manage",
+      "appeal.decide",
+      "release.approve"
+    ],
+    "mergeAllowlist": [
+      "docs/",
+      "results/",
+      "data/",
+      "publish/",
+      "adoption/",
+      "*.md"
+    ],
+    "mergeDenylist": [
+      "spec/",
+      "governance/",
+      "40-checker/",
+      "GOVERNANCE.md",
+      "CONTRIBUTING.md",
+      "MAINTAINERS.md",
+      "SECURITY.md"
+    ],
+    "mustNot": [
+      "approve its own pull request",
+      "sign DCO for a human",
+      "change an evidence PASS/FAIL value",
+      "delete a dispute or audit record",
+      "use a secret outside its scoped token"
+    ],
+    "auditLog": "governance/ai-actions.log"
+  }
+}

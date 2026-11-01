@@ -61,7 +61,7 @@ accurate until a named person accepts and is added to `.github/CODEOWNERS`.
 
 ## If the maintainer becomes unavailable
 
-- The repository remains forkable; no CLA and no proprietary dependency.
+- The repository remains forkable; no copyright-assignment CLA and no proprietary dependency (DCO + DCT v1).
 - A named successor in `MAINTAINERS.md` (once recruited) can request GitHub
   ownership transfer through GitHub Support with the existing credentials.
 - If no successor accepts within 90 days, mark the repository `archived` rather

@@ -1,0 +1,21 @@
+{
+  "schema": "dsh-reviewers/1",
+  "updatedAt": "2026-11-01",
+  "note": "Reviewer authorization is a scoped, expiring record. It is not a professional licence, not an accreditation, and not a certificate of competence.",
+  "reviewers": [
+    {
+      "handle": "PerryLink",
+      "role": "organizer",
+      "status": "provisional",
+      "scopes": ["entry", "flow", "boost", "certification"],
+      "appointedAt": "2026-11-01",
+      "expiresAt": "2027-02-01",
+      "shadowReviews": 0,
+      "knownAnswerExercises": 0,
+      "coi": [
+        "author of dsh-auto-review and of the five meta-tools",
+        "cannot independently review own plugins"
+      ]
+    }
+  ]
+}

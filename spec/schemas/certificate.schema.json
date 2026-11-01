@@ -1,0 +1,255 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://github.com/PerryLink/dsh-standards/spec/schemas/certificate.schema.json",
+  "title": "DSH certificate",
+  "description": "A quality-grade certificate (A-E evidence, A-D grade) is orthogonal to the adoption levels. A certificate MUST NOT carry a level field.",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "schema",
+    "certificateId",
+    "subject",
+    "grade",
+    "claimLevel",
+    "status",
+    "issuedAt",
+    "expiresAt",
+    "scope",
+    "scheme",
+    "assessor",
+    "evidence",
+    "selfAssessed",
+    "disclaimer",
+    "verifyUrl"
+  ],
+  "not": {
+    "required": [
+      "level"
+    ]
+  },
+  "properties": {
+    "schema": {
+      "const": "dsh-certificate/1"
+    },
+    "certificateId": {
+      "type": "string",
+      "pattern": "^DSH-CERT-[0-9]{4}-[0-9]{3}$"
+    },
+    "subject": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "repo",
+        "version"
+      ],
+      "properties": {
+        "repo": {
+          "type": "string",
+          "minLength": 1
+        },
+        "version": {
+          "type": "string",
+          "minLength": 1
+        },
+        "commit": {
+          "type": "string",
+          "pattern": "^[0-9a-f]{7,40}$"
+        }
+      }
+    },
+    "grade": {
+      "enum": [
+        "A",
+        "B",
+        "C",
+        "D"
+      ]
+    },
+    "status": {
+      "enum": [
+        "draft",
+        "active",
+        "suspended",
+        "withdrawn",
+        "expired"
+      ]
+    },
+    "issuedAt": {
+      "type": "string",
+      "format": "date"
+    },
+    "expiresAt": {
+      "type": "string",
+      "format": "date"
+    },
+    "scope": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "dimensions",
+        "excluded"
+      ],
+      "properties": {
+        "dimensions": {
+          "type": "array",
+          "minItems": 1,
+          "items": {
+            "enum": [
+              "A",
+              "B",
+              "C",
+              "D",
+              "E"
+            ]
+          },
+          "uniqueItems": true
+        },
+        "excluded": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          },
+          "uniqueItems": true
+        },
+        "platform": {
+          "type": "string"
+        },
+        "dsh": {
+          "type": "string"
+        },
+        "cordis": {
+          "type": "string"
+        }
+      }
+    },
+    "scheme": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "id",
+        "version"
+      ],
+      "properties": {
+        "id": {
+          "const": "dsh-certification"
+        },
+        "version": {
+          "type": "string",
+          "minLength": 1
+        }
+      }
+    },
+    "assessor": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "handle",
+        "role",
+        "coi"
+      ],
+      "properties": {
+        "handle": {
+          "type": "string",
+          "minLength": 1
+        },
+        "role": {
+          "enum": [
+            "organizer",
+            "maintainer",
+            "reviewer",
+            "external-reviewer"
+          ]
+        },
+        "coi": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        }
+      }
+    },
+    "evidence": {
+      "type": "array",
+      "minItems": 1,
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": [
+          "id",
+          "result"
+        ],
+        "properties": {
+          "id": {
+            "enum": [
+              "A",
+              "B",
+              "C",
+              "D",
+              "E"
+            ]
+          },
+          "result": {
+            "enum": [
+              "PASS",
+              "FAIL",
+              "WARN",
+              "NOT-RUN"
+            ]
+          },
+          "url": {
+            "type": "string"
+          },
+          "sha256": {
+            "type": "string",
+            "pattern": "^[0-9a-f]{64}$"
+          },
+          "note": {
+            "type": "string"
+          }
+        },
+        "anyOf": [
+          {
+            "required": [
+              "url"
+            ]
+          },
+          {
+            "required": [
+              "sha256"
+            ]
+          }
+        ]
+      }
+    },
+    "selfAssessed": {
+      "type": "boolean"
+    },
+    "disclaimer": {
+      "type": "string",
+      "minLength": 12
+    },
+    "notClaimed": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      },
+      "uniqueItems": true
+    },
+    "verifyUrl": {
+      "type": "string",
+      "pattern": "^https://"
+    },
+    "supersedes": {
+      "type": "string",
+      "pattern": "^DSH-CERT-[0-9]{4}-[0-9]{3}$"
+    },
+    "claimLevel": {
+      "enum": [
+        "self-reported",
+        "verified",
+        "peer-reviewed"
+      ],
+      "description": "self-reported when the assessor is the author; verified only with an independent reviewer; peer-reviewed with a panel."
+    }
+  }
+}

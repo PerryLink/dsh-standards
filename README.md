@@ -8,8 +8,8 @@
 | 层 | 规范/实践 | 当前状态 |
 |---|---|---|
 | 1 | **DSH-ENTRY 入门规范** | 18/18 `recognized`；10/18 base-only G3 verified，gate 后 8/18 clean；client 15/15 loaded |
-| 2 | **DSH-FLOW 顺畅规范** | draft；J1 真跑，J2–J8 `not-run` |
-| 3 | **DSH-BOOST 加速实践** | draft；LEV-1–8 均有 measured 证据（loader / context / provider-capture / synthetic timer） |
+| 2 | **DSH-FLOW 顺畅规范** | draft；fixture 上 J1/J2/J4/J6 **12 PASS**；5 个真实包 **40 PASS / 0 FAIL / 1 blocked**；J3/J5/J7/J8 仍 `not-run` |
+| 3 | **DSH-BOOST 加速实践** | draft；LEV-1–8 **8/8 measured**（loader / context / provider-capture / synthetic timer；非生产基线） |
 
 ## 先看什么
 
@@ -26,6 +26,9 @@
 - [39-五工具定位与贡献](39-五工具定位与贡献.md) — guide/doctor/cert/portal/catalog 的角色
 - [40-五工具全面转向方案](40-五工具全面转向方案.md) — 以三层为主轴的迁移计划
 - [42-标准体系缺口](42-标准体系缺口-认证检验认可.md) — 认证/检验/认可/监督还差什么
+- [43-缺口总账与 AI 可执行方案](43-缺口总账与AI可执行方案.md) — **全部缺口、AI/Human/模板/删除裁决、90 天 P0–P3**
+- [44-角色治理与贡献机制](44-角色治理与贡献机制.md) — **角色阶梯、DCO+DCT（CLA 式）、COI、申诉、AI 职员**
+- [45-三用途落地](45-三用途落地-官方市场开发者.md) — **官方前沿探索 / 市场参考 / 开发者指南**
 - [97-采纳可行性评估](97-采纳可行性评估.md) — 官方路径、缺口、90 天
 - [98-内测群与官方沟通包](98-内测群与官方沟通包.md) — 对外话术
 
@@ -48,6 +51,12 @@ node scripts/level-audit.mjs <dir> --format json
 # J1 安装/卸载旅程
 node scripts/journey-runtime.mjs --package <dir> --json
 
+# 治理/贡献/证书检查
+node scripts/governance-check.mjs
+node scripts/certificate-check.mjs
+node scripts/claim-check.mjs
+node scripts/dco-check.mjs --range HEAD~1..HEAD
+
 # LEV-7 有界并行基准
 cd ../examples/boost
 node lev7-bench.mjs 64 20
@@ -60,8 +69,16 @@ node lev7-bench.mjs 64 20
 - 18 包 base-only runtime：**18/18 有原始 JSON；10/18 G3 verified，8 partial，0 error**；host gate 后 **8 clean + 2 reject + 8 partial**；
 - client runtime：**15/15 `client-module-loaded`**（真实 Chromium）；web-app **4/4 loaded**；
 - 不可用：**0 plugin code FAIL；2 host-gate reject（telemetry/verification）**；
-- 检查器：**25/25 tests**；
+- 检查器：**52/52 tests**（含新增 27 个治理/DCO/证书/声明测试）；
 - J1：**6 PASS + 1 WARN**；LEV-3：volatile **0/20** vs control **20/20** remount；LEV-6：稳定 prefix **100%** vs 易变 **0%**；LEV-7：**8.24×**（合成，非生产基线）。
+
+## 治理与贡献
+
+- 角色与权限：`governance/roles.json`；一页说明：`GOVERNANCE.md`
+- 贡献：DCO 1.1 + DCT v1（`dsh-ct/1`，许可而非版权转让）；见 `CONTRIBUTING.md`
+- 标志：`governance/mark-policy.md`（自动授予、可撤销、必须带免责声明）
+- 申诉：`governance/appeals.md`；AI 只受理/计时/复核，人类终裁
+- 三用途采用包：`adoption/{official,market,developer}/`（按 `45` 落地）
 
 ## 边界
 
@@ -69,17 +86,28 @@ node lev7-bench.mjs 64 20
 - 不做认证/安全审计；
 - 不把 static 写成 runtime；
 - 不把 10/18 base-only 写成 18/18 web/生产；不把 `client-module-loaded` 写成 UI/认证；
-- 不声称官方推荐/采纳。
+- 不声称官方推荐/采纳；
+- 不声称认证/认可/安全审计；A–D 是质量等级，不是 ENTRY/FLOW/BOOST。
+
+## 许可
+
+- 文本/规范：CC BY 4.0；
+- 代码/脚本/schema：Apache-2.0（含专利授权与防御终止）；
+- 标志/badge：单独规则，见 `governance/mark-policy.md`；
+- 贡献：DCO 1.1 + DCT v1，不要求版权转让。
 
 ## 目录
 
 ```text
 00-99*.md         规范/研究/画像/沟通包
 40-checker/       检查器、J1 旅程、bundle smoke、样本框、结果
+governance/       角色/贡献条款/标志/申诉/COI/决策日志 + 机器检查
+adoption/         official / market / developer 三套采用包
+spec/             levels.json + schemas（evidence / certificate）
 examples/boost/   LEV-7 参考实现与基准
-publish/          format-1 labels 示例
+publish/          labels 示例 + 评价记录 JSON
 ```
 
 ## 先行项目
 
-`dsh-plugin-standard`（lanbaolu）是同生态的先行项目；本项目与其无隶属关系，引用/对比时将标注来源。许可在正式对外前单独确认。
+`dsh-plugin-standard`（lanbaolu）是同生态的先行项目；本项目与其无隶属关系，引用/对比时将标注来源。许可见 `LICENSE`（文本 CC BY 4.0 / 代码 Apache-2.0）。

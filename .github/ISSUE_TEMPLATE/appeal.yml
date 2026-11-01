@@ -1,0 +1,59 @@
+name: Appeal or complaint
+description: Challenge a factual error, a procedure, a conflict, stale evidence, or a label overreach.
+title: "[appeal] "
+labels: ["appeal"]
+body:
+  - type: markdown
+    attributes:
+      value: |
+        This is **not** a legal remedy, arbitration, or regulator complaint. The
+        project has no legal entity. It can correct facts, re-run checks, and
+        publish a decision record; it cannot award damages or compel a third party.
+
+  - type: input
+    id: subject
+    attributes:
+      label: Subject
+      description: repo@version, certificate ID, or label URL
+      placeholder: "owner/plugin@1.2.3 / DSH-CERT-2026-001"
+    validations:
+      required: true
+
+  - type: dropdown
+    id: grounds
+    attributes:
+      label: Grounds
+      options:
+        - Factual error (repo/version/commit/evidence/date)
+        - Procedure not followed (no comment window, no clause ID)
+        - Undisclosed conflict of interest
+        - Stale or invalid evidence still shown as valid
+        - Label overreach (self-declared shown as certified, level shown as grade)
+    validations:
+      required: true
+
+  - type: textarea
+    id: detail
+    attributes:
+      label: What is wrong
+      description: Quote the exact field or sentence; do not paste credentials or personal data.
+    validations:
+      required: true
+
+  - type: textarea
+    id: counter
+    attributes:
+      label: Counter-evidence and a reproducible command
+      description: A URL, commit, or command that a third party can run.
+    validations:
+      required: true
+
+  - type: checkboxes
+    id: acknowledgements
+    attributes:
+      label: Acknowledgements
+      options:
+        - label: I understand this is not a legal remedy and does not create a contract.
+          required: true
+        - label: I have not included credentials, session data, or personal data.
+          required: true
