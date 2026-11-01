@@ -1,0 +1,42 @@
+name: Proposal
+description: A clause, checker, adoption-kit, or governance change.
+title: "[proposal] "
+labels: ["proposal"]
+body:
+  - type: dropdown
+    id: area
+    attributes:
+      label: Area
+      options:
+        - Standard text / clause
+        - Checker / schema
+        - Official adoption kit
+        - Market adoption kit
+        - Developer adoption kit
+        - Governance / contribution
+        - Other
+    validations:
+      required: true
+  - type: textarea
+    id: problem
+    attributes:
+      label: Problem
+      description: What decision is blocked today? Link the clause/gate/file.
+    validations:
+      required: true
+  - type: textarea
+    id: proposal
+    attributes:
+      label: Proposal and acceptance
+      description: What changes, how it is verified, and what it must not claim.
+    validations:
+      required: true
+  - type: checkboxes
+    id: ack
+    attributes:
+      label: Boundaries
+      options:
+        - label: This does not add an official, certified, secure, or ranking claim.
+          required: true
+        - label: If this changes a clause, I will allow a 7-day comment window and mark it provisional.
+          required: false

@@ -1,0 +1,253 @@
+{
+  "schema": "dsh-clauses/1",
+  "version": "1.0.0-rc.1",
+  "updatedAt": "2026-11-02",
+  "note": "Stable clause IDs mapped to the gates in spec/levels.json. The source anchor is a section, not a line number, so edits do not silently break the map.",
+  "clauses": [
+    {
+      "id": "ENTRY-RUNSET",
+      "level": "entry",
+      "title": "Run set and coverage",
+      "source": "31-DSH-ENTRY入门规范.md#21-run-set",
+      "gates": [
+        "G0",
+        "G1",
+        "G3"
+      ],
+      "normative": true
+    },
+    {
+      "id": "ENTRY-BLOCKING",
+      "level": "entry",
+      "title": "Blocking conditions",
+      "source": "31-DSH-ENTRY入门规范.md#22-blocking",
+      "gates": [
+        "G2"
+      ],
+      "normative": true
+    },
+    {
+      "id": "ENTRY-KIND",
+      "level": "entry",
+      "title": "Per-kind execution",
+      "source": "31-DSH-ENTRY入门规范.md#23-按-kind-的运行",
+      "gates": [
+        "G0",
+        "G1"
+      ],
+      "normative": true
+    },
+    {
+      "id": "ENTRY-STATUS",
+      "level": "entry",
+      "title": "Conclusion states",
+      "source": "31-DSH-ENTRY入门规范.md#24-结论状态",
+      "gates": [
+        "G3",
+        "G5"
+      ],
+      "normative": true
+    },
+    {
+      "id": "ENTRY-CLIENT",
+      "level": "entry",
+      "title": "Client static shape",
+      "source": "31-DSH-ENTRY入门规范.md#23-按-kind-的运行",
+      "gates": [
+        "G4"
+      ],
+      "normative": true
+    },
+    {
+      "id": "ENTRY-BOUNDARY",
+      "level": "entry",
+      "title": "Boundary and non-claims",
+      "source": "31-DSH-ENTRY入门规范.md#五边界",
+      "gates": [
+        "G5"
+      ],
+      "normative": true
+    },
+    {
+      "id": "FLOW-J1",
+      "level": "flow",
+      "title": "Install and remove",
+      "source": "32-DSH-FLOW顺畅规范.md#三j1j8-判定协议",
+      "gates": [
+        "J1"
+      ],
+      "normative": true
+    },
+    {
+      "id": "FLOW-J2",
+      "level": "flow",
+      "title": "Enable and disable",
+      "source": "32-DSH-FLOW顺畅规范.md#三j1j8-判定协议",
+      "gates": [
+        "J2"
+      ],
+      "normative": true
+    },
+    {
+      "id": "FLOW-J3",
+      "level": "flow",
+      "title": "Configuration",
+      "source": "32-DSH-FLOW顺畅规范.md#三j1j8-判定协议",
+      "gates": [
+        "J3"
+      ],
+      "normative": true
+    },
+    {
+      "id": "FLOW-J4",
+      "level": "flow",
+      "title": "First success",
+      "source": "32-DSH-FLOW顺畅规范.md#三j1j8-判定协议",
+      "gates": [
+        "J4"
+      ],
+      "normative": true
+    },
+    {
+      "id": "FLOW-J5",
+      "level": "flow",
+      "title": "Permissions and disclosure",
+      "source": "32-DSH-FLOW顺畅规范.md#43-权限文案",
+      "gates": [
+        "J5"
+      ],
+      "normative": true
+    },
+    {
+      "id": "FLOW-J6",
+      "level": "flow",
+      "title": "Upgrade, rollback, uninstall",
+      "source": "32-DSH-FLOW顺畅规范.md#三j1j8-判定协议",
+      "gates": [
+        "J6"
+      ],
+      "normative": true
+    },
+    {
+      "id": "FLOW-J7",
+      "level": "flow",
+      "title": "Observability and diagnostics",
+      "source": "32-DSH-FLOW顺畅规范.md#三j1j8-判定协议",
+      "gates": [
+        "J7"
+      ],
+      "normative": true
+    },
+    {
+      "id": "FLOW-J8",
+      "level": "flow",
+      "title": "Client/server shapes",
+      "source": "32-DSH-FLOW顺畅规范.md#三j1j8-判定协议",
+      "gates": [
+        "J8"
+      ],
+      "normative": true
+    },
+    {
+      "id": "BOOST-LEV1",
+      "level": "boost",
+      "title": "Reversible effects",
+      "source": "33-DSH-BOOST加速实践.md#二八条-lev",
+      "gates": [
+        "LEV-1"
+      ],
+      "normative": false
+    },
+    {
+      "id": "BOOST-LEV2",
+      "level": "boost",
+      "title": "Inject and wait",
+      "source": "33-DSH-BOOST加速实践.md#二八条-lev",
+      "gates": [
+        "LEV-2"
+      ],
+      "normative": false
+    },
+    {
+      "id": "BOOST-LEV3",
+      "level": "boost",
+      "title": "Volatile hot config",
+      "source": "33-DSH-BOOST加速实践.md#二八条-lev",
+      "gates": [
+        "LEV-3"
+      ],
+      "normative": false
+    },
+    {
+      "id": "BOOST-LEV4",
+      "level": "boost",
+      "title": "Event modes",
+      "source": "33-DSH-BOOST加速实践.md#二八条-lev",
+      "gates": [
+        "LEV-4"
+      ],
+      "normative": false
+    },
+    {
+      "id": "BOOST-LEV5",
+      "level": "boost",
+      "title": "Seam, isolate, group",
+      "source": "33-DSH-BOOST加速实践.md#二八条-lev",
+      "gates": [
+        "LEV-5"
+      ],
+      "normative": false
+    },
+    {
+      "id": "BOOST-LEV6",
+      "level": "boost",
+      "title": "Prefix and prompt stability",
+      "source": "33-DSH-BOOST加速实践.md#二八条-lev",
+      "gates": [
+        "LEV-6"
+      ],
+      "normative": false
+    },
+    {
+      "id": "BOOST-LEV7",
+      "level": "boost",
+      "title": "Bounded parallelism and jobs",
+      "source": "33-DSH-BOOST加速实践.md#二八条-lev",
+      "gates": [
+        "LEV-7"
+      ],
+      "normative": false
+    },
+    {
+      "id": "BOOST-LEV8",
+      "level": "boost",
+      "title": "Composition and evidence card",
+      "source": "33-DSH-BOOST加速实践.md#二八条-lev",
+      "gates": [
+        "LEV-8"
+      ],
+      "normative": false
+    },
+    {
+      "id": "BOOST-G10",
+      "level": "boost",
+      "title": "G-10 boundary",
+      "source": "33-DSH-BOOST加速实践.md#三g-10-的边界",
+      "gates": [
+        "LEV-8"
+      ],
+      "normative": false
+    },
+    {
+      "id": "BOOST-EVIDENCE",
+      "level": "boost",
+      "title": "Evidence card",
+      "source": "33-DSH-BOOST加速实践.md#四证据卡",
+      "gates": [
+        "LEV-8"
+      ],
+      "normative": false
+    }
+  ],
+  "normativeCount": 14
+}

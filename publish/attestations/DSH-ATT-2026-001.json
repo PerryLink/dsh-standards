@@ -1,6 +1,6 @@
 {
-  "schema": "dsh-certificate/1",
-  "certificateId": "DSH-CERT-2026-001",
+  "schema": "dsh-attestation/1",
+  "attestationId": "DSH-ATT-2026-001",
   "subject": {
     "repo": "PerryLink/dsh-auto-review",
     "version": "0.15.0",
@@ -78,5 +78,12 @@
     "UI correctness",
     "independent third-party review"
   ],
-  "verifyUrl": "https://github.com/PerryLink/dsh-plugin-certification"
+  "verifyUrl": "https://github.com/PerryLink/dsh-plugin-certification",
+  "history": [
+    {
+      "status": "draft",
+      "at": "2026-11-01",
+      "reason": "self-assessed draft; not active"
+    }
+  ]
 }

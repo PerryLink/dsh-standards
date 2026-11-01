@@ -15,7 +15,7 @@ body:
     attributes:
       label: Subject
       description: repo@version, certificate ID, or label URL
-      placeholder: "owner/plugin@1.2.3 / DSH-CERT-2026-001"
+      placeholder: "owner/plugin@1.2.3 / DSH-ATT-2026-001"
     validations:
       required: true
 

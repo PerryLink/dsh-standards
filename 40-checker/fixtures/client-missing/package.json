@@ -1,0 +1,6 @@
+{
+  "name": "@dsh-fixtures/client-missing",
+  "version": "1.0.0",
+  "dsh": { "client": "client.js" },
+  "exports": { ".": "./index.js" }
+}

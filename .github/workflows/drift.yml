@@ -23,13 +23,21 @@ jobs:
         with:
           node-version: 24
       - name: Checker tests
-        run: node --test 40-checker/test/*.test.mjs
+        run: node --test 40-checker/test
       - name: Good fixture stays recognized
         run: |
           node 40-checker/bin/dsh-plugin-verify.mjs 40-checker/fixtures/good \
             --scope entry --entry-claim static --format json \
             --out "$RUNNER_TEMP/good.json"
           node -e "const r=require('$RUNNER_TEMP/good.json');console.log(r.conclusion.status, r.conclusion.level)"
+      - name: Clause map + evidence chain + stale clock
+        run: |
+          node 40-checker/scripts/clause-map.mjs
+          node 40-checker/scripts/evidence-chain.mjs verify
+          node 40-checker/scripts/stale-check.mjs
+          node 40-checker/scripts/attestation-check.mjs
+          node 40-checker/scripts/claim-check.mjs
+
       - name: Version and CLI surface
         run: |
           node 40-checker/bin/dsh-plugin-verify.mjs --version

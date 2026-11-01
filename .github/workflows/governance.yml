@@ -25,21 +25,32 @@ jobs:
           node --test
           40-checker/test/governance.test.mjs
           40-checker/test/dco.test.mjs
-          40-checker/test/certificate.test.mjs
+          40-checker/test/attestation.test.mjs
           40-checker/test/claim.test.mjs
           40-checker/test/verify.test.mjs
+          40-checker/test/client-shape.test.mjs
+          40-checker/test/ops.test.mjs
 
       - name: Roles, contributors, reviewers, COI
         run: node 40-checker/scripts/governance-check.mjs
 
-      - name: Certificate JSON
-        run: node 40-checker/scripts/certificate-check.mjs
+      - name: Clause map
+        run: node 40-checker/scripts/clause-map.mjs
+
+      - name: Evidence chain
+        run: node 40-checker/scripts/evidence-chain.mjs verify
+
+      - name: Stale clock
+        run: node 40-checker/scripts/stale-check.mjs
+
+      - name: Attestation JSON
+        run: node 40-checker/scripts/attestation-check.mjs
 
       - name: Public claims
         run: node 40-checker/scripts/claim-check.mjs
 
       - name: Verify the example record
-        run: node publish/verify.mjs --id DSH-CERT-2026-001
+        run: node publish/verify.mjs --id DSH-ATT-2026-001
 
       - name: Shell syntax
         run: bash -n adoption/official/repro.sh

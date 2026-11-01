@@ -1,0 +1,57 @@
+{
+  "schema": "dsh-attestation-scheme/1",
+  "id": "dsh-attestation-scheme",
+  "version": "1.0.0-rc.1",
+  "status": "provisional",
+  "nonOfficial": true,
+  "object": "a published DSH plugin or bundle pinned to repo@version and commit",
+  "scope": {
+    "dimensions": ["A", "B", "C", "D", "E"],
+    "excluded": ["security audit", "runtime isolation", "UI correctness", "production readiness", "official endorsement", "market ranking"],
+    "validityDays": 365
+  },
+  "grades": {
+    "A": "all five pass, E=ok, no veto",
+    "B": "E=ok and at least three of A/B/C/D pass",
+    "C": "E=ok, the rest incomplete",
+    "D": "any hard gate fails (no dsh.bundle, no license, malicious pattern)"
+  },
+  "environmentBlocked": "E fails only because of an unattended-environment gate; keep B if A-D pass and record environment-blocked",
+  "veto": {
+    "triggers": ["obfuscated code", "credential exfiltration", "surprising install-time behavior"],
+    "effect": "grade D immediately, publish the reason",
+    "notClaimed": "not a CVE, not a sandbox result, not proof of safety"
+  },
+  "evidenceDiscipline": [
+    "every score comes from a reproducible probe, Scorecard run, provenance check, or test-drive record",
+    "absent evidence is no-evidence, never a guess",
+    "every dimension records an audit link and a snapshot date",
+    "report (dsh-report/1) and attestation (dsh-attestation/1) are separate documents",
+    "selfAssessed=true implies claimLevel=self-reported"
+  ],
+  "statusMachine": {
+    "draft": "materials not signed",
+    "active": "organizer signed, within validity",
+    "suspended": "appeal or review in progress",
+    "withdrawn": "evidence error, misuse, or author withdrawal",
+    "expired": "expiresAt passed"
+  },
+  "transitionRules": [
+    "draft -> active requires a human organizer signature and a public evidence record",
+    "active -> suspended requires an appeal or a review record",
+    "active|suspended -> withdrawn requires a reason and a decision-log entry",
+    "active -> expired is automatic when expiresAt < today",
+    "withdrawn -> active is not allowed; issue a new attestation with a new ID"
+  ],
+  "mark": {
+    "policy": "governance/mark-policy.md",
+    "requiredFields": ["attestationId", "scope", "expiresAt", "verifyUrl"],
+    "disclaimer": "非官方 · 非认证 · 非安全审计"
+  },
+  "review": {
+    "freshnessDays": 365,
+    "surveillance": "quarterly link/version/expiry check",
+    "appeals": "governance/appeals.md",
+    "coi": "governance/coi.json"
+  }
+}

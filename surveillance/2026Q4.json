@@ -1,0 +1,16 @@
+{
+  "schema": "dsh-surveillance/1",
+  "generatedAt": "2026-11-01T05:13:45.670Z",
+  "checked": 1,
+  "issues": [],
+  "records": [
+    {
+      "attestationId": "DSH-ATT-2026-001",
+      "status": "draft",
+      "expiresAt": "2027-11-01",
+      "issues": []
+    }
+  ],
+  "online": false,
+  "note": "Read-only. No delisting, no punishment, no security judgement."
+}

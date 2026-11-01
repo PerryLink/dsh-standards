@@ -1,14 +1,14 @@
 #!/usr/bin/env node
 /**
- * verify.mjs — look up a DSH certificate/attestation by ID, validate it, and
+ * verify.mjs — look up a DSH attestation by ID, validate it, and
  * print its scope/status/expiry. Optionally check that evidence URLs resolve.
  *
  * It is a read-only view. It does not issue, suspend, or revoke anything, and it
  * never turns an expired record into a valid one.
  *
  * Usage:
- *   node publish/verify.mjs --id DSH-CERT-2026-001
- *   node publish/verify.mjs --file publish/certificates/DSH-CERT-2026-001.json
+ *   node publish/verify.mjs --id DSH-ATT-2026-001
+ *   node publish/verify.mjs --file publish/attestations/DSH-ATT-2026-001.json
  *   node publish/verify.mjs --build
  *   node publish/verify.mjs --id ... --online --json
  *
@@ -17,11 +17,11 @@
 import fs from 'node:fs'
 import path from 'node:path'
 import { fileURLToPath } from 'node:url'
-import { validateCertificate } from '../40-checker/scripts/certificate-check.mjs'
+import { validateAttestation } from '../40-checker/scripts/attestation-check.mjs'
 
 const HERE = path.dirname(fileURLToPath(import.meta.url))
 const ROOT = path.resolve(HERE, '..')
-const CERTS = path.join(ROOT, 'publish', 'certificates')
+const CERTS = path.join(ROOT, 'publish', 'attestations')
 const INDEX = path.join(CERTS, 'index.json')
 
 function readJson(file) {
@@ -30,11 +30,11 @@ function readJson(file) {
 
 export function buildIndex(dir = CERTS) {
   const files = fs.readdirSync(dir).filter((name) => name.endsWith('.json') && name !== 'index.json').sort()
-  const certificates = []
+  const attestations = []
   for (const name of files) {
     const cert = readJson(path.join(dir, name))
-    certificates.push({
-      certificateId: cert.certificateId,
+    attestations.push({
+      attestationId: cert.attestationId,
       repo: cert.subject?.repo,
       version: cert.subject?.version,
       grade: cert.grade,
@@ -43,24 +43,24 @@ export function buildIndex(dir = CERTS) {
       issuedAt: cert.issuedAt,
       expiresAt: cert.expiresAt,
       verifyUrl: cert.verifyUrl,
-      file: `publish/certificates/${name}`,
+      file: `publish/attestations/${name}`,
     })
   }
   return {
-    schema: 'dsh-certificate-index/1',
+    schema: 'dsh-attestation-index/1',
     updatedAt: new Date().toISOString().slice(0, 10),
-    certificates,
+    attestations,
   }
 }
 
 export function loadIndex(root = ROOT) {
-  const file = path.join(root, 'publish', 'certificates', 'index.json')
+  const file = path.join(root, 'publish', 'attestations', 'index.json')
   if (fs.existsSync(file)) return readJson(file)
-  return buildIndex(path.join(root, 'publish', 'certificates'))
+  return buildIndex(path.join(root, 'publish', 'attestations'))
 }
 
-export function findCertificate(index, id) {
-  return (index.certificates || []).find((c) => c.certificateId === id) || null
+export function findAttestation(index, id) {
+  return (index.attestations || []).find((c) => c.attestationId === id) || null
 }
 
 export function effectiveStatus(cert, now = new Date()) {
@@ -72,7 +72,7 @@ export function effectiveStatus(cert, now = new Date()) {
 
 export function summarize(cert) {
   return {
-    certificateId: cert.certificateId,
+    attestationId: cert.attestationId,
     subject: cert.subject,
     grade: cert.grade,
     claimLevel: cert.claimLevel,
@@ -115,12 +115,12 @@ export async function verify({ root = ROOT, id = null, file = null, online = fal
     cert = readJson(source)
   } else {
     const index = loadIndex(root)
-    const entry = findCertificate(index, id)
-    if (!entry) return { ok: false, error: `certificate not found: ${id}`, index }
+    const entry = findAttestation(index, id)
+    if (!entry) return { ok: false, error: `attestation not found: ${id}`, index }
     source = path.join(root, entry.file)
     cert = readJson(source)
   }
-  const validation = validateCertificate(cert)
+  const validation = validateAttestation(cert)
   const summary = summarize(cert)
   const errors = [...validation.errors]
   if (summary.status === 'expired' && cert.status === 'active') {
@@ -131,7 +131,7 @@ export async function verify({ root = ROOT, id = null, file = null, online = fal
   return {
     ok: errors.length === 0,
     source: path.relative(root, source),
-    certificate: summary,
+    attestation: summary,
     errors,
     warnings: validation.warnings,
     online: onlineResults,
@@ -162,10 +162,10 @@ export async function main(argv = process.argv.slice(2)) {
     else { console.error(`unknown argument: ${arg}`); return 3 }
   }
   if (build) {
-    const index = buildIndex(path.join(root, 'publish', 'certificates'))
-    const out = path.join(root, 'publish', 'certificates', 'index.json')
+    const index = buildIndex(path.join(root, 'publish', 'attestations'))
+    const out = path.join(root, 'publish', 'attestations', 'index.json')
     fs.writeFileSync(out, `${JSON.stringify(index, null, 2)}\n`)
-    console.log(`wrote ${path.relative(root, out)} (${index.certificates.length} record(s))`)
+    console.log(`wrote ${path.relative(root, out)} (${index.attestations.length} record(s))`)
     return 0
   }
   if (!id && !file) { usage(); return 3 }
@@ -175,8 +175,8 @@ export async function main(argv = process.argv.slice(2)) {
   } else if (!result.ok && result.error) {
     console.error(result.error)
   } else {
-    const c = result.certificate
-    console.log(`${c.certificateId}  ${c.subject.repo}@${c.subject.version}`)
+    const c = result.attestation
+    console.log(`${c.attestationId}  ${c.subject.repo}@${c.subject.version}`)
     console.log(`grade ${c.grade} · claimLevel ${c.claimLevel} · status ${c.status}${c.selfAssessed ? ' · self-assessed' : ''}`)
     console.log(`issued ${c.issuedAt} · expires ${c.expiresAt}`)
     console.log(`scope: ${c.scope.dimensions.join(',')}; excluded: ${c.scope.excluded.join(', ')}`)

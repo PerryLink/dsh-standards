@@ -1,13 +1,13 @@
 {
   "$schema": "https://json-schema.org/draft/2020-12/schema",
-  "$id": "https://github.com/PerryLink/dsh-standards/spec/schemas/certificate.schema.json",
-  "title": "DSH certificate",
-  "description": "A quality-grade certificate (A-E evidence, A-D grade) is orthogonal to the adoption levels. A certificate MUST NOT carry a level field.",
+  "$id": "https://github.com/PerryLink/dsh-standards/spec/schemas/attestation.schema.json",
+  "title": "DSH attestation",
+  "description": "A quality-grade attestation (A-E evidence, A-D grade) is orthogonal to the adoption levels. A attestation MUST NOT carry a level field.",
   "type": "object",
   "additionalProperties": false,
   "required": [
     "schema",
-    "certificateId",
+    "attestationId",
     "subject",
     "grade",
     "claimLevel",
@@ -29,11 +29,11 @@
   },
   "properties": {
     "schema": {
-      "const": "dsh-certificate/1"
+      "const": "dsh-attestation/1"
     },
-    "certificateId": {
+    "attestationId": {
       "type": "string",
-      "pattern": "^DSH-CERT-[0-9]{4}-[0-9]{3}$"
+      "pattern": "^DSH-ATT-[0-9]{4}-[0-9]{3}$"
     },
     "subject": {
       "type": "object",
@@ -241,7 +241,7 @@
     },
     "supersedes": {
       "type": "string",
-      "pattern": "^DSH-CERT-[0-9]{4}-[0-9]{3}$"
+      "pattern": "^DSH-ATT-[0-9]{4}-[0-9]{3}$"
     },
     "claimLevel": {
       "enum": [
@@ -250,6 +250,35 @@
         "peer-reviewed"
       ],
       "description": "self-reported when the assessor is the author; verified only with an independent reviewer; peer-reviewed with a panel."
+    },
+    "history": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": [
+          "status",
+          "at"
+        ],
+        "properties": {
+          "status": {
+            "enum": [
+              "draft",
+              "active",
+              "suspended",
+              "withdrawn",
+              "expired"
+            ]
+          },
+          "at": {
+            "type": "string",
+            "format": "date"
+          },
+          "reason": {
+            "type": "string"
+          }
+        }
+      }
     }
   }
 }

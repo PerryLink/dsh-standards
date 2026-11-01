@@ -1,0 +1,54 @@
+{
+  "schema": "dsh-attestation-rubric/1",
+  "version": "1.0.0-rc.1",
+  "note": "Each dimension maps to evidence fields. A missing field is no-evidence, not zero. The rubric does not convert to a level.",
+  "dimensions": {
+    "A": {
+      "label": "Manifest compliance",
+      "source": "static",
+      "checks": ["dsh.bundle present", "SPDX license", "keywords/topics aligned", "README present", "engines range"],
+      "evidence": ["package.json#dsh", "package.json#license", "package.json#keywords", "README", "package.json#engines"],
+      "pass": "all checks present",
+      "doesNotProve": ["patch parses", "host admits", "boot", "client export"]
+    },
+    "B": {
+      "label": "Build hygiene",
+      "source": "static",
+      "checks": ["files allowlist", "peer/optional declarations", "no malicious install pattern", "lint/typecheck gate"],
+      "evidence": ["package.json#files", "package.json#peerDependencies", "package.json#scripts", "CI config"],
+      "pass": "no hard pattern hit and the allowlist covers referenced files",
+      "doesNotProve": ["tarball completeness", "script safety", "runtime correctness"]
+    },
+    "C": {
+      "label": "Supply chain",
+      "source": "OpenSSF Scorecard",
+      "checks": ["scorecard run for the repo at the snapshot date"],
+      "evidence": ["scorecard API URL", "score", "run date"],
+      "pass": "a recorded score exists; it is context, not a gate",
+      "doesNotProve": ["plugin behavior", "security", "any level"]
+    },
+    "D": {
+      "label": "Release integrity",
+      "source": "npm provenance",
+      "checks": ["npm audit signatures verifies the published artifact"],
+      "evidence": ["provenance URL", "audit command", "result"],
+      "pass": "the artifact verifies at the snapshot date",
+      "doesNotProve": ["source safety", "correctness", "host acceptance"]
+    },
+    "E": {
+      "label": "Install smoke",
+      "source": "dsh-test-drive",
+      "checks": ["isolated profile install", "keyless boot", "four states ok/load-fail/install-fail/skip"],
+      "evidence": ["test-drive record", "command", "host version"],
+      "pass": "state=ok",
+      "doesNotProve": ["per-row ACTIVE", "other host versions", "FLOW uninstall", "client UI"]
+    }
+  },
+  "veto": {
+    "label": "Security veto (not a dimension)",
+    "checks": ["no obfuscated code", "no credential exfiltration", "no surprising install-time behavior"],
+    "effect": "D with a published reason",
+    "doesNotProve": ["security", "CVE absence", "sandbox isolation"]
+  },
+  "gradeInputs": ["A", "B", "C", "D", "E", "veto", "environmentBlocked"]
+}

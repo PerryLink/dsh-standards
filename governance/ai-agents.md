@@ -7,9 +7,9 @@
 
 | 角色 | 能做 | 不能做 | 典型产物 |
 |---|---|---|---|
-| `ai-steward` | 分诊、打标签、总结、路由、起草 PR、在 allowlist 内合并 | 合并 spec/governance/checker/证书；批准自己的 PR；代人类签 DCO | issue 摘要、docs PR、周报 |
-| `ai-inspector` | 跑检查、复现失败、生成证据记录、写方法与限制 | 无命令输出写 PASS；签发/撤销证书；改 gate 定义 | `results/*.json`、复现日志 |
-| `ai-registrar` | 校验 registry/证书 JSON、同步只读镜像、发现过期 | 签发/暂停/撤销证书；发明证书 ID；改证据值 | `data/*.json` 镜像、一致性报告 |
+| `ai-steward` | 分诊、打标签、总结、路由、起草 PR、在 allowlist 内合并 | 合并 spec/governance/checker/评价记录；批准自己的 PR；代人类签 DCO | issue 摘要、docs PR、周报 |
+| `ai-inspector` | 跑检查、复现失败、生成证据记录、写方法与限制 | 无命令输出写 PASS；签发/撤销评价记录；改 gate 定义 | `results/*.json`、复现日志 |
+| `ai-registrar` | 校验 registry/评价记录 JSON、同步只读镜像、发现过期 | 签发/暂停/撤销评价记录；发明评价记录 ID；改证据值 | `data/*.json` 镜像、一致性报告 |
 | `ai-clerk` | DCO/条款受理、申诉登记、时限跟踪、回避检查、追加日志 | 裁决申诉；删除争议记录；授予角色 | `contributors.json` 更新、申诉时间线 |
 | `ai-monitor` | 季度链接/版本/过期检查、stale 报告、抽查报告 | 处罚、下架、撤销；无人类决定改状态 | 监督报告、差异清单 |
 | `ai-translator` | 翻译文档、维护术语表、标记不可译术语 | 改变规范含义；无源链接翻译条款 | 双语页面、术语表 |
@@ -19,7 +19,7 @@
 1. **不能自批**：AI 不能 approve 自己开的 PR，也不能在同一 PR 里既生成又批准。
 2. **不能签人**：`Signed-off-by` 必须由承担责任的自然人签署；AI 只能加 `AI-Agent` / `AI-Model` trailer。
 3. **不能造 PASS**：任何 `PASS`/`runtime`/`measured` 必须绑定命令、版本、commit、产物；没有就写 `not-run`。
-4. **不能越权合并**：AI 只可在 `mergeAllowlist` 内合并；`spec/`、`governance/`、`40-checker/`、证书文件永远需要人类合并。
+4. **不能越权合并**：AI 只可在 `mergeAllowlist` 内合并；`spec/`、`governance/`、`40-checker/`、评价记录文件永远需要人类合并。
 5. **不能删记录**：争议、审计、决策日志只追加；AI 不得删除或改写历史行。
 
 ## 3. 身份与提交
@@ -58,6 +58,6 @@ Signed-off-by: <human sponsor> <email>
 ## 6. 不能做的事（与 42 的边界一致）
 
 - 不冒充官方、认可机构、认证机构、安全审计；
-- 不签发法律证书、不提供法律意见；
+- 不签发法律评价记录、不提供法律意见；
 - 不验证贡献者真实身份、雇主授权、专利状态；
 - 不对插件安全性、UI 正确性、生产可用性作出保证。

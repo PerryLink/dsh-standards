@@ -205,7 +205,7 @@ export async function main(argv = process.argv.slice(2)) {
     return 3
   }
 
-  const { manifest, kind, kindInferred, entry, patch, checks: manifestChecks } = runManifestChecks(dir, {
+  const { manifest, kind, kindInferred, entry, patch, g4, checks: manifestChecks } = runManifestChecks(dir, {
     runtimeVersion: options.runtimeVersion,
     installSpec: options.installSpec,
     marketIndex: options.marketIndex,
@@ -277,6 +277,7 @@ export async function main(argv = process.argv.slice(2)) {
     subject,
     anchor: anchorOf(options, options.runtime),
     checks,
+    g4,
     scope: options.scope,
     profile: options.profile,
     kind,

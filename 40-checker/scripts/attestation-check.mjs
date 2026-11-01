@@ -1,13 +1,13 @@
 #!/usr/bin/env node
 /**
- * certificate-check.mjs — validate DSH certificate JSON.
+ * attestation-check.mjs — validate DSH attestation JSON.
  *
- * The certificate is a quality-grade document (A-E evidence, A-D grade). It is
+ * The attestation is a quality-grade document (A-E evidence, A-D grade). It is
  * orthogonal to the adoption levels: a `level` field is a hard error.
  *
  * Usage:
- *   node 40-checker/scripts/certificate-check.mjs --dir publish/certificates
- *   node 40-checker/scripts/certificate-check.mjs --file path/to/cert.json --json
+ *   node 40-checker/scripts/attestation-check.mjs --dir publish/attestations
+ *   node 40-checker/scripts/attestation-check.mjs --file path/to/cert.json --json
  */
 import fs from 'node:fs'
 import path from 'node:path'
@@ -23,14 +23,14 @@ function date(value) {
   return typeof value === 'string' && /^\d{4}-\d{2}-\d{2}$/.test(value) && !Number.isNaN(Date.parse(value))
 }
 
-export function validateCertificate(cert) {
+export function validateAttestation(cert) {
   const errors = []
   const warn = (m) => errors.push(`WARN ${m}`)
   const err = (m) => errors.push(m)
-  if (!cert || typeof cert !== 'object') return { errors: ['certificate must be an object'] }
-  if (cert.schema !== 'dsh-certificate/1') err('schema must be dsh-certificate/1')
-  if ('level' in cert) err('certificate must not contain a level field (A-D is orthogonal to ENTRY/FLOW/BOOST)')
-  if (!/^DSH-CERT-\d{4}-\d{3}$/.test(cert.certificateId || '')) err('certificateId must match DSH-CERT-YYYY-NNN')
+  if (!cert || typeof cert !== 'object') return { errors: ['attestation must be an object'] }
+  if (cert.schema !== 'dsh-attestation/1') err('schema must be dsh-attestation/1')
+  if ('level' in cert) err('attestation must not contain a level field (A-D is orthogonal to ENTRY/FLOW/BOOST)')
+  if (!/^DSH-ATT-\d{4}-\d{3}$/.test(cert.attestationId || '')) err('attestationId must match DSH-ATT-YYYY-NNN')
   if (!cert.subject || !cert.subject.repo || !cert.subject.version) err('subject.repo and subject.version are required')
   if (!GRADES.has(cert.grade)) err('grade must be A, B, C, or D')
   if (!['self-reported', 'verified', 'peer-reviewed'].includes(cert.claimLevel)) {
@@ -46,7 +46,7 @@ export function validateCertificate(cert) {
     err('expiresAt must be after issuedAt')
   }
   if (date(cert.expiresAt) && Date.parse(cert.expiresAt) < Date.now() && cert.status === 'active') {
-    err('an expired certificate cannot be active; set status=expired')
+    err('an expired attestation cannot be active; set status=expired')
   }
   if (!cert.scope || !Array.isArray(cert.scope.dimensions) || cert.scope.dimensions.length === 0) {
     err('scope.dimensions must list A-E')
@@ -54,7 +54,7 @@ export function validateCertificate(cert) {
     for (const dimension of cert.scope.dimensions) if (!DIMENSIONS.has(dimension)) err(`invalid scope dimension ${dimension}`)
   }
   if (!Array.isArray(cert.scope?.excluded) || cert.scope.excluded.length === 0) {
-    err('scope.excluded must state what the certificate does NOT cover')
+    err('scope.excluded must state what the attestation does NOT cover')
   }
   if (!cert.scheme || cert.scheme.id !== 'dsh-certification' || !cert.scheme.version) err('scheme.id/version required')
   if (!cert.assessor || !cert.assessor.handle) err('assessor.handle required')
@@ -89,7 +89,7 @@ export function validateCertificate(cert) {
 
 export function main(argv = process.argv.slice(2)) {
   let root = DEFAULT_ROOT
-  let dir = 'publish/certificates'
+  let dir = 'publish/attestations'
   let file = null
   let json = false
   for (let i = 0; i < argv.length; i += 1) {
@@ -99,7 +99,7 @@ export function main(argv = process.argv.slice(2)) {
     else if (arg === '--file') file = path.resolve(argv[++i])
     else if (arg === '--json') json = true
     else if (arg === '--help' || arg === '-h') {
-      console.log('usage: certificate-check.mjs [--root <dir>] [--dir <dir>] [--file <json>] [--json]')
+      console.log('usage: attestation-check.mjs [--root <dir>] [--dir <dir>] [--file <json>] [--json]')
       return 0
     } else {
       console.error(`unknown argument: ${arg}`)
@@ -111,13 +111,13 @@ export function main(argv = process.argv.slice(2)) {
   else {
     const full = path.join(root, dir)
     if (!fs.existsSync(full)) {
-      console.error(`certificate-check: directory not found: ${full}`)
+      console.error(`attestation-check: directory not found: ${full}`)
       return 2
     }
     files = fs.readdirSync(full).filter((name) => name.endsWith('.json') && name !== 'index.json').map((name) => path.join(full, name)).sort()
   }
   if (files.length === 0) {
-    console.error('certificate-check: no certificate JSON found')
+    console.error('attestation-check: no attestation JSON found')
     return 2
   }
   const results = []
@@ -125,9 +125,9 @@ export function main(argv = process.argv.slice(2)) {
   for (const item of files) {
     try {
       const cert = JSON.parse(fs.readFileSync(item, 'utf8'))
-      const result = validateCertificate(cert)
+      const result = validateAttestation(cert)
       if (result.errors.length > 0) failed += 1
-      results.push({ file: path.relative(root, item), certificateId: cert.certificateId, ...result })
+      results.push({ file: path.relative(root, item), attestationId: cert.attestationId, ...result })
     } catch (error) {
       failed += 1
       results.push({ file: path.relative(root, item), errors: [`parse error: ${error.message}`], warnings: [] })
@@ -141,7 +141,7 @@ export function main(argv = process.argv.slice(2)) {
       for (const error of result.errors) console.log(`FAIL ${result.file}: ${error}`)
       console.log(`${result.errors.length === 0 ? 'PASS' : 'FAIL'} ${result.file}`)
     }
-    console.log(`${failed === 0 ? 'PASS' : 'FAIL'} certificate: ${results.length} file(s), ${failed} failed`)
+    console.log(`${failed === 0 ? 'PASS' : 'FAIL'} attestation: ${results.length} file(s), ${failed} failed`)
   }
   return failed === 0 ? 0 : 2
 }

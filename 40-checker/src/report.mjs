@@ -37,7 +37,7 @@ function allowedNa(check, scope, profile, kind) {
   return false
 }
 
-export function buildReport({ subject, anchor, checks, scope, profile, kind, staticOnly = false, entryRuntime = 'require', entryClaim = 'runtime' }) {
+export function buildReport({ subject, anchor, checks, g4 = null, scope, profile, kind, staticOnly = false, entryRuntime = 'require', entryClaim = 'runtime' }) {
   const mandatory = mandatoryFor(scope, profile, staticOnly, entryClaim)
   const adjustedChecks = scope === 'entry' ? checks.map(item => adjustEntryCheck(item, entryClaim)) : checks
   const runtimeIds = new Set(['DSC-04', 'DSC-05', 'DSC-06', 'DSC-07', 'DSC-08', 'DSC-09'])
@@ -86,6 +86,7 @@ export function buildReport({ subject, anchor, checks, scope, profile, kind, sta
     standard: { id: 'DS-C', version: '1.0.0' },
     subject,
     anchor,
+    g4,
     checks: effectiveChecks,
     coverage: {
       mandatory: mandatory.length,

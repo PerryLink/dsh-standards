@@ -5,6 +5,7 @@ import {
 import { parseVersion, satisfies, validRange } from './semver.mjs'
 import { parseInstallSpec } from './install-spec.mjs'
 import { check, detail, worst } from './result.mjs'
+import { checkClientShape } from './client-shape.mjs'
 
 const PACKAGE_NAME = /^(?:@[a-z0-9][a-z0-9._~-]*\/)?[a-z0-9][a-z0-9._~-]*$/
 const PACKAGE_NAME_MAX_LENGTH = 214
@@ -153,6 +154,7 @@ export function runManifestChecks(dir, options = {}) {
       kind: 'unknown',
       entry: null,
       patch: null,
+      g4: { hasClient: false, ok: true, result: 'NA', reason: 'manifest unavailable' },
       checks: [
         check({ id: 'DSC-01', clause: 'C-1', layer: 'L0', result: 'FAIL', reason: `package.json is missing or invalid: ${parsed.error.message}`, details: [detail('C-1.1', 'FAIL', parsed.error.message)], evidence: ['package.json'] }),
         check({ id: 'DSC-02', clause: 'C-2', layer: 'L0', result: 'ERROR', coverage: 'not-run', reason: 'manifest unavailable' }),
@@ -165,6 +167,7 @@ export function runManifestChecks(dir, options = {}) {
   const kindInfo = inferKind(manifest, entry.exists)
   const kind = kindInfo.kind
   const patch = analyzePatch(dir, manifest)
+  const g4 = checkClientShape(manifest)
 
   const manifestDetails = []
   const name = manifest.name
@@ -304,7 +307,7 @@ export function runManifestChecks(dir, options = {}) {
     evidence: ['package.json#dependencies', 'package.json#scripts', options.marketIndex ?? '--install-spec'],
   })
 
-  return { manifest, kind, kindInferred: kindInfo.inferred, entry, patch, checks: [manifestCheck, compatCheck, installCheck] }
+  return { manifest, kind, kindInferred: kindInfo.inferred, entry, patch, g4, checks: [manifestCheck, compatCheck, installCheck] }
 }
 
 export function checkMarketEntry(indexPath, pluginName) {

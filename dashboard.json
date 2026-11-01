@@ -1,0 +1,64 @@
+{
+  "schema": "dsh-dashboard/1",
+  "generatedAt": "2026-11-01T05:13:52.727Z",
+  "entry": {
+    "resultFiles": 20,
+    "claim": "18/18 recognized static; 10 G3 verified, 8 partial (see results/entry/18/README.md)"
+  },
+  "flow": {
+    "packages": 5,
+    "summary": {
+      "packages": 5,
+      "checks": {
+        "pass": 40,
+        "warn": 0,
+        "fail": 0,
+        "blocked": 1,
+        "partial": 0,
+        "notRun": 35
+      },
+      "verdicts": {
+        "pass": 11,
+        "fail": 0,
+        "blocked": 1,
+        "partial": 2,
+        "notRun": 6
+      },
+      "classifications": {
+        "clean": 3,
+        "host-gate": 1,
+        "harness-partial": 1
+      }
+    },
+    "claim": "J1/J2/J4/J6 runtime on fixture; J3/J5/J7/J8 not-run"
+  },
+  "boost": {
+    "measured": [
+      "LEV-1",
+      "LEV-2",
+      "LEV-4",
+      "LEV-5",
+      "LEV-8"
+    ],
+    "measuredCount": 5,
+    "claim": "LEV-1-8 measured at synthetic/loader level; not a production baseline"
+  },
+  "attestations": {
+    "count": 1,
+    "draft": 1,
+    "selfReported": 1
+  },
+  "governance": {
+    "schema": "dsh-governance/1",
+    "stage": "solo",
+    "status": "provisional"
+  },
+  "evidenceChainEntries": 2,
+  "notClaimed": [
+    "official standard",
+    "certification",
+    "security audit",
+    "production readiness",
+    "ranking"
+  ]
+}

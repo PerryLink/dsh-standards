@@ -145,6 +145,7 @@ function classifyEntry(report, invoked) {
     failed: failed.map(check => ({ id: check.id, reason: check.reason })),
     warnings: warnings.map(check => ({ id: check.id, reason: check.reason })),
     runtimeEvidence: dsc14 ? { result: dsc14.result, reason: dsc14.reason } : null,
+    g4: report.g4 ?? null,
   }
 }
 
@@ -211,6 +212,7 @@ function classifyBoost(evidence) {
 function nextActions(entry, flow, boost) {
   const actions = []
   for (const failure of entry.failed) actions.push(`ENTRY: fix ${failure.id} — ${failure.reason}`)
+  if (entry.g4 && entry.g4.hasClient && entry.g4.ok === false) actions.push(`ENTRY: fix G4 — ${entry.g4.reason}`)
   for (const warning of entry.warnings) actions.push(`ENTRY: consider ${warning.id} — ${warning.reason}`)
   if (entry.state === 'recognized') actions.push('ENTRY: run with --host to replace static recognition with a real G0-G3 boot')
   if (flow.state === 'not-run') actions.push('FLOW: record J1-J8 in a flow-evidence JSON; do not claim FLOW until they run')

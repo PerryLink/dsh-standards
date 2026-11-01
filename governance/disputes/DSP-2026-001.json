@@ -1,0 +1,22 @@
+{
+  "id": "DSP-2026-001",
+  "subject": "example/plugin@1.0.0",
+  "grounds": "factual-error",
+  "filedAt": "2026-11-01",
+  "status": "decided",
+  "statusHistory": [
+    { "status": "received", "at": "2026-11-01T09:00:00Z" },
+    { "status": "under-review", "at": "2026-11-02T09:00:00Z" },
+    { "status": "decided", "at": "2026-11-08T09:00:00Z" }
+  ],
+  "recusals": [],
+  "decision": "corrected",
+  "reason": "Dry run: the record cited a commit that did not contain the cited evidence. The factual field was corrected and the old record kept as history.",
+  "evidence": [
+    "40-checker/results/fixtures/good.json",
+    "publish/attestations/DSH-ATT-2026-001.json"
+  ],
+  "decidedAt": "2026-11-08",
+  "decidedBy": "organizer",
+  "note": "Fictional dry-run case; no real plugin or person is accused. It exercises intake, recusal, re-run, decision, and public record."
+}

@@ -1,0 +1,35 @@
+{
+  "schema": "dsh-reference-suite/1",
+  "version": "1.0.0",
+  "updatedAt": "2026-11-02",
+  "anchors": {
+    "dsh": "0.2.2-alpha.2",
+    "cordis": "4.0.6-alpha.1",
+    "node": ">=20",
+    "platform": "linux-x64 (primary), win32-x64 (secondary)"
+  },
+  "changeRules": [
+    "Adding a sample is a minor version bump; removing or changing an expected result is a major bump.",
+    "An expected result must be frozen in a commit before the run; the run commit must not contain answer edits.",
+    "A sample without a license/provenance is not added.",
+    "A sample that only proves 'not-run' is not a positive or negative control."
+  ],
+  "samples": [
+    { "id": "fixture-good", "kind": "plugin", "path": "40-checker/fixtures/good", "expected": "recognized", "control": "positive", "provenance": "synthetic" },
+    { "id": "fixture-bad", "kind": "plugin", "path": "40-checker/fixtures/bad", "expected": "failed", "control": "negative", "provenance": "synthetic" },
+    { "id": "fixture-bundle", "kind": "bundle", "path": "40-checker/fixtures/bundle", "expected": "runtime-or-blocked", "control": "positive", "provenance": "synthetic" },
+    { "id": "fixture-client-missing", "kind": "client", "path": "40-checker/fixtures/client-missing", "expected": "G4-failed", "control": "negative", "provenance": "synthetic" },
+    { "id": "flow-ci-diet", "kind": "flow-sample", "path": "40-checker/results/flow/real/ci-diet.json", "expected": "partial", "control": "positive", "provenance": "public-npm" },
+    { "id": "flow-free-search", "kind": "flow-sample", "path": "40-checker/results/flow/real/DDDMUC__dsh-free-search.json", "expected": "partial", "control": "positive", "provenance": "public-npm" },
+    { "id": "flow-ui-auth", "kind": "flow-sample", "path": "40-checker/results/flow/real/ui-auth.json", "expected": "partial", "control": "positive", "provenance": "public-npm" },
+    { "id": "flow-telemetry", "kind": "flow-sample", "path": "40-checker/results/flow/real/telemetry.json", "expected": "blocked", "control": "negative", "provenance": "public-npm" },
+    { "id": "flow-purge", "kind": "flow-sample", "path": "40-checker/results/flow/real/YuJunZhiXue__dsh-purge.json", "expected": "partial", "control": "positive", "provenance": "public-npm" },
+    { "id": "entry-18-index", "kind": "entry-batch", "path": "40-checker/results/entry/18/README.md", "expected": "10-verified-8-partial", "control": "batch", "provenance": "public-npm" },
+    { "id": "boost-lev12458", "kind": "boost-batch", "path": "40-checker/results/boost/lev12458.json", "expected": "measured", "control": "positive", "provenance": "synthetic" }
+  ],
+  "limits": [
+    "This is a reference suite, not a certified reference material.",
+    "Synthetic fixtures prove a parser/checker path, not ecosystem behavior.",
+    "The 18-package batch is static recognition plus base-only runtime; it is not 18/18 production."
+  ]
+}

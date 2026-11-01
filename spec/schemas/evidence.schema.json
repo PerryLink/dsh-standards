@@ -5,43 +5,109 @@
   "description": "One record per subject-level-method run. The status enum is validated per level by the consumer: measured only for boost, manual only for flow.",
   "type": "object",
   "additionalProperties": false,
-  "required": ["schema", "subject", "level", "status", "scope", "method", "evidence", "validity"],
+  "required": [
+    "schema",
+    "subject",
+    "level",
+    "status",
+    "scope",
+    "method",
+    "evidence",
+    "validity"
+  ],
   "properties": {
-    "schema": { "const": "dsh-levels/1" },
+    "schema": {
+      "const": "dsh-levels/1"
+    },
     "subject": {
       "type": "object",
       "additionalProperties": false,
-      "required": ["repo"],
+      "required": [
+        "repo"
+      ],
       "properties": {
-        "repo": { "type": "string", "minLength": 1 },
-        "version": { "type": "string" },
-        "commit": { "type": "string", "pattern": "^[0-9a-f]{7,40}$" }
+        "repo": {
+          "type": "string",
+          "minLength": 1
+        },
+        "version": {
+          "type": "string"
+        },
+        "commit": {
+          "type": "string",
+          "pattern": "^[0-9a-f]{7,40}$"
+        }
       }
     },
-    "level": { "enum": ["entry", "flow", "boost"] },
+    "level": {
+      "enum": [
+        "entry",
+        "flow",
+        "boost"
+      ]
+    },
     "status": {
-      "enum": ["recognized", "static", "runtime", "blocked", "failed", "not-run", "stale", "manual", "measured", "not-measured"]
+      "enum": [
+        "recognized",
+        "static",
+        "runtime",
+        "blocked",
+        "failed",
+        "not-run",
+        "stale",
+        "manual",
+        "measured",
+        "not-measured",
+        "not-applicable",
+        "withdrawn"
+      ]
     },
     "scope": {
       "type": "object",
       "additionalProperties": false,
-      "required": ["dsh", "cordis"],
+      "required": [
+        "dsh",
+        "cordis"
+      ],
       "properties": {
-        "dsh": { "type": "string", "minLength": 1 },
-        "cordis": { "type": "string", "minLength": 1 },
-        "platform": { "type": "string" },
-        "pluginVersion": { "type": "string" }
+        "dsh": {
+          "type": "string",
+          "minLength": 1
+        },
+        "cordis": {
+          "type": "string",
+          "minLength": 1
+        },
+        "platform": {
+          "type": "string"
+        },
+        "pluginVersion": {
+          "type": "string"
+        }
       }
     },
     "method": {
       "type": "object",
       "additionalProperties": false,
-      "required": ["tool", "version"],
+      "required": [
+        "tool",
+        "version"
+      ],
       "properties": {
-        "tool": { "type": "string", "minLength": 1 },
-        "version": { "type": "string", "minLength": 1 },
-        "command": { "type": "string" },
-        "runId": { "type": "string" }
+        "tool": {
+          "type": "string",
+          "minLength": 1
+        },
+        "version": {
+          "type": "string",
+          "minLength": 1
+        },
+        "command": {
+          "type": "string"
+        },
+        "runId": {
+          "type": "string"
+        }
       }
     },
     "evidence": {
@@ -50,51 +116,216 @@
       "items": {
         "type": "object",
         "additionalProperties": false,
-        "required": ["id", "result"],
+        "required": [
+          "id",
+          "result"
+        ],
         "properties": {
-          "id": { "type": "string", "minLength": 1 },
-          "result": { "enum": ["PASS", "FAIL", "WARN", "NOT-RUN", "BLOCKED", "ERROR"] },
-          "artifact": { "type": "string" },
-          "url": { "type": "string" },
-          "sha256": { "type": "string", "pattern": "^[0-9a-f]{64}$" }
+          "id": {
+            "type": "string",
+            "minLength": 1
+          },
+          "result": {
+            "enum": [
+              "PASS",
+              "FAIL",
+              "WARN",
+              "NOT-RUN",
+              "BLOCKED",
+              "ERROR"
+            ]
+          },
+          "artifact": {
+            "type": "string"
+          },
+          "url": {
+            "type": "string"
+          },
+          "sha256": {
+            "type": "string",
+            "pattern": "^[0-9a-f]{64}$"
+          }
         },
-        "anyOf": [{ "required": ["artifact"] }, { "required": ["url"] }, { "required": ["sha256"] }]
+        "anyOf": [
+          {
+            "required": [
+              "artifact"
+            ]
+          },
+          {
+            "required": [
+              "url"
+            ]
+          },
+          {
+            "required": [
+              "sha256"
+            ]
+          }
+        ]
       }
     },
     "producer": {
       "type": "object",
       "additionalProperties": false,
       "properties": {
-        "tool": { "type": "string" },
-        "version": { "type": "string" },
-        "runId": { "type": "string" }
+        "tool": {
+          "type": "string"
+        },
+        "version": {
+          "type": "string"
+        },
+        "runId": {
+          "type": "string"
+        }
       }
     },
     "validity": {
       "type": "object",
       "additionalProperties": false,
-      "required": ["generatedAt", "expiresAt", "rule"],
+      "required": [
+        "generatedAt",
+        "expiresAt",
+        "rule"
+      ],
       "properties": {
-        "generatedAt": { "type": "string", "format": "date" },
-        "expiresAt": { "type": "string", "format": "date" },
-        "rule": { "enum": ["entry<=90d", "flow<=180d", "boost<=365d", "certificate<=365d"] }
+        "generatedAt": {
+          "type": "string",
+          "format": "date"
+        },
+        "expiresAt": {
+          "type": "string",
+          "format": "date"
+        },
+        "rule": {
+          "enum": [
+            "entry<=90d",
+            "flow<=180d",
+            "boost<=365d",
+            "certificate<=365d"
+          ]
+        }
       }
     },
-    "stale": { "type": "boolean" },
-    "notClaimed": { "type": "array", "items": { "type": "string" }, "uniqueItems": true }
+    "stale": {
+      "type": "boolean"
+    },
+    "notClaimed": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      },
+      "uniqueItems": true
+    },
+    "claimLevel": {
+      "enum": [
+        "observation",
+        "reference",
+        "advice"
+      ],
+      "description": "Sentence type, not strength. Market renders reference; developer renders advice."
+    },
+    "audience": {
+      "type": "array",
+      "items": {
+        "enum": [
+          "official",
+          "market",
+          "developer"
+        ]
+      },
+      "uniqueItems": true
+    },
+    "render": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "template": {
+          "type": "string"
+        },
+        "recordHash": {
+          "type": "string",
+          "pattern": "^sha256:[0-9a-f]{64}$"
+        },
+        "renderer": {
+          "type": "string"
+        }
+      }
+    }
   },
   "allOf": [
     {
-      "if": { "properties": { "level": { "const": "entry" } } },
-      "then": { "properties": { "status": { "enum": ["recognized", "static", "runtime", "blocked", "failed", "not-run", "stale"] } } }
+      "if": {
+        "properties": {
+          "level": {
+            "const": "entry"
+          }
+        }
+      },
+      "then": {
+        "properties": {
+          "status": {
+            "enum": [
+              "recognized",
+              "static",
+              "runtime",
+              "blocked",
+              "failed",
+              "not-run",
+              "stale",
+              "withdrawn",
+              "not-applicable"
+            ]
+          }
+        }
+      }
     },
     {
-      "if": { "properties": { "level": { "const": "flow" } } },
-      "then": { "properties": { "status": { "enum": ["manual", "runtime", "failed", "not-run", "stale"] } } }
+      "if": {
+        "properties": {
+          "level": {
+            "const": "flow"
+          }
+        }
+      },
+      "then": {
+        "properties": {
+          "status": {
+            "enum": [
+              "manual",
+              "runtime",
+              "failed",
+              "not-run",
+              "stale",
+              "withdrawn",
+              "not-applicable"
+            ]
+          }
+        }
+      }
     },
     {
-      "if": { "properties": { "level": { "const": "boost" } } },
-      "then": { "properties": { "status": { "enum": ["measured", "not-measured", "failed", "stale"] } } }
+      "if": {
+        "properties": {
+          "level": {
+            "const": "boost"
+          }
+        }
+      },
+      "then": {
+        "properties": {
+          "status": {
+            "enum": [
+              "measured",
+              "not-measured",
+              "failed",
+              "stale",
+              "withdrawn",
+              "not-applicable"
+            ]
+          }
+        }
+      }
     }
   ]
 }

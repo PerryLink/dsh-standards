@@ -1,0 +1,52 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>DSH attestation verify</title>
+  <style>
+    body { font: 16px/1.5 system-ui, sans-serif; max-width: 52rem; margin: 3rem auto; padding: 0 1rem; color: #111; }
+    code, input { font: 0.95rem ui-monospace, monospace; }
+    input { width: 100%; padding: .6rem; border: 1px solid #ccc; border-radius: .4rem; }
+    .card { border: 1px solid #ddd; border-radius: .6rem; padding: 1rem; margin-top: 1rem; }
+    .muted { color: #555; }
+    .stale { color: #a00; font-weight: 600; }
+    .ok { color: #060; font-weight: 600; }
+    .warn { background: #fff6d6; padding: .6rem; border-radius: .4rem; }
+    a { color: #0645ad; }
+  </style>
+</head>
+<body>
+  <h1>DSH attestation verify</h1>
+  <p class="warn"><strong>非官方 · 非认证 · 非安全审计。</strong> This page only reads a published record. It does not issue, suspend, or validate a plugin.</p>
+  <p class="muted">Enter an attestation ID, e.g. <code>DSH-ATT-2026-001</code>.</p>
+  <input id="q" placeholder="DSH-ATT-YYYY-NNN" autocomplete="off">
+  <div id="out" class="card" hidden></div>
+  <p class="muted">A–D is a quality grade, not ENTRY/FLOW/BOOST. An expired or withdrawn record is not valid.</p>
+  <script>
+    const out = document.getElementById('out')
+    const q = document.getElementById('q')
+    const esc = (s) => String(s ?? '').replace(/[&<>"']/g, (c) => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]))
+    let index = null
+    fetch('attestations/index.json').then((r) => r.json()).then((j) => { index = j }).catch(() => {
+      out.hidden = false
+      out.innerHTML = '<p class="stale">Cannot load attestations/index.json. Serve this directory over HTTP; do not trust a local file copy.</p>'
+    })
+    q.addEventListener('change', () => {
+      if (!index) return
+      const item = (index.attestations || []).find((a) => a.attestationId === q.value.trim())
+      out.hidden = false
+      if (!item) { out.innerHTML = '<p class="stale">Not found. No record is not “valid”.</p>'; return }
+      const expired = item.expiresAt && Date.parse(item.expiresAt + 'T23:59:59Z') < Date.now()
+      const invalid = item.status === 'withdrawn' || item.status === 'expired' || expired
+      out.innerHTML = `
+        <h2>${esc(item.attestationId)}</h2>
+        <p><strong>${esc(item.repo)}@${esc(item.version)}</strong></p>
+        <p>grade <strong>${esc(item.grade)}</strong> · claimLevel <strong>${esc(item.claimLevel)}</strong> · status <strong class="${invalid ? 'stale' : 'ok'}">${esc(expired ? 'expired/stale' : item.status)}</strong></p>
+        <p>issued ${esc(item.issuedAt)} · expires ${esc(item.expiresAt)}</p>
+        <p>verify: <a href="${esc(item.verifyUrl)}" rel="noreferrer">${esc(item.verifyUrl)}</a></p>
+        <p class="muted">${esc(item.file)}</p>`
+    })
+  </script>
+</body>
+</html>

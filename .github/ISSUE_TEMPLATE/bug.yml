@@ -1,0 +1,46 @@
+name: Bug or false positive
+description: A checker result is wrong, a command crashes, or a link is broken.
+title: "[bug] "
+labels: ["bug"]
+body:
+  - type: input
+    id: subject
+    attributes:
+      label: Subject
+      description: repo@version, commit, or file
+    validations:
+      required: true
+  - type: textarea
+    id: command
+    attributes:
+      label: Command and output
+      description: The exact command, exit code, and the first 20 lines. Redact tokens and personal data.
+    validations:
+      required: true
+  - type: textarea
+    id: expected
+    attributes:
+      label: Expected vs actual
+    validations:
+      required: true
+  - type: dropdown
+    id: kind
+    attributes:
+      label: Kind
+      options:
+        - False positive (checker says FAIL but the plugin is fine)
+        - False negative (checker says PASS/WARN but it should fail)
+        - Crash / infrastructure error
+        - Broken link or stale evidence
+        - Documentation bug
+    validations:
+      required: true
+  - type: checkboxes
+    id: ack
+    attributes:
+      label: Acknowledgements
+      options:
+        - label: I did not include credentials, session data, or personal data.
+          required: true
+        - label: I understand a skip is not a pass and a stale record is not evidence.
+          required: true

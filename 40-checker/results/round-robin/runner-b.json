@@ -1,0 +1,9 @@
+{
+  "runner": "dsh-plugin-verify@0.1.0 (node22/linux)",
+  "anchor": { "dsh": "0.2.2-alpha.2", "cordis": "4.0.6-alpha.1" },
+  "results": {
+    "good": { "status": "warn", "artifact": "40-checker/results/fixtures/good.json" },
+    "bad": { "status": "fail", "artifact": "40-checker/results/fixtures/bad.json" },
+    "skipped": { "status": "not-run", "artifact": null }
+  }
+}

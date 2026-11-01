@@ -29,6 +29,9 @@
 - [43-缺口总账与 AI 可执行方案](43-缺口总账与AI可执行方案.md) — **全部缺口、AI/Human/模板/删除裁决、90 天 P0–P3**
 - [44-角色治理与贡献机制](44-角色治理与贡献机制.md) — **角色阶梯、DCO+DCT（CLA 式）、COI、申诉、AI 职员**
 - [45-三用途落地](45-三用途落地-官方市场开发者.md) — **官方前沿探索 / 市场参考 / 开发者指南**
+- [P0-P2 执行状态](P0-P2-STATUS.md) — 逐项 DONE / PARTIAL / NOT DONE
+- [scheme/](scheme/SCHEME-v1.md) — A–E / A–D 评价方案与 rubric
+- [evidence/](evidence/README.md) — 追加式证据链与复跑说明
 - [97-采纳可行性评估](97-采纳可行性评估.md) — 官方路径、缺口、90 天
 - [98-内测群与官方沟通包](98-内测群与官方沟通包.md) — 对外话术
 
@@ -51,12 +54,12 @@ node scripts/level-audit.mjs <dir> --format json
 # J1 安装/卸载旅程
 node scripts/journey-runtime.mjs --package <dir> --json
 
-# 治理/贡献/证书检查
+# 治理/贡献/评价记录检查
 node scripts/governance-check.mjs
-node scripts/certificate-check.mjs
+node scripts/attestation-check.mjs
 node scripts/claim-check.mjs
 node scripts/dco-check.mjs --range HEAD~1..HEAD
-node ../publish/verify.mjs --id DSH-CERT-2026-001
+node ../publish/verify.mjs --id DSH-ATT-2026-001
 
 # LEV-7 有界并行基准
 cd ../examples/boost
@@ -70,7 +73,7 @@ node lev7-bench.mjs 64 20
 - 18 包 base-only runtime：**18/18 有原始 JSON；10/18 G3 verified，8 partial，0 error**；host gate 后 **8 clean + 2 reject + 8 partial**；
 - client runtime：**15/15 `client-module-loaded`**（真实 Chromium）；web-app **4/4 loaded**；
 - 不可用：**0 plugin code FAIL；2 host-gate reject（telemetry/verification）**；
-- 检查器：**59/59 tests**（含新增 34 个治理/DCO/证书/声明/验真测试）；
+- 检查器：**72/72 tests**（含治理/DCO/评价记录/声明/验真/链/漂移测试）；
 - J1：**6 PASS + 1 WARN**；LEV-3：volatile **0/20** vs control **20/20** remount；LEV-6：稳定 prefix **100%** vs 易变 **0%**；LEV-7：**8.24×**（合成，非生产基线）。
 
 ## 治理与贡献
@@ -104,7 +107,7 @@ node lev7-bench.mjs 64 20
 40-checker/       检查器、J1 旅程、bundle smoke、样本框、结果
 governance/       角色/贡献条款/标志/申诉/COI/决策日志 + 机器检查
 adoption/         official / market / developer 三套采用包
-spec/             levels.json + schemas（evidence / certificate）
+spec/             levels.json + clauses.json + schemas（evidence / report / attestation）
 examples/boost/   LEV-7 参考实现与基准
 publish/          labels 示例 + 评价记录 JSON
 ```
