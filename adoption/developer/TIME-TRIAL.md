@@ -3,6 +3,15 @@
 > Status: **not measured**. The protocol exists; the 5-author trial has not run.
 > Do not claim “30 minutes” until the table below has real rows.
 
+## Machine dry run
+
+```bash
+node adoption/developer/time-trial.mjs --package <plugin-dir> --out trial.json
+```
+
+It records one machine run (start → first record) and is labelled a dry run; it
+does **not** replace the 5-author table below.
+
 ## Protocol
 
 1. Recruit 5 authors who have never used the standard.

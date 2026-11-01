@@ -56,7 +56,7 @@
 | Task | Status | Evidence / gap |
 |---|---|---|
 | EVD-03 J7 observability | DONE (fixture-level) | `journey-config-observe.mjs`: start line + credential boundary |
-| EVD-04 J8 client shapes | PARTIAL | shape preflight + `web-probe.mjs`; no render probe in FLOW |
+| EVD-04 J8 client shapes | DONE (module-load) | shape preflight + `web-probe.mjs`; 15/15 `client-module-loaded`, render not claimed |
 | EVD-05 10 packages | DONE | 10 real packages; 4 second-wave J4 pass, 1 (`verification`) recorded FAIL |
 | EVD-07 18/18 clean | PARTIAL | 10 verified / 8 partial; `fullbase/ATTRIBUTION.md` maps each partial to missing services (`agentPresets`, `connection`, `webServer`) |
 | EVD-11 round-robin | DONE | `round-robin.yml` ubuntu+windows; artifact `rounds/2026Q4.json` `comparable:true` (latest main run `5bbfbc6`/`8cc8030`) |
@@ -71,7 +71,7 @@
 | CRT-10 rubric | DONE | `scheme/rubric.json` |
 | MKT-02 verify page | DONE | `publish/verify.html` + portal `verify.html` (f882144) |
 | MKT-05/06/07 catalog | DONE | catalog `a272d06`: 109-package sidecar, `withdrawn`, `/v1/levels`, `peerRange` + `dshVersion` |
-| DEV-02 30-min trial | NOT DONE | protocol only (`TIME-TRIAL.md`), no 5-author data |
+| DEV-02 30-min trial | PARTIAL | `time-trial.mjs` machine dry run + protocol; no 5-author data |
 | DEV-04 migration card | DONE | `MIGRATION.md` |
 | DEV-07 training | DONE | `TRAINING.md` |
 | DEV-11 FAQ | DONE | `FAQ.md` |
@@ -117,7 +117,7 @@ node publish/verify.mjs --id DSH-ATT-2026-001
 
 ## What is still genuinely open
 
-1. J8 browser render is still not a FLOW record; J3/J7 are fixture-level runtime, not ecosystem-wide.
+1. J3/J7 are fixture-level runtime, not ecosystem-wide; J8 is module-load only, not UI render.
 2. 18/18 clean (10/8 today); `ATTRIBUTION.md` explains the 8 partial rows as host-profile service gaps, not plugin code FAIL.
 3. 30-minute trial with 5 authors (protocol only).
 4. Independent second round-robin runner (`comparable:false` today).
