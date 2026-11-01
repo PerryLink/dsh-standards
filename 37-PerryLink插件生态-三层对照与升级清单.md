@@ -12,7 +12,7 @@
 | 仓库 | 角色 | 能支撑的层 | 当前状态（2026-11-01） | 本轮动作 | 下一轮 |
 |---|---|---|---|---|---|
 | `dsh-plugin-guide` | 作者知识库 + skill + CLI | ENTRY/FLOW/BOOST 教学 | 有 10 章开发指南，但无三层章节 | **已推送 `84e384d`：`guide/standards.md` + 中文版 + `data/standards.json` + 侧栏/SKILL/§8 路由** | 把 J1–J8、LEV 证据卡做成可复制的模板 |
-| `dsh-plugin-certification` | A–E 质量证据 + A–D 等级 | ENTRY（A/E/veto） | 有认证 registry；无层 crosswalk | **已推送 `0ef6d3c`：crosswalk + 0.15.0 真实复认证 + mirror `cdc2966`；CI 绿** | 给 FLOW 增加“用户旅程证据”维度（可选，不混入 A–D） |
+| `dsh-plugin-certification` | A–E 质量证据 + A–D 等级 | ENTRY（A/E/veto） | 有认证 registry；无层 crosswalk | **已推送 `6187880`：crosswalk + 0.15.0 自评估复认证 + mirror `c831e3b`；CI 绿** | 给 FLOW 增加“用户旅程证据”维度（可选，不混入 A–D） |
 | `dsh-plugin-doctor` | R/K/D/CC/X 检查器 | ENTRY（R/K/D/X） | 有成熟检查器；JSON 无层字段 | **已推送 `16051df`：`lib/standards.mjs` + JSON `standards` 字段 + `STANDARDS.md` + 18 项测试** | 把 `level-audit` 的 FLOW/BOOST 证据文件接进 `--standards` 视图 |
 | `dsh-plugin-portal` | 生态门户 | 展示 | 只显示 star/rating，无层标签 | **已推送 `01f2684`：README 三层入口 + 99 条 roster 同步 + 57 条卡片描述；CI 绿** | 读 `levels` 字段显示 ENTRY/FLOW/BOOST 徽章；无证据显示 `not-run` |
 | `dsh-catalog` | Desktop Market 目录 | 展示/收录 | 有 curated 条目，无层字段 | **已推送 `aef7bb9`：README 增加三层入口** | 收录时要求 `level-labels`，缺证据不显示 PASS |
@@ -99,7 +99,7 @@ guide 教作者怎么写
 | 仓库 | 提交 | CI/验证 |
 |---|---|---|
 | `dsh-plugin-guide` | `84e384d` | `plugin-doctor`、`verify-kit`、Scorecard、Pages 四组 workflow **全部 success**；本地 `check-readme-sync` / `check-readme-parity` / `check-facts` 通过 |
-| `dsh-plugin-certification` | `0ef6d3c` + mirror `cdc2966` | 已修 sibling 分支、同步 roster 98/87/8/3、按 0.15.0 真实复认证刷新 registry（A–E 证据、snapshot 2026-11-01；`selfAssessed:true`，作者=认证者，非独立第三方）；`check-freshness` 全绿，远端 `Checks` **success** |
+| `dsh-plugin-certification` | `6187880` + mirror `c831e3b` | 已修 sibling 分支、同步 roster 98/87/8/3、按 0.15.0 真实复认证刷新 registry（A–E 证据、snapshot 2026-11-01；`selfAssessed:true`，作者=认证者，非独立第三方）；`check-freshness` 全绿，远端 `Checks` **success** |
 | `dsh-plugin-doctor` | `16051df` | 远端 `ci`、`plugin-doctor`、Scorecard **success**；`npm test` 全绿，其中 `standards: 21/21`、contract 58/58、compat 25/25；JSON `standards` 字段已实测 |
 
 | `dsh-plugin-upgrade` | `52197f4`（含 `735cd09`） | `legD` 三走廊；`npm test` 62 pass / 1 skip，README/artifact gate 绿；远端 `CI`/`plugin-doctor`/Scorecard **success** |
