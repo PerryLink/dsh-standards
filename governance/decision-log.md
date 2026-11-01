@@ -26,3 +26,5 @@
 | D-009 | 2026-11-02 | B | 对外与机器契约由 certificate 迁移为 attestation（`dsh-attestation/1`、`DSH-ATT-*`、`publish/attestations/`） | “证书”易被读成法律认证；评价记录只表示可复核证据 | `spec/schemas/attestation.schema.json`、`publish/attestations/` | 历史文档保留“证书”并加迁移横幅 | 2027-02-01 | PerryLink (organizer) |
 
 | D-010 | 2026-11-08 | B | 完成一次申诉 dry-run（DSP-2026-001，虚构案例），验证受理/回避/复跑/更正/公开记录 | 没有演练的申诉流程只是文档；dry-run 暴露时限与记录字段 | `governance/disputes/DSP-2026-001.json` | 无 | 2027-02-01 | PerryLink (organizer) |
+
+| D-011 | 2026-11-01 | A | 全仓许可临时统一为 Apache-2.0（文本/规范/代码/schema）；标志仍单独规则 | 用户要求“暂时都是全部定为 Apache-2.0”；统一许可减少贡献与再分发摩擦 | `LICENSE`、`NOTICE`、`CONTRIBUTING.md`、`governance/contribution-terms.md` | 文本许可长期是否回到 CC BY 4.0，待律师复核 | 2027-02-01 | PerryLink (organizer) |

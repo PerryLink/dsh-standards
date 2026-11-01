@@ -95,10 +95,10 @@ node lev7-bench.mjs 64 20
 
 ## 许可
 
-- 文本/规范：CC BY 4.0；
-- 代码/脚本/schema：Apache-2.0（含专利授权与防御终止）；
-- 标志/badge：单独规则，见 `governance/mark-policy.md`；
-- 贡献：DCO 1.1 + DCT v1，不要求版权转让。
+- 文本/规范/代码/脚本/schema：**Apache-2.0**（含专利授权与防御终止）；
+- 标志/badge：单独规则，见 `governance/mark-policy.md`，不随 Apache-2.0 授权；
+- 贡献：DCO 1.1 + DCT v1，不要求版权转让；
+- 这是一次**临时统一**：正式对外前仍建议由律师复核文本许可是否应改回 CC BY 4.0。
 
 ## 目录
 
