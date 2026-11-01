@@ -106,6 +106,8 @@ result.
 | Tests | DONE |
 | Historical docs banner | DONE (39/40/42/84/86/89) |
 | Old paths | Removed; no compatibility alias (draft repo, no external consumers) |
+| certification registry | `data/attestations.json`, `dsh-attested` badge, Apache-2.0 (`2f27666`) |
+| cert-mcp mirror | `data/attestations.json`, registry URL updated (`4f0cf72`) |
 
 ## Cross-repo commits
 
@@ -116,6 +118,8 @@ result.
 | `dsh-plugin-guide` | `e75cd9f` | verify-kit / plugin-doctor / pages success |
 | `dsh-plugin-kit` | `9897213` | ci success |
 | `dsh-catalog` | `a272d06` | ci + deploy success |
+| `dsh-plugin-certification` | `2f27666` | Checks success |
+| `dsh-cert-mcp` | `4f0cf72` | smoke / plugin-doctor / registry-drift success |
 
 ## Verification
 

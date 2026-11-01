@@ -106,7 +106,7 @@ guide 教作者怎么写
 | `dsh-plugin-portal` | `01f2684` | 99 条 roster 同步、57 条卡片描述、7 个 group label；`verify-portal` PASS，远端 CI **success** |
 | `dsh-catalog` | `aef7bb9` | README 增加三层入口；`ci` success |
 
-**未改**：`data/certified.json`、badges、任何等级；没有新增认证条目；没有给任何仓库贴“官方/认证”标签。
+**未改**：`data/attestations.json`、badges、任何等级；没有新增认证条目；没有给任何仓库贴“官方/认证”标签。
 
 **仍需注意**：`dsh-standards` 本身仍是私有仓。三份公开文档已改为“私有草案 + 公开教学副本”的写法，避免公开 404；是否把标准仓转 public 需要维护者决定。
 

@@ -29,7 +29,8 @@
 - [43-缺口总账与 AI 可执行方案](43-缺口总账与AI可执行方案.md) — **全部缺口、AI/Human/模板/删除裁决、90 天 P0–P3**
 - [44-角色治理与贡献机制](44-角色治理与贡献机制.md) — **角色阶梯、DCO+DCT（CLA 式）、COI、申诉、AI 职员**
 - [45-三用途落地](45-三用途落地-官方市场开发者.md) — **官方前沿探索 / 市场参考 / 开发者指南**
-- [P0-P2 执行状态](P0-P2-STATUS.md) — 逐项 DONE / PARTIAL / NOT DONE
+- [P0-P2 执行状态](P0-P2-STATUS.md) — 逐项 DONE / PARTIAL / REPLACED
+- [46-剩余事项与执行建议](46-剩余事项与执行建议.md) — 还差什么、先做什么、什么不做
 - [scheme/](scheme/SCHEME-v1.md) — A–E / A–D 评价方案与 rubric
 - [evidence/](evidence/README.md) — 追加式证据链与复跑说明
 - [97-采纳可行性评估](97-采纳可行性评估.md) — 官方路径、缺口、90 天
