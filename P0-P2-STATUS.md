@@ -65,7 +65,7 @@
 | EVD-17 cross-platform | DONE | `.github/workflows/cross-platform.yml` (ubuntu+windows) |
 | EVD-20 benchmark entry | DONE | `bench/README.md` |
 | CRT-04 appeal dry-run | DONE | `governance/disputes/DSP-2026-001.json` |
-| CRT-06 surveillance | DONE (local) | `surveillance.mjs` + `surveillance/2026Q4.json`; 2026-11-01 local run 1 record / 0 issues; workflow exists but GitHub 0 runs (dispatch 401) |
+| CRT-06 surveillance | DONE | `surveillance.mjs` + `surveillance/2026Q4.json`; 2026-11-01 local run 1 record / 0 issues; GitHub run 41306300606 success |
 | CRT-08 status history | DONE | `history[]` in schema/example |
 | CRT-09 verify page | DONE | `publish/verify.mjs` + `verify.html` |
 | CRT-10 rubric | DONE | `scheme/rubric.json` |
@@ -148,11 +148,14 @@ node publish/verify.mjs --id DSH-ATT-2026-001
    the kits are “rejectable artifacts”, not adoption evidence.
 3. J3/J7 are fixture-level runtime, not ecosystem-wide; J8 is module-load only,
    not UI render.
-4. The surveillance workflow exists but has no GitHub run; the 2026-11-01 local
-   run passed (1 record / 0 issues). `workflow_dispatch` needs auth, so the CI
-   first run is `blocked`, not done.
+4. The surveillance workflow first ran on 2026-11-01: run `41306300606`
+   succeeded (1 record / 0 issues). The quarterly cron remains.
 5. Real web profile: 8/8 former partials verified; `telemetry` and `verification`
    remain `verified-gate-reject`; 18/18 clean is still not claimed.
+6. Dependabot: 438 owned repos audited with the tree API, 0 configs. Alerts are
+   disabled on 438/438; security updates on 428/438. The 10 failures are all
+   archived repos (403 on settings); they have no config, so Dependabot is
+   inactive unless unarchived.
 
 These are **scope boundaries**, not hidden PASS claims. The 18/18 clean item is
 now `PARTIAL` with real web evidence; the 5-author median and J8 render remain
