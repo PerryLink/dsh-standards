@@ -30,3 +30,7 @@
 | D-011 | 2026-11-01 | A | 全仓许可临时统一为 Apache-2.0（文本/规范/代码/schema）；标志仍单独规则 | 用户要求“暂时都是全部定为 Apache-2.0”；统一许可减少贡献与再分发摩擦 | `LICENSE`、`NOTICE`、`CONTRIBUTING.md`、`governance/contribution-terms.md` | 文本许可长期是否回到 CC BY 4.0，待律师复核 | 2027-02-01 | PerryLink (organizer) |
 
 | D-012 | 2026-11-01 | A | 文本/规范/文档改为 CC BY-SA 4.0；代码/脚本/schema 保持 Apache-2.0；取代 D-011 的临时统一 | 用户明确选择“文本 CC BY-SA 4.0”；双许可更符合文本共享与代码专利授权 | `LICENSE`、`LICENSE-CC-BY-SA`、`LICENSE-APACHE`、`NOTICE` | 无 | 2027-02-01 | PerryLink (organizer) |
+
+| D-013 | 2026-11-01 | A | 文本许可由 CC BY-SA 4.0 改为 CC BY 4.0，并加 `MODIFICATION-POLICY.md` 要求显著说明修改；代码仍 Apache-2.0 | 用户选择 CC BY 4.0；ShareAlike 不是本项目的目标，但“说明修改”要清晰可执行 | `LICENSE`、`LICENSE-CC-BY`、`MODIFICATION-POLICY.md`、`NOTICE` | `MODIFICATION-POLICY` 是否被解释为额外限制，待律师复核；CC BY 4.0 原文优先 | 2027-02-01 | PerryLink (organizer) |
+
+| D-014 | 2026-11-01 | A | 激活治理：roles/reviewers/mark-policy/scheme 转 active；`DSH-ATT-2026-001` 转 active，但保持 `selfAssessed: true` + `claimLevel: self-reported` | 用户确认“都同意，执行”；自评记录不冒充独立验证 | `governance/roles.json`、`reviewers.json`、`mark-policy.json`、`scheme/scheme.json`、`publish/attestations/DSH-ATT-2026-001.json` | 独立评审仍需外部 reviewer | 2027-02-01 | PerryLink (organizer) |

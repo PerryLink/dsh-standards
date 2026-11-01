@@ -2,7 +2,7 @@
   "schema": "dsh-governance/1",
   "version": "1.0.0-rc.1",
   "updatedAt": "2026-11-01",
-  "status": "provisional",
+  "status": "active",
   "nonOfficial": true,
   "stage": "solo",
   "creator": "PerryLink",
@@ -454,7 +454,9 @@
         "legal statement or external position",
         "role appointment"
       ],
-      "approver": ["organizer"],
+      "approver": [
+        "organizer"
+      ],
       "aiAllowed": false,
       "reviewers": [],
       "commentDays": 0,
@@ -469,10 +471,15 @@
         "certification scheme",
         "new level status or deprecation"
       ],
-      "approver": ["organizer"],
+      "approver": [
+        "organizer"
+      ],
       "aiAllowed": true,
       "aiRole": "draft-only",
-      "reviewers": ["maintainer", "reviewer"],
+      "reviewers": [
+        "maintainer",
+        "reviewer"
+      ],
       "commentDays": 7,
       "provisionalDays": 90,
       "record": "governance/decision-log.md"
@@ -485,10 +492,14 @@
         "portal and catalog display",
         "CI workflows"
       ],
-      "approver": ["maintainer"],
+      "approver": [
+        "maintainer"
+      ],
       "aiAllowed": true,
       "aiRole": "implement-and-propose",
-      "reviewers": ["maintainer"],
+      "reviewers": [
+        "maintainer"
+      ],
       "commentDays": 0,
       "provisionalDays": 30,
       "record": "governance/decision-log.md"
@@ -502,7 +513,12 @@
         "report generation",
         "translation of non-normative text"
       ],
-      "approver": ["ai-steward", "ai-registrar", "ai-monitor", "ai-translator"],
+      "approver": [
+        "ai-steward",
+        "ai-registrar",
+        "ai-monitor",
+        "ai-translator"
+      ],
       "aiAllowed": true,
       "reviewers": [],
       "commentDays": 0,
@@ -538,7 +554,12 @@
     }
   },
   "coi": {
-    "requiredFields": ["employer", "funding", "ownPlugins", "marketRoles"],
+    "requiredFields": [
+      "employer",
+      "funding",
+      "ownPlugins",
+      "marketRoles"
+    ],
     "selfAssessedFlag": "required when the organizer or a maintainer is the plugin author",
     "recusal": [
       "same GitHub organization as the subject author",
@@ -549,7 +570,11 @@
     "record": "governance/coi.json"
   },
   "ai": {
-    "trailers": ["AI-Agent", "AI-Model", "AI-Assisted"],
+    "trailers": [
+      "AI-Agent",
+      "AI-Model",
+      "AI-Assisted"
+    ],
     "forbiddenPermissions": [
       "spec.decide",
       "attestation.issue",
@@ -586,5 +611,7 @@
       "use a secret outside its scoped token"
     ],
     "auditLog": "governance/ai-actions.log"
-  }
+  },
+  "activatedAt": "2026-11-01",
+  "activationDecision": "D-014"
 }

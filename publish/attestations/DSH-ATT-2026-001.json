@@ -8,7 +8,7 @@
   },
   "grade": "A",
   "claimLevel": "self-reported",
-  "status": "draft",
+  "status": "active",
   "issuedAt": "2026-11-01",
   "expiresAt": "2027-11-01",
   "scope": {
@@ -84,6 +84,11 @@
       "status": "draft",
       "at": "2026-11-01",
       "reason": "self-assessed draft; not active"
+    },
+    {
+      "status": "active",
+      "at": "2026-11-01",
+      "reason": "organizer signed; claimLevel remains self-reported (author = assessor)"
     }
   ]
 }

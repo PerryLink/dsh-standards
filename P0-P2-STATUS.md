@@ -35,7 +35,7 @@
 | EVD-19 sample provenance | DONE | reference suite `provenance` |
 | CRT-01 scheme | DONE | `scheme/SCHEME-v1.md` + `scheme.json` |
 | CRT-02 attestation JSON | DONE | `dsh-attestation/1` |
-| CRT-03 migrate one | DONE | `DSH-ATT-2026-001` (draft, self-assessed) |
+| CRT-03 migrate one | DONE | `DSH-ATT-2026-001` (active, self-assessed, self-reported) |
 | CRT-07 status machine | DONE | scheme transitions + schema |
 | CRT-11 report/attestation split | DONE | report has no grade; attestation has no checks |
 | CRT-12 scope/limitations | DONE | `scope.excluded` required |

@@ -3,10 +3,10 @@ DSH standards — licensing
 This repository uses two licenses, by material type.
 
 1. Text, specifications, checklists, documentation, and translations
-   License: Creative Commons Attribution-ShareAlike 4.0 International
-   (CC BY-SA 4.0)
-   Full text: https://creativecommons.org/licenses/by-sa/4.0/legalcode
-   SPDX: CC-BY-SA-4.0
+   License: Creative Commons Attribution 4.0 International (CC BY 4.0)
+   Full text: LICENSE-CC-BY
+   SPDX: CC-BY-4.0
+   Modification notice: MODIFICATION-POLICY.md (required, prominent)
 
 2. Code, scripts, schemas, and machine-readable checkers
    License: Apache License, Version 2.0
@@ -21,8 +21,8 @@ This repository uses two licenses, by material type.
 Contributions are accepted under governance/contribution-terms.md
 (DCO 1.1 + a non-exclusive copyright licence + an RF patent commitment), not
 under a copyright assignment. By contributing text you agree that it may be
-distributed under CC BY-SA 4.0; by contributing code you agree that it may be
-distributed under Apache-2.0.
+distributed under CC BY 4.0 and that modifications must carry a Change Notice;
+by contributing code you agree that it may be distributed under Apache-2.0.
 
 This file is a notice, not legal advice. A lawyer should review it before the
 repository is used commercially.

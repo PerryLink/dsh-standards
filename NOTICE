@@ -1,7 +1,8 @@
 DSH standards
 Copyright 2026 PerryLink
 
-Text/specifications/documentation: CC BY-SA 4.0 (LICENSE-CC-BY-SA).
+Text/specifications/documentation: CC BY 4.0 (LICENSE-CC-BY).
+Modifications must carry a prominent Change Notice (MODIFICATION-POLICY.md).
 Code/scripts/schemas: Apache License 2.0 (LICENSE-APACHE).
 
 Unless required by applicable law or agreed to in writing, software is

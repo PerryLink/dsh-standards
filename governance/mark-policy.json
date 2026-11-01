@@ -2,7 +2,12 @@
   "schema": "dsh-mark-policy/1",
   "version": "1.0.0-rc.1",
   "updatedAt": "2026-11-01",
-  "marks": ["DSH-ENTRY", "DSH-FLOW", "DSH-BOOST", "DSH level badge"],
+  "marks": [
+    "DSH-ENTRY",
+    "DSH-FLOW",
+    "DSH-BOOST",
+    "DSH level badge"
+  ],
   "owner": "PerryLink (project steward)",
   "registration": "none; not a registered trademark; no legal claim of exclusivity beyond ordinary署名/来源标识",
   "grant": "auto-on-valid-evidence; no application, account, fee, or human approval",
@@ -15,9 +20,21 @@
     "reproduce the unmodified clause text with attribution"
   ],
   "forbidden": [
-    "official", "national standard", "GB", "CNAS", "accredited", "certified",
-    "security audit", "secure", "recommended", "best", "top", "ranking",
-    "guaranteed", "passed", "approved by DeepSeek"
+    "official",
+    "national standard",
+    "GB",
+    "CNAS",
+    "accredited",
+    "certified",
+    "security audit",
+    "secure",
+    "recommended",
+    "best",
+    "top",
+    "ranking",
+    "guaranteed",
+    "passed",
+    "approved by DeepSeek"
   ],
   "rules": [
     "A mark must never appear without its evidence status and date.",
@@ -33,7 +50,24 @@
   },
   "machine": {
     "checker": "40-checker/scripts/claim-check.mjs",
-    "forbiddenWords": ["official", "national standard", "cnas", "accredited", "security audit", "recommended", "ranking", "guaranteed", "approved by deepseek"],
-    "requiredDisclaimerAny": ["非官方", "not official", "not a certification", "非认证"]
-  }
+    "forbiddenWords": [
+      "official",
+      "national standard",
+      "cnas",
+      "accredited",
+      "security audit",
+      "recommended",
+      "ranking",
+      "guaranteed",
+      "approved by deepseek"
+    ],
+    "requiredDisclaimerAny": [
+      "非官方",
+      "not official",
+      "not a certification",
+      "非认证"
+    ]
+  },
+  "status": "active",
+  "activatedAt": "2026-11-01"
 }

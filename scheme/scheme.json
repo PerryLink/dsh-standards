@@ -2,12 +2,25 @@
   "schema": "dsh-attestation-scheme/1",
   "id": "dsh-attestation-scheme",
   "version": "1.0.0-rc.1",
-  "status": "provisional",
+  "status": "active",
   "nonOfficial": true,
   "object": "a published DSH plugin or bundle pinned to repo@version and commit",
   "scope": {
-    "dimensions": ["A", "B", "C", "D", "E"],
-    "excluded": ["security audit", "runtime isolation", "UI correctness", "production readiness", "official endorsement", "market ranking"],
+    "dimensions": [
+      "A",
+      "B",
+      "C",
+      "D",
+      "E"
+    ],
+    "excluded": [
+      "security audit",
+      "runtime isolation",
+      "UI correctness",
+      "production readiness",
+      "official endorsement",
+      "market ranking"
+    ],
     "validityDays": 365
   },
   "grades": {
@@ -18,7 +31,11 @@
   },
   "environmentBlocked": "E fails only because of an unattended-environment gate; keep B if A-D pass and record environment-blocked",
   "veto": {
-    "triggers": ["obfuscated code", "credential exfiltration", "surprising install-time behavior"],
+    "triggers": [
+      "obfuscated code",
+      "credential exfiltration",
+      "surprising install-time behavior"
+    ],
     "effect": "grade D immediately, publish the reason",
     "notClaimed": "not a CVE, not a sandbox result, not proof of safety"
   },
@@ -45,7 +62,12 @@
   ],
   "mark": {
     "policy": "governance/mark-policy.md",
-    "requiredFields": ["attestationId", "scope", "expiresAt", "verifyUrl"],
+    "requiredFields": [
+      "attestationId",
+      "scope",
+      "expiresAt",
+      "verifyUrl"
+    ],
     "disclaimer": "非官方 · 非认证 · 非安全审计"
   },
   "review": {
@@ -53,5 +75,6 @@
     "surveillance": "quarterly link/version/expiry check",
     "appeals": "governance/appeals.md",
     "coi": "governance/coi.json"
-  }
+  },
+  "activatedAt": "2026-11-01"
 }

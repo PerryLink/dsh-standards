@@ -2,6 +2,8 @@
 
 > **非官方、非认证、非安全审计。** 这是 DSH 插件规范与实践草稿（canonical: dsh-standards），不代表 DeepSeek 官方背书。
 > `"DeepSeek Harness"` 是 DeepSeek 的商标；本项目只使用 `DSH` 缩写。
+>
+> ⚠️ **修改必须说明**：复制或修改本仓文本时，必须在显著位置给出 Change Notice（来源 commit、改了哪个章节、改了什么、为什么、日期）。见 [`MODIFICATION-POLICY.md`](MODIFICATION-POLICY.md)。
 
 一个项目，三层采用深度：
 
@@ -96,7 +98,7 @@ node lev7-bench.mjs 64 20
 
 ## 许可
 
-- 文本/规范/文档/翻译：**CC BY-SA 4.0**（`LICENSE-CC-BY-SA`）；
+- 文本/规范/文档/翻译：**CC BY 4.0**（`LICENSE-CC-BY`）；**修改必须按 `MODIFICATION-POLICY.md` 给出 Change Notice**；
 - 代码/脚本/schema：**Apache-2.0**（`LICENSE-APACHE`，含专利授权与防御终止）；
 - 标志/badge：单独规则，见 `governance/mark-policy.md`，不随上述许可授权；
 - 贡献：DCO 1.1 + DCT v1，不要求版权转让。
@@ -115,4 +117,4 @@ publish/          labels 示例 + 评价记录 JSON
 
 ## 先行项目
 
-`dsh-plugin-standard`（lanbaolu）是同生态的先行项目；本项目与其无隶属关系，引用/对比时将标注来源。许可见 `LICENSE`（文本 CC BY-SA 4.0 / 代码 Apache-2.0）。
+`dsh-plugin-standard`（lanbaolu）是同生态的先行项目；本项目与其无隶属关系，引用/对比时将标注来源。许可见 `LICENSE`（文本 CC BY 4.0 / 代码 Apache-2.0）；修改必须说明。

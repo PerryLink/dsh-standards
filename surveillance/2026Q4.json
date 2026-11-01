@@ -1,12 +1,12 @@
 {
   "schema": "dsh-surveillance/1",
-  "generatedAt": "2026-11-01T05:13:45.670Z",
+  "generatedAt": "2026-11-01T08:06:19.989Z",
   "checked": 1,
   "issues": [],
   "records": [
     {
       "attestationId": "DSH-ATT-2026-001",
-      "status": "draft",
+      "status": "active",
       "expiresAt": "2027-11-01",
       "issues": []
     }

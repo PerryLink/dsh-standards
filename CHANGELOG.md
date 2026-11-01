@@ -10,5 +10,5 @@
 - Added G4 static check, clause-map, stale-check, surveillance, dashboard.
 - Added developer/official/market kits and `publish/verify.mjs` / `verify.html`.
 - CI: governance checks, 73 tests, attestation verify, shell syntax, cross-platform matrix.
-- License: full Apache-2.0 + NOTICE; marks remain separate (D-011).
+- License: text CC BY 4.0 with a required Change Notice; code Apache-2.0 (D-013); marks separate.
 - Cross-repo: portal `f882144`, guide `e75cd9f`, kit `9897213`, catalog `a272d06`, certification `2f27666`, cert-mcp `4f0cf72`.

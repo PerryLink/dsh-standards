@@ -62,7 +62,9 @@ command output is a bug.
 
 ## License
 
-- Text/spec/docs/translations: **CC BY-SA 4.0** (`LICENSE-CC-BY-SA`).
+- Text/spec/docs/translations: **CC BY 4.0** (`LICENSE-CC-BY`).
+- If you modify and republish text, include a **Change Notice** per
+  `MODIFICATION-POLICY.md` (source commit, sections, what changed, why, date).
 - Code/scripts/schemas: **Apache-2.0** (`LICENSE-APACHE`).
 - Marks/badges: separate, see `governance/mark-policy.md`.
 - Contributions: DCO 1.1 + DCT v1 (`dsh-ct/1`), no copyright assignment.

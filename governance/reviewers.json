@@ -6,10 +6,15 @@
     {
       "handle": "PerryLink",
       "role": "organizer",
-      "status": "provisional",
-      "scopes": ["entry", "flow", "boost", "certification"],
+      "status": "active",
+      "scopes": [
+        "entry",
+        "flow",
+        "boost",
+        "certification"
+      ],
       "appointedAt": "2026-11-01",
-      "expiresAt": "2027-02-01",
+      "expiresAt": "2027-05-01",
       "shadowReviews": 0,
       "knownAnswerExercises": 0,
       "coi": [

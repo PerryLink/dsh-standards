@@ -1,6 +1,6 @@
 {
   "schema": "dsh-dashboard/1",
-  "generatedAt": "2026-11-01T05:42:39.508Z",
+  "generatedAt": "2026-11-01T08:06:20.039Z",
   "entry": {
     "resultFiles": 20,
     "claim": "18/18 recognized static; 10 G3 verified, 8 partial (see results/entry/18/README.md)"
@@ -45,15 +45,15 @@
   },
   "attestations": {
     "count": 1,
-    "draft": 1,
+    "draft": 0,
     "selfReported": 1
   },
   "governance": {
     "schema": "dsh-governance/1",
     "stage": "solo",
-    "status": "provisional"
+    "status": "active"
   },
-  "evidenceChainEntries": 2,
+  "evidenceChainEntries": 5,
   "notClaimed": [
     "official standard",
     "certification",
