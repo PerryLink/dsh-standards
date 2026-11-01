@@ -56,6 +56,26 @@ const SAMPLES = [
     id: 'YuJunZhiXue__dsh-purge', name: 'dsh-purge', version: '1.1.85', source: 'github', spec: 'YuJunZhiXue/dsh-purge',
     why: 'postinstall/profile behavior', j1Partial: true, j2Partial: true, layerProbe: true,
   },
+  {
+    id: 'daily-log', name: '@zzerx/dsh-plugin-daily-log', version: '0.4.3', source: 'npm', spec: '@zzerx/dsh-plugin-daily-log@0.4.3',
+    why: 'second wave: scoped npm plugin',
+  },
+  {
+    id: 'project-memory', name: '@yolk_vat-y/dsh-project-memory', version: '0.6.7', source: 'npm', spec: '@yolk_vat-y/dsh-project-memory@0.6.7',
+    why: 'second wave: scoped npm plugin',
+  },
+  {
+    id: 'qiushi', name: 'qiushi-dsh-evidence-audit', version: '0.1.0', source: 'npm', spec: 'qiushi-dsh-evidence-audit@0.1.0',
+    why: 'second wave: evidence-oriented plugin',
+  },
+  {
+    id: 'status-rotator', name: 'dsh-status-rotator', version: '0.38.0', source: 'npm', spec: 'dsh-status-rotator@0.38.0',
+    why: 'second wave: npm plugin',
+  },
+  {
+    id: 'verification', name: 'dsh-verification-receipt', version: '0.1.0', source: 'npm', spec: 'dsh-verification-receipt@0.1.0',
+    why: 'second wave: expected gate/host edge',
+  },
 ]
 
 function parseArgs(argv) {

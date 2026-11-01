@@ -156,6 +156,7 @@ function main() {
   }
   const result = {
     schema: 'dsh-flow-runtime/1',
+    environment: { dsh: dshVersion, node: process.version, platform: process.platform },
     package: manifest.name,
     version: manifest.version,
     previous: previousManifest ? previousManifest.version : null,

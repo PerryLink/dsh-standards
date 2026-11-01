@@ -1,0 +1,270 @@
+{
+  "schema": "dsh-flow-real/1",
+  "generatedAt": "2026-11-01T05:39:21.201Z",
+  "id": "status-rotator",
+  "package": "dsh-status-rotator",
+  "version": "0.38.0",
+  "entry18Version": "0.38.0",
+  "source": "npm",
+  "spec": "dsh-status-rotator@0.38.0",
+  "why": "second wave: npm plugin",
+  "packageDir": "/tmp/flow-sample/status-rotator",
+  "download": {
+    "kind": "npm-pack",
+    "command": "npm pack dsh-status-rotator@0.38.0 --pack-destination /tmp/flow-sample/_cache",
+    "tarball": "/tmp/flow-sample/_cache/dsh-status-rotator-0.38.0.tgz",
+    "registry": "https://registry.npmmirror.com",
+    "actualVersion": "0.38.0"
+  },
+  "manifest": {
+    "name": "dsh-status-rotator",
+    "version": "0.38.0",
+    "engines": null,
+    "peerDependencies": {
+      "@deepseek-ai/cordis": "*"
+    },
+    "dependencies": null,
+    "scripts": {
+      "postinstall": null
+    },
+    "dsh": {
+      "bundle": {
+        "patch": "./cordis.patch.yml"
+      },
+      "client": {
+        "platform": "web",
+        "inject": [],
+        "immediately": true
+      }
+    }
+  },
+  "dependencyInstall": {
+    "needed": false,
+    "command": null,
+    "exit": 0,
+    "ignoredScripts": true,
+    "note": "no dependencies in package.json; npm install skipped"
+  },
+  "previous": null,
+  "gate": null,
+  "journey": {
+    "command": "/home/yy/opt/node-v24.22.1-linux-x64/bin/node /mnt/c/Users/zzhdz/WorkBuddy/2026-10-30-16-02-58/dsh-standard/40-checker/scripts/journey-runtime.mjs --package /tmp/flow-sample/status-rotator --dsh dsh --json",
+    "exit": 1,
+    "parseError": null,
+    "stderr": "",
+    "result": {
+      "schema": "dsh-flow-runtime/1",
+      "package": "dsh-status-rotator",
+      "version": "0.38.0",
+      "previous": null,
+      "mode": "j1-j2-j4-j6-runtime",
+      "checks": [
+        {
+          "id": "J1.profile",
+          "result": "PASS",
+          "reason": "create profile exit=0",
+          "stderr": ""
+        },
+        {
+          "id": "J1.install",
+          "result": "PASS",
+          "reason": "add exit=0",
+          "stderr": "[WARN] The package dsh-status-rotator, which you have just pnpm linked, has the following peerDependencies specified in its package.json:\n\n  - @deepseek-ai/cordis@*\n\nThe linked in dependency will not resolve the peer dependencies from the target node_modules.\nThis might cause issues in your project. To resolve this, you may use the \"file:\" protocol to reference the local dependency.\nAlready up to date\n\ndependencies:\n+ dsh-status-rotator <- ../../../flow-sample/status-rotator\n\nDone in 92ms using pnpm v12.15.0\n"
+        },
+        {
+          "id": "J1.dump",
+          "result": "PASS",
+          "reason": "dump exit=0",
+          "stderr": ""
+        },
+        {
+          "id": "J1.layer",
+          "result": "PASS",
+          "reason": "layer/entry appears in dump"
+        },
+        {
+          "id": "J2.disable",
+          "result": "PASS",
+          "reason": "row status-rotator disabled",
+          "stderr": ""
+        },
+        {
+          "id": "J2.enable",
+          "result": "PASS",
+          "reason": "row status-rotator enabled again",
+          "stderr": ""
+        },
+        {
+          "id": "J1.remove",
+          "result": "PASS",
+          "reason": "remove exit=0",
+          "stderr": "Already up to date\n\ndependencies:\n- dsh-status-rotator link:/tmp/flow-sample/status-rotator\n\nDone in 22ms using pnpm v12.15.0\n"
+        },
+        {
+          "id": "J1.clean",
+          "result": "PASS",
+          "reason": "layer/dependency gone after remove"
+        },
+        {
+          "id": "J4.tree-load",
+          "result": "FAIL",
+          "reason": "boot exit=0; no credential-boundary message",
+          "stderr": ""
+        },
+        {
+          "id": "J6.upgrade",
+          "result": "not-run",
+          "reason": "no --previous package supplied"
+        },
+        {
+          "id": "J6.rollback",
+          "result": "not-run",
+          "reason": "no --previous package supplied"
+        },
+        {
+          "id": "J3.config",
+          "result": "not-run",
+          "reason": "invalid-config harness not implemented; do not claim J3"
+        },
+        {
+          "id": "J5.permissions",
+          "result": "not-run",
+          "reason": "permissions/disclosure review is manual"
+        },
+        {
+          "id": "J7.observe",
+          "result": "not-run",
+          "reason": "observability probe not implemented"
+        },
+        {
+          "id": "J8.client",
+          "result": "not-run",
+          "reason": "client-shape probe not implemented"
+        }
+      ],
+      "summary": {
+        "pass": 8,
+        "warn": 0,
+        "fail": 1,
+        "blocked": 0,
+        "notRun": 6
+      },
+      "conclusion": "flow-fail"
+    }
+  },
+  "layerProbe": null,
+  "checks": [
+    {
+      "id": "J1.profile",
+      "result": "PASS",
+      "reason": "create profile exit=0",
+      "stderr": ""
+    },
+    {
+      "id": "J1.install",
+      "result": "PASS",
+      "reason": "add exit=0",
+      "stderr": "[WARN] The package dsh-status-rotator, which you have just pnpm linked, has the following peerDependencies specified in its package.json:\n\n  - @deepseek-ai/cordis@*\n\nThe linked in dependency will not resolve the peer dependencies from the target node_modules.\nThis might cause issues in your project. To resolve this, you may use the \"file:\" protocol to reference the local dependency.\nAlready up to date\n\ndependencies:\n+ dsh-status-rotator <- ../../../flow-sample/status-rotator\n\nDone in 92ms using pnpm v12.15.0\n"
+    },
+    {
+      "id": "J1.dump",
+      "result": "PASS",
+      "reason": "dump exit=0",
+      "stderr": ""
+    },
+    {
+      "id": "J1.layer",
+      "result": "PASS",
+      "reason": "layer/entry appears in dump"
+    },
+    {
+      "id": "J2.disable",
+      "result": "PASS",
+      "reason": "row status-rotator disabled",
+      "stderr": ""
+    },
+    {
+      "id": "J2.enable",
+      "result": "PASS",
+      "reason": "row status-rotator enabled again",
+      "stderr": ""
+    },
+    {
+      "id": "J1.remove",
+      "result": "PASS",
+      "reason": "remove exit=0",
+      "stderr": "Already up to date\n\ndependencies:\n- dsh-status-rotator link:/tmp/flow-sample/status-rotator\n\nDone in 22ms using pnpm v12.15.0\n"
+    },
+    {
+      "id": "J1.clean",
+      "result": "PASS",
+      "reason": "layer/dependency gone after remove"
+    },
+    {
+      "id": "J4.tree-load",
+      "result": "FAIL",
+      "reason": "boot exit=0; no credential-boundary message",
+      "stderr": ""
+    },
+    {
+      "id": "J6.upgrade",
+      "result": "not-run",
+      "reason": "no --previous package supplied"
+    },
+    {
+      "id": "J6.rollback",
+      "result": "not-run",
+      "reason": "no --previous package supplied"
+    },
+    {
+      "id": "J3.config",
+      "result": "not-run",
+      "reason": "invalid-config harness not implemented; do not claim J3"
+    },
+    {
+      "id": "J5.permissions",
+      "result": "not-run",
+      "reason": "permissions/disclosure review is manual"
+    },
+    {
+      "id": "J7.observe",
+      "result": "not-run",
+      "reason": "observability probe not implemented"
+    },
+    {
+      "id": "J8.client",
+      "result": "not-run",
+      "reason": "client-shape probe not implemented"
+    }
+  ],
+  "verdicts": {
+    "J1": "pass",
+    "J2": "pass",
+    "J4": "fail",
+    "J6": "not-run"
+  },
+  "classification": "clean",
+  "caveats": [],
+  "limitations": [
+    "J3/J5/J7/J8 are not covered by journey-runtime.",
+    "This is a local-directory install (`dsh plugin add <dir>`), not a registry tarball install."
+  ],
+  "summary": {
+    "checks": {
+      "pass": 8,
+      "warn": 0,
+      "fail": 1,
+      "blocked": 0,
+      "partial": 0,
+      "notRun": 6
+    },
+    "verdicts": {
+      "pass": 2,
+      "fail": 1,
+      "blocked": 0,
+      "partial": 0,
+      "notRun": 1
+    }
+  },
+  "conclusion": "flow-fail"
+}

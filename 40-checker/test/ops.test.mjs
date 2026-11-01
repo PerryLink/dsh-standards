@@ -70,7 +70,7 @@ test('dashboard: never claims official/security/production', () => {
   const d = buildDashboard(ROOT)
   assert.equal(d.schema, 'dsh-dashboard/1')
   assert.ok(d.notClaimed.includes('security audit'))
-  assert.equal(d.flow.packages, 5)
+  assert.equal(d.flow.packages, 10)
 })
 
 test('surveillance: expired record becomes an issue', () => {
@@ -97,4 +97,21 @@ test('round-robin: two not-run results are not comparable', async () => {
     expected: { good: { expected: 'warn' } },
   })
   assert.equal(r.comparable, false)
+})
+
+test('flow index: aggregates result files without upgrading a verdict', async () => {
+  const { buildFlowIndex } = await import('../scripts/flow-index.mjs')
+  const dir = fs.mkdtempSync(path.join(os.tmpdir(), 'dsh-flow-index-'))
+  const row = (id, pass, fail) => ({
+    schema: 'dsh-flow-real/1', id, package: id, version: '1.0.0', source: 'fixture', why: 'test',
+    verdicts: { J1: pass ? 'pass' : 'fail', J2: 'not-run', J4: 'not-run', J6: 'not-run' },
+    classification: 'clean', conclusion: 'partial', caveats: [], summary: { checks: { pass, fail, blocked: 0, notRun: 6 }, verdicts: { pass: pass ? 1 : 0, fail: fail, blocked: 0, partial: 0, notRun: 3 } },
+  })
+  fs.writeFileSync(path.join(dir, 'a.json'), JSON.stringify(row('a', 1, 0)))
+  fs.writeFileSync(path.join(dir, 'b.json'), JSON.stringify(row('b', 0, 1)))
+  const index = buildFlowIndex(dir)
+  assert.equal(index.totals.packages, 2)
+  assert.equal(index.totals.checks.fail, 1)
+  assert.equal(index.totals.verdicts.fail, 1)
+  fs.rmSync(dir, { recursive: true, force: true })
 })

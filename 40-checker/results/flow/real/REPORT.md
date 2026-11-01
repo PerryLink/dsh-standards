@@ -1,8 +1,10 @@
 # FLOW real-package evidence (J1/J2/J4, one J6)
 
 Generated: 2026-11-01 (Asia/Shanghai)
-Scope: a **representative sample of 5** of the 18 packages in `40-checker/samples/entry18.json`.
+Scope: a **representative sample of 10** of the 18 packages in `40-checker/samples/entry18.json`.
 This is **not** a run over all 18, and it is **not** full FLOW coverage.
+
+> **Second wave (2026-11-02)**: 5 more npm packages were added (`daily-log`, `project-memory`, `qiushi`, `status-rotator`, `verification`). They ran against the local `dsh 0.2.1-rc.5`, while the first wave used `0.2.2-alpha.2`. **Do not compare J4 pass rates across waves**; the host differs. The second wave records J4 failures as failures, not as “not-run”.
 
 ## Environment
 
@@ -31,6 +33,11 @@ No sample repo was edited. Dependencies were installed in the `/tmp` copies only
 | `ui-auth` | `dsh-ui-auth@0.7.1` | npm tarball | bundle with a client (`dsh.client` + `lib/client.js`) |
 | `telemetry` | `dsh-telemetry-redactor@0.1.0` | npm tarball | expected host compatibility-gate rejection; recorded as **blocked** |
 | `YuJunZhiXue__dsh-purge` | `dsh-purge@1.1.85` (clone HEAD package version is **1.1.86**) | shallow git clone | has a `postinstall` that writes the profile body insert |
+| `daily-log` | `@zzerx/dsh-plugin-daily-log@0.4.3` | npm tarball | second wave |
+| `project-memory` | `@yolk_vat-y/dsh-project-memory@0.6.7` | npm tarball | second wave |
+| `qiushi` | `qiushi-dsh-evidence-audit@0.1.0` | npm tarball | second wave |
+| `status-rotator` | `dsh-status-rotator@0.38.0` | npm tarball | second wave |
+| `verification` | `dsh-verification-receipt@0.1.0` | npm tarball | second wave; expected host edge |
 
 `YuJunZhiXue/dsh-purge` HEAD was `1bdf2399701ddea298adac8d0fad52314251ca7b`
 ("version 1.1.86"), but `entry18.json` records 1.1.85. The actual installed
@@ -313,3 +320,16 @@ node -e "const r=require('./40-checker/results/flow/real/ci-diet.json');
 - [`index.json`](./index.json)
 
 No commit or push was made. `journey-runtime.mjs` is unmodified.
+
+
+## Second-wave summary (2026-11-02)
+
+| id | J1 | J2 | J4 | J6 | Note |
+|---|---|---|---|---|---|
+| `daily-log` | PASS | PASS | FAIL | not-run | J4 failure recorded |
+| `project-memory` | PASS | PASS | FAIL | not-run | J4 failure recorded |
+| `qiushi` | PASS | PASS | FAIL | not-run | J4 failure recorded |
+| `status-rotator` | PASS | PASS | FAIL | not-run | J4 failure recorded |
+| `verification` | FAIL | not-run | FAIL | not-run | install failure; no PASS invented |
+
+Aggregate over all 10 packages: **74 PASS / 8 FAIL / 2 BLOCKED / 66 not-run** checks (see `index.json`). The 5 second-wave J4 failures are a real signal: keyless boot did not reach the expected credential boundary on this host, and the harness recorded `FAIL` rather than rewriting it to PASS.

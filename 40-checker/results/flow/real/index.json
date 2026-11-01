@@ -1,49 +1,24 @@
 {
   "schema": "dsh-flow-real-index/1",
-  "generatedAt": "2026-11-01T04:24:20.308Z",
+  "generatedAt": "2026-11-01T05:39:51.062Z",
   "environment": {
     "node": "v24.22.1",
     "platform": "linux",
     "arch": "x64",
     "dsh": {
-      "path": "/tmp/dsh022/node_modules/@deepseek-ai/dsh/lib/bin.js",
-      "version": "0.2.2-alpha.2"
+      "path": "/mnt/c/Users/zzhdz/WorkBuddy/2026-10-30-16-02-58/dsh-standard/dsh",
+      "version": "0.2.1-rc.5"
     },
     "pnpm": "12.15.0",
     "npm": "11.19.1",
     "registry": "https://registry.npmmirror.com",
     "sampleBase": "/tmp/flow-sample",
     "resultsDir": "/mnt/c/Users/zzhdz/WorkBuddy/2026-10-30-16-02-58/dsh-standard/40-checker/results/flow/real",
-    "command": "/home/yy/opt/node-v24.22.1-linux-x64/bin/node /mnt/c/Users/zzhdz/WorkBuddy/2026-10-30-16-02-58/dsh-standard/40-checker/scripts/flow-sample-ci.mjs"
+    "command": "/home/yy/opt/node-v24.22.1-linux-x64/bin/node /mnt/c/Users/zzhdz/WorkBuddy/2026-10-30-16-02-58/dsh-standard/40-checker/scripts/flow-sample-ci.mjs --only 'daily-log,project-memory,qiushi,status-rotator,verification' --timeout 180000",
+    "mixed": true,
+    "note": "First wave used dsh 0.2.2-alpha.2; second wave used local dsh 0.2.1-rc.5. See each result file; do not compare J4 across waves."
   },
   "samples": [
-    {
-      "id": "ci-diet",
-      "package": "dsh-ci-diet",
-      "version": "0.5.2",
-      "source": "npm",
-      "why": "simple npm bundle",
-      "verdicts": {
-        "J1": "pass",
-        "J2": "pass",
-        "J4": "pass",
-        "J6": "pass"
-      },
-      "classification": "clean",
-      "conclusion": "flow-warn",
-      "checks": {
-        "pass": 12,
-        "warn": 0,
-        "fail": 0,
-        "blocked": 0,
-        "partial": 0,
-        "notRun": 4
-      },
-      "caveats": [
-        "J6 used the published 0.5.1 tarball as --previous; no persisted data/migration was exercised."
-      ],
-      "file": "/mnt/c/Users/zzhdz/WorkBuddy/2026-10-30-16-02-58/dsh-standard/40-checker/results/flow/real/ci-diet.json"
-    },
     {
       "id": "DDDMUC__dsh-free-search",
       "package": "dsh-free-search",
@@ -70,61 +45,6 @@
         "J6 not run: only one version was fetched; the clone HEAD is 7c30dd059e1d9de4ffc8b779978b2152af84b0ec."
       ],
       "file": "/mnt/c/Users/zzhdz/WorkBuddy/2026-10-30-16-02-58/dsh-standard/40-checker/results/flow/real/DDDMUC__dsh-free-search.json"
-    },
-    {
-      "id": "ui-auth",
-      "package": "dsh-ui-auth",
-      "version": "0.7.1",
-      "source": "npm",
-      "why": "bundle with a client",
-      "verdicts": {
-        "J1": "pass",
-        "J2": "pass",
-        "J4": "pass",
-        "J6": "not-run"
-      },
-      "classification": "clean",
-      "conclusion": "flow-warn",
-      "checks": {
-        "pass": 9,
-        "warn": 0,
-        "fail": 0,
-        "blocked": 0,
-        "partial": 0,
-        "notRun": 6
-      },
-      "caveats": [
-        "J4 reached MISSING_CREDENTIAL, but dsh-ui-auth stayed pending on services webServer/connection in headless; client activation (J8) is not proven."
-      ],
-      "file": "/mnt/c/Users/zzhdz/WorkBuddy/2026-10-30-16-02-58/dsh-standard/40-checker/results/flow/real/ui-auth.json"
-    },
-    {
-      "id": "telemetry",
-      "package": "dsh-telemetry-redactor",
-      "version": "0.1.0",
-      "source": "npm",
-      "why": "expected host compatibility-gate rejection",
-      "verdicts": {
-        "J1": "blocked",
-        "J2": "not-run",
-        "J4": "not-run",
-        "J6": "not-run"
-      },
-      "classification": "host-gate",
-      "conclusion": "flow-blocked",
-      "checks": {
-        "pass": 1,
-        "warn": 0,
-        "fail": 0,
-        "blocked": 1,
-        "partial": 0,
-        "notRun": 13
-      },
-      "caveats": [
-        "Compatibility gate rejected this exact version; no exemption was granted and no retry was attempted.",
-        "J2/J4 were not run because nothing was installed. This is a host gate, not a plugin defect."
-      ],
-      "file": "/mnt/c/Users/zzhdz/WorkBuddy/2026-10-30-16-02-58/dsh-standard/40-checker/results/flow/real/telemetry.json"
     },
     {
       "id": "YuJunZhiXue__dsh-purge",
@@ -155,29 +75,236 @@
         "Actual package version 1.1.86 differs from entry18.json 1.1.85."
       ],
       "file": "/mnt/c/Users/zzhdz/WorkBuddy/2026-10-30-16-02-58/dsh-standard/40-checker/results/flow/real/YuJunZhiXue__dsh-purge.json"
+    },
+    {
+      "id": "ci-diet",
+      "package": "dsh-ci-diet",
+      "version": "0.5.2",
+      "source": "npm",
+      "why": "simple npm bundle",
+      "verdicts": {
+        "J1": "pass",
+        "J2": "pass",
+        "J4": "pass",
+        "J6": "pass"
+      },
+      "classification": "clean",
+      "conclusion": "flow-warn",
+      "checks": {
+        "pass": 12,
+        "warn": 0,
+        "fail": 0,
+        "blocked": 0,
+        "partial": 0,
+        "notRun": 4
+      },
+      "caveats": [
+        "J6 used the published 0.5.1 tarball as --previous; no persisted data/migration was exercised."
+      ],
+      "file": "/mnt/c/Users/zzhdz/WorkBuddy/2026-10-30-16-02-58/dsh-standard/40-checker/results/flow/real/ci-diet.json"
+    },
+    {
+      "id": "daily-log",
+      "package": "@zzerx/dsh-plugin-daily-log",
+      "version": "0.4.3",
+      "source": "npm",
+      "why": "second wave: scoped npm plugin",
+      "verdicts": {
+        "J1": "pass",
+        "J2": "pass",
+        "J4": "fail",
+        "J6": "not-run"
+      },
+      "classification": "clean",
+      "conclusion": "flow-fail",
+      "checks": {
+        "pass": 8,
+        "warn": 0,
+        "fail": 1,
+        "blocked": 0,
+        "partial": 0,
+        "notRun": 6
+      },
+      "caveats": [],
+      "file": "/mnt/c/Users/zzhdz/WorkBuddy/2026-10-30-16-02-58/dsh-standard/40-checker/results/flow/real/daily-log.json"
+    },
+    {
+      "id": "project-memory",
+      "package": "@yolk_vat-y/dsh-project-memory",
+      "version": "0.6.7",
+      "source": "npm",
+      "why": "second wave: scoped npm plugin",
+      "verdicts": {
+        "J1": "pass",
+        "J2": "pass",
+        "J4": "fail",
+        "J6": "not-run"
+      },
+      "classification": "clean",
+      "conclusion": "flow-fail",
+      "checks": {
+        "pass": 8,
+        "warn": 0,
+        "fail": 1,
+        "blocked": 0,
+        "partial": 0,
+        "notRun": 6
+      },
+      "caveats": [],
+      "file": "/mnt/c/Users/zzhdz/WorkBuddy/2026-10-30-16-02-58/dsh-standard/40-checker/results/flow/real/project-memory.json"
+    },
+    {
+      "id": "qiushi",
+      "package": "qiushi-dsh-evidence-audit",
+      "version": "0.1.0",
+      "source": "npm",
+      "why": "second wave: evidence-oriented plugin",
+      "verdicts": {
+        "J1": "pass",
+        "J2": "pass",
+        "J4": "fail",
+        "J6": "not-run"
+      },
+      "classification": "clean",
+      "conclusion": "flow-fail",
+      "checks": {
+        "pass": 8,
+        "warn": 0,
+        "fail": 1,
+        "blocked": 0,
+        "partial": 0,
+        "notRun": 6
+      },
+      "caveats": [],
+      "file": "/mnt/c/Users/zzhdz/WorkBuddy/2026-10-30-16-02-58/dsh-standard/40-checker/results/flow/real/qiushi.json"
+    },
+    {
+      "id": "status-rotator",
+      "package": "dsh-status-rotator",
+      "version": "0.38.0",
+      "source": "npm",
+      "why": "second wave: npm plugin",
+      "verdicts": {
+        "J1": "pass",
+        "J2": "pass",
+        "J4": "fail",
+        "J6": "not-run"
+      },
+      "classification": "clean",
+      "conclusion": "flow-fail",
+      "checks": {
+        "pass": 8,
+        "warn": 0,
+        "fail": 1,
+        "blocked": 0,
+        "partial": 0,
+        "notRun": 6
+      },
+      "caveats": [],
+      "file": "/mnt/c/Users/zzhdz/WorkBuddy/2026-10-30-16-02-58/dsh-standard/40-checker/results/flow/real/status-rotator.json"
+    },
+    {
+      "id": "telemetry",
+      "package": "dsh-telemetry-redactor",
+      "version": "0.1.0",
+      "source": "npm",
+      "why": "expected host compatibility-gate rejection",
+      "verdicts": {
+        "J1": "blocked",
+        "J2": "not-run",
+        "J4": "not-run",
+        "J6": "not-run"
+      },
+      "classification": "host-gate",
+      "conclusion": "flow-blocked",
+      "checks": {
+        "pass": 1,
+        "warn": 0,
+        "fail": 0,
+        "blocked": 1,
+        "partial": 0,
+        "notRun": 13
+      },
+      "caveats": [
+        "Compatibility gate rejected this exact version; no exemption was granted and no retry was attempted.",
+        "J2/J4 were not run because nothing was installed. This is a host gate, not a plugin defect."
+      ],
+      "file": "/mnt/c/Users/zzhdz/WorkBuddy/2026-10-30-16-02-58/dsh-standard/40-checker/results/flow/real/telemetry.json"
+    },
+    {
+      "id": "ui-auth",
+      "package": "dsh-ui-auth",
+      "version": "0.7.1",
+      "source": "npm",
+      "why": "bundle with a client",
+      "verdicts": {
+        "J1": "pass",
+        "J2": "pass",
+        "J4": "pass",
+        "J6": "not-run"
+      },
+      "classification": "clean",
+      "conclusion": "flow-warn",
+      "checks": {
+        "pass": 9,
+        "warn": 0,
+        "fail": 0,
+        "blocked": 0,
+        "partial": 0,
+        "notRun": 6
+      },
+      "caveats": [
+        "J4 reached MISSING_CREDENTIAL, but dsh-ui-auth stayed pending on services webServer/connection in headless; client activation (J8) is not proven."
+      ],
+      "file": "/mnt/c/Users/zzhdz/WorkBuddy/2026-10-30-16-02-58/dsh-standard/40-checker/results/flow/real/ui-auth.json"
+    },
+    {
+      "id": "verification",
+      "package": "dsh-verification-receipt",
+      "version": "0.1.0",
+      "source": "npm",
+      "why": "second wave: expected gate/host edge",
+      "verdicts": {
+        "J1": "fail",
+        "J2": "not-run",
+        "J4": "fail",
+        "J6": "not-run"
+      },
+      "classification": "clean",
+      "conclusion": "flow-fail",
+      "checks": {
+        "pass": 2,
+        "warn": 0,
+        "fail": 4,
+        "blocked": 1,
+        "partial": 0,
+        "notRun": 7
+      },
+      "caveats": [],
+      "file": "/mnt/c/Users/zzhdz/WorkBuddy/2026-10-30-16-02-58/dsh-standard/40-checker/results/flow/real/verification.json"
     }
   ],
   "totals": {
-    "packages": 5,
+    "packages": 10,
     "checks": {
-      "pass": 40,
+      "pass": 74,
       "warn": 0,
-      "fail": 0,
-      "blocked": 1,
+      "fail": 8,
+      "blocked": 2,
       "partial": 0,
-      "notRun": 35
+      "notRun": 66
     },
     "verdicts": {
-      "pass": 11,
-      "fail": 0,
+      "pass": 19,
+      "fail": 6,
       "blocked": 1,
       "partial": 2,
-      "notRun": 6
+      "notRun": 12
     },
     "classifications": {
-      "clean": 3,
-      "host-gate": 1,
-      "harness-partial": 1
+      "clean": 8,
+      "harness-partial": 1,
+      "host-gate": 1
     }
   },
   "coverage": {
@@ -191,8 +318,9 @@
     "J8": "not-run"
   },
   "notes": [
-    "A gate rejection is recorded as BLOCKED, never as PASS; this script never calls allow-version.",
+    "A gate rejection is recorded as BLOCKED, never as PASS; this index never calls allow-version.",
     "The purge sample is J1/J2 partial because its postinstall was deliberately not run.",
-    "J3/J5/J7/J8 remain not-run: this evidence does not claim full FLOW coverage."
+    "J3/J5/J7/J8 remain not-run: this evidence does not claim full FLOW coverage.",
+    "Second-wave npm samples are real packages, not fixtures; their J4 failure is recorded, not hidden."
   ]
 }

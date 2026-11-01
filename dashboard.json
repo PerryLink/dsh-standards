@@ -1,36 +1,36 @@
 {
   "schema": "dsh-dashboard/1",
-  "generatedAt": "2026-11-01T05:13:52.727Z",
+  "generatedAt": "2026-11-01T05:40:38.979Z",
   "entry": {
     "resultFiles": 20,
     "claim": "18/18 recognized static; 10 G3 verified, 8 partial (see results/entry/18/README.md)"
   },
   "flow": {
-    "packages": 5,
+    "packages": 10,
     "summary": {
-      "packages": 5,
+      "packages": 10,
       "checks": {
-        "pass": 40,
+        "pass": 74,
         "warn": 0,
-        "fail": 0,
-        "blocked": 1,
+        "fail": 8,
+        "blocked": 2,
         "partial": 0,
-        "notRun": 35
+        "notRun": 66
       },
       "verdicts": {
-        "pass": 11,
-        "fail": 0,
+        "pass": 19,
+        "fail": 6,
         "blocked": 1,
         "partial": 2,
-        "notRun": 6
+        "notRun": 12
       },
       "classifications": {
-        "clean": 3,
-        "host-gate": 1,
-        "harness-partial": 1
+        "clean": 8,
+        "harness-partial": 1,
+        "host-gate": 1
       }
     },
-    "claim": "J1/J2/J4/J6 runtime on fixture; J3/J5/J7/J8 not-run"
+    "claim": "J1/J2/J4/J6 runtime on a fixture and 10 real packages; J3/J5/J7/J8 not-run"
   },
   "boost": {
     "measured": [

@@ -1,0 +1,272 @@
+{
+  "schema": "dsh-flow-real/1",
+  "generatedAt": "2026-11-01T05:37:57.006Z",
+  "id": "qiushi",
+  "package": "qiushi-dsh-evidence-audit",
+  "version": "0.1.0",
+  "entry18Version": "0.1.0",
+  "source": "npm",
+  "spec": "qiushi-dsh-evidence-audit@0.1.0",
+  "why": "second wave: evidence-oriented plugin",
+  "packageDir": "/tmp/flow-sample/qiushi",
+  "download": {
+    "kind": "npm-pack",
+    "command": "npm pack qiushi-dsh-evidence-audit@0.1.0 --pack-destination /tmp/flow-sample/_cache",
+    "tarball": "/tmp/flow-sample/_cache/qiushi-dsh-evidence-audit-0.1.0.tgz",
+    "registry": "https://registry.npmmirror.com",
+    "actualVersion": "0.1.0"
+  },
+  "manifest": {
+    "name": "qiushi-dsh-evidence-audit",
+    "version": "0.1.0",
+    "engines": {
+      "node": "^22.19.0 || >=24.0.0"
+    },
+    "peerDependencies": {
+      "@deepseek-ai/cordis": "4.0.1"
+    },
+    "dependencies": {
+      "@deepseek-ai/schemastery": "3.18.1"
+    },
+    "scripts": {
+      "postinstall": null
+    },
+    "dsh": {
+      "bundle": {
+        "patch": "./cordis.patch.yml"
+      }
+    }
+  },
+  "dependencyInstall": {
+    "needed": true,
+    "command": "npm install --omit=dev --ignore-scripts --legacy-peer-deps --no-package-lock",
+    "exit": 0,
+    "ignoredScripts": true,
+    "note": "third-party lifecycle scripts were not run (--ignore-scripts)",
+    "stdout": "\nadded 3 packages in 2s\n",
+    "stderr": "",
+    "error": null
+  },
+  "previous": null,
+  "gate": null,
+  "journey": {
+    "command": "/home/yy/opt/node-v24.22.1-linux-x64/bin/node /mnt/c/Users/zzhdz/WorkBuddy/2026-10-30-16-02-58/dsh-standard/40-checker/scripts/journey-runtime.mjs --package /tmp/flow-sample/qiushi --dsh dsh --json",
+    "exit": 1,
+    "parseError": null,
+    "stderr": "",
+    "result": {
+      "schema": "dsh-flow-runtime/1",
+      "package": "qiushi-dsh-evidence-audit",
+      "version": "0.1.0",
+      "previous": null,
+      "mode": "j1-j2-j4-j6-runtime",
+      "checks": [
+        {
+          "id": "J1.profile",
+          "result": "PASS",
+          "reason": "create profile exit=0",
+          "stderr": ""
+        },
+        {
+          "id": "J1.install",
+          "result": "PASS",
+          "reason": "add exit=0",
+          "stderr": "[WARN] The package qiushi-dsh-evidence-audit, which you have just pnpm linked, has the following peerDependencies specified in its package.json:\n\n  - @deepseek-ai/cordis@4.0.1\n\nThe linked in dependency will not resolve the peer dependencies from the target node_modules.\nThis might cause issues in your project. To resolve this, you may use the \"file:\" protocol to reference the local dependency.\nAlready up to date\n\ndependencies:\n+ qiushi-dsh-evidence-audit <- ../../../flow-sample/qiushi\n\nDone in 28ms using pnpm v12.15.0\n"
+        },
+        {
+          "id": "J1.dump",
+          "result": "PASS",
+          "reason": "dump exit=0",
+          "stderr": ""
+        },
+        {
+          "id": "J1.layer",
+          "result": "PASS",
+          "reason": "layer/entry appears in dump"
+        },
+        {
+          "id": "J2.disable",
+          "result": "PASS",
+          "reason": "row qiushi-evidence-audit disabled",
+          "stderr": ""
+        },
+        {
+          "id": "J2.enable",
+          "result": "PASS",
+          "reason": "row qiushi-evidence-audit enabled again",
+          "stderr": ""
+        },
+        {
+          "id": "J1.remove",
+          "result": "PASS",
+          "reason": "remove exit=0",
+          "stderr": "Already up to date\n\ndependencies:\n- qiushi-dsh-evidence-audit link:/tmp/flow-sample/qiushi\n\nDone in 20ms using pnpm v12.15.0\n"
+        },
+        {
+          "id": "J1.clean",
+          "result": "PASS",
+          "reason": "layer/dependency gone after remove"
+        },
+        {
+          "id": "J4.tree-load",
+          "result": "FAIL",
+          "reason": "boot exit=0; no credential-boundary message",
+          "stderr": ""
+        },
+        {
+          "id": "J6.upgrade",
+          "result": "not-run",
+          "reason": "no --previous package supplied"
+        },
+        {
+          "id": "J6.rollback",
+          "result": "not-run",
+          "reason": "no --previous package supplied"
+        },
+        {
+          "id": "J3.config",
+          "result": "not-run",
+          "reason": "invalid-config harness not implemented; do not claim J3"
+        },
+        {
+          "id": "J5.permissions",
+          "result": "not-run",
+          "reason": "permissions/disclosure review is manual"
+        },
+        {
+          "id": "J7.observe",
+          "result": "not-run",
+          "reason": "observability probe not implemented"
+        },
+        {
+          "id": "J8.client",
+          "result": "not-run",
+          "reason": "client-shape probe not implemented"
+        }
+      ],
+      "summary": {
+        "pass": 8,
+        "warn": 0,
+        "fail": 1,
+        "blocked": 0,
+        "notRun": 6
+      },
+      "conclusion": "flow-fail"
+    }
+  },
+  "layerProbe": null,
+  "checks": [
+    {
+      "id": "J1.profile",
+      "result": "PASS",
+      "reason": "create profile exit=0",
+      "stderr": ""
+    },
+    {
+      "id": "J1.install",
+      "result": "PASS",
+      "reason": "add exit=0",
+      "stderr": "[WARN] The package qiushi-dsh-evidence-audit, which you have just pnpm linked, has the following peerDependencies specified in its package.json:\n\n  - @deepseek-ai/cordis@4.0.1\n\nThe linked in dependency will not resolve the peer dependencies from the target node_modules.\nThis might cause issues in your project. To resolve this, you may use the \"file:\" protocol to reference the local dependency.\nAlready up to date\n\ndependencies:\n+ qiushi-dsh-evidence-audit <- ../../../flow-sample/qiushi\n\nDone in 28ms using pnpm v12.15.0\n"
+    },
+    {
+      "id": "J1.dump",
+      "result": "PASS",
+      "reason": "dump exit=0",
+      "stderr": ""
+    },
+    {
+      "id": "J1.layer",
+      "result": "PASS",
+      "reason": "layer/entry appears in dump"
+    },
+    {
+      "id": "J2.disable",
+      "result": "PASS",
+      "reason": "row qiushi-evidence-audit disabled",
+      "stderr": ""
+    },
+    {
+      "id": "J2.enable",
+      "result": "PASS",
+      "reason": "row qiushi-evidence-audit enabled again",
+      "stderr": ""
+    },
+    {
+      "id": "J1.remove",
+      "result": "PASS",
+      "reason": "remove exit=0",
+      "stderr": "Already up to date\n\ndependencies:\n- qiushi-dsh-evidence-audit link:/tmp/flow-sample/qiushi\n\nDone in 20ms using pnpm v12.15.0\n"
+    },
+    {
+      "id": "J1.clean",
+      "result": "PASS",
+      "reason": "layer/dependency gone after remove"
+    },
+    {
+      "id": "J4.tree-load",
+      "result": "FAIL",
+      "reason": "boot exit=0; no credential-boundary message",
+      "stderr": ""
+    },
+    {
+      "id": "J6.upgrade",
+      "result": "not-run",
+      "reason": "no --previous package supplied"
+    },
+    {
+      "id": "J6.rollback",
+      "result": "not-run",
+      "reason": "no --previous package supplied"
+    },
+    {
+      "id": "J3.config",
+      "result": "not-run",
+      "reason": "invalid-config harness not implemented; do not claim J3"
+    },
+    {
+      "id": "J5.permissions",
+      "result": "not-run",
+      "reason": "permissions/disclosure review is manual"
+    },
+    {
+      "id": "J7.observe",
+      "result": "not-run",
+      "reason": "observability probe not implemented"
+    },
+    {
+      "id": "J8.client",
+      "result": "not-run",
+      "reason": "client-shape probe not implemented"
+    }
+  ],
+  "verdicts": {
+    "J1": "pass",
+    "J2": "pass",
+    "J4": "fail",
+    "J6": "not-run"
+  },
+  "classification": "clean",
+  "caveats": [],
+  "limitations": [
+    "J3/J5/J7/J8 are not covered by journey-runtime.",
+    "This is a local-directory install (`dsh plugin add <dir>`), not a registry tarball install."
+  ],
+  "summary": {
+    "checks": {
+      "pass": 8,
+      "warn": 0,
+      "fail": 1,
+      "blocked": 0,
+      "partial": 0,
+      "notRun": 6
+    },
+    "verdicts": {
+      "pass": 2,
+      "fail": 1,
+      "blocked": 0,
+      "partial": 0,
+      "notRun": 1
+    }
+  },
+  "conclusion": "flow-fail"
+}

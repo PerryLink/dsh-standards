@@ -45,7 +45,7 @@ export function buildDashboard(root = ROOT) {
     flow: {
       packages: flowIndex?.samples?.length ?? flowIndex?.results?.length ?? 0,
       summary: flowIndex?.totals ?? flowIndex?.summary ?? null,
-      claim: 'J1/J2/J4/J6 runtime on fixture; J3/J5/J7/J8 not-run',
+      claim: 'J1/J2/J4/J6 runtime on a fixture and 10 real packages; J3/J5/J7/J8 not-run',
     },
     boost: {
       measured: boost?.summary?.measured ?? null,
