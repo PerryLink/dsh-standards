@@ -3,7 +3,7 @@
   "generatedAt": "2026-10-31T16:07:22.027Z",
   "capture": {
     "file": "40-checker/results/lev6/capture.jsonl",
-    "resolvedPath": "/mnt/c/Users/zzhdz/WorkBuddy/2026-10-30-16-02-58/dsh-standard/40-checker/results/lev6/capture.jsonl",
+    "resolvedPath": "<standards>/40-checker/results/lev6/capture.jsonl",
     "sha256": "0b5a2e644548d63b67e37aae0f47aa2a1e7586c03b159c48ef653ba4aa74f19b",
     "messagesRequests": 4,
     "otherRequests": 0,

@@ -45,7 +45,7 @@ const WORKSPACE = path.resolve(HERE, '..', '..')
 const FIXTURE_DIR = path.join(HERE, 'lev3-fixture')
 const DEFAULT_OUT = path.join(WORKSPACE, '40-checker', 'results', 'lev3', 'lev3.json')
 const DEFAULT_INSTALLED = '/mnt/c/Users/zzhdz/AppData/Roaming/npm/node_modules/@deepseek-ai/dsh'
-const DEFAULT_CHECKOUT = '/home/yy/deepseek-harness'
+const DEFAULT_CHECKOUT = '<dsh-checkout>'
 const VOLATILE_FIELD = 'greeting'
 const CONTROL_FIELD = 'mode'
 

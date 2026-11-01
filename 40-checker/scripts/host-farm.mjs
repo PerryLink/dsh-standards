@@ -14,7 +14,7 @@
  *   node scripts/host-farm.mjs \
  *     --plugin /tmp/dsh-verify-samples/foo \
  *     --farm /tmp/dsh-farm \
- *     --host /home/yy/deepseek-harness \
+ *     --host <dsh-checkout> \
  *     --install --build
  */
 import fs from 'node:fs'
@@ -22,7 +22,7 @@ import path from 'node:path'
 import { spawnSync } from 'node:child_process'
 
 function parse(argv) {
-  const options = { plugin: null, farm: null, host: '/home/yy/deepseek-harness', install: false, build: false, link: false, quiet: false }
+  const options = { plugin: null, farm: null, host: '<dsh-checkout>', install: false, build: false, link: false, quiet: false }
   for (let i = 0; i < argv.length; i += 1) {
     const arg = argv[i]
     if (arg === '--plugin') options.plugin = argv[++i]

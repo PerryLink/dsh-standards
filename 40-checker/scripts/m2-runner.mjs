@@ -10,7 +10,7 @@
  * Usage:
  *   node scripts/m2-runner.mjs \
  *     --package /tmp/dsh-host/plugins/ci-diet \
- *     --runtime /home/yy/deepseek-harness/vendor/cordis/lib/index.js \
+ *     --runtime <dsh-checkout>/vendor/cordis/lib/index.js \
  *     --runtime-version 0.2.2-alpha.2 \
  *     --out results/m2/ci-diet.json
  */

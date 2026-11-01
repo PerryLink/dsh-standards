@@ -12,7 +12,7 @@
     "kindEvaluated": "unknown",
     "name": "@dsh-fixtures/neg-bad-entry",
     "version": "1.0.0",
-    "path": "/mnt/c/Users/zzhdz/WorkBuddy/2026-10-30-16-02-58/dsh-standard/40-checker/fixtures/negative/bad-entry"
+    "path": "<standards>/40-checker/fixtures/negative/bad-entry"
   },
   "anchor": {
     "repo": "deepseek-ai/deepseek-harness",

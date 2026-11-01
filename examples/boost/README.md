@@ -4,8 +4,8 @@
 
 ## LEV-7 有界并行
 
-- [lev7-bounded-batch.mjs](</mnt/c/Users/zzhdz/WorkBuddy/2026-10-30-16-02-58/dsh-standard/examples/boost/lev7-bounded-batch.mjs>)
-- [lev7-bounded-batch.test.mjs](</mnt/c/Users/zzhdz/WorkBuddy/2026-10-30-16-02-58/dsh-standard/examples/boost/lev7-bounded-batch.test.mjs>)
+- [lev7-bounded-batch.mjs](<<standards>/examples/boost/lev7-bounded-batch.mjs>)
+- [lev7-bounded-batch.test.mjs](<<standards>/examples/boost/lev7-bounded-batch.test.mjs>)
 - 证据：`node --test` 1/1 pass；`peak=2`、结果顺序稳定。
 
 ## LEV-3 volatile 配置（片段）

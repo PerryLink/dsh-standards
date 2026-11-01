@@ -116,7 +116,7 @@ This is not inferred from the fixture; it is the Loader's own gate:
    [`include/src/index.ts:279`](/mnt/c/Users/zzhdz/AppData/Roaming/npm/node_modules/@deepseek-ai/dsh/node_modules/@deepseek-ai/cordis-plugin-include/src/index.ts).
 2. `Entry.update()` computes `changes === ['config']`, then gates on:
    `fiber.state === ACTIVE && ctx prototype unchanged && equalExceptVolatile(...)` —
-   [`loader/src/config/entry.ts:146`](/mnt/c/Users/zzhdz/AppData/Roaming/npm/node_modules/@deepseek-ai/dsh/node_modules/@deepseek-ai/cordis-plugin-loader/src/config/entry.ts) (checkout: [`entry.ts:149`](/home/yy/deepseek-harness/vendor/loader/src/config/entry.ts)).
+   [`loader/src/config/entry.ts:146`](/mnt/c/Users/zzhdz/AppData/Roaming/npm/node_modules/@deepseek-ai/dsh/node_modules/@deepseek-ai/cordis-plugin-loader/src/config/entry.ts) (checkout: [`entry.ts:149`](<dsh-checkout>/vendor/loader/src/config/entry.ts)).
 3. `equalExceptVolatile` returns true when the differing path's schema has
    `meta.volatile` —
    [`diff.ts:18`](/mnt/c/Users/zzhdz/AppData/Roaming/npm/node_modules/@deepseek-ai/dsh/node_modules/@deepseek-ai/cordis-plugin-loader/src/config/diff.ts).
@@ -133,7 +133,7 @@ This is not inferred from the fixture; it is the Loader's own gate:
 The event contract is declared at
 [`loader/src/index.ts:34`](/mnt/c/Users/zzhdz/AppData/Roaming/npm/node_modules/@deepseek-ai/dsh/node_modules/@deepseek-ai/cordis-plugin-loader/src/index.ts);
 the HMR call site is
-[`packages/boot/hmr/src/index.ts:472`](/home/yy/deepseek-harness/packages/boot/hmr/src/index.ts).
+[`packages/boot/hmr/src/index.ts:472`](<dsh-checkout>/packages/boot/hmr/src/index.ts).
 
 ### 2.6 Commands
 
@@ -301,7 +301,7 @@ app-boot's policy/audit work and is not comparable to the direct checkout boot.
 ## 8. Reproduce / verify
 
 ```bash
-cd /mnt/c/Users/zzhdz/WorkBuddy/2026-10-30-16-02-58/dsh-standard
+cd <standards>
 node examples/boost/lev3-loader-bench.mjs
 node --test examples/boost/lev3-result.test.mjs
 ```

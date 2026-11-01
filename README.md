@@ -96,10 +96,10 @@ node lev7-bench.mjs 64 20
 
 ## 许可
 
-- 文本/规范/代码/脚本/schema：**Apache-2.0**（含专利授权与防御终止）；
-- 标志/badge：单独规则，见 `governance/mark-policy.md`，不随 Apache-2.0 授权；
-- 贡献：DCO 1.1 + DCT v1，不要求版权转让；
-- 这是一次**临时统一**：正式对外前仍建议由律师复核文本许可是否应改回 CC BY 4.0。
+- 文本/规范/文档/翻译：**CC BY-SA 4.0**（`LICENSE-CC-BY-SA`）；
+- 代码/脚本/schema：**Apache-2.0**（`LICENSE-APACHE`，含专利授权与防御终止）；
+- 标志/badge：单独规则，见 `governance/mark-policy.md`，不随上述许可授权；
+- 贡献：DCO 1.1 + DCT v1，不要求版权转让。
 
 ## 目录
 
@@ -115,4 +115,4 @@ publish/          labels 示例 + 评价记录 JSON
 
 ## 先行项目
 
-`dsh-plugin-standard`（lanbaolu）是同生态的先行项目；本项目与其无隶属关系，引用/对比时将标注来源。许可见 `LICENSE`（文本 CC BY 4.0 / 代码 Apache-2.0）。
+`dsh-plugin-standard`（lanbaolu）是同生态的先行项目；本项目与其无隶属关系，引用/对比时将标注来源。许可见 `LICENSE`（文本 CC BY-SA 4.0 / 代码 Apache-2.0）。

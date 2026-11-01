@@ -253,7 +253,7 @@ Run the whole sample set (downloads, dependency installs, journey probes, the
 gate preflight and the purge layer probe):
 
 ```bash
-cd /mnt/c/Users/zzhdz/WorkBuddy/2026-10-30-16-02-58/dsh-standard
+cd <standards>
 node 40-checker/scripts/flow-sample-ci.mjs
 ```
 

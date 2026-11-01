@@ -229,7 +229,7 @@ node scripts/m2-runner.mjs \
 - `--backend landlock`：Landlock ABI 3，拒绝 HOME/TMP/cwd 之外的写；`unshare-landlock` 再叠 network/PID。
 - `--image ref@sha256:<64hex>` 只做格式校验并记录 `sandbox.image`（`verified:false`）；本机没有 Docker 后端。
 - **仍不是完整安全沙箱**：读权限仍打开，无 seccomp/cgroup/只读 root；OCI 容器是下一阶段。
-- 实测：`dsh-ci-diet`/`dsh-project-memory` → `verified-warn`；`dsh-status-rotator`/`dsh-ui-auth` → `failed`（仅 C-2）；`fixtures/hang` → `inconclusive`（3s kill）；`fixtures/fs-write` 写 `/home/yy/...` → EACCES，文件未生成。
+- 实测：`dsh-ci-diet`/`dsh-project-memory` → `verified-warn`；`dsh-status-rotator`/`dsh-ui-auth` → `failed`（仅 C-2）；`fixtures/hang` → `inconclusive`（3s kill）；`fixtures/fs-write` 写 `<home>/...` → EACCES，文件未生成。
 
 ## 10. CI
 

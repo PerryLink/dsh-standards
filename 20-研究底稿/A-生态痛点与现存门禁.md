@@ -1,8 +1,8 @@
 # A 路：DSH 插件生态痛点取证 + 现存质量门禁盘点
 
 > 任务：为「DSH 插件三级标准（GB 强制性 / GB/T 推荐性 / GB/Z 指导性技术文件）」提供第一路输入。
-> 数据源：① 上一轮生态调研报告 `C:/Users/zzhdz/WorkBuddy/2026-10-30-15-27-13/DSH插件生态调研报告.md`；
-> ② 本地克隆的完整官方仓库 `C:/Users/zzhdz/WorkBuddy/2026-10-30-16-02-58/deepseek-harness`（只读，未做任何修改）。
+> 数据源：① 上一轮生态调研报告 `<user-home>/WorkBuddy/2026-10-30-15-27-13/DSH插件生态调研报告.md`；
+> ② 本地克隆的完整官方仓库 `<workspace>/deepseek-harness`（只读，未做任何修改）。
 > 本文件的所有仓库路径均相对于 `deepseek-harness/` 根；行号取自本次检出的快照。
 
 ---

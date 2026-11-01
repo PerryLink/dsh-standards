@@ -48,7 +48,7 @@ const WORKSPACE = path.resolve(HERE, '..', '..')
 const FIXTURE_DIR = path.join(HERE, 'lev12458-fixture')
 const DEFAULT_OUT = path.join(WORKSPACE, '40-checker', 'results', 'boost', 'lev12458.json')
 const DEFAULT_DSH = '/tmp/dsh022/node_modules/@deepseek-ai/dsh'
-const DEFAULT_CHECKOUT = '/home/yy/deepseek-harness'
+const DEFAULT_CHECKOUT = '<dsh-checkout>'
 const PRACTICES = ['LEV-1', 'LEV-2', 'LEV-4', 'LEV-5', 'LEV-8']
 
 const LIMITATIONS = [

@@ -3,7 +3,7 @@
   "generatedAt": "2026-10-31T16:08:55.653Z",
   "capture": {
     "file": "replication R1 — standalone local run (raw capture not committed)",
-    "resolvedPath": "/mnt/c/Users/zzhdz/WorkBuddy/2026-10-30-16-02-58/dsh-standard/_lev6-local/local-capture.jsonl",
+    "resolvedPath": "<standards>/_lev6-local/local-capture.jsonl",
     "sha256": "9fae249c21a8ad52b9372cd5f8116b2b4354f6b5086ffd86b19148b688f787b1",
     "messagesRequests": 4,
     "otherRequests": 0,

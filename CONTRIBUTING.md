@@ -62,7 +62,7 @@ command output is a bug.
 
 ## License
 
-- Text/spec/docs/code/scripts/schemas: **Apache-2.0** (temporary unified
-  license; a lawyer should confirm whether prose should return to CC BY 4.0).
+- Text/spec/docs/translations: **CC BY-SA 4.0** (`LICENSE-CC-BY-SA`).
+- Code/scripts/schemas: **Apache-2.0** (`LICENSE-APACHE`).
 - Marks/badges: separate, see `governance/mark-policy.md`.
 - Contributions: DCO 1.1 + DCT v1 (`dsh-ct/1`), no copyright assignment.

@@ -1,6 +1,6 @@
 # C 路｜DSH 插件安全基线与权限面研究
 
-> 研究日期：2026-10-30 ｜ 对象：`C:/Users/zzhdz/WorkBuddy/2026-10-30-16-02-58/deepseek-harness`（`@deepseek-ai/dsh-root` v0.2.2-alpha.2，origin `deepseek-ai/deepseek-harness`）
+> 研究日期：2026-10-30 ｜ 对象：`<workspace>/deepseek-harness`（`@deepseek-ai/dsh-root` v0.2.2-alpha.2，origin `deepseek-ai/deepseek-harness`）
 > 只读研究，未修改仓库任何文件。所有路径均已逐个 `stat` 校验存在。
 > 配套输入：`2026-10-30-15-27-13/DSH插件生态调研报告.md`（破限/红队类、免费 Key provider、远程访问类插件、"市场收录不等于安全背书"）
 

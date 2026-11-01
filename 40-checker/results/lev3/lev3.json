@@ -2511,7 +2511,7 @@
         "node": "v24.22.1",
         "platform": "linux x64",
         "mode": "direct-loader",
-        "checkout": "/home/yy/deepseek-harness",
+        "checkout": "<dsh-checkout>",
         "sandbox": "/tmp/lev3-checkout-nEMdxt",
         "sandboxNote": "temporary node_modules copy, removed after the run",
         "versions": {
@@ -2534,7 +2534,7 @@
         },
         "source": {
           "entry": {
-            "file": "/home/yy/deepseek-harness/vendor/loader/src/config/entry.ts",
+            "file": "<dsh-checkout>/vendor/loader/src/config/entry.ts",
             "sha256": "ee57422010f5aa82a25365b2f54dd346a51a0c924c92a5dabbd19b36899b2ef0",
             "hasVolatileOnlyGate": true,
             "hasCommitVolatile": true,
@@ -2542,13 +2542,13 @@
             "checksEqualExceptVolatile": true
           },
           "diff": {
-            "file": "/home/yy/deepseek-harness/vendor/loader/src/config/diff.ts",
+            "file": "<dsh-checkout>/vendor/loader/src/config/diff.ts",
             "sha256": "6025a6b9798a0a16af017bb7d8d6394bbe345685b2ace56b15975add5843edb3",
             "hasVolatileMeta": true,
             "hasEqualExceptVolatile": true
           },
           "index": {
-            "file": "/home/yy/deepseek-harness/vendor/loader/src/index.ts",
+            "file": "<dsh-checkout>/vendor/loader/src/index.ts",
             "sha256": "d43047083e6489a841e620fe78b45802329dbecdcdbca1b7af7de92a7a055b80",
             "declaresVolatileUpdateEvent": true
           }
@@ -4784,7 +4784,7 @@
     }
   },
   "provenance": {
-    "workspace": "/mnt/c/Users/zzhdz/WorkBuddy/2026-10-30-16-02-58/dsh-standard",
+    "workspace": "<standards>",
     "fixture": {
       "directory": "examples/boost/lev3-fixture",
       "files": [

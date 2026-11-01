@@ -56,7 +56,7 @@ Type '_zod.version.minor' ... Type '4' is not assignable to type '6'
 
 即：
 
-- host farm 解析到 `/home/yy/deepseek-harness/node_modules/.pnpm/zod@4.4.3`；
+- host farm 解析到 `<dsh-checkout>/node_modules/.pnpm/zod@4.4.3`；
 - 插件自己的 `node_modules` 解析到 `zod 4.6.7`；
 - TypeScript 同时看到两个 zod 的 `$ZodType`，类型不兼容；
 - `tsc` 退出非零，`build-source-artifacts.mjs` 在 copy 前退出，于是 `lib/session-affinity.js` 没生成。

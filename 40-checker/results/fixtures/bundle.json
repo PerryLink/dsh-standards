@@ -12,7 +12,7 @@
     "kindEvaluated": "plugin",
     "name": "@dsh-fixtures/bundle-with-server",
     "version": "1.0.0",
-    "path": "/mnt/c/Users/zzhdz/WorkBuddy/2026-10-30-16-02-58/dsh-standard/40-checker/fixtures/bundle"
+    "path": "<standards>/40-checker/fixtures/bundle"
   },
   "anchor": {
     "repo": "deepseek-ai/deepseek-harness",
@@ -20,7 +20,7 @@
     "scanner": "dsh-plugin-verify@0.1.0",
     "dsh": "0.2.2-alpha.2",
     "cordis": "4.0.5",
-    "runtime": "/home/yy/deepseek-harness/vendor/cordis/lib/index.js"
+    "runtime": "<dsh-checkout>/vendor/cordis/lib/index.js"
   },
   "checks": [
     {

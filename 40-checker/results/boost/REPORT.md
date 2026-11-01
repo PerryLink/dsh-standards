@@ -37,7 +37,7 @@ The harness imports the **installed** Cordis packages as files (no DSH CLI, no p
 | Loader | `1.0.7-alpha.1` — `lib/index.js` sha256 `bf2cf32746fa3a249ca95518993795a7f49595fe26772ceefc5fc9b645e92a0e` |
 | Include | `1.0.11-alpha.1` — installed and hashed, **not used** |
 | app-boot | installed `dsh-app-boot` — used only by LEV-8 for `bundlePatchFiles` / `bundlePatchPaths` / `loadOverlayPatches` / `composeEntries` |
-| DSH checkout | `/home/yy/deepseek-harness` at `ce7073d51254c26cd63b22a60835b8f948deb447`, package version `0.2.2-alpha.2`, **dirty: 3 entries** (recorded in JSON) |
+| DSH checkout | `<dsh-checkout>` at `ce7073d51254c26cd63b22a60835b8f948deb447`, package version `0.2.2-alpha.2`, **dirty: 3 entries** (recorded in JSON) |
 
 The npm packages carry no `gitHead`. The checkout commit is provenance for the matching source tree,
 **not** a byte-identity claim about the installed tree. Installed file hashes and the checkout commit

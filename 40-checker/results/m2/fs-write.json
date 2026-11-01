@@ -21,7 +21,7 @@
     "scanner": "dsh-plugin-verify@0.1.0",
     "dsh": "0.2.2-alpha.2",
     "cordis": "4.0.5",
-    "runtime": "/home/yy/deepseek-harness/vendor/cordis/lib/index.js"
+    "runtime": "<dsh-checkout>/vendor/cordis/lib/index.js"
   },
   "coverage": {
     "mandatory": 11,
@@ -163,7 +163,7 @@
       "layer": "L1",
       "result": "FAIL",
       "coverage": "full",
-      "reason": "load failed: EACCES: permission denied, open '/home/yy/dsh-m2-landlock-escape-test'",
+      "reason": "load failed: EACCES: permission denied, open '/tmp/dsh-m2-landlock-escape-test'",
       "evidence": [
         "index.mjs"
       ],

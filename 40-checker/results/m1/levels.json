@@ -16381,7 +16381,7 @@
         },
         "checkedAt": "2026-10-31",
         "expiresAt": "2027-01-29",
-        "evidenceUrl": "file:///mnt/c/Users/zzhdz/WorkBuddy/2026-10-30-16-02-58/dsh-standard/40-checker/results/m1/yolk_vat-y-dsh-project-memory-0.6.7.json"
+        "evidenceUrl": "file://<standards>/40-checker/results/m1/yolk_vat-y-dsh-project-memory-0.6.7.json"
       }
     },
     "@yongfanbeta/dsh-pomodoro@0.2.0": {
@@ -17667,7 +17667,7 @@
         },
         "checkedAt": "2026-10-31",
         "expiresAt": "2027-01-29",
-        "evidenceUrl": "file:///mnt/c/Users/zzhdz/WorkBuddy/2026-10-30-16-02-58/dsh-standard/40-checker/results/m1/zzerx-dsh-plugin-daily-log-0.4.3.json"
+        "evidenceUrl": "file://<standards>/40-checker/results/m1/zzerx-dsh-plugin-daily-log-0.4.3.json"
       }
     },
     "@zzerx/dsh-plugin-memory@0.4.3": {
@@ -25127,7 +25127,7 @@
         },
         "checkedAt": "2026-10-31",
         "expiresAt": "2027-01-29",
-        "evidenceUrl": "file:///mnt/c/Users/zzhdz/WorkBuddy/2026-10-30-16-02-58/dsh-standard/40-checker/results/m1/dsh-ci-diet-0.5.2.json"
+        "evidenceUrl": "file://<standards>/40-checker/results/m1/dsh-ci-diet-0.5.2.json"
       }
     },
     "dsh-cite@0.7.5": {
@@ -59893,7 +59893,7 @@
         },
         "checkedAt": "2026-10-31",
         "expiresAt": "2027-01-29",
-        "evidenceUrl": "file:///mnt/c/Users/zzhdz/WorkBuddy/2026-10-30-16-02-58/dsh-standard/40-checker/results/m1/dsh-status-rotator-0.38.0.json"
+        "evidenceUrl": "file://<standards>/40-checker/results/m1/dsh-status-rotator-0.38.0.json"
       }
     },
     "dsh-statusbar-config@0.2.2": {
@@ -61449,7 +61449,7 @@
         },
         "checkedAt": "2026-10-31",
         "expiresAt": "2027-01-29",
-        "evidenceUrl": "file:///mnt/c/Users/zzhdz/WorkBuddy/2026-10-30-16-02-58/dsh-standard/40-checker/results/m1/dsh-telemetry-redactor-0.1.0.json"
+        "evidenceUrl": "file://<standards>/40-checker/results/m1/dsh-telemetry-redactor-0.1.0.json"
       }
     },
     "dsh-temp-note@0.1.0": {
@@ -64589,7 +64589,7 @@
         },
         "checkedAt": "2026-10-31",
         "expiresAt": "2027-01-29",
-        "evidenceUrl": "file:///mnt/c/Users/zzhdz/WorkBuddy/2026-10-30-16-02-58/dsh-standard/40-checker/results/m1/dsh-ui-auth-0.7.1.json"
+        "evidenceUrl": "file://<standards>/40-checker/results/m1/dsh-ui-auth-0.7.1.json"
       }
     },
     "dsh-ui-design-toggle@0.2.1": {
@@ -65731,7 +65731,7 @@
         },
         "checkedAt": "2026-10-31",
         "expiresAt": "2027-01-29",
-        "evidenceUrl": "file:///mnt/c/Users/zzhdz/WorkBuddy/2026-10-30-16-02-58/dsh-standard/40-checker/results/m1/dsh-verification-receipt-0.1.0.json"
+        "evidenceUrl": "file://<standards>/40-checker/results/m1/dsh-verification-receipt-0.1.0.json"
       }
     },
     "dsh-verify@0.9.6": {
@@ -71355,7 +71355,7 @@
         },
         "checkedAt": "2026-10-31",
         "expiresAt": "2027-01-29",
-        "evidenceUrl": "file:///mnt/c/Users/zzhdz/WorkBuddy/2026-10-30-16-02-58/dsh-standard/40-checker/results/m1/qiushi-dsh-evidence-audit-0.1.0.json"
+        "evidenceUrl": "file://<standards>/40-checker/results/m1/qiushi-dsh-evidence-audit-0.1.0.json"
       }
     },
     "qmd-autosearch@0.1.2": {

@@ -10,7 +10,7 @@ only**; the consolidated 18-row matrix result must come from
 - Node `v24.22.1`; DSH `0.2.2-alpha.2` from
   `/tmp/dsh022/node_modules/@deepseek-ai/dsh/lib/bin.js`.
 - Playwright `1.49.1`; Chromium `131.0.6778.33`
-  (`/home/yy/.cache/ms-playwright/chromium-1148/chrome-linux/chrome`).
+  (`<home>/.cache/ms-playwright/chromium-1148/chrome-linux/chrome`).
 - The WSL image lacked `libnss3`/`libnspr4`/`libasound2`; the `.deb` payloads
   were extracted to `/tmp/chromedeps/root` and used through `LD_LIBRARY_PATH`.
   This is a local workaround only. CI uses
@@ -44,13 +44,13 @@ node /tmp/dsh022/node_modules/@deepseek-ai/dsh/lib/bin.js \
   --profile wr5 --no-open --port 18770 > /tmp/ui-cwd2/web.log 2>&1 &
 # wait for the log line "dsh web: http://127.0.0.1:18770/?token=..."
 U=$(sed -n 's/^dsh web: \(http[^ ]*\)$/\1/p' /tmp/ui-cwd2/web.log | head -1)
-cd /mnt/c/Users/zzhdz/WorkBuddy/2026-10-30-16-02-58/dsh-standard
+cd <standards>
 LD_LIBRARY_PATH=/tmp/chromedeps/root/usr/lib/x86_64-linux-gnu \
   node 40-checker/scripts/web-probe.mjs \
     --url "$U" --expect dsh-ui-auth \
     --out /tmp/probe-ui3.json --screenshot /tmp/probe-ui3.png \
     --login-file /tmp/ui-cwd2/dsh-ui-auth-bootstrap.txt \
-    --executable /home/yy/.cache/ms-playwright/chromium-1148/chrome-linux/chrome
+    --executable <home>/.cache/ms-playwright/chromium-1148/chrome-linux/chrome
 ```
 
 `client-exports.json` is a manifest inspection of all 18 identities: 15 declare

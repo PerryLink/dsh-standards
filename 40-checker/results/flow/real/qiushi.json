@@ -50,7 +50,7 @@
   "previous": null,
   "gate": null,
   "journey": {
-    "command": "/home/yy/opt/node-v24.22.1-linux-x64/bin/node /mnt/c/Users/zzhdz/WorkBuddy/2026-10-30-16-02-58/dsh-standard/40-checker/scripts/journey-runtime.mjs --package /tmp/flow-sample/qiushi --dsh /tmp/dsh022/node_modules/@deepseek-ai/dsh/lib/bin.js --json",
+    "command": "<home>/opt/node-v24.22.1-linux-x64/bin/node <standards>/40-checker/scripts/journey-runtime.mjs --package /tmp/flow-sample/qiushi --dsh /tmp/dsh022/node_modules/@deepseek-ai/dsh/lib/bin.js --json",
     "exit": 0,
     "parseError": null,
     "stderr": "",

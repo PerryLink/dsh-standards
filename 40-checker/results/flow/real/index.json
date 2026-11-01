@@ -13,8 +13,8 @@
     "npm": "11.19.1",
     "registry": "https://registry.npmmirror.com",
     "sampleBase": "/tmp/flow-sample",
-    "resultsDir": "/mnt/c/Users/zzhdz/WorkBuddy/2026-10-30-16-02-58/dsh-standard/40-checker/results/flow/real",
-    "command": "/home/yy/opt/node-v24.22.1-linux-x64/bin/node /mnt/c/Users/zzhdz/WorkBuddy/2026-10-30-16-02-58/dsh-standard/40-checker/scripts/flow-sample-ci.mjs --only 'daily-log,project-memory,qiushi,status-rotator,verification' --dsh /tmp/dsh022/node_modules/@deepseek-ai/dsh/lib/bin.js --timeout 180000",
+    "resultsDir": "<standards>/40-checker/results/flow/real",
+    "command": "<home>/opt/node-v24.22.1-linux-x64/bin/node <standards>/40-checker/scripts/flow-sample-ci.mjs --only 'daily-log,project-memory,qiushi,status-rotator,verification' --dsh /tmp/dsh022/node_modules/@deepseek-ai/dsh/lib/bin.js --timeout 180000",
     "note": "All 10 samples were run on dsh 0.2.2-alpha.2; the second wave used the same anchor as the first."
   },
   "samples": [
@@ -43,7 +43,7 @@
       "caveats": [
         "J6 not run: only one version was fetched; the clone HEAD is 7c30dd059e1d9de4ffc8b779978b2152af84b0ec."
       ],
-      "file": "/mnt/c/Users/zzhdz/WorkBuddy/2026-10-30-16-02-58/dsh-standard/40-checker/results/flow/real/DDDMUC__dsh-free-search.json"
+      "file": "<standards>/40-checker/results/flow/real/DDDMUC__dsh-free-search.json"
     },
     {
       "id": "YuJunZhiXue__dsh-purge",
@@ -73,7 +73,7 @@
         "J4 reached the credential boundary, but the main plugin was not mounted; this proves tree-load only.",
         "Actual package version 1.1.86 differs from entry18.json 1.1.85."
       ],
-      "file": "/mnt/c/Users/zzhdz/WorkBuddy/2026-10-30-16-02-58/dsh-standard/40-checker/results/flow/real/YuJunZhiXue__dsh-purge.json"
+      "file": "<standards>/40-checker/results/flow/real/YuJunZhiXue__dsh-purge.json"
     },
     {
       "id": "ci-diet",
@@ -100,7 +100,7 @@
       "caveats": [
         "J6 used the published 0.5.1 tarball as --previous; no persisted data/migration was exercised."
       ],
-      "file": "/mnt/c/Users/zzhdz/WorkBuddy/2026-10-30-16-02-58/dsh-standard/40-checker/results/flow/real/ci-diet.json"
+      "file": "<standards>/40-checker/results/flow/real/ci-diet.json"
     },
     {
       "id": "daily-log",
@@ -125,7 +125,7 @@
         "notRun": 6
       },
       "caveats": [],
-      "file": "/mnt/c/Users/zzhdz/WorkBuddy/2026-10-30-16-02-58/dsh-standard/40-checker/results/flow/real/daily-log.json"
+      "file": "<standards>/40-checker/results/flow/real/daily-log.json"
     },
     {
       "id": "project-memory",
@@ -150,7 +150,7 @@
         "notRun": 6
       },
       "caveats": [],
-      "file": "/mnt/c/Users/zzhdz/WorkBuddy/2026-10-30-16-02-58/dsh-standard/40-checker/results/flow/real/project-memory.json"
+      "file": "<standards>/40-checker/results/flow/real/project-memory.json"
     },
     {
       "id": "qiushi",
@@ -175,7 +175,7 @@
         "notRun": 6
       },
       "caveats": [],
-      "file": "/mnt/c/Users/zzhdz/WorkBuddy/2026-10-30-16-02-58/dsh-standard/40-checker/results/flow/real/qiushi.json"
+      "file": "<standards>/40-checker/results/flow/real/qiushi.json"
     },
     {
       "id": "status-rotator",
@@ -200,7 +200,7 @@
         "notRun": 6
       },
       "caveats": [],
-      "file": "/mnt/c/Users/zzhdz/WorkBuddy/2026-10-30-16-02-58/dsh-standard/40-checker/results/flow/real/status-rotator.json"
+      "file": "<standards>/40-checker/results/flow/real/status-rotator.json"
     },
     {
       "id": "telemetry",
@@ -228,7 +228,7 @@
         "Compatibility gate rejected this exact version; no exemption was granted and no retry was attempted.",
         "J2/J4 were not run because nothing was installed. This is a host gate, not a plugin defect."
       ],
-      "file": "/mnt/c/Users/zzhdz/WorkBuddy/2026-10-30-16-02-58/dsh-standard/40-checker/results/flow/real/telemetry.json"
+      "file": "<standards>/40-checker/results/flow/real/telemetry.json"
     },
     {
       "id": "ui-auth",
@@ -255,7 +255,7 @@
       "caveats": [
         "J4 reached MISSING_CREDENTIAL, but dsh-ui-auth stayed pending on services webServer/connection in headless; client activation (J8) is not proven."
       ],
-      "file": "/mnt/c/Users/zzhdz/WorkBuddy/2026-10-30-16-02-58/dsh-standard/40-checker/results/flow/real/ui-auth.json"
+      "file": "<standards>/40-checker/results/flow/real/ui-auth.json"
     },
     {
       "id": "verification",
@@ -280,7 +280,7 @@
         "notRun": 7
       },
       "caveats": [],
-      "file": "/mnt/c/Users/zzhdz/WorkBuddy/2026-10-30-16-02-58/dsh-standard/40-checker/results/flow/real/verification.json"
+      "file": "<standards>/40-checker/results/flow/real/verification.json"
     }
   ],
   "totals": {

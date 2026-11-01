@@ -20,7 +20,7 @@
       "id": "J1.install",
       "result": "PASS",
       "reason": "add exit=0",
-      "stderr": "Already up to date\n\ndependencies:\n+ @dsh-fixtures/bundle-with-server <- ../../../../mnt/c/Users/zzhdz/WorkBuddy/2026-10-30-16-02-58/dsh-standard/40-checker/fixtures/bundle\n\nDone in 42ms using pnpm v12.15.0\n"
+      "stderr": "Already up to date\n\ndependencies:\n+ @dsh-fixtures/bundle-with-server <- ../../../..<standards>/40-checker/fixtures/bundle\n\nDone in 42ms using pnpm v12.15.0\n"
     },
     {
       "id": "J1.dump",
@@ -37,7 +37,7 @@
       "id": "J1.remove",
       "result": "PASS",
       "reason": "remove exit=0",
-      "stderr": "Already up to date\n\ndependencies:\n- @dsh-fixtures/bundle-with-server link:/mnt/c/Users/zzhdz/WorkBuddy/2026-10-30-16-02-58/dsh-standard/40-checker/fixtures/bundle\n\nDone in 201ms using pnpm v12.15.0\n"
+      "stderr": "Already up to date\n\ndependencies:\n- @dsh-fixtures/bundle-with-server link:<standards>/40-checker/fixtures/bundle\n\nDone in 201ms using pnpm v12.15.0\n"
     },
     {
       "id": "J1.clean",
