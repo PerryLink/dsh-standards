@@ -19,7 +19,7 @@
 | `dsh-plugin-kit` | 共享 peer 范围 + 骨架 | ENTRY | 有 skeleton/peer-range；无层元数据 | **已推送 `a705646`：`template/standards.json`（not-run 占位）+ README 说明** | 骨架写入 `dsh.standards` 模板；peer-range 跟随 0.2.x |
 | `dsh-checkers` | 53 个 checker 的一键 bundle | ENTRY static | 有 53 项检查；无 runtime G0–G3 | 未改（本轮） | 把 ENTRY static 与 `level-audit` 串联；runtime 另跑 |
 | `dsh-score` | 多维度评分 | 质量（正交） | 消费 test-drive；无层字段 | 未改（本轮） | 明确“score 不是 level”；输出层证据链接而不算分 |
-| `dsh-plugin-upgrade` | 版本走廊/迁移 | ENTRY/FLOW | 只有 0.1.3→0.1.6 两条走廊 | **已推送 `52197f4`：新增 `legD` 0.1.6/0.1.7→0.2.x，5 个扫描 seam + advisory；测试 61/61** | 把 advisory 扩成可检测 seam；回滚演练 |
+| `dsh-plugin-upgrade` | 版本走廊/迁移 | ENTRY/FLOW | 只有 0.1.3→0.1.6 两条走廊 | **已推送 `52197f4`：新增 `legD` 0.1.6/0.1.7→0.2.x，5 个扫描 seam + advisory；测试 62 pass / 1 skip** | 把 advisory 扩成可检测 seam；回滚演练 |
 | `dsh-test-drive` | 隔离安装/冒烟 | ENTRY（安装/加载） | 成熟；可提供 E 证据 | 未改（本轮） | 记录 `levels.entry` 证据，供 doctor/certification 消费 |
 | `dsh-policy-ledger` | 安装诊断 | ENTRY（安装） | 有 tarball/安装日志诊断 | 未改（本轮） | 把安装失败映射到 G0/G2/G3 归因 |
 | `dsh-cert-mcp` | 认证 registry MCP | 认证（正交） | 只读 MCP | **已推送 `cdc2966`：镜像 2026-11-01 认证刷新；CI 绿** | 增加 `get_levels` 只读工具（不改变认证结论） |
