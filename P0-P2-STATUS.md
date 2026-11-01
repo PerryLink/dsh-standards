@@ -59,7 +59,7 @@
 | EVD-04 J8 client shapes | PARTIAL | shape preflight + `web-probe.mjs`; no render probe in FLOW |
 | EVD-05 10 packages | DONE | 10 real packages; 4 second-wave J4 pass, 1 (`verification`) recorded FAIL |
 | EVD-07 18/18 clean | NOT DONE | 10 verified / 8 partial; attribution only |
-| EVD-11 round-robin | DONE | `round-robin.yml` ubuntu+windows; artifact `rounds/2026Q4.json` `comparable:true` |
+| EVD-11 round-robin | DONE | `round-robin.yml` ubuntu+windows; artifact `rounds/2026Q4.json` `comparable:true` (latest main run `5bbfbc6`/`8cc8030`) |
 | EVD-15 stale clock | DONE | `stale-check.mjs`; fixed-date test |
 | EVD-16 negative controls | DONE | G4 + existing 5 negatives |
 | EVD-17 cross-platform | DONE | `.github/workflows/cross-platform.yml` (ubuntu+windows) |
@@ -124,3 +124,6 @@ node publish/verify.mjs --id DSH-ATT-2026-001
 5. Portal/catalog changes live in their own repos (agent output, pending commit).
 6. No external official/market/developer adoption yet; the kits are “rejectable
    artifacts”, not adoption evidence.
+7. `dsh-plugin-certification` keeps the historical `certified` brand; the
+   standard repo’s schema/files/IDs are migrated, that separate repo is not.
+8. Catalog sidecar has `peerRange` but no separate `dshVersion` field.
