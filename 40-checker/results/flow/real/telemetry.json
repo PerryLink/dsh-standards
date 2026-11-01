@@ -1,0 +1,178 @@
+{
+  "schema": "dsh-flow-real/1",
+  "generatedAt": "2026-11-01T04:24:17.895Z",
+  "id": "telemetry",
+  "package": "dsh-telemetry-redactor",
+  "version": "0.1.0",
+  "entry18Version": "0.1.0",
+  "source": "npm",
+  "spec": "dsh-telemetry-redactor@0.1.0",
+  "why": "expected host compatibility-gate rejection",
+  "packageDir": "/tmp/flow-sample/telemetry",
+  "download": {
+    "kind": "npm-pack",
+    "command": "npm pack dsh-telemetry-redactor@0.1.0 --pack-destination /tmp/flow-sample/_cache",
+    "tarball": "/tmp/flow-sample/_cache/dsh-telemetry-redactor-0.1.0.tgz",
+    "registry": "https://registry.npmmirror.com",
+    "actualVersion": "0.1.0"
+  },
+  "manifest": {
+    "name": "dsh-telemetry-redactor",
+    "version": "0.1.0",
+    "engines": {
+      "node": "^22.19.0 || >=24.0.0"
+    },
+    "peerDependencies": {
+      "@deepseek-ai/cordis": "^4.0.1",
+      "@deepseek-ai/dsh-session-telemetry": ">=0.1.0-rc.5 <0.2.0"
+    },
+    "dependencies": {
+      "@deepseek-ai/schemastery": "3.18.1"
+    },
+    "scripts": {
+      "postinstall": null
+    },
+    "dsh": {
+      "bundle": {
+        "patch": "./cordis.patch.yml"
+      }
+    }
+  },
+  "dependencyInstall": {
+    "needed": true,
+    "command": "npm install --omit=dev --ignore-scripts --legacy-peer-deps --no-package-lock",
+    "exit": 0,
+    "ignoredScripts": true,
+    "note": "third-party lifecycle scripts were not run (--ignore-scripts)",
+    "stdout": "\nup to date in 906ms\n",
+    "stderr": "",
+    "error": null
+  },
+  "previous": null,
+  "gate": {
+    "command": "/tmp/dsh022/node_modules/@deepseek-ai/dsh/lib/bin.js plugin --profile flow-gate add /tmp/flow-sample/telemetry",
+    "dshHome": "/tmp/dsh-flow-gate-HrHTa1",
+    "profile": "flow-gate",
+    "createExit": 0,
+    "addExit": 1,
+    "rejected": true,
+    "diagnostic": "\ndsh: installation rejected: Plugin dsh-telemetry-redactor@0.1.0 is incompatible with dsh 0.2.2-alpha.2: requirements {\"@deepseek-ai/dsh-session-telemetry\":\">=0.1.0-rc.5 <0.2.0\"}. Running it may cause crashes or data loss. Update the plugin or install a plugin version compatible with this dsh runtime. To accept this risk explicitly, grant the exact-version exemption for dsh-telemetry-redactor@0.1.0 on dsh 0.2.2-alpha.2 with `dsh plugin allow-version` or the plugin manager, then retry the installation or restart dsh. Exact-version exemption: not active.\ndsh: nothing was installed.\ndsh: to accept the risk, run: dsh plugin --profile flow-gate allow-version dsh-telemetry-redactor@0.1.0 --dsh-version 0.2.2-alpha.2 --accept-risk\ndsh: plugin command failed; diagnostics: /tmp/dsh-flow-gate-HrHTa1/profiles/flow-gate/.plugin-manager/logs/operation-YrAvJB/pnpm.log\n",
+    "requirements": "{\"@deepseek-ai/dsh-session-telemetry\":\">=0.1.0-rc.5 <0.2.0\"}",
+    "exemptionGranted": false,
+    "compatibilityFilePresent": false,
+    "cleanedUp": true
+  },
+  "journey": null,
+  "layerProbe": null,
+  "checks": [
+    {
+      "id": "J1.profile",
+      "result": "PASS",
+      "reason": "create profile exit=0"
+    },
+    {
+      "id": "J1.install",
+      "result": "BLOCKED",
+      "reason": "installation rejected: {\"@deepseek-ai/dsh-session-telemetry\":\">=0.1.0-rc.5 <0.2.0\"}",
+      "stderr": "\ndsh: installation rejected: Plugin dsh-telemetry-redactor@0.1.0 is incompatible with dsh 0.2.2-alpha.2: requirements {\"@deepseek-ai/dsh-session-telemetry\":\">=0.1.0-rc.5 <0.2.0\"}. Running it may cause crashes or data loss. Update the plugin or install a plugin version compatible with this dsh runtime. To accept this risk explicitly, grant the exact-version exemption for dsh-telemetry-redactor@0.1.0 on dsh 0.2.2-alpha.2 with `dsh plugin allow-version` or the plugin manager, then retry the installation or restart dsh. Exact-version exemption: not active.\ndsh: nothing was installed.\ndsh: to accept the risk, run: dsh plugin --profile flow-gate allow-version dsh-telemetry-redactor@0.1.0 --dsh-version 0.2.2-alpha.2 --accept-risk\ndsh: plugin command failed; diagnostics: /tmp/dsh-flow-gate-HrHTa1/profiles/flow-gate/.plugin-manager/logs/operation-YrAvJB/pnpm.log\n"
+    },
+    {
+      "id": "J1.dump",
+      "result": "not-run",
+      "reason": "compatibility gate rejected the install; nothing was installed"
+    },
+    {
+      "id": "J1.layer",
+      "result": "not-run",
+      "reason": "compatibility gate rejected the install; nothing was installed"
+    },
+    {
+      "id": "J1.remove",
+      "result": "not-run",
+      "reason": "compatibility gate rejected the install; nothing was installed"
+    },
+    {
+      "id": "J1.clean",
+      "result": "not-run",
+      "reason": "compatibility gate rejected the install; nothing was installed"
+    },
+    {
+      "id": "J2.disable",
+      "result": "not-run",
+      "reason": "compatibility gate rejected the install; nothing was installed"
+    },
+    {
+      "id": "J2.enable",
+      "result": "not-run",
+      "reason": "compatibility gate rejected the install; nothing was installed"
+    },
+    {
+      "id": "J4.tree-load",
+      "result": "not-run",
+      "reason": "compatibility gate rejected the install; nothing was installed"
+    },
+    {
+      "id": "J6.upgrade",
+      "result": "not-run",
+      "reason": "compatibility gate rejected the install; nothing was installed"
+    },
+    {
+      "id": "J6.rollback",
+      "result": "not-run",
+      "reason": "compatibility gate rejected the install; nothing was installed"
+    },
+    {
+      "id": "J3.config",
+      "result": "not-run",
+      "reason": "invalid-config harness not implemented"
+    },
+    {
+      "id": "J5.permissions",
+      "result": "not-run",
+      "reason": "permissions/disclosure review is manual"
+    },
+    {
+      "id": "J7.observe",
+      "result": "not-run",
+      "reason": "observability probe not implemented"
+    },
+    {
+      "id": "J8.client",
+      "result": "not-run",
+      "reason": "client-shape probe not implemented"
+    }
+  ],
+  "verdicts": {
+    "J1": "blocked",
+    "J2": "not-run",
+    "J4": "not-run",
+    "J6": "not-run"
+  },
+  "classification": "host-gate",
+  "caveats": [
+    "Compatibility gate rejected this exact version; no exemption was granted and no retry was attempted.",
+    "J2/J4 were not run because nothing was installed. This is a host gate, not a plugin defect."
+  ],
+  "limitations": [
+    "J3/J5/J7/J8 are not covered by journey-runtime.",
+    "This is a local-directory install (`dsh plugin add <dir>`), not a registry tarball install."
+  ],
+  "summary": {
+    "checks": {
+      "pass": 1,
+      "warn": 0,
+      "fail": 0,
+      "blocked": 1,
+      "partial": 0,
+      "notRun": 13
+    },
+    "verdicts": {
+      "pass": 0,
+      "fail": 0,
+      "blocked": 1,
+      "partial": 0,
+      "notRun": 3
+    }
+  },
+  "conclusion": "flow-blocked"
+}

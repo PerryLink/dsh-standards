@@ -9,7 +9,7 @@
 |---|---|---|
 | 1 | **DSH-ENTRY 入门规范** | 18/18 `recognized`；10/18 base-only G3 verified，gate 后 8/18 clean；client 15/15 loaded |
 | 2 | **DSH-FLOW 顺畅规范** | draft；J1 真跑，J2–J8 `not-run` |
-| 3 | **DSH-BOOST 加速实践** | draft；LEV-3/6/7 已 measured（loader / provider-capture / synthetic timer） |
+| 3 | **DSH-BOOST 加速实践** | draft；LEV-1–8 均有 measured 证据（loader / context / provider-capture / synthetic timer） |
 
 ## 先看什么
 
@@ -23,6 +23,9 @@
 - [36-插件全生命周期与工具链](36-插件全生命周期与工具链.md) — 从脚手架到退役
 - [37-PerryLink 插件生态三层对照](37-PerryLink插件生态-三层对照与升级清单.md) — 我的仓怎么升级
 - [38-三层标准 RFC](38-RFC-三层标准-待商议问题.md) — 内测群商议的 8 个问题
+- [39-五工具定位与贡献](39-五工具定位与贡献.md) — guide/doctor/cert/portal/catalog 的角色
+- [40-五工具全面转向方案](40-五工具全面转向方案.md) — 以三层为主轴的迁移计划
+- [42-标准体系缺口](42-标准体系缺口-认证检验认可.md) — 认证/检验/认可/监督还差什么
 - [97-采纳可行性评估](97-采纳可行性评估.md) — 官方路径、缺口、90 天
 - [98-内测群与官方沟通包](98-内测群与官方沟通包.md) — 对外话术
 

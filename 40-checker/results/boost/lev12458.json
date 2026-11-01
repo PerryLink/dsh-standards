@@ -1,0 +1,1747 @@
+{
+  "schema": "dsh-boost-lev12458/1",
+  "generatedAt": "2026-11-01T04:24:39.795Z",
+  "command": [
+    "node",
+    "examples/boost/lev12458-bench.mjs",
+    "--runs",
+    "5"
+  ],
+  "environment": {
+    "node": "v24.22.1",
+    "platform": "linux/x64",
+    "kernel": "6.6.114.1-microsoft-standard-WSL2",
+    "cpus": 20,
+    "workspace": "/mnt/c/Users/zzhdz/WorkBuddy/2026-10-30-16-02-58/dsh-standard",
+    "dsh": {
+      "version": "0.2.2-alpha.2",
+      "package": "/tmp/dsh022/node_modules/@deepseek-ai/dsh",
+      "packageJsonSha256": "fcfbff65bc9a7beae1d5bd56af6eb166b61dcd22bd20234653d2b8d56d09aa63"
+    },
+    "cordis": {
+      "version": "4.0.6-alpha.1",
+      "package": "/tmp/dsh022/node_modules/@deepseek-ai/cordis",
+      "libSha256": "e2154e2748ace61fa34631cd3081b9fe71c8d744e5a6b90d36c659f44d6470eb"
+    },
+    "loader": {
+      "version": "1.0.7-alpha.1",
+      "package": "/tmp/dsh022/node_modules/@deepseek-ai/cordis-plugin-loader",
+      "libSha256": "bf2cf32746fa3a249ca95518993795a7f49595fe26772ceefc5fc9b645e92a0e"
+    },
+    "include": {
+      "version": "1.0.11-alpha.1",
+      "package": "/tmp/dsh022/node_modules/@deepseek-ai/cordis-plugin-include",
+      "libSha256": "ad5eaf3b80a8fd9945466486493a0d1a8e9590895bcde01e5673f3d07b4fd306",
+      "used": false,
+      "note": "not used by this harness; recorded because the install ships it"
+    },
+    "appBoot": {
+      "version": "0.2.2-alpha.2",
+      "package": "/tmp/dsh022/node_modules/@deepseek-ai/dsh-app-boot",
+      "libSha256": "dbe13b8cbfe6a183efab4cb363bbcbc35e4ee171b5f8c798390d0371ca9ea4ff",
+      "used": [
+        "LEV-8"
+      ]
+    },
+    "checkout": {
+      "path": "/home/yy/deepseek-harness",
+      "commit": "ce7073d51254c26cd63b22a60835b8f948deb447",
+      "dirty": true,
+      "dirtyEntries": 3,
+      "packageVersion": "0.2.2-alpha.2",
+      "dirtyPaths": [
+        "M package.json",
+        " M packages/boot/app-boot/src/profile-resolution/resolver.ts",
+        " M pnpm-lock.yaml"
+      ]
+    },
+    "note": "installed npm packages have no gitHead; checkout commit is provenance for the source tree, not a byte-identity claim"
+  },
+  "summary": {
+    "status": "measured",
+    "measured": [
+      "LEV-1",
+      "LEV-2",
+      "LEV-4",
+      "LEV-5",
+      "LEV-8"
+    ],
+    "notMeasured": [],
+    "verdicts": {
+      "LEV-1": "supported",
+      "LEV-2": "supported",
+      "LEV-4": "supported",
+      "LEV-5": "supported",
+      "LEV-8": "supported"
+    },
+    "evidenceCard": {
+      "ok": true,
+      "checkedPractices": [
+        "LEV-1",
+        "LEV-2",
+        "LEV-4",
+        "LEV-5",
+        "LEV-8"
+      ],
+      "problems": []
+    }
+  },
+  "measurements": [
+    {
+      "practice": "LEV-1",
+      "title": "可逆 / reversible effects across loader restarts",
+      "level": "loader-level",
+      "status": "measured",
+      "hypothesis": "A fixture that registers a timer, a listener, and an auxiliary effect through ctx.effect returns to its effect baseline after N loader restarts and its timer disposer runs N times; a raw setInterval without ctx.effect leaks one handle per restart.",
+      "environment": {
+        "node": "v24.22.1",
+        "platform": "linux/x64",
+        "kernel": "6.6.114.1-microsoft-standard-WSL2",
+        "cpus": 20,
+        "workspace": "/mnt/c/Users/zzhdz/WorkBuddy/2026-10-30-16-02-58/dsh-standard",
+        "dsh": {
+          "version": "0.2.2-alpha.2",
+          "package": "/tmp/dsh022/node_modules/@deepseek-ai/dsh",
+          "packageJsonSha256": "fcfbff65bc9a7beae1d5bd56af6eb166b61dcd22bd20234653d2b8d56d09aa63"
+        },
+        "cordis": {
+          "version": "4.0.6-alpha.1",
+          "package": "/tmp/dsh022/node_modules/@deepseek-ai/cordis",
+          "libSha256": "e2154e2748ace61fa34631cd3081b9fe71c8d744e5a6b90d36c659f44d6470eb"
+        },
+        "loader": {
+          "version": "1.0.7-alpha.1",
+          "package": "/tmp/dsh022/node_modules/@deepseek-ai/cordis-plugin-loader",
+          "libSha256": "bf2cf32746fa3a249ca95518993795a7f49595fe26772ceefc5fc9b645e92a0e"
+        },
+        "include": {
+          "version": "1.0.11-alpha.1",
+          "package": "/tmp/dsh022/node_modules/@deepseek-ai/cordis-plugin-include",
+          "libSha256": "ad5eaf3b80a8fd9945466486493a0d1a8e9590895bcde01e5673f3d07b4fd306",
+          "used": false,
+          "note": "not used by this harness; recorded because the install ships it"
+        },
+        "appBoot": {
+          "version": "0.2.2-alpha.2",
+          "package": "/tmp/dsh022/node_modules/@deepseek-ai/dsh-app-boot",
+          "libSha256": "dbe13b8cbfe6a183efab4cb363bbcbc35e4ee171b5f8c798390d0371ca9ea4ff",
+          "used": [
+            "LEV-8"
+          ]
+        },
+        "checkout": {
+          "path": "/home/yy/deepseek-harness",
+          "commit": "ce7073d51254c26cd63b22a60835b8f948deb447",
+          "dirty": true,
+          "dirtyEntries": 3,
+          "packageVersion": "0.2.2-alpha.2",
+          "dirtyPaths": [
+            "M package.json",
+            " M packages/boot/app-boot/src/profile-resolution/resolver.ts",
+            " M pnpm-lock.yaml"
+          ]
+        },
+        "note": "installed npm packages have no gitHead; checkout commit is provenance for the source tree, not a byte-identity claim"
+      },
+      "input": {
+        "fixtureFiles": [
+          {
+            "path": "examples/boost/lev12458-fixture/lev1/negative.mjs",
+            "sha256": "7af25b9ebb44a35f7d1f26426d68c7cd58d50805f89c5702395bde1bb1e1ec95"
+          },
+          {
+            "path": "examples/boost/lev12458-fixture/lev1/positive.mjs",
+            "sha256": "17f3b6e654e426e1bad8f2308f80b2e4142986183c06942e5346c1780e70351e"
+          },
+          {
+            "path": "examples/boost/lev12458-fixture/lev1/probe.mjs",
+            "sha256": "6d1e26f8cdf2c0a8fd46a7841ce0efdfe064f36974cdefb16f42a45f52d3d6ff"
+          }
+        ],
+        "composition": "real Context + Loader; entries: lev1-probe (service), lev1-fixture (positive.mjs | negative.mjs)",
+        "restartTrigger": "ctx.loader.update(\"lev1-fixture\", { config: { mode } }) + ctx.loader.await()",
+        "arms": [
+          "positive",
+          "negative"
+        ],
+        "runs": 5,
+        "pingEvent": "lev1/ping emitted once after the restarts",
+        "probe": "lev1Probe service wraps globalThis.setInterval/clearInterval to count open interval handles; counts ctx.effect disposers and fiber.getEffects() labels"
+      },
+      "command": "node examples/boost/lev12458-bench.mjs --only LEV-1 --runs 5",
+      "negativeControl": {
+        "fixture": "lev1/negative.mjs",
+        "description": "Same listener and auxiliary effect, but the interval is created with the raw global setInterval and has no ctx.effect disposer. The probe must see one leaked handle per restart, not merely trust the fixture.",
+        "expected": "open interval handles grow by 5; timer disposers stay 0",
+        "observed": {
+          "openTimersAfterFirstApply": 1,
+          "openTimersAfterRestarts": 6,
+          "openTimersDelta": 5,
+          "timerDisposers": 0,
+          "openTimersAfterDispose": 6,
+          "leakedTimersDrained": 6
+        }
+      },
+      "result": {
+        "runs": 5,
+        "positive": {
+          "arm": "positive",
+          "fixture": "./positive.mjs",
+          "runs": 5,
+          "bootOpenTimers": 0,
+          "firstOpenTimers": 1,
+          "baselineEffects": [
+            "lev1.timer",
+            "ctx.on(\"lev1/ping\")",
+            "lev1.aux"
+          ],
+          "firstEffectsEvent": {
+            "type": "effects",
+            "instanceId": 1,
+            "labels": [
+              "lev1.timer",
+              "ctx.on(\"lev1/ping\")",
+              "lev1.aux"
+            ]
+          },
+          "rows": [
+            {
+              "i": 1,
+              "mode": "m1",
+              "state": 2,
+              "stateName": "ACTIVE",
+              "reloadMs": 0.88,
+              "applies": 2,
+              "timerDisposers": 1,
+              "auxDisposers": 1,
+              "disposerCalls": 2,
+              "openTimers": 1,
+              "effects": [
+                "lev1.timer",
+                "ctx.on(\"lev1/ping\")",
+                "lev1.aux"
+              ],
+              "effectsMatchBaseline": true
+            },
+            {
+              "i": 2,
+              "mode": "m2",
+              "state": 2,
+              "stateName": "ACTIVE",
+              "reloadMs": 0.369,
+              "applies": 3,
+              "timerDisposers": 2,
+              "auxDisposers": 2,
+              "disposerCalls": 4,
+              "openTimers": 1,
+              "effects": [
+                "lev1.timer",
+                "ctx.on(\"lev1/ping\")",
+                "lev1.aux"
+              ],
+              "effectsMatchBaseline": true
+            },
+            {
+              "i": 3,
+              "mode": "m3",
+              "state": 2,
+              "stateName": "ACTIVE",
+              "reloadMs": 0.302,
+              "applies": 4,
+              "timerDisposers": 3,
+              "auxDisposers": 3,
+              "disposerCalls": 6,
+              "openTimers": 1,
+              "effects": [
+                "lev1.timer",
+                "ctx.on(\"lev1/ping\")",
+                "lev1.aux"
+              ],
+              "effectsMatchBaseline": true
+            },
+            {
+              "i": 4,
+              "mode": "m4",
+              "state": 2,
+              "stateName": "ACTIVE",
+              "reloadMs": 0.275,
+              "applies": 5,
+              "timerDisposers": 4,
+              "auxDisposers": 4,
+              "disposerCalls": 8,
+              "openTimers": 1,
+              "effects": [
+                "lev1.timer",
+                "ctx.on(\"lev1/ping\")",
+                "lev1.aux"
+              ],
+              "effectsMatchBaseline": true
+            },
+            {
+              "i": 5,
+              "mode": "m5",
+              "state": 2,
+              "stateName": "ACTIVE",
+              "reloadMs": 0.23,
+              "applies": 6,
+              "timerDisposers": 5,
+              "auxDisposers": 5,
+              "disposerCalls": 10,
+              "openTimers": 1,
+              "effects": [
+                "lev1.timer",
+                "ctx.on(\"lev1/ping\")",
+                "lev1.aux"
+              ],
+              "effectsMatchBaseline": true
+            }
+          ],
+          "final": {
+            "state": 2,
+            "stateName": "ACTIVE",
+            "effects": [
+              "lev1.timer",
+              "ctx.on(\"lev1/ping\")",
+              "lev1.aux"
+            ],
+            "effectsMatchBaseline": true,
+            "applies": 6,
+            "effectInstalls": 12,
+            "timerDisposers": 5,
+            "auxDisposers": 5,
+            "disposerCalls": 10,
+            "pings": 1,
+            "openTimers": 1
+          },
+          "disposed": {
+            "state": 4,
+            "stateName": "DISPOSED",
+            "effects": [],
+            "openTimers": 0,
+            "leakedTimersDrained": 0
+          },
+          "latencyMs": {
+            "n": 5,
+            "min": 0.23,
+            "median": 0.302,
+            "p50": 0.302,
+            "p95": 0.778,
+            "max": 0.88,
+            "mean": 0.411
+          }
+        },
+        "negative": {
+          "arm": "negative",
+          "fixture": "./negative.mjs",
+          "runs": 5,
+          "bootOpenTimers": 0,
+          "firstOpenTimers": 1,
+          "baselineEffects": [
+            "ctx.on(\"lev1/ping\")",
+            "lev1.aux"
+          ],
+          "firstEffectsEvent": {
+            "type": "effects",
+            "instanceId": 1,
+            "labels": [
+              "ctx.on(\"lev1/ping\")",
+              "lev1.aux"
+            ]
+          },
+          "rows": [
+            {
+              "i": 1,
+              "mode": "m1",
+              "state": 2,
+              "stateName": "ACTIVE",
+              "reloadMs": 0.236,
+              "applies": 2,
+              "timerDisposers": 0,
+              "auxDisposers": 1,
+              "disposerCalls": 1,
+              "openTimers": 2,
+              "effects": [
+                "ctx.on(\"lev1/ping\")",
+                "lev1.aux"
+              ],
+              "effectsMatchBaseline": true
+            },
+            {
+              "i": 2,
+              "mode": "m2",
+              "state": 2,
+              "stateName": "ACTIVE",
+              "reloadMs": 0.186,
+              "applies": 3,
+              "timerDisposers": 0,
+              "auxDisposers": 2,
+              "disposerCalls": 2,
+              "openTimers": 3,
+              "effects": [
+                "ctx.on(\"lev1/ping\")",
+                "lev1.aux"
+              ],
+              "effectsMatchBaseline": true
+            },
+            {
+              "i": 3,
+              "mode": "m3",
+              "state": 2,
+              "stateName": "ACTIVE",
+              "reloadMs": 0.163,
+              "applies": 4,
+              "timerDisposers": 0,
+              "auxDisposers": 3,
+              "disposerCalls": 3,
+              "openTimers": 4,
+              "effects": [
+                "ctx.on(\"lev1/ping\")",
+                "lev1.aux"
+              ],
+              "effectsMatchBaseline": true
+            },
+            {
+              "i": 4,
+              "mode": "m4",
+              "state": 2,
+              "stateName": "ACTIVE",
+              "reloadMs": 0.179,
+              "applies": 5,
+              "timerDisposers": 0,
+              "auxDisposers": 4,
+              "disposerCalls": 4,
+              "openTimers": 5,
+              "effects": [
+                "ctx.on(\"lev1/ping\")",
+                "lev1.aux"
+              ],
+              "effectsMatchBaseline": true
+            },
+            {
+              "i": 5,
+              "mode": "m5",
+              "state": 2,
+              "stateName": "ACTIVE",
+              "reloadMs": 0.152,
+              "applies": 6,
+              "timerDisposers": 0,
+              "auxDisposers": 5,
+              "disposerCalls": 5,
+              "openTimers": 6,
+              "effects": [
+                "ctx.on(\"lev1/ping\")",
+                "lev1.aux"
+              ],
+              "effectsMatchBaseline": true
+            }
+          ],
+          "final": {
+            "state": 2,
+            "stateName": "ACTIVE",
+            "effects": [
+              "ctx.on(\"lev1/ping\")",
+              "lev1.aux"
+            ],
+            "effectsMatchBaseline": true,
+            "applies": 6,
+            "effectInstalls": 6,
+            "timerDisposers": 0,
+            "auxDisposers": 5,
+            "disposerCalls": 5,
+            "pings": 1,
+            "openTimers": 6
+          },
+          "disposed": {
+            "state": 4,
+            "stateName": "DISPOSED",
+            "effects": [],
+            "openTimers": 6,
+            "leakedTimersDrained": 6
+          },
+          "latencyMs": {
+            "n": 5,
+            "min": 0.152,
+            "median": 0.179,
+            "p50": 0.179,
+            "p95": 0.226,
+            "max": 0.236,
+            "mean": 0.183
+          }
+        },
+        "divergence": {
+          "timerDisposerDelta": 5,
+          "openTimerDelta": -5,
+          "effectCountDelta": 1,
+          "pingsAfterRestarts": {
+            "positive": 1,
+            "negative": 1
+          }
+        },
+        "checks": {
+          "fixturesActive": true,
+          "positiveTimerDisposedPerRestart": true,
+          "positiveNoOpenTimerDelta": true,
+          "positiveEffectsMatchBaseline": true,
+          "negativeTimerNeverDisposed": true,
+          "negativeLeakDetected": true,
+          "negativeEffectsMatchItsOwnBaseline": true,
+          "probeDistinguishes": true
+        },
+        "verdict": "supported"
+      },
+      "limitations": [
+        "loader-level: real Context + Loader with three fixture entries; no DSH profile, CLI, Include/YAML, or chokidar watcher.",
+        "Restart trigger is ctx.loader.update()+loader.await(), the same entry-update path Include.refresh() drives after a YAML change; the file watcher is not measured.",
+        "The interval probe wraps globalThis.setInterval/clearInterval in this process only; setTimeout, setImmediate, sockets, and native resources are not instrumented.",
+        "The negative fixture is deliberately synthetic; it proves the probe detects this leak class, not that real plugins commonly leak.",
+        "N=5; latency is a warm single-process observation, not a production number.",
+        "getEffects() is Cordis fiber metadata; baseline comparison is over effect labels, not resource identity."
+      ]
+    },
+    {
+      "practice": "LEV-2",
+      "title": "等待 / waiting for an injected service instead of failing",
+      "level": "loader-level",
+      "status": "measured",
+      "hypothesis": "A consumer that declares inject=[service] stays PENDING without a TypeError while the provider is absent; inserting the provider entry and awaiting the loader once makes the consumer ACTIVE. Direct ctx.service access without inject throws instead.",
+      "environment": {
+        "node": "v24.22.1",
+        "platform": "linux/x64",
+        "kernel": "6.6.114.1-microsoft-standard-WSL2",
+        "cpus": 20,
+        "workspace": "/mnt/c/Users/zzhdz/WorkBuddy/2026-10-30-16-02-58/dsh-standard",
+        "dsh": {
+          "version": "0.2.2-alpha.2",
+          "package": "/tmp/dsh022/node_modules/@deepseek-ai/dsh",
+          "packageJsonSha256": "fcfbff65bc9a7beae1d5bd56af6eb166b61dcd22bd20234653d2b8d56d09aa63"
+        },
+        "cordis": {
+          "version": "4.0.6-alpha.1",
+          "package": "/tmp/dsh022/node_modules/@deepseek-ai/cordis",
+          "libSha256": "e2154e2748ace61fa34631cd3081b9fe71c8d744e5a6b90d36c659f44d6470eb"
+        },
+        "loader": {
+          "version": "1.0.7-alpha.1",
+          "package": "/tmp/dsh022/node_modules/@deepseek-ai/cordis-plugin-loader",
+          "libSha256": "bf2cf32746fa3a249ca95518993795a7f49595fe26772ceefc5fc9b645e92a0e"
+        },
+        "include": {
+          "version": "1.0.11-alpha.1",
+          "package": "/tmp/dsh022/node_modules/@deepseek-ai/cordis-plugin-include",
+          "libSha256": "ad5eaf3b80a8fd9945466486493a0d1a8e9590895bcde01e5673f3d07b4fd306",
+          "used": false,
+          "note": "not used by this harness; recorded because the install ships it"
+        },
+        "appBoot": {
+          "version": "0.2.2-alpha.2",
+          "package": "/tmp/dsh022/node_modules/@deepseek-ai/dsh-app-boot",
+          "libSha256": "dbe13b8cbfe6a183efab4cb363bbcbc35e4ee171b5f8c798390d0371ca9ea4ff",
+          "used": [
+            "LEV-8"
+          ]
+        },
+        "checkout": {
+          "path": "/home/yy/deepseek-harness",
+          "commit": "ce7073d51254c26cd63b22a60835b8f948deb447",
+          "dirty": true,
+          "dirtyEntries": 3,
+          "packageVersion": "0.2.2-alpha.2",
+          "dirtyPaths": [
+            "M package.json",
+            " M packages/boot/app-boot/src/profile-resolution/resolver.ts",
+            " M pnpm-lock.yaml"
+          ]
+        },
+        "note": "installed npm packages have no gitHead; checkout commit is provenance for the source tree, not a byte-identity claim"
+      },
+      "input": {
+        "fixtureFiles": [
+          {
+            "path": "examples/boost/lev12458-fixture/lev2/bad-consumer.mjs",
+            "sha256": "ae3a958f328816bbd762787963e917d0dd139e9162d8ace2480b310e9b8bdcb2"
+          },
+          {
+            "path": "examples/boost/lev12458-fixture/lev2/consumer.mjs",
+            "sha256": "61a36fcdc3fedc8144cee81c9ac177f6f82c01cf6c8e39c28c83c3a65351468e"
+          },
+          {
+            "path": "examples/boost/lev12458-fixture/lev2/direct.mjs",
+            "sha256": "28b755809c3cb01610e63fbd1518c0fb40dc01321ec35c04af553eda310d900a"
+          },
+          {
+            "path": "examples/boost/lev12458-fixture/lev2/probe.mjs",
+            "sha256": "8bf09b3ccdffca9cd3d0d5305337d321f2481b12caeb22079099586b0de07bcc"
+          },
+          {
+            "path": "examples/boost/lev12458-fixture/lev2/service-a.mjs",
+            "sha256": "72943c114e806a4ec6594887a118f5240a41bfa9e44d37d26a70960e4e2b245c"
+          }
+        ],
+        "composition": "real Context + Loader; lev2-probe root service; entries: lev2-b consumer, lev2-direct-before, lev2-bad, lev2-a provider, lev2-direct-after",
+        "providerInsertion": "ctx.loader.create({ id: \"lev2-a\", name: \"./service-a.mjs\", config: { value: \"A1\" } })",
+        "activationWait": "one ctx.loader.await() after provider insertion"
+      },
+      "command": "node examples/boost/lev12458-bench.mjs --only LEV-2 --runs 5",
+      "negativeControl": {
+        "fixtures": [
+          "lev2/direct.mjs",
+          "lev2/bad-consumer.mjs"
+        ],
+        "description": "direct.mjs declares no inject and reads ctx.lev2Svc; it catches the error so the message can be recorded before and after the provider exists. bad-consumer.mjs does the same read uncaught, so its fiber must FAIL rather than wait.",
+        "expected": "direct access throws \"cannot get property ... without inject\" both before and after; bad-consumer fiber state is FAILED (3)",
+        "observed": {
+          "directEvents": [
+            {
+              "seq": 1,
+              "type": "direct-access",
+              "ok": false,
+              "name": "Error",
+              "message": "cannot get property \"lev2Svc\" without inject"
+            },
+            {
+              "seq": 3,
+              "type": "direct-access",
+              "ok": false,
+              "name": "Error",
+              "message": "cannot get property \"lev2Svc\" without inject"
+            }
+          ],
+          "badConsumerState": 3,
+          "badConsumerStateName": "FAILED"
+        }
+      },
+      "result": {
+        "before": {
+          "state": 0,
+          "stateName": "PENDING",
+          "pendingTasks": 0,
+          "probe": {
+            "events": []
+          }
+        },
+        "after": {
+          "state": 2,
+          "stateName": "ACTIVE",
+          "pendingTasks": 0,
+          "probe": {
+            "events": [
+              {
+                "seq": 1,
+                "type": "direct-access",
+                "ok": false,
+                "name": "Error",
+                "message": "cannot get property \"lev2Svc\" without inject"
+              },
+              {
+                "seq": 2,
+                "type": "apply",
+                "value": "A1",
+                "providerUid": 7,
+                "uid": 4
+              }
+            ]
+          }
+        },
+        "activationMs": 4.666,
+        "applies": [
+          {
+            "seq": 2,
+            "type": "apply",
+            "value": "A1",
+            "providerUid": 7,
+            "uid": 4
+          }
+        ],
+        "directEvents": [
+          {
+            "seq": 1,
+            "type": "direct-access",
+            "ok": false,
+            "name": "Error",
+            "message": "cannot get property \"lev2Svc\" without inject"
+          },
+          {
+            "seq": 3,
+            "type": "direct-access",
+            "ok": false,
+            "name": "Error",
+            "message": "cannot get property \"lev2Svc\" without inject"
+          }
+        ],
+        "badConsumerState": 3,
+        "checks": {
+          "consumerPendingBeforeProvider": true,
+          "noTypeErrorWhilePending": true,
+          "consumerActiveAfterProvider": true,
+          "activatedInOneLoaderEpoch": true,
+          "consumerApplyRecorded": true,
+          "badConsumerFailedNotPending": true,
+          "directAccessThrowsBefore": true,
+          "directAccessThrowsAfter": true
+        },
+        "verdict": "supported"
+      },
+      "limitations": [
+        "loader-level synthetic service; no real DSH service or plugin is involved.",
+        "\"one epoch\" means one ctx.loader.await() after provider insertion, not a wall-clock guarantee.",
+        "The direct-access negative control uses ctx.get(\"lev2Probe\", false) only to report the caught error; the access under test is the undeclared ctx.lev2Svc read.",
+        "Cordis 4 requires inject for service access; the throw is the documented strict model, not a defect.",
+        "Single process, single machine; activationMs includes loader bookkeeping, not service construction cost."
+      ]
+    },
+    {
+      "practice": "LEV-4",
+      "title": "事件 / waterfall next-vs-veto and listener failure modes",
+      "level": "context-level",
+      "status": "measured",
+      "hypothesis": "A waterfall listener that calls next() preserves the next listener and the inner callback; one that returns a veto value short-circuits both. A throwing notification listener is contained only in parallel mode (all listeners run, AggregateError); emit/serial/bail stop at the throwing listener, which is the documented dispatch behavior.",
+      "environment": {
+        "node": "v24.22.1",
+        "platform": "linux/x64",
+        "kernel": "6.6.114.1-microsoft-standard-WSL2",
+        "cpus": 20,
+        "workspace": "/mnt/c/Users/zzhdz/WorkBuddy/2026-10-30-16-02-58/dsh-standard",
+        "dsh": {
+          "version": "0.2.2-alpha.2",
+          "package": "/tmp/dsh022/node_modules/@deepseek-ai/dsh",
+          "packageJsonSha256": "fcfbff65bc9a7beae1d5bd56af6eb166b61dcd22bd20234653d2b8d56d09aa63"
+        },
+        "cordis": {
+          "version": "4.0.6-alpha.1",
+          "package": "/tmp/dsh022/node_modules/@deepseek-ai/cordis",
+          "libSha256": "e2154e2748ace61fa34631cd3081b9fe71c8d744e5a6b90d36c659f44d6470eb"
+        },
+        "loader": {
+          "version": "1.0.7-alpha.1",
+          "package": "/tmp/dsh022/node_modules/@deepseek-ai/cordis-plugin-loader",
+          "libSha256": "bf2cf32746fa3a249ca95518993795a7f49595fe26772ceefc5fc9b645e92a0e"
+        },
+        "include": {
+          "version": "1.0.11-alpha.1",
+          "package": "/tmp/dsh022/node_modules/@deepseek-ai/cordis-plugin-include",
+          "libSha256": "ad5eaf3b80a8fd9945466486493a0d1a8e9590895bcde01e5673f3d07b4fd306",
+          "used": false,
+          "note": "not used by this harness; recorded because the install ships it"
+        },
+        "appBoot": {
+          "version": "0.2.2-alpha.2",
+          "package": "/tmp/dsh022/node_modules/@deepseek-ai/dsh-app-boot",
+          "libSha256": "dbe13b8cbfe6a183efab4cb363bbcbc35e4ee171b5f8c798390d0371ca9ea4ff",
+          "used": [
+            "LEV-8"
+          ]
+        },
+        "checkout": {
+          "path": "/home/yy/deepseek-harness",
+          "commit": "ce7073d51254c26cd63b22a60835b8f948deb447",
+          "dirty": true,
+          "dirtyEntries": 3,
+          "packageVersion": "0.2.2-alpha.2",
+          "dirtyPaths": [
+            "M package.json",
+            " M packages/boot/app-boot/src/profile-resolution/resolver.ts",
+            " M pnpm-lock.yaml"
+          ]
+        },
+        "note": "installed npm packages have no gitHead; checkout commit is provenance for the source tree, not a byte-identity claim"
+      },
+      "input": {
+        "fixtureFiles": [
+          {
+            "path": "examples/boost/lev12458-fixture/lev4/notify.mjs",
+            "sha256": "772cebb5b770bf159ec530ef6599c00229d55045fa290822243e6707a44ee770"
+          },
+          {
+            "path": "examples/boost/lev12458-fixture/lev4/waterfall.mjs",
+            "sha256": "48126a6e3442ee93db51ad75227ffa5d8bf71c6db9892731dd7b2085d0237d45"
+          }
+        ],
+        "composition": "real Cordis Context + ctx.plugin() fibers; no Loader/Include",
+        "events": [
+          "lev4/waterfall",
+          "lev4/emit",
+          "lev4/parallel",
+          "lev4/serial",
+          "lev4/bail"
+        ],
+        "listeners": "L1 records, L2 records then throws Error(\"L2-boom\"), L3 records; listeners return undefined so bail is not triggered by a return value",
+        "implementation": "Cordis 4.0.6-alpha.1 EventsService.waterfall/emit/parallel/serial/bail"
+      },
+      "command": "node examples/boost/lev12458-bench.mjs --only LEV-4 --runs 5",
+      "negativeControl": {
+        "description": "The veto waterfall case is the negative of the next() case: the same two listeners, but L1 does not call next(). The probe must see L2 and the inner callback skipped; if both cases produced the same calls, the probe would be blind to short-circuiting.",
+        "expected": "next: [L1,L2,inner] + inner-result; veto: [L1] + veto-L1",
+        "observed": {
+          "next": {
+            "case": "waterfall-next",
+            "calls": [
+              "L1",
+              "L2",
+              "inner"
+            ],
+            "result": "inner-result",
+            "expectedCalls": [
+              "L1",
+              "L2",
+              "inner"
+            ],
+            "expectedResult": "inner-result",
+            "pass": true,
+            "source": "lev4/waterfall.mjs: listener 1 calls next() or returns \"veto-L1\"; listener 2 calls next()"
+          },
+          "veto": {
+            "case": "waterfall-veto",
+            "calls": [
+              "L1"
+            ],
+            "result": "veto-L1",
+            "expectedCalls": [
+              "L1"
+            ],
+            "expectedResult": "veto-L1",
+            "pass": true,
+            "source": "lev4/waterfall.mjs: listener 1 calls next() or returns \"veto-L1\"; listener 2 calls next()"
+          }
+        }
+      },
+      "result": {
+        "waterfall": [
+          {
+            "case": "waterfall-next",
+            "calls": [
+              "L1",
+              "L2",
+              "inner"
+            ],
+            "result": "inner-result",
+            "expectedCalls": [
+              "L1",
+              "L2",
+              "inner"
+            ],
+            "expectedResult": "inner-result",
+            "pass": true,
+            "source": "lev4/waterfall.mjs: listener 1 calls next() or returns \"veto-L1\"; listener 2 calls next()"
+          },
+          {
+            "case": "waterfall-veto",
+            "calls": [
+              "L1"
+            ],
+            "result": "veto-L1",
+            "expectedCalls": [
+              "L1"
+            ],
+            "expectedResult": "veto-L1",
+            "pass": true,
+            "source": "lev4/waterfall.mjs: listener 1 calls next() or returns \"veto-L1\"; listener 2 calls next()"
+          }
+        ],
+        "notifications": [
+          {
+            "mode": "emit",
+            "calls": [
+              "L1",
+              "L2"
+            ],
+            "outcome": {
+              "resolved": false,
+              "errorName": "Error",
+              "errorMessage": "L2-boom",
+              "aggregateErrors": null
+            },
+            "expected": {
+              "calls": [
+                "L1",
+                "L2"
+              ],
+              "resolved": false,
+              "errorName": "Error"
+            },
+            "pass": true,
+            "documentedBehavior": "synchronous listeners; a throw propagates and the remaining listeners do not run"
+          },
+          {
+            "mode": "parallel",
+            "calls": [
+              "L1",
+              "L2",
+              "L3"
+            ],
+            "outcome": {
+              "resolved": false,
+              "errorName": "AggregateError",
+              "errorMessage": "",
+              "aggregateErrors": 1
+            },
+            "expected": {
+              "calls": [
+                "L1",
+                "L2",
+                "L3"
+              ],
+              "resolved": false,
+              "errorName": "AggregateError"
+            },
+            "pass": true,
+            "documentedBehavior": "all listeners run concurrently; rejections are collected into an AggregateError after they settle"
+          },
+          {
+            "mode": "serial",
+            "calls": [
+              "L1",
+              "L2"
+            ],
+            "outcome": {
+              "resolved": false,
+              "errorName": "Error",
+              "errorMessage": "L2-boom",
+              "aggregateErrors": null
+            },
+            "expected": {
+              "calls": [
+                "L1",
+                "L2"
+              ],
+              "resolved": false,
+              "errorName": "Error"
+            },
+            "pass": true,
+            "documentedBehavior": "listeners are awaited in order until a bail value; a throw rejects and the remaining listeners do not run"
+          },
+          {
+            "mode": "bail",
+            "calls": [
+              "L1",
+              "L2"
+            ],
+            "outcome": {
+              "resolved": false,
+              "errorName": "Error",
+              "errorMessage": "L2-boom",
+              "aggregateErrors": null
+            },
+            "expected": {
+              "calls": [
+                "L1",
+                "L2"
+              ],
+              "resolved": false,
+              "errorName": "Error"
+            },
+            "pass": true,
+            "documentedBehavior": "listeners run synchronously until a bail value; a throw propagates and the remaining listeners do not run"
+          }
+        ],
+        "checks": {
+          "waterfallNextPreservesNextListener": true,
+          "waterfallVetoShortCircuits": true,
+          "emitThrowStopsRemaining": true,
+          "parallelRunsAllDespiteThrow": true,
+          "serialThrowStopsRemaining": true,
+          "bailThrowStopsRemaining": true,
+          "modesDistinguishable": true
+        },
+        "verdict": "supported"
+      },
+      "limitations": [
+        "context-level: real Context + real plugin fibers, but no Loader/Include entry and no DSH-specific event contract.",
+        "Synthetic event names and listeners; the result describes Cordis EventsService dispatch, not every DSH event.",
+        "The throwing listener is identical in all four modes; only the dispatch mode changes, so the comparison is controlled.",
+        "No latency numbers: this is a behavior probe, not a benchmark."
+      ]
+    },
+    {
+      "practice": "LEV-5",
+      "title": "seam / 隔离: two loader isolate realms, provider swap without consumer edits",
+      "level": "loader-level",
+      "status": "measured",
+      "hypothesis": "Two named loader isolate labels give two consumers separate lev5Svc instances; restarting provider A changes consumer A to the new implementation with no consumer edit while consumer B keeps b1; a root-scope consumer stays PENDING (no cross-realm bleed).",
+      "environment": {
+        "node": "v24.22.1",
+        "platform": "linux/x64",
+        "kernel": "6.6.114.1-microsoft-standard-WSL2",
+        "cpus": 20,
+        "workspace": "/mnt/c/Users/zzhdz/WorkBuddy/2026-10-30-16-02-58/dsh-standard",
+        "dsh": {
+          "version": "0.2.2-alpha.2",
+          "package": "/tmp/dsh022/node_modules/@deepseek-ai/dsh",
+          "packageJsonSha256": "fcfbff65bc9a7beae1d5bd56af6eb166b61dcd22bd20234653d2b8d56d09aa63"
+        },
+        "cordis": {
+          "version": "4.0.6-alpha.1",
+          "package": "/tmp/dsh022/node_modules/@deepseek-ai/cordis",
+          "libSha256": "e2154e2748ace61fa34631cd3081b9fe71c8d744e5a6b90d36c659f44d6470eb"
+        },
+        "loader": {
+          "version": "1.0.7-alpha.1",
+          "package": "/tmp/dsh022/node_modules/@deepseek-ai/cordis-plugin-loader",
+          "libSha256": "bf2cf32746fa3a249ca95518993795a7f49595fe26772ceefc5fc9b645e92a0e"
+        },
+        "include": {
+          "version": "1.0.11-alpha.1",
+          "package": "/tmp/dsh022/node_modules/@deepseek-ai/cordis-plugin-include",
+          "libSha256": "ad5eaf3b80a8fd9945466486493a0d1a8e9590895bcde01e5673f3d07b4fd306",
+          "used": false,
+          "note": "not used by this harness; recorded because the install ships it"
+        },
+        "appBoot": {
+          "version": "0.2.2-alpha.2",
+          "package": "/tmp/dsh022/node_modules/@deepseek-ai/dsh-app-boot",
+          "libSha256": "dbe13b8cbfe6a183efab4cb363bbcbc35e4ee171b5f8c798390d0371ca9ea4ff",
+          "used": [
+            "LEV-8"
+          ]
+        },
+        "checkout": {
+          "path": "/home/yy/deepseek-harness",
+          "commit": "ce7073d51254c26cd63b22a60835b8f948deb447",
+          "dirty": true,
+          "dirtyEntries": 3,
+          "packageVersion": "0.2.2-alpha.2",
+          "dirtyPaths": [
+            "M package.json",
+            " M packages/boot/app-boot/src/profile-resolution/resolver.ts",
+            " M pnpm-lock.yaml"
+          ]
+        },
+        "note": "installed npm packages have no gitHead; checkout commit is provenance for the source tree, not a byte-identity claim"
+      },
+      "input": {
+        "fixtureFiles": [
+          {
+            "path": "examples/boost/lev12458-fixture/lev5/consumer.mjs",
+            "sha256": "90772371d5bb8499b1577f7a49a2466929086d125653a37cf2aa6da12164a0af"
+          },
+          {
+            "path": "examples/boost/lev12458-fixture/lev5/probe.mjs",
+            "sha256": "1236c9ebc9568bec7cfb708f3db84c01bf093369d1768403ca9e8ae0f2090d7c"
+          },
+          {
+            "path": "examples/boost/lev12458-fixture/lev5/provider.mjs",
+            "sha256": "eeb4c1a521949b77c647ae34b0541b6b4bff6d0e8cec4cf69e4e067a8f439d82"
+          }
+        ],
+        "composition": "real Context + Loader; providers and consumers carry isolate: { lev5Svc: \"realm-a\" | \"realm-b\" }; root consumer carries no isolate",
+        "entries": [
+          {
+            "id": "lev5-provider-a",
+            "isolate": {
+              "lev5Svc": "realm-a"
+            },
+            "config": {
+              "version": "a1",
+              "realm": "a"
+            }
+          },
+          {
+            "id": "lev5-provider-b",
+            "isolate": {
+              "lev5Svc": "realm-b"
+            },
+            "config": {
+              "version": "b1",
+              "realm": "b"
+            }
+          },
+          {
+            "id": "lev5-consumer-a",
+            "isolate": {
+              "lev5Svc": "realm-a"
+            },
+            "config": {
+              "consumer": "a"
+            }
+          },
+          {
+            "id": "lev5-consumer-b",
+            "isolate": {
+              "lev5Svc": "realm-b"
+            },
+            "config": {
+              "consumer": "b"
+            }
+          },
+          {
+            "id": "lev5-consumer-root",
+            "config": {
+              "consumer": "root"
+            }
+          }
+        ],
+        "providerSwap": "ctx.loader.update(\"lev5-provider-a\", { config: { version: \"a2\", realm: \"a\" } }) + one loader.await()",
+        "consumerHashBefore": "90772371d5bb8499b1577f7a49a2466929086d125653a37cf2aa6da12164a0af"
+      },
+      "command": "node examples/boost/lev12458-bench.mjs --only LEV-5 --runs 5",
+      "negativeControl": {
+        "fixture": "lev5/consumer.mjs without an isolate label (entry lev5-consumer-root)",
+        "description": "A consumer outside both realms injects the same service name. If isolate leaked, it would activate with one of the two providers. It must stay PENDING and the root scope must not expose lev5Svc.",
+        "expected": "root consumer state PENDING (0), ctx.get(\"lev5Svc\", false) === undefined, zero foreign-realm apply events",
+        "observed": {
+          "rootConsumerState": 0,
+          "rootConsumerStateName": "PENDING",
+          "rootServiceVisible": false,
+          "crossRealmApplies": 0
+        }
+      },
+      "result": {
+        "before": {
+          "states": {
+            "providerA": {
+              "state": 2,
+              "stateName": "ACTIVE",
+              "uid": 4
+            },
+            "providerB": {
+              "state": 2,
+              "stateName": "ACTIVE",
+              "uid": 5
+            },
+            "consumerA": {
+              "state": 2,
+              "stateName": "ACTIVE",
+              "uid": 6
+            },
+            "consumerB": {
+              "state": 2,
+              "stateName": "ACTIVE",
+              "uid": 7
+            },
+            "consumerRoot": {
+              "state": 0,
+              "stateName": "PENDING",
+              "uid": 8
+            }
+          },
+          "probe": {
+            "events": [
+              {
+                "seq": 1,
+                "type": "apply",
+                "consumer": "a",
+                "version": "a1",
+                "realm": "a",
+                "providerUid": 4,
+                "uid": 6
+              },
+              {
+                "seq": 2,
+                "type": "apply",
+                "consumer": "b",
+                "version": "b1",
+                "realm": "b",
+                "providerUid": 5,
+                "uid": 7
+              }
+            ]
+          },
+          "rootServiceVisible": false
+        },
+        "after": {
+          "states": {
+            "providerA": {
+              "state": 2,
+              "stateName": "ACTIVE",
+              "uid": 4
+            },
+            "providerB": {
+              "state": 2,
+              "stateName": "ACTIVE",
+              "uid": 5
+            },
+            "consumerA": {
+              "state": 2,
+              "stateName": "ACTIVE",
+              "uid": 6
+            },
+            "consumerB": {
+              "state": 2,
+              "stateName": "ACTIVE",
+              "uid": 7
+            },
+            "consumerRoot": {
+              "state": 0,
+              "stateName": "PENDING",
+              "uid": 8
+            }
+          },
+          "probe": {
+            "events": [
+              {
+                "seq": 1,
+                "type": "apply",
+                "consumer": "a",
+                "version": "a1",
+                "realm": "a",
+                "providerUid": 4,
+                "uid": 6
+              },
+              {
+                "seq": 2,
+                "type": "apply",
+                "consumer": "b",
+                "version": "b1",
+                "realm": "b",
+                "providerUid": 5,
+                "uid": 7
+              },
+              {
+                "seq": 3,
+                "type": "dispose",
+                "consumer": "a",
+                "version": "a1",
+                "realm": "a"
+              },
+              {
+                "seq": 4,
+                "type": "apply",
+                "consumer": "a",
+                "version": "a2",
+                "realm": "a",
+                "providerUid": 4,
+                "uid": 6
+              }
+            ]
+          },
+          "rootServiceVisible": false
+        },
+        "swapMs": 0.344,
+        "applies": [
+          {
+            "seq": 1,
+            "type": "apply",
+            "consumer": "a",
+            "version": "a1",
+            "realm": "a",
+            "providerUid": 4,
+            "uid": 6
+          },
+          {
+            "seq": 2,
+            "type": "apply",
+            "consumer": "b",
+            "version": "b1",
+            "realm": "b",
+            "providerUid": 5,
+            "uid": 7
+          },
+          {
+            "seq": 4,
+            "type": "apply",
+            "consumer": "a",
+            "version": "a2",
+            "realm": "a",
+            "providerUid": 4,
+            "uid": 6
+          }
+        ],
+        "disposes": [
+          {
+            "seq": 3,
+            "type": "dispose",
+            "consumer": "a",
+            "version": "a1",
+            "realm": "a"
+          }
+        ],
+        "appliesFor": {
+          "a": [
+            "a1",
+            "a2"
+          ],
+          "b": [
+            "b1"
+          ]
+        },
+        "impls": [
+          {
+            "version": "b1",
+            "realm": "b",
+            "providerUid": 5
+          },
+          {
+            "version": "a2",
+            "realm": "a",
+            "providerUid": 4
+          }
+        ],
+        "consumerHashBefore": "90772371d5bb8499b1577f7a49a2466929086d125653a37cf2aa6da12164a0af",
+        "consumerHashAfter": "90772371d5bb8499b1577f7a49a2466929086d125653a37cf2aa6da12164a0af",
+        "consumerSourceUnchanged": true,
+        "leakedServices": [],
+        "crossRealmApplies": 0,
+        "checks": {
+          "twoRealmProvidersActive": true,
+          "twoConsumersActive": true,
+          "consumerAOwnsRealmA": true,
+          "consumerBOwnsRealmB": true,
+          "consumerBUnaffectedByProviderASwap": true,
+          "consumerAReactedToSwap": true,
+          "rootConsumerStaysPending": true,
+          "rootScopeHasNoService": true,
+          "crossRealmBleedZero": true,
+          "distinctProviderInstances": true,
+          "consumerSourceUnchanged": true,
+          "providerSwapWasOneLoaderAwait": true
+        },
+        "verdict": "supported"
+      },
+      "limitations": [
+        "loader-level isolate, not OS/process isolation and not a security boundary.",
+        "leakedServices() is not an exported Cordis/DSH API in these versions; the array is computed from root-scope visibility plus foreign-realm apply events and is labelled as a probe.",
+        "Same process: the two realms share the Node runtime, module cache, and event bus.",
+        "Provider replacement restarts the provider entry; it does not hot-swap a value inside a running provider object.",
+        "Isolate is configuration-sensitive: a missing or mismatched label makes a consumer PENDING rather than falling back to the root scope (this is what the negative control observes)."
+      ]
+    },
+    {
+      "practice": "LEV-8",
+      "title": "组合 / bundle patch composition with one toggled insert",
+      "level": "loader-level",
+      "status": "measured",
+      "hypothesis": "Two bundle patch layers (base + sample) compose into the base rows plus exactly one sample row; disabling that sample row with a later profile overlay changes only its disabled flag, leaving both base rows byte-identical. A toggle whose target is absent warns and changes nothing; a malformed insert is rejected by the real parser.",
+      "environment": {
+        "node": "v24.22.1",
+        "platform": "linux/x64",
+        "kernel": "6.6.114.1-microsoft-standard-WSL2",
+        "cpus": 20,
+        "workspace": "/mnt/c/Users/zzhdz/WorkBuddy/2026-10-30-16-02-58/dsh-standard",
+        "dsh": {
+          "version": "0.2.2-alpha.2",
+          "package": "/tmp/dsh022/node_modules/@deepseek-ai/dsh",
+          "packageJsonSha256": "fcfbff65bc9a7beae1d5bd56af6eb166b61dcd22bd20234653d2b8d56d09aa63"
+        },
+        "cordis": {
+          "version": "4.0.6-alpha.1",
+          "package": "/tmp/dsh022/node_modules/@deepseek-ai/cordis",
+          "libSha256": "e2154e2748ace61fa34631cd3081b9fe71c8d744e5a6b90d36c659f44d6470eb"
+        },
+        "loader": {
+          "version": "1.0.7-alpha.1",
+          "package": "/tmp/dsh022/node_modules/@deepseek-ai/cordis-plugin-loader",
+          "libSha256": "bf2cf32746fa3a249ca95518993795a7f49595fe26772ceefc5fc9b645e92a0e"
+        },
+        "include": {
+          "version": "1.0.11-alpha.1",
+          "package": "/tmp/dsh022/node_modules/@deepseek-ai/cordis-plugin-include",
+          "libSha256": "ad5eaf3b80a8fd9945466486493a0d1a8e9590895bcde01e5673f3d07b4fd306",
+          "used": false,
+          "note": "not used by this harness; recorded because the install ships it"
+        },
+        "appBoot": {
+          "version": "0.2.2-alpha.2",
+          "package": "/tmp/dsh022/node_modules/@deepseek-ai/dsh-app-boot",
+          "libSha256": "dbe13b8cbfe6a183efab4cb363bbcbc35e4ee171b5f8c798390d0371ca9ea4ff",
+          "used": [
+            "LEV-8"
+          ]
+        },
+        "checkout": {
+          "path": "/home/yy/deepseek-harness",
+          "commit": "ce7073d51254c26cd63b22a60835b8f948deb447",
+          "dirty": true,
+          "dirtyEntries": 3,
+          "packageVersion": "0.2.2-alpha.2",
+          "dirtyPaths": [
+            "M package.json",
+            " M packages/boot/app-boot/src/profile-resolution/resolver.ts",
+            " M pnpm-lock.yaml"
+          ]
+        },
+        "note": "installed npm packages have no gitHead; checkout commit is provenance for the source tree, not a byte-identity claim"
+      },
+      "input": {
+        "fixtureFiles": [
+          {
+            "path": "examples/boost/lev12458-fixture/lev8/bundles/base/base-a.mjs",
+            "sha256": "b56991b91c5d03da3450bf82cd841b12df46067f49b620aa72c7379133338935"
+          },
+          {
+            "path": "examples/boost/lev12458-fixture/lev8/bundles/base/base-b.mjs",
+            "sha256": "96358dd97abf577aa63ff2ff57d117b5e84865229175309c895c2309110d98af"
+          },
+          {
+            "path": "examples/boost/lev12458-fixture/lev8/bundles/base/cordis.patch.yml",
+            "sha256": "d8f50e38d3a01fac07a5b996673350369b655d93ba920ddb12a30873039fd8a1"
+          },
+          {
+            "path": "examples/boost/lev12458-fixture/lev8/bundles/base/package.json",
+            "sha256": "068b2e3d02b9cc1c810332d20a039fabf40dad7775d360ca83f99f442095c4bb"
+          },
+          {
+            "path": "examples/boost/lev12458-fixture/lev8/bundles/sample/cordis.patch.yml",
+            "sha256": "0cf0b1f7dcd5e12793c86dbd6b117dab1359c584fed20a6e4ebb3fc75ebba1d1"
+          },
+          {
+            "path": "examples/boost/lev12458-fixture/lev8/bundles/sample/package.json",
+            "sha256": "b902e27591e066ea828e961cfede0501135ea092c4e57b3e12ad951e9e7c10d5"
+          },
+          {
+            "path": "examples/boost/lev12458-fixture/lev8/bundles/sample/sample.mjs",
+            "sha256": "be4f97cb04fddf6c0e79c65722865dfbd675d82bb55f8f74a5de7f231573d2bd"
+          },
+          {
+            "path": "examples/boost/lev12458-fixture/lev8/invalid.patch.yml",
+            "sha256": "1800b4b57da821ae4d0034f94f0d8162e81fb1443161668bd288811d2bebb579"
+          },
+          {
+            "path": "examples/boost/lev12458-fixture/lev8/toggle.patch.yml",
+            "sha256": "2ea0908f7b51fe17d81503b97539eeaab6702c806311b202ded66e5c0bcf94e8"
+          }
+        ],
+        "bundles": [
+          {
+            "name": "@dsh-fixtures/lev8-base",
+            "dir": "examples/boost/lev12458-fixture/lev8/bundles/base",
+            "patch": [
+              "./cordis.patch.yml"
+            ],
+            "resolved": [
+              "examples/boost/lev12458-fixture/lev8/bundles/base/cordis.patch.yml"
+            ]
+          },
+          {
+            "name": "@dsh-fixtures/lev8-sample",
+            "dir": "examples/boost/lev12458-fixture/lev8/bundles/sample",
+            "patch": [
+              "./cordis.patch.yml"
+            ],
+            "resolved": [
+              "examples/boost/lev12458-fixture/lev8/bundles/sample/cordis.patch.yml"
+            ]
+          }
+        ],
+        "overlay": {
+          "file": "examples/boost/lev12458-fixture/lev8/toggle.patch.yml",
+          "patches": [
+            {
+              "id": "lev8-sample",
+              "disabled": true
+            }
+          ]
+        },
+        "composeCalls": [
+          "composeEntries([base])",
+          "composeEntries([base, sample])",
+          "composeEntries([base, sample, toggle])",
+          "composeEntries([base, toggle])"
+        ],
+        "parser": "dsh-app-boot loadOverlayPatches + composeEntries + bundlePatchPaths + bundlePatchFiles"
+      },
+      "command": "node examples/boost/lev12458-bench.mjs --only LEV-8 --runs 5",
+      "negativeControl": {
+        "description": "The toggle overlay is applied without the sample layer. A sound composer must warn that lev8-sample is not found and leave the base rows untouched; it must not invent or disable anything. Separately, invalid.patch.yml has a non-list insert and must be rejected by the real parser.",
+        "expected": "warning mentions lev8-sample not found; rows equal base-only; malformed patch throws",
+        "observed": {
+          "missingTargetWarnings": [
+            "patch: entry \"lev8-sample\" not found"
+          ],
+          "missingTargetRowIds": [
+            "lev8-base-a",
+            "lev8-base-b"
+          ],
+          "malformedPatch": {
+            "threw": true,
+            "message": "patch.insert?.forEach is not a function"
+          }
+        }
+      },
+      "result": {
+        "compositions": {
+          "baseOnly": {
+            "name": "base-only",
+            "rows": [
+              {
+                "id": "lev8-base-a",
+                "name": "file:///mnt/c/Users/zzhdz/WorkBuddy/2026-10-30-16-02-58/dsh-standard/examples/boost/lev12458-fixture/lev8/bundles/base/base-a.mjs",
+                "config": {
+                  "label": "base-a"
+                }
+              },
+              {
+                "id": "lev8-base-b",
+                "name": "file:///mnt/c/Users/zzhdz/WorkBuddy/2026-10-30-16-02-58/dsh-standard/examples/boost/lev12458-fixture/lev8/bundles/base/base-b.mjs",
+                "config": {
+                  "label": "base-b"
+                }
+              }
+            ],
+            "warnings": []
+          },
+          "enabled": {
+            "name": "base+sample",
+            "rows": [
+              {
+                "id": "lev8-base-a",
+                "name": "file:///mnt/c/Users/zzhdz/WorkBuddy/2026-10-30-16-02-58/dsh-standard/examples/boost/lev12458-fixture/lev8/bundles/base/base-a.mjs",
+                "config": {
+                  "label": "base-a"
+                }
+              },
+              {
+                "id": "lev8-base-b",
+                "name": "file:///mnt/c/Users/zzhdz/WorkBuddy/2026-10-30-16-02-58/dsh-standard/examples/boost/lev12458-fixture/lev8/bundles/base/base-b.mjs",
+                "config": {
+                  "label": "base-b"
+                }
+              },
+              {
+                "id": "lev8-sample",
+                "name": "file:///mnt/c/Users/zzhdz/WorkBuddy/2026-10-30-16-02-58/dsh-standard/examples/boost/lev12458-fixture/lev8/bundles/sample/sample.mjs",
+                "config": {
+                  "label": "sample",
+                  "enabled": true
+                }
+              }
+            ],
+            "warnings": []
+          },
+          "disabled": {
+            "name": "base+sample+toggle",
+            "rows": [
+              {
+                "id": "lev8-base-a",
+                "name": "file:///mnt/c/Users/zzhdz/WorkBuddy/2026-10-30-16-02-58/dsh-standard/examples/boost/lev12458-fixture/lev8/bundles/base/base-a.mjs",
+                "config": {
+                  "label": "base-a"
+                }
+              },
+              {
+                "id": "lev8-base-b",
+                "name": "file:///mnt/c/Users/zzhdz/WorkBuddy/2026-10-30-16-02-58/dsh-standard/examples/boost/lev12458-fixture/lev8/bundles/base/base-b.mjs",
+                "config": {
+                  "label": "base-b"
+                }
+              },
+              {
+                "id": "lev8-sample",
+                "name": "file:///mnt/c/Users/zzhdz/WorkBuddy/2026-10-30-16-02-58/dsh-standard/examples/boost/lev12458-fixture/lev8/bundles/sample/sample.mjs",
+                "config": {
+                  "label": "sample",
+                  "enabled": true
+                },
+                "disabled": true
+              }
+            ],
+            "warnings": []
+          },
+          "missingTarget": {
+            "name": "base+toggle-without-sample",
+            "rows": [
+              {
+                "id": "lev8-base-a",
+                "name": "file:///mnt/c/Users/zzhdz/WorkBuddy/2026-10-30-16-02-58/dsh-standard/examples/boost/lev12458-fixture/lev8/bundles/base/base-a.mjs",
+                "config": {
+                  "label": "base-a"
+                }
+              },
+              {
+                "id": "lev8-base-b",
+                "name": "file:///mnt/c/Users/zzhdz/WorkBuddy/2026-10-30-16-02-58/dsh-standard/examples/boost/lev12458-fixture/lev8/bundles/base/base-b.mjs",
+                "config": {
+                  "label": "base-b"
+                }
+              }
+            ],
+            "warnings": [
+              "patch: entry \"lev8-sample\" not found"
+            ]
+          }
+        },
+        "diffs": {
+          "baseToEnabled": {
+            "added": [
+              "lev8-sample"
+            ],
+            "removed": [],
+            "changed": []
+          },
+          "enabledToDisabled": {
+            "added": [],
+            "removed": [],
+            "changed": [
+              {
+                "id": "lev8-sample",
+                "keys": [
+                  "disabled"
+                ],
+                "before": {
+                  "disabled": null
+                },
+                "after": {
+                  "disabled": true
+                }
+              }
+            ]
+          }
+        },
+        "schemaChecks": [
+          {
+            "label": "base-only",
+            "ok": true,
+            "issues": [],
+            "rows": 2,
+            "ids": [
+              "lev8-base-a",
+              "lev8-base-b"
+            ]
+          },
+          {
+            "label": "base+sample",
+            "ok": true,
+            "issues": [],
+            "rows": 3,
+            "ids": [
+              "lev8-base-a",
+              "lev8-base-b",
+              "lev8-sample"
+            ]
+          },
+          {
+            "label": "base+sample+toggle",
+            "ok": true,
+            "issues": [],
+            "rows": 3,
+            "ids": [
+              "lev8-base-a",
+              "lev8-base-b",
+              "lev8-sample"
+            ]
+          }
+        ],
+        "checks": {
+          "twoBundleLayersLoaded": true,
+          "baseRowsStableAcrossCompositions": true,
+          "sampleInsertedOnce": true,
+          "toggleOnlyChangesSampleDisabled": true,
+          "validCompositionsHaveNoWarnings": true,
+          "missingTargetIsWarnedAndInert": true,
+          "malformedPatchRejected": true,
+          "composedRowsPassLocalSchema": true,
+          "evidenceCardValid": true
+        },
+        "verdict": "supported",
+        "evidenceCardCheck": {
+          "ok": true,
+          "checkedPractices": [
+            "LEV-1",
+            "LEV-2",
+            "LEV-4",
+            "LEV-5",
+            "LEV-8"
+          ],
+          "problems": [],
+          "partial": false,
+          "note": "validates every measurement row present in this JSON; partial when --only selected a subset"
+        }
+      },
+      "limitations": [
+        "Composition-only: no boot, no plugin import, no runtime activation. The evidence is about patch composition, not a full profile.",
+        "The two bundle manifests are synthetic fixture packages; real bundles can have more layers, patches, and configs.",
+        "composeEntries() starts from an empty root; this is not a full profile composition (which also has profile and user layers).",
+        "The row schema check is a local whitelist of EntryOptions keys, not a published JSON Schema. The real parser was observed to accept unknown row keys; the malformed-insert case is rejected.",
+        "The evidence-card check below validates this file's rows, not external or production evidence."
+      ]
+    }
+  ],
+  "fixture": {
+    "directory": "examples/boost/lev12458-fixture",
+    "files": [
+      {
+        "path": "examples/boost/lev12458-fixture/lev1/negative.mjs",
+        "sha256": "7af25b9ebb44a35f7d1f26426d68c7cd58d50805f89c5702395bde1bb1e1ec95"
+      },
+      {
+        "path": "examples/boost/lev12458-fixture/lev1/positive.mjs",
+        "sha256": "17f3b6e654e426e1bad8f2308f80b2e4142986183c06942e5346c1780e70351e"
+      },
+      {
+        "path": "examples/boost/lev12458-fixture/lev1/probe.mjs",
+        "sha256": "6d1e26f8cdf2c0a8fd46a7841ce0efdfe064f36974cdefb16f42a45f52d3d6ff"
+      },
+      {
+        "path": "examples/boost/lev12458-fixture/lev2/bad-consumer.mjs",
+        "sha256": "ae3a958f328816bbd762787963e917d0dd139e9162d8ace2480b310e9b8bdcb2"
+      },
+      {
+        "path": "examples/boost/lev12458-fixture/lev2/consumer.mjs",
+        "sha256": "61a36fcdc3fedc8144cee81c9ac177f6f82c01cf6c8e39c28c83c3a65351468e"
+      },
+      {
+        "path": "examples/boost/lev12458-fixture/lev2/direct.mjs",
+        "sha256": "28b755809c3cb01610e63fbd1518c0fb40dc01321ec35c04af553eda310d900a"
+      },
+      {
+        "path": "examples/boost/lev12458-fixture/lev2/probe.mjs",
+        "sha256": "8bf09b3ccdffca9cd3d0d5305337d321f2481b12caeb22079099586b0de07bcc"
+      },
+      {
+        "path": "examples/boost/lev12458-fixture/lev2/service-a.mjs",
+        "sha256": "72943c114e806a4ec6594887a118f5240a41bfa9e44d37d26a70960e4e2b245c"
+      },
+      {
+        "path": "examples/boost/lev12458-fixture/lev4/notify.mjs",
+        "sha256": "772cebb5b770bf159ec530ef6599c00229d55045fa290822243e6707a44ee770"
+      },
+      {
+        "path": "examples/boost/lev12458-fixture/lev4/waterfall.mjs",
+        "sha256": "48126a6e3442ee93db51ad75227ffa5d8bf71c6db9892731dd7b2085d0237d45"
+      },
+      {
+        "path": "examples/boost/lev12458-fixture/lev5/consumer.mjs",
+        "sha256": "90772371d5bb8499b1577f7a49a2466929086d125653a37cf2aa6da12164a0af"
+      },
+      {
+        "path": "examples/boost/lev12458-fixture/lev5/probe.mjs",
+        "sha256": "1236c9ebc9568bec7cfb708f3db84c01bf093369d1768403ca9e8ae0f2090d7c"
+      },
+      {
+        "path": "examples/boost/lev12458-fixture/lev5/provider.mjs",
+        "sha256": "eeb4c1a521949b77c647ae34b0541b6b4bff6d0e8cec4cf69e4e067a8f439d82"
+      },
+      {
+        "path": "examples/boost/lev12458-fixture/lev8/bundles/base/base-a.mjs",
+        "sha256": "b56991b91c5d03da3450bf82cd841b12df46067f49b620aa72c7379133338935"
+      },
+      {
+        "path": "examples/boost/lev12458-fixture/lev8/bundles/base/base-b.mjs",
+        "sha256": "96358dd97abf577aa63ff2ff57d117b5e84865229175309c895c2309110d98af"
+      },
+      {
+        "path": "examples/boost/lev12458-fixture/lev8/bundles/base/cordis.patch.yml",
+        "sha256": "d8f50e38d3a01fac07a5b996673350369b655d93ba920ddb12a30873039fd8a1"
+      },
+      {
+        "path": "examples/boost/lev12458-fixture/lev8/bundles/base/package.json",
+        "sha256": "068b2e3d02b9cc1c810332d20a039fabf40dad7775d360ca83f99f442095c4bb"
+      },
+      {
+        "path": "examples/boost/lev12458-fixture/lev8/bundles/sample/cordis.patch.yml",
+        "sha256": "0cf0b1f7dcd5e12793c86dbd6b117dab1359c584fed20a6e4ebb3fc75ebba1d1"
+      },
+      {
+        "path": "examples/boost/lev12458-fixture/lev8/bundles/sample/package.json",
+        "sha256": "b902e27591e066ea828e961cfede0501135ea092c4e57b3e12ad951e9e7c10d5"
+      },
+      {
+        "path": "examples/boost/lev12458-fixture/lev8/bundles/sample/sample.mjs",
+        "sha256": "be4f97cb04fddf6c0e79c65722865dfbd675d82bb55f8f74a5de7f231573d2bd"
+      },
+      {
+        "path": "examples/boost/lev12458-fixture/lev8/invalid.patch.yml",
+        "sha256": "1800b4b57da821ae4d0034f94f0d8162e81fb1443161668bd288811d2bebb579"
+      },
+      {
+        "path": "examples/boost/lev12458-fixture/lev8/toggle.patch.yml",
+        "sha256": "2ea0908f7b51fe17d81503b97539eeaab6702c806311b202ded66e5c0bcf94e8"
+      }
+    ]
+  },
+  "limitations": [
+    "Synthetic fixtures only: no DSH CLI, profile, bundle boot, real provider, network, API key, or user session data participates.",
+    "The installed npm tree is DSH 0.2.2-alpha.2 with Cordis 4.0.6-alpha.1 / loader 1.0.7-alpha.1. npm packages carry no gitHead, so the checkout commit recorded below is provenance for the matching source tree, not proof that the installed bytes are identical.",
+    "The checkout was dirty at run time (see environment.checkout.dirtyEntries); checkout commit + installed package versions are reported separately rather than conflated.",
+    "Single WSL2 machine, single process, warm filesystem; latency numbers are observations from this fixture, not production profile guarantees.",
+    "LEV-1/2/5 are loader-level and LEV-4 is context-level. None of these is a profile-level or end-to-end benchmark."
+  ]
+}

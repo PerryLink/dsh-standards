@@ -1,0 +1,10 @@
+# LEV-8 base bundle layer: inserts two stable rows that the sample layer must not disturb.
+- insert:
+    - id: lev8-base-a
+      name: ./base-a.mjs
+      config:
+        label: base-a
+    - id: lev8-base-b
+      name: ./base-b.mjs
+      config:
+        label: base-b

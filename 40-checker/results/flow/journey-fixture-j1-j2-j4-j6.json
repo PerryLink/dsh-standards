@@ -15,7 +15,7 @@
       "id": "J1.install",
       "result": "PASS",
       "reason": "add exit=0",
-      "stderr": "Already up to date\n\ndependencies:\n+ @dsh-fixtures/bundle-with-server <- ../../../../mnt/c/Users/zzhdz/WorkBuddy/2026-10-30-16-02-58/dsh-standard/40-checker/fixtures/bundle\n\nDone in 34ms using pnpm v12.15.0\n"
+      "stderr": "Already up to date\n\ndependencies:\n+ @dsh-fixtures/bundle-with-server <- ../../../../mnt/c/Users/zzhdz/WorkBuddy/2026-10-30-16-02-58/dsh-standard/40-checker/fixtures/bundle\n\nDone in 46ms using pnpm v12.15.0\n"
     },
     {
       "id": "J1.dump",
@@ -44,7 +44,7 @@
       "id": "J1.remove",
       "result": "PASS",
       "reason": "remove exit=0",
-      "stderr": "Already up to date\n\ndependencies:\n- @dsh-fixtures/bundle-with-server link:/mnt/c/Users/zzhdz/WorkBuddy/2026-10-30-16-02-58/dsh-standard/40-checker/fixtures/bundle\n\nDone in 19ms using pnpm v12.15.0\n"
+      "stderr": "Already up to date\n\ndependencies:\n- @dsh-fixtures/bundle-with-server link:/mnt/c/Users/zzhdz/WorkBuddy/2026-10-30-16-02-58/dsh-standard/40-checker/fixtures/bundle\n\nDone in 30ms using pnpm v12.15.0\n"
     },
     {
       "id": "J1.clean",
@@ -61,19 +61,19 @@
       "id": "J6.upgrade",
       "result": "PASS",
       "reason": "upgrade 0.9.0->1.0.0 exit=0, installed=0.9.0",
-      "stderr": "[WARN] Replaced \"@dsh-fixtures/bundle-with-server\" (\"link:/mnt/c/Users/zzhdz/WorkBuddy/2026-10-30-16-02-58/dsh-standard/40-checker/fixtures/bundle\") with \"/mnt/c/Users/zzhdz/WorkBuddy/2026-10-30-16-02-58/dsh-standard/40-checker/fixtures/bundle-v0\" from a different source.\nAlready up to date\n\ndependencies:\n+ @dsh-fixtures/bundle-with-server <- ../../../../mnt/c/Users/zzhdz/WorkBuddy/2026-10-30-16-02-58/dsh-standard/40-checker/fixtures/bundle-v0\n\nDone in 47ms using pnpm v12.15.0\n"
+      "stderr": "[WARN] Replaced \"@dsh-fixtures/bundle-with-server\" (\"link:/mnt/c/Users/zzhdz/WorkBuddy/2026-10-30-16-02-58/dsh-standard/40-checker/fixtures/bundle\") with \"/mnt/c/Users/zzhdz/WorkBuddy/2026-10-30-16-02-58/dsh-standard/40-checker/fixtures/bundle-v0\" from a different source.\nAlready up to date\n\ndependencies:\n+ @dsh-fixtures/bundle-with-server <- ../../../../mnt/c/Users/zzhdz/WorkBuddy/2026-10-30-16-02-58/dsh-standard/40-checker/fixtures/bundle-v0\n\nDone in 42ms using pnpm v12.15.0\n"
     },
     {
       "id": "J6.upgrade-current",
       "result": "PASS",
       "reason": "current install exit=0, installed=1.0.0",
-      "stderr": "[WARN] Replaced \"@dsh-fixtures/bundle-with-server\" (\"link:/mnt/c/Users/zzhdz/WorkBuddy/2026-10-30-16-02-58/dsh-standard/40-checker/fixtures/bundle-v0\") with \"/mnt/c/Users/zzhdz/WorkBuddy/2026-10-30-16-02-58/dsh-standard/40-checker/fixtures/bundle\" from a different source.\nAlready up to date\n\ndependencies:\n+ @dsh-fixtures/bundle-with-server <- ../../../../mnt/c/Users/zzhdz/WorkBuddy/2026-10-30-16-02-58/dsh-standard/40-checker/fixtures/bundle\n\nDone in 52ms using pnpm v12.15.0\n"
+      "stderr": "[WARN] Replaced \"@dsh-fixtures/bundle-with-server\" (\"link:/mnt/c/Users/zzhdz/WorkBuddy/2026-10-30-16-02-58/dsh-standard/40-checker/fixtures/bundle-v0\") with \"/mnt/c/Users/zzhdz/WorkBuddy/2026-10-30-16-02-58/dsh-standard/40-checker/fixtures/bundle\" from a different source.\nAlready up to date\n\ndependencies:\n+ @dsh-fixtures/bundle-with-server <- ../../../../mnt/c/Users/zzhdz/WorkBuddy/2026-10-30-16-02-58/dsh-standard/40-checker/fixtures/bundle\n\nDone in 46ms using pnpm v12.15.0\n"
     },
     {
       "id": "J6.rollback",
       "result": "PASS",
       "reason": "rollback exit=0, installed=0.9.0",
-      "stderr": "[WARN] Replaced \"@dsh-fixtures/bundle-with-server\" (\"link:/mnt/c/Users/zzhdz/WorkBuddy/2026-10-30-16-02-58/dsh-standard/40-checker/fixtures/bundle\") with \"/mnt/c/Users/zzhdz/WorkBuddy/2026-10-30-16-02-58/dsh-standard/40-checker/fixtures/bundle-v0\" from a different source.\nAlready up to date\n\ndependencies:\n+ @dsh-fixtures/bundle-with-server <- ../../../../mnt/c/Users/zzhdz/WorkBuddy/2026-10-30-16-02-58/dsh-standard/40-checker/fixtures/bundle-v0\n\nDone in 53ms using pnpm v12.15.0\n"
+      "stderr": "[WARN] Replaced \"@dsh-fixtures/bundle-with-server\" (\"link:/mnt/c/Users/zzhdz/WorkBuddy/2026-10-30-16-02-58/dsh-standard/40-checker/fixtures/bundle\") with \"/mnt/c/Users/zzhdz/WorkBuddy/2026-10-30-16-02-58/dsh-standard/40-checker/fixtures/bundle-v0\" from a different source.\nAlready up to date\n\ndependencies:\n+ @dsh-fixtures/bundle-with-server <- ../../../../mnt/c/Users/zzhdz/WorkBuddy/2026-10-30-16-02-58/dsh-standard/40-checker/fixtures/bundle-v0\n\nDone in 43ms using pnpm v12.15.0\n"
     },
     {
       "id": "J3.config",
@@ -100,6 +100,7 @@
     "pass": 12,
     "warn": 0,
     "fail": 0,
+    "blocked": 0,
     "notRun": 4
   },
   "conclusion": "flow-warn"

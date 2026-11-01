@@ -1,0 +1,4 @@
+# Profile-level toggle overlay: disables only the sample row inserted by the
+# sample bundle layer. Applied after both bundle layers.
+- id: lev8-sample
+  disabled: true

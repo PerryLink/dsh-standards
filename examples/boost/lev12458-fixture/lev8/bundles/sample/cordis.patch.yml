@@ -1,0 +1,8 @@
+# LEV-8 sample bundle layer: inserts exactly one row. The toggle overlay targets
+# this row by id; the base rows are untouched.
+- insert:
+    - id: lev8-sample
+      name: ./sample.mjs
+      config:
+        label: sample
+        enabled: true

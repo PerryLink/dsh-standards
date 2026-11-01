@@ -35,15 +35,16 @@
 
 **LEV-6 优先**：它是唯一能用 token 直接计价、且与 Cordis 强绑定的实践。
 
-### 2.1 2026-11-01 实测（三组）
+### 2.1 2026-11-01 实测（八组）
 
 | 实践 | 证据等级 | 结果 | 原始数据 |
 |---|---|---|---|
 | LEV-3 | **loader-level**：真实 Cordis `Context`+`Loader`+`Include`，合成 fixture | volatile 字段 0/20 remount、0/20 restart、effect dispose 0/20；control 普通字段 20/20 remount。两个宿主（0.2.1-rc.5 / 0.2.2-alpha.2）同向 | `40-checker/results/lev3/lev3.json` |
 | LEV-6 | **provider-capture**：真实 DSH 请求，合成 Anthropic Messages 端点，不是计费 | 稳定 prefix arm 的 promptOrder 复用 **100.00%**；易变 nonce arm **0.00%**，首个分歧在 system 第 0 字节 | `40-checker/results/lev6/lev6.json` + `capture.jsonl` |
 | LEV-7 | **synthetic timer**：64 tasks × 5 runs | median **8.24×**；不是生产基线 | `examples/boost/results/lev7.json` |
+| LEV-1/2/4/5/8 | **loader/context-level**：真实 Cordis loader + 合成 fixture | LEV-1 effect 5/5 回收、裸 timer 泄漏 +5；LEV-2 PENDING→ACTIVE；LEV-4 next/veto/emit/serial/bail/parallel 实测；LEV-5 两 realm 隔离 0 串扰；LEV-8 组合只改目标行 | `40-checker/results/boost/lev12458.json` |
 
-三条都带负向对照，能证伪；但都不能写成“生产环境省 X%”或“真实 cache 命中率”。
+八条都带负向对照，能证伪；但都不能写成“生产环境省 X%”或“真实 cache 命中率”。
 
 ---
 

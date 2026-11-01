@@ -15,14 +15,15 @@ import path from 'node:path'
 import { spawnSync } from 'node:child_process'
 
 function parse(argv) {
-  const out = { package: null, previous: null, dsh: process.env.DSH_BIN || null, json: false, timeout: 120_000 }
+  const out = { package: null, previous: null, dsh: process.env.DSH_BIN || null, allowExemption: false, json: false, timeout: 120_000 }
   for (let i = 0; i < argv.length; i += 1) {
     if (argv[i] === '--package') out.package = argv[++i]
     else if (argv[i] === '--previous') out.previous = argv[++i]
     else if (argv[i] === '--dsh') out.dsh = argv[++i]
+    else if (argv[i] === '--allow-exemption') out.allowExemption = true
     else if (argv[i] === '--json') out.json = true
     else if (argv[i] === '--timeout') out.timeout = Number(argv[++i])
-    else if (argv[i] === '--help' || argv[i] === '-h') { console.log('usage: node scripts/journey-runtime.mjs --package <dir> [--previous <dir>] [--dsh <bin>] [--json]'); process.exit(0) }
+    else if (argv[i] === '--help' || argv[i] === '-h') { console.log('usage: node scripts/journey-runtime.mjs --package <dir> [--previous <dir>] [--dsh <bin>] [--allow-exemption] [--json]'); process.exit(0) }
     else throw new Error(`unknown option: ${argv[i]}`)
   }
   if (!out.package) throw new Error('--package is required')
@@ -73,12 +74,17 @@ function main() {
     const create = sh(dsh, ['--profile', profile, '--from-default-profile', 'headless', '--dump-config'], env, options.timeout)
     add('J1.profile', create.status === 0 ? 'PASS' : 'FAIL', `create profile exit=${create.status}`, { stderr: create.stderr.slice(0, 500) })
     let addResult = sh(dsh, ['plugin', '--profile', profile, 'add', pkg], env, options.timeout)
-    if (addResult.status !== 0 && /installation rejected/.test(`${addResult.stdout}${addResult.stderr}`)) {
+    let addText = `${addResult.stdout}${addResult.stderr}`
+    const rejected = addResult.status !== 0 && /installation rejected/.test(addText)
+    // Never grant an exact-version exemption by default: a gate rejection is a
+    // measured BLOCKED result, not something the harness may silently accept.
+    if (rejected && (options.allowExemption || process.env.DSH_JOURNEY_ALLOW_EXEMPTION === '1')) {
       const allow = sh(dsh, ['plugin', '--profile', profile, 'allow-version', `${manifest.name}@${manifest.version}`, '--dsh-version', dshVersion, '--accept-risk'], env, options.timeout)
       add('J1.exemption', allow.status === 0 ? 'WARN' : 'FAIL', `allow-version exit=${allow.status}`, { stderr: allow.stderr.slice(0, 500) })
       addResult = sh(dsh, ['plugin', '--profile', profile, 'add', pkg], env, options.timeout)
+      addText = `${addResult.stdout}${addResult.stderr}`
     }
-    add('J1.install', addResult.status === 0 ? 'PASS' : 'FAIL', `add exit=${addResult.status}`, { stderr: (addResult.stderr || addResult.stdout).slice(0, 800) })
+    add('J1.install', rejected && !options.allowExemption && process.env.DSH_JOURNEY_ALLOW_EXEMPTION !== '1' ? 'BLOCKED' : addResult.status === 0 ? 'PASS' : 'FAIL', rejected ? 'host compatibility gate rejected the install (no exemption granted)' : `add exit=${addResult.status}`, { stderr: addText.slice(0, 800) })
     const dump1 = sh(dsh, ['--profile', profile, '--dump-config'], env, options.timeout)
     add('J1.dump', dump1.status === 0 ? 'PASS' : 'FAIL', `dump exit=${dump1.status}`, { stderr: dump1.stderr.slice(0, 500) })
     const appears = dump1.stdout.includes(manifest.name) || /fixture-bundle-server/.test(dump1.stdout)
@@ -159,9 +165,10 @@ function main() {
       pass: checks.filter(c => c.result === 'PASS').length,
       warn: checks.filter(c => c.result === 'WARN').length,
       fail: checks.filter(c => c.result === 'FAIL').length,
+      blocked: checks.filter(c => c.result === 'BLOCKED').length,
       notRun: checks.filter(c => c.result === 'not-run').length,
     },
-    conclusion: checks.some(c => c.result === 'FAIL') ? 'flow-fail' : 'flow-warn',
+    conclusion: checks.some(c => c.result === 'FAIL') ? 'flow-fail' : checks.some(c => c.result === 'BLOCKED') ? 'flow-blocked' : 'flow-warn',
   }
   if (options.json || !process.stdout.isTTY) process.stdout.write(`${JSON.stringify(result, null, 2)}\n`)
   process.exitCode = result.conclusion === 'flow-fail' ? 1 : 0

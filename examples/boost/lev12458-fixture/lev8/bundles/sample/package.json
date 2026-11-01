@@ -1,0 +1,12 @@
+{
+  "name": "@dsh-fixtures/lev8-sample",
+  "version": "0.0.0",
+  "private": true,
+  "type": "module",
+  "dsh": {
+    "manifestVersion": 1,
+    "bundle": {
+      "patch": "./cordis.patch.yml"
+    }
+  }
+}

@@ -1,0 +1,317 @@
+{
+  "schema": "dsh-flow-real/1",
+  "generatedAt": "2026-11-01T04:24:20.297Z",
+  "id": "YuJunZhiXue__dsh-purge",
+  "package": "dsh-purge",
+  "version": "1.1.86",
+  "entry18Version": "1.1.85",
+  "source": "github",
+  "spec": "YuJunZhiXue/dsh-purge",
+  "why": "postinstall/profile behavior",
+  "packageDir": "/tmp/flow-sample/YuJunZhiXue__dsh-purge",
+  "download": {
+    "kind": "git-clone",
+    "command": "git clone --depth 1 https://github.com/YuJunZhiXue/dsh-purge.git /tmp/flow-sample/YuJunZhiXue__dsh-purge",
+    "url": "https://github.com/YuJunZhiXue/dsh-purge",
+    "gitHead": "1bdf2399701ddea298adac8d0fad52314251ca7b",
+    "gitSubject": "fix: 回收流程防 PID 复用误杀并等待端口释放，版本 1.1.86（#197/#198）",
+    "actualVersion": "1.1.86"
+  },
+  "manifest": {
+    "name": "dsh-purge",
+    "version": "1.1.86",
+    "engines": {
+      "node": ">=18"
+    },
+    "peerDependencies": {
+      "@deepseek-ai/cordis": "^4.0.1"
+    },
+    "dependencies": null,
+    "scripts": {
+      "postinstall": "node scripts/ensure-profile-bundle.mjs"
+    },
+    "dsh": {
+      "bundle": {
+        "patch": "./cordis.patch.yml"
+      },
+      "client": {
+        "platform": "web",
+        "inject": [
+          "@deepseek-ai/dsh-client-connection",
+          "@deepseek-ai/dsh-client-runtime",
+          "@deepseek-ai/dsh-client-locale",
+          "@deepseek-ai/dsh-client-ui-slots",
+          "@deepseek-ai/dsh-client-ui-settings",
+          "@deepseek-ai/dsh-client-ui-conversation"
+        ]
+      },
+      "install": {
+        "preferred": "tarball",
+        "tarball": "https://codeload.github.com/YuJunZhiXue/dsh-purge/tar.gz/refs/heads/master",
+        "zip": "https://codeload.github.com/YuJunZhiXue/dsh-purge/zip/refs/heads/master",
+        "git": "https://github.com/YuJunZhiXue/dsh-purge.git"
+      }
+    }
+  },
+  "dependencyInstall": {
+    "needed": false,
+    "command": null,
+    "exit": 0,
+    "ignoredScripts": true,
+    "note": "no dependencies in package.json; npm install skipped"
+  },
+  "previous": null,
+  "gate": null,
+  "journey": {
+    "command": "/home/yy/opt/node-v24.22.1-linux-x64/bin/node /mnt/c/Users/zzhdz/WorkBuddy/2026-10-30-16-02-58/dsh-standard/40-checker/scripts/journey-runtime.mjs --package /tmp/flow-sample/YuJunZhiXue__dsh-purge --dsh /tmp/dsh022/node_modules/@deepseek-ai/dsh/lib/bin.js --json",
+    "exit": 0,
+    "parseError": null,
+    "stderr": "",
+    "result": {
+      "schema": "dsh-flow-runtime/1",
+      "package": "dsh-purge",
+      "version": "1.1.86",
+      "previous": null,
+      "mode": "j1-j2-j4-j6-runtime",
+      "checks": [
+        {
+          "id": "J1.profile",
+          "result": "PASS",
+          "reason": "create profile exit=0",
+          "stderr": ""
+        },
+        {
+          "id": "J1.install",
+          "result": "PASS",
+          "reason": "add exit=0",
+          "stderr": "[WARN] The package dsh-purge, which you have just pnpm linked, has the following peerDependencies specified in its package.json:\n\n  - @deepseek-ai/cordis@^4.0.1\n\nThe linked in dependency will not resolve the peer dependencies from the target node_modules.\nThis might cause issues in your project. To resolve this, you may use the \"file:\" protocol to reference the local dependency.\nAlready up to date\n\ndependencies:\n+ dsh-purge <- ../../../flow-sample/YuJunZhiXue__dsh-purge\n\nDone in 25ms using pnpm v12.15.0\n"
+        },
+        {
+          "id": "J1.dump",
+          "result": "PASS",
+          "reason": "dump exit=0",
+          "stderr": "dsh: [dsh-purge] patch: entry \"redteam-store\" not found\ndsh: [dsh-purge] patch: entry \"redteam-ui\" not found\ndsh: [dsh-purge] patch: entry \"redteam-mode\" not found\ndsh: [dsh-purge] patch: entry \"redteam-mode-store\" not found\ndsh: [dsh-purge] patch: entry \"redteam-mode-ui\" not found\ndsh: [dsh-purge] patch: entry \"dsh-purge\" not found\n"
+        },
+        {
+          "id": "J1.layer",
+          "result": "PASS",
+          "reason": "layer/entry appears in dump"
+        },
+        {
+          "id": "J2.disable",
+          "result": "PASS",
+          "reason": "row dsh-purge-redteam disabled",
+          "stderr": "dsh: [dsh-purge] patch: entry \"redteam-store\" not found\ndsh: [dsh-purge] patch: entry \"redteam-ui\" not found\ndsh: [dsh-purge] patch: entry \"redteam-mode\" not found\ndsh: [dsh-purge] patch: entry \"redteam-mode-store\" not found\ndsh: [dsh-purge] patch: entry \"redteam-mode-ui\" not found\ndsh: [dsh-purge] patch: entry \"dsh-purge\" not found\n"
+        },
+        {
+          "id": "J2.enable",
+          "result": "PASS",
+          "reason": "row dsh-purge-redteam enabled again",
+          "stderr": "dsh: [dsh-purge] patch: entry \"redteam-store\" not found\ndsh: [dsh-purge] patch: entry \"redteam-ui\" not found\ndsh: [dsh-purge] patch: entry \"redteam-mode\" not found\ndsh: [dsh-purge] patch: entry \"redteam-mode-store\" not found\ndsh: [dsh-purge] patch: entry \"redteam-mode-ui\" not found\ndsh: [dsh-purge] patch: entry \"dsh-purge\" not found\n"
+        },
+        {
+          "id": "J1.remove",
+          "result": "PASS",
+          "reason": "remove exit=0",
+          "stderr": "Already up to date\n\ndependencies:\n- dsh-purge link:/tmp/flow-sample/YuJunZhiXue__dsh-purge\n\nDone in 17ms using pnpm v12.15.0\n"
+        },
+        {
+          "id": "J1.clean",
+          "result": "PASS",
+          "reason": "layer/dependency gone after remove"
+        },
+        {
+          "id": "J4.tree-load",
+          "result": "PASS",
+          "reason": "keyless boot reached the credential boundary",
+          "stderr": "\ndsh: warning: 1 entry did not activate\ndsh-purge-redteam-ui (dsh-purge/redteam/ui): pending (waiting for service: webServer)\ndsh: MISSING_CREDENTIAL: llm-deepseek: no API key for provider route \"deepseek-official\"; store DEEPSEEK_API_KEY through the credentials service (the web Models page writes it), or export DEEPSEEK_API_KEY in the launching environment\n"
+        },
+        {
+          "id": "J6.upgrade",
+          "result": "not-run",
+          "reason": "no --previous package supplied"
+        },
+        {
+          "id": "J6.rollback",
+          "result": "not-run",
+          "reason": "no --previous package supplied"
+        },
+        {
+          "id": "J3.config",
+          "result": "not-run",
+          "reason": "invalid-config harness not implemented; do not claim J3"
+        },
+        {
+          "id": "J5.permissions",
+          "result": "not-run",
+          "reason": "permissions/disclosure review is manual"
+        },
+        {
+          "id": "J7.observe",
+          "result": "not-run",
+          "reason": "observability probe not implemented"
+        },
+        {
+          "id": "J8.client",
+          "result": "not-run",
+          "reason": "client-shape probe not implemented"
+        }
+      ],
+      "summary": {
+        "pass": 9,
+        "warn": 0,
+        "fail": 0,
+        "notRun": 6
+      },
+      "conclusion": "flow-warn"
+    }
+  },
+  "layerProbe": {
+    "command": "/tmp/dsh022/node_modules/@deepseek-ai/dsh/lib/bin.js --profile flow-layer --dump-config",
+    "dshHome": "/tmp/dsh-flow-layer-ZwrR4e",
+    "profile": "flow-layer",
+    "createExit": 0,
+    "addExit": 0,
+    "dumpExit": 0,
+    "mainRowPresent": false,
+    "redteamRowIds": [
+      "dsh-purge-redteam",
+      "dsh-purge-redteam-store",
+      "dsh-purge-redteam-ui"
+    ],
+    "missingPatchEntries": [
+      "redteam-store",
+      "redteam-ui",
+      "redteam-mode",
+      "redteam-mode-store",
+      "redteam-mode-ui",
+      "dsh-purge"
+    ],
+    "profileBundles": [
+      "@deepseek-ai/dsh-base",
+      "@deepseek-ai/dsh-headless",
+      "dsh-purge"
+    ],
+    "dumpStderr": "dsh: [dsh-purge] patch: entry \"redteam-store\" not found\ndsh: [dsh-purge] patch: entry \"redteam-ui\" not found\ndsh: [dsh-purge] patch: entry \"redteam-mode\" not found\ndsh: [dsh-purge] patch: entry \"redteam-mode-store\" not found\ndsh: [dsh-purge] patch: entry \"redteam-mode-ui\" not found\ndsh: [dsh-purge] patch: entry \"dsh-purge\" not found\n",
+    "cleanedUp": true
+  },
+  "checks": [
+    {
+      "id": "J1.profile",
+      "result": "PASS",
+      "reason": "create profile exit=0",
+      "stderr": ""
+    },
+    {
+      "id": "J1.install",
+      "result": "PASS",
+      "reason": "add exit=0",
+      "stderr": "[WARN] The package dsh-purge, which you have just pnpm linked, has the following peerDependencies specified in its package.json:\n\n  - @deepseek-ai/cordis@^4.0.1\n\nThe linked in dependency will not resolve the peer dependencies from the target node_modules.\nThis might cause issues in your project. To resolve this, you may use the \"file:\" protocol to reference the local dependency.\nAlready up to date\n\ndependencies:\n+ dsh-purge <- ../../../flow-sample/YuJunZhiXue__dsh-purge\n\nDone in 25ms using pnpm v12.15.0\n"
+    },
+    {
+      "id": "J1.dump",
+      "result": "PASS",
+      "reason": "dump exit=0",
+      "stderr": "dsh: [dsh-purge] patch: entry \"redteam-store\" not found\ndsh: [dsh-purge] patch: entry \"redteam-ui\" not found\ndsh: [dsh-purge] patch: entry \"redteam-mode\" not found\ndsh: [dsh-purge] patch: entry \"redteam-mode-store\" not found\ndsh: [dsh-purge] patch: entry \"redteam-mode-ui\" not found\ndsh: [dsh-purge] patch: entry \"dsh-purge\" not found\n"
+    },
+    {
+      "id": "J1.layer",
+      "result": "PASS",
+      "reason": "layer/entry appears in dump"
+    },
+    {
+      "id": "J2.disable",
+      "result": "PASS",
+      "reason": "row dsh-purge-redteam disabled",
+      "stderr": "dsh: [dsh-purge] patch: entry \"redteam-store\" not found\ndsh: [dsh-purge] patch: entry \"redteam-ui\" not found\ndsh: [dsh-purge] patch: entry \"redteam-mode\" not found\ndsh: [dsh-purge] patch: entry \"redteam-mode-store\" not found\ndsh: [dsh-purge] patch: entry \"redteam-mode-ui\" not found\ndsh: [dsh-purge] patch: entry \"dsh-purge\" not found\n"
+    },
+    {
+      "id": "J2.enable",
+      "result": "PASS",
+      "reason": "row dsh-purge-redteam enabled again",
+      "stderr": "dsh: [dsh-purge] patch: entry \"redteam-store\" not found\ndsh: [dsh-purge] patch: entry \"redteam-ui\" not found\ndsh: [dsh-purge] patch: entry \"redteam-mode\" not found\ndsh: [dsh-purge] patch: entry \"redteam-mode-store\" not found\ndsh: [dsh-purge] patch: entry \"redteam-mode-ui\" not found\ndsh: [dsh-purge] patch: entry \"dsh-purge\" not found\n"
+    },
+    {
+      "id": "J1.remove",
+      "result": "PASS",
+      "reason": "remove exit=0",
+      "stderr": "Already up to date\n\ndependencies:\n- dsh-purge link:/tmp/flow-sample/YuJunZhiXue__dsh-purge\n\nDone in 17ms using pnpm v12.15.0\n"
+    },
+    {
+      "id": "J1.clean",
+      "result": "PASS",
+      "reason": "layer/dependency gone after remove"
+    },
+    {
+      "id": "J4.tree-load",
+      "result": "PASS",
+      "reason": "keyless boot reached the credential boundary",
+      "stderr": "\ndsh: warning: 1 entry did not activate\ndsh-purge-redteam-ui (dsh-purge/redteam/ui): pending (waiting for service: webServer)\ndsh: MISSING_CREDENTIAL: llm-deepseek: no API key for provider route \"deepseek-official\"; store DEEPSEEK_API_KEY through the credentials service (the web Models page writes it), or export DEEPSEEK_API_KEY in the launching environment\n"
+    },
+    {
+      "id": "J6.upgrade",
+      "result": "not-run",
+      "reason": "no --previous package supplied"
+    },
+    {
+      "id": "J6.rollback",
+      "result": "not-run",
+      "reason": "no --previous package supplied"
+    },
+    {
+      "id": "J3.config",
+      "result": "not-run",
+      "reason": "invalid-config harness not implemented; do not claim J3"
+    },
+    {
+      "id": "J5.permissions",
+      "result": "not-run",
+      "reason": "permissions/disclosure review is manual"
+    },
+    {
+      "id": "J7.observe",
+      "result": "not-run",
+      "reason": "observability probe not implemented"
+    },
+    {
+      "id": "J8.client",
+      "result": "not-run",
+      "reason": "client-shape probe not implemented"
+    }
+  ],
+  "verdicts": {
+    "J1": "partial",
+    "J2": "partial",
+    "J4": "pass",
+    "J6": "not-run"
+  },
+  "classification": "harness-partial",
+  "caveats": [
+    "J1 is partial: the package postinstall was not run (`--ignore-scripts`); the main `dsh-purge` profile row is absent even though add/dump/remove succeeded.",
+    "J2 is partial: the overlay toggled `dsh-purge-redteam`, not the main `dsh-purge` row.",
+    "J4 reached the credential boundary, but the main plugin was not mounted; this proves tree-load only.",
+    "Actual package version 1.1.86 differs from entry18.json 1.1.85."
+  ],
+  "limitations": [
+    "J3/J5/J7/J8 are not covered by journey-runtime.",
+    "This is a local-directory install (`dsh plugin add <dir>`), not a registry tarball install."
+  ],
+  "summary": {
+    "checks": {
+      "pass": 9,
+      "warn": 0,
+      "fail": 0,
+      "blocked": 0,
+      "partial": 0,
+      "notRun": 6
+    },
+    "verdicts": {
+      "pass": 1,
+      "fail": 0,
+      "blocked": 0,
+      "partial": 2,
+      "notRun": 1
+    }
+  },
+  "conclusion": "flow-partial"
+}

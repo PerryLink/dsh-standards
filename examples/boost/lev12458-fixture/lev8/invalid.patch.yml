@@ -1,0 +1,2 @@
+# Deliberately malformed: insert must be a list, so the real parser must reject it.
+- insert: not-a-list

@@ -42,9 +42,23 @@
   documented canonicalization，不是第二次 capture；token 用 DSH 的 4 chars/token 估算，
   不含 per-block overhead。**不得写成“省 X% 钱”或“真实 cache 命中率”**。
 
+## LEV-1 / 2 / 4 / 5 / 8（2026-11-01 补）
+
+- 实现：`examples/boost/lev12458-bench.mjs`；fixture：`examples/boost/lev12458-fixture/`。
+- 原始数据：`40-checker/results/boost/lev12458.json`；说明：`40-checker/results/boost/REPORT.md`。
+- 结果（全部带负向对照）：
+  - LEV-1：effect disposer 5/5、interval handle 1→1；裸 `setInterval` 负控 0 disposer、handle 1→6。
+  - LEV-2：consumer 在 provider 前 PENDING(0)，provider 后 ACTIVE(2)；直接 `ctx.service` 不 inject 抛错。
+  - LEV-4：next `[L1,L2,inner]`；veto `[L1]`；emit/serial/bail 遇 throw 停止；parallel 跑满 3 个并 AggregateError。
+  - LEV-5：两个 loader isolate realm，A/B 各见自己的 provider，跨 realm 0 串扰；root consumer PENDING。
+  - LEV-8：base 2 行 + sample 1 行，toggle 只改 `lev8-sample.disabled`；坏 insert 被拒；缺失 target 仅警告且 inert。
+- 等级：loader-level（LEV-1/2/5/8）、context-level（LEV-4）；不是生产 profile 基准。
+
 ## 结论
 
-- BOOST 现在有 **LEV-3（loader-level）**、**LEV-6（provider-capture）**、**LEV-7（合成 timer，8.24×）**
-  三组可复现数据。
+- BOOST 现在 **LEV-1–8 都有 measured 证据**：LEV-3（loader）、LEV-6（provider-capture）、
+  LEV-7（合成 timer 8.24×）、LEV-1/2/4/5/8（loader/context-level）。
+- 仍然没有生产 profile / 真实 provider 的端到端基准；`boost-evidenced` 只适用于
+  “在这组 fixture 与版本上成立”，不是对外保证。
 - 仍然没有生产 profile / 真实 provider 的端到端基准；`boost-evidenced` 只适用于
   “在这组 fixture 与版本上成立”，不是对外保证。
