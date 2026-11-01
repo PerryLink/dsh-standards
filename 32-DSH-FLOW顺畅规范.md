@@ -5,7 +5,7 @@
 > **依据**：`94-开发建议-顺畅.md`、`87` 的 8 条用户旅程、`81` 的验收缺口。
 > **不是**：认证、排名、完整契约审计；未跑=WARN，不冒充 PASS。
 > **对外状态**：内部草案；J3/J5/J7/J8 未跑，暂不作为对外规范。
-> **当前 runtime**：fixture 上 J1/J2/J4/J6 12 PASS；5 个真实包上 **40 PASS / 0 FAIL / 1 blocked / 2 partial**（`results/flow/real/`）；J3/J5/J7/J8 仍 `not-run`。
+> **当前 runtime**：fixture 上 J1/J2/J4/J6 12 PASS；10 个真实包上 **78 PASS / 4 FAIL / 2 blocked / 66 not-run**（`results/flow/real/`）；J3/J5/J7/J8 仍 `not-run`。
 > **已知未完成**：J1–J8 的完整 runtime harness 尚未落成；`journey.mjs` 仍有 static-prep。
 > **三层模型**：`34`；作者清单：`35`；生命周期：`36`。
 

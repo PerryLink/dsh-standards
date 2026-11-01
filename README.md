@@ -8,7 +8,7 @@
 | 层 | 规范/实践 | 当前状态 |
 |---|---|---|
 | 1 | **DSH-ENTRY 入门规范** | 18/18 `recognized`；10/18 base-only G3 verified，gate 后 8/18 clean；client 15/15 loaded |
-| 2 | **DSH-FLOW 顺畅规范** | draft；fixture 上 J1/J2/J4/J6 **12 PASS**；5 个真实包 **40 PASS / 0 FAIL / 1 blocked**；J3/J5/J7/J8 仍 `not-run` |
+| 2 | **DSH-FLOW 顺畅规范** | draft；fixture 上 J1/J2/J4/J6 **12 PASS**；10 个真实包 **78 PASS / 4 FAIL / 2 blocked / 66 not-run**；J3/J5/J7/J8 仍 `not-run` |
 | 3 | **DSH-BOOST 加速实践** | draft；LEV-1–8 **8/8 measured**（loader / context / provider-capture / synthetic timer；非生产基线） |
 
 ## 先看什么
