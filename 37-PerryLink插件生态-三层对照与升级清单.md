@@ -21,7 +21,7 @@
 | `dsh-score` | 多维度评分 | 质量（正交） | 消费 test-drive；无层字段 | 未改（本轮） | 明确“score 不是 level”；输出层证据链接而不算分 |
 | `dsh-test-drive` | 隔离安装/冒烟 | ENTRY（安装/加载） | 成熟；可提供 E 证据 | 未改（本轮） | 记录 `levels.entry` 证据，供 doctor/certification 消费 |
 | `dsh-policy-ledger` | 安装诊断 | ENTRY（安装） | 有 tarball/安装日志诊断 | 未改（本轮） | 把安装失败映射到 G0/G2/G3 归因 |
-| `dsh-cert-mcp` | 认证 registry MCP | 认证（正交） | 只读 MCP | 未改（本轮） | 增加 `get_levels` 只读工具（不改变认证结论） |
+| `dsh-cert-mcp` | 认证 registry MCP | 认证（正交） | 只读 MCP | **已推送 `cdc2966`：镜像 2026-11-01 认证刷新；CI 绿** | 增加 `get_levels` 只读工具（不改变认证结论） |
 | `dsh-eval-pack` | eval lint/grader | 不属于三层 | 独立评测 | 未改（本轮） | 只作为 BOOST 证据卡的输入之一，不贴层标签 |
 
 ---
