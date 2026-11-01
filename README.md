@@ -33,6 +33,7 @@
 - [45-三用途落地](45-三用途落地-官方市场开发者.md) — **官方前沿探索 / 市场参考 / 开发者指南**
 - [P0-P2 执行状态](P0-P2-STATUS.md) — 逐项 DONE / PARTIAL / REPLACED
 - [46-剩余事项与执行建议](46-剩余事项与执行建议.md) — 还差什么、先做什么、什么不做
+- [47-配套插件发布记录](47-配套插件发布记录-2026-11-02.md) — guide/doctor/kit/upgrade/cert-mcp 的 npm + Release
 - [scheme/](scheme/SCHEME-v1.md) — A–E / A–D 评价方案与 rubric
 - [evidence/](evidence/README.md) — 追加式证据链与复跑说明
 - [97-采纳可行性评估](97-采纳可行性评估.md) — 官方路径、缺口、90 天
