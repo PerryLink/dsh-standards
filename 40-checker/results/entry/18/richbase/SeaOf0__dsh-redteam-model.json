@@ -1,0 +1,61 @@
+{
+  "schema": "dsh-entry18-web/1",
+  "id": "SeaOf0__dsh-redteam-model",
+  "name": "@dsh-external/dsh-redteam-model",
+  "version": "1.1.2",
+  "source": "github",
+  "spec": "SeaOf0/dsh-redteam-model",
+  "profile": "web",
+  "base": {
+    "layer": "dsh-base/cordis.patch.yml",
+    "webLayer": true,
+    "webLayerPath": "/tmp/dsh022/node_modules/@deepseek-ai/dsh-web-app/cordis.patch.yml"
+  },
+  "environment": "local",
+  "dshVersion": "0.2.2-alpha.2",
+  "dshVersionExpected": "0.2.2-alpha.2",
+  "host": {
+    "packageRoot": "/tmp/dsh022/node_modules/@deepseek-ai/dsh",
+    "depsRoot": "/tmp/dsh022/node_modules",
+    "appBoot": "/tmp/dsh022/node_modules/@deepseek-ai/dsh-app-boot/lib/index.js",
+    "basePatch": "/tmp/dsh022/node_modules/@deepseek-ai/dsh-base/cordis.patch.yml",
+    "webPatch": "/tmp/dsh022/node_modules/@deepseek-ai/dsh-web-app/cordis.patch.yml"
+  },
+  "startedAt": "2026-11-01T10:30:59.460Z",
+  "finishedAt": "2026-11-01T10:31:50.828Z",
+  "elapsedMs": 51368,
+  "fixture": "git-clone",
+  "artifact": {
+    "requested": "SeaOf0/dsh-redteam-model",
+    "resolved": "git-clone",
+    "reason": "no published npm tarball at @dsh-external/dsh-redteam-model@1.1.2",
+    "manifestName": "@dsh-external/dsh-redteam-model",
+    "manifestVersion": "1.1.2",
+    "versionMatches": true,
+    "nameMatches": true,
+    "publishedRepository": null,
+    "tarball": null,
+    "repository": "https://github.com/SeaOf0/dsh-redteam-model.git"
+  },
+  "installScripts": "skipped",
+  "installCommand": "npm install --omit=dev --ignore-scripts --legacy-peer-deps --no-package-lock --no-audit --no-fund",
+  "manifestRewrite": "removed devDependencies+scripts",
+  "install": {
+    "command": "npm install --omit=dev --ignore-scripts --legacy-peer-deps --no-package-lock --no-audit --no-fund",
+    "status": "ok",
+    "elapsedMs": 239,
+    "scripts": "skipped"
+  },
+  "status": "error",
+  "verdict": "error",
+  "g3State": null,
+  "g3Rows": null,
+  "g3Active": null,
+  "compatibility": null,
+  "exitCode": 3,
+  "smoke": null,
+  "error": {
+    "stage": "smoke",
+    "message": "…on-log-download    connection\n  open-in-app             webServer, connection\n  directory-picker        webServer, connection\n  session-controller      fileUploads\n  web-startup             cmdlineArgs\n  harness-dev-context     webApp\n  client-hmr              webServer\n  file-upload             connection\n  ui-deliverables         connection, sessionController\n  dsh-redteam-model       connection"
+  }
+}

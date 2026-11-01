@@ -1,28 +1,34 @@
 # 30-minute path: from template to the first evidence record
 
 > Goal: one non-`not-run` record in ≤30 minutes (median), not a “pass”.
-> If a command below is not available yet, the gap is tracked in `43` (DEV-02/06).
+> The commands below are first-party and runnable from this repo. The 30-minute median remains `not-run` until external timings exist.
 
 ## 0–5 min: get a template
 
 ```bash
-npx dsh-plugin-kit create my-plugin
+cp -r <standards>/examples/plugin-template my-plugin
 cd my-plugin
+# edit package.json: name, description, license
 ```
 
-If the kit is not installed, use any DSH plugin skeleton; the only required
-fields are `name`, `apply(ctx, config)`, and a `dsh` manifest entry.
+The template is first-party (`examples/plugin-template`). Do **not** use
+`npx dsh-plugin-kit`: that bare npm name is a different project. If you already
+have a skeleton, the only required fields are `name`, `apply(ctx, config)`, and
+a `dsh` manifest entry.
 
 ## 5–15 min: static ENTRY
 
 ```bash
-node <standards>/40-checker/scripts/level-audit.mjs . --format json
+node <standards>/40-checker/bin/dsh-levels.mjs audit . --format json
 ```
+
+Do not add `--level` / `--claim`: those are `dsh-plugin-verify` flags, not
+`dsh-levels` flags.
 
 Read the JSON, not the badge:
 
-- `level: "entry"`, `status: "static"` or `"runtime"`;
-- `gates.G0..G5` with `PASS/FAIL/NOT-RUN`;
+- `levels.entry.state`: `recognized` (static) or `runtime`;
+- `levels.entry.checkerStatus` / `warnings`: what to fix next;
 - `notClaimed` tells you what this does **not** prove.
 
 ## 15–25 min: fix the first three failures
@@ -41,7 +47,7 @@ green.
 ## 25–30 min: write the record
 
 ```bash
-node <standards>/40-checker/scripts/level-audit.mjs . \
+node <standards>/40-checker/bin/dsh-levels.mjs audit . \
   --format json --out evidence.json
 ```
 

@@ -8,6 +8,10 @@ Generated: 2026-10-31T13:24:19.371Z (static) · 2026-11-01 (runtime)
   `dsh@0.2.2-alpha.2` + `dsh-base`; G3 `verified` 10, `partial` 8, `error` 0;
   after the host gate, clean `verified` 8, `gate-reject` 2 (`telemetry`,
   `verification`), `partial` 8. See `fullbase/REPORT.md` and `fullbase/summary.json`.
+- **Runtime web-layer** (`richbase/`): 2026-11-01 time-boxed experiment; the
+  first shard (`SeaOf0__dsh-redteam-model`) was **blocked** because
+  `bundle-smoke` cannot supply `webStartup`/`cmdlineArgs`/`webApp`; no row was
+  promoted. See `richbase/REPORT.md`.
 - **Target-only** (`targetonly/`): earlier attempt without the base layer; it is
   retained only as an intermediate artifact, not as the runtime result.
 - The old "runtime JSON is still missing / 7/18" note is obsolete. The

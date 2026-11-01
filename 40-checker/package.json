@@ -1,6 +1,7 @@
 {
   "name": "dsh-plugin-verify",
   "version": "0.1.0",
+  "private": true,
   "description": "DS-C conformance checker MVP for DeepSeek Harness plugins (standalone, zero dependencies)",
   "type": "module",
   "bin": {

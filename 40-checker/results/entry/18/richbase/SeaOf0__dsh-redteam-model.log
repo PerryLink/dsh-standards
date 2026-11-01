@@ -1,0 +1,38 @@
+# entry18 web shard: SeaOf0__dsh-redteam-model
+# name=@dsh-external/dsh-redteam-model version=1.1.2 source=github spec=SeaOf0/dsh-redteam-model
+# dshVersion=0.2.2-alpha.2 profile=web webLayer=true environment=local
+# startedAt=2026-11-01T10:30:59.460Z
+[farm] /tmp/dsh-entry18-farm-736660 (202 host entries linked, marker=.entry18-farm)
+[fixture] plan=git-clone reason=no published npm tarball at @dsh-external/dsh-redteam-model@1.1.2
+[git-clone] $ git clone --depth 1 https://github.com/SeaOf0/dsh-redteam-model.git /tmp/dsh-entry18-farm-736660/plugins/SeaOf0__dsh-redteam-model
+[git-clone] exit 0 (46080ms)
+[git-clone:stderr]
+Cloning into '/tmp/dsh-entry18-farm-736660/plugins/SeaOf0__dsh-redteam-model'...
+[fixture] packageDir=/tmp/dsh-entry18-farm-736660/plugins/SeaOf0__dsh-redteam-model manifest=@dsh-external/dsh-redteam-model@1.1.2 bundle="./cordis.patch.yml"
+[manifest] rewrite=removed devDependencies+scripts
+[npm-install] $ npm install --omit=dev --ignore-scripts --legacy-peer-deps --no-package-lock --no-audit --no-fund
+[npm-install] exit 0 (239ms)
+[npm-install:stdout]
+
+up to date in 193ms
+[link] node_modules/@dsh-external/dsh-redteam-model -> /tmp/dsh-entry18-farm-736660/plugins/SeaOf0__dsh-redteam-model
+[bundle-smoke] $ /home/yy/opt/node-v24.22.1-linux-x64/bin/node /mnt/c/Users/zzhdz/WorkBuddy/2026-10-30-16-02-58/dsh-standard/40-checker/scripts/bundle-smoke.mjs --package /tmp/dsh-entry18-farm-736660/plugins/SeaOf0__dsh-redteam-model --host /tmp/dsh022/node_modules/@deepseek-ai/dsh-app-boot/lib/index.js --base /tmp/dsh022/node_modules/@deepseek-ai/dsh-base/cordis.patch.yml --web /tmp/dsh022/node_modules/@deepseek-ai/dsh-web-app/cordis.patch.yml --bare /tmp/dsh-entry18-farm-736660/ --timeout 150000 --json
+[bundle-smoke] exit 3 (2822ms)
+[bundle-smoke:stderr]
+bundle-smoke: bundle-smoke: startup failed: 3 required plugins did not activate
+
+Plugins waiting for services (13):
+  Plugin                  Missing services
+  webserver (required)    webStartup
+  web-runtime (required)  webServer, webStartup
+  connection (required)   webStartup
+  session-log-download    connection
+  open-in-app             webServer, connection
+  directory-picker        webServer, connection
+  session-controller      fileUploads
+  web-startup             cmdlineArgs
+  harness-dev-context     webApp
+  client-hmr              webServer
+  file-upload             connection
+  ui-deliverables         connection, sessionController
+  dsh-redteam-model       connection

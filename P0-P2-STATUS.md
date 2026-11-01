@@ -28,7 +28,7 @@
 | EVD-08 doctor blocked/G4 | DONE (G4) | G4 static; doctor `blocked` is a separate repo task |
 | EVD-09 report schema | DONE | `spec/schemas/report.schema.json` |
 | EVD-10 reference suite | DONE | `spec/reference-suite.json` |
-| EVD-12 evidence chain | DONE | `evidence/chain.jsonl` + `evidence-chain.mjs` |
+| EVD-12 evidence chain | DONE | `evidence/chain.jsonl` (6 entries, incl. richbase blocked row) + `evidence-chain.mjs`; verify PASS |
 | EVD-13 one-command reproduce | PARTIAL | `level-audit` + `nextActions`; no unified `dsh-levels audit` |
 | EVD-14 evidence schema | DONE | `dsh-levels/1` + audience/claimLevel/render |
 | EVD-18 failure taxonomy | DONE | `docs/status-taxonomy.md` |
@@ -42,7 +42,7 @@
 | MKT-01/03/04/08/10 | DONE | portal `f882144`: 99-repo levels, attestation mirror, verify page, checks 8-11 |
 | DEV-01 checklists | DONE | `CHECKLIST-{entry,flow,boost}.md` |
 | DEV-03 error catalog | DONE | `ERRORS.md` |
-| DEV-05 kit template | DONE | guide `e75cd9f` scaffolder + kit `9897213` manual template; `dsh.standards` not-run |
+| DEV-05 kit template | DONE | `examples/plugin-template` (first-party) + `scripts/doc-commands-check.mjs`; `dsh.standards` stays `not-run` |
 | DEV-06 single CLI | DONE | `40-checker/bin/dsh-levels.mjs audit` forwards to `level-audit` |
 | DEV-08 bilingual parity | PARTIAL | translation rules; no parity script |
 | DEV-09 minimal examples | DONE | `examples/boost`, fixtures, `QUICKSTART` |
@@ -58,14 +58,14 @@
 | EVD-03 J7 observability | DONE (fixture-level) | `journey-config-observe.mjs`: start line + credential boundary |
 | EVD-04 J8 client shapes | DONE (module-load) | shape preflight + `web-probe.mjs`; 15/15 `client-module-loaded`, render not claimed |
 | EVD-05 10 packages | DONE | 10 real packages; 4 second-wave J4 pass, 1 (`verification`) recorded FAIL |
-| EVD-07 18/18 clean | REPLACED | `fullbase/ATTRIBUTION.md` maps 8 partials to missing host services; a clean 18/18 needs a richer profile, which is outside the plugin/checker scope. No fake clean. |
-| EVD-11 round-robin | DONE | `round-robin.yml` ubuntu+windows; artifact `rounds/2026Q4.json` `comparable:true` (latest main run `5bbfbc6`/`8cc8030`) |
+| EVD-07 18/18 clean | REPLACED (richbase blocked) | `fullbase/ATTRIBUTION.md` maps 8 partials to missing host services; 2026-11-01 web-layer shard `SeaOf0__dsh-redteam-model` blocked by missing `webStartup`/`cmdlineArgs`/`webApp` (`results/entry/18/richbase/REPORT.md`); no promotion, no fake clean. |
+| EVD-11 round-robin | DONE | `round-robin.yml` ubuntu+windows; artifact `rounds/2026Q4.json` `comparable:true`; current main run `8535131` success |
 | EVD-15 stale clock | DONE | `stale-check.mjs`; fixed-date test |
 | EVD-16 negative controls | DONE | G4 + existing 5 negatives |
 | EVD-17 cross-platform | DONE | `.github/workflows/cross-platform.yml` (ubuntu+windows) |
 | EVD-20 benchmark entry | DONE | `bench/README.md` |
 | CRT-04 appeal dry-run | DONE | `governance/disputes/DSP-2026-001.json` |
-| CRT-06 surveillance | DONE | `surveillance.mjs` + `surveillance/2026Q4.json` |
+| CRT-06 surveillance | DONE (local) | `surveillance.mjs` + `surveillance/2026Q4.json`; 2026-11-01 local run 1 record / 0 issues; workflow exists but GitHub 0 runs (dispatch 401) |
 | CRT-08 status history | DONE | `history[]` in schema/example |
 | CRT-09 verify page | DONE | `publish/verify.mjs` + `verify.html` |
 | CRT-10 rubric | DONE | `scheme/rubric.json` |
@@ -87,7 +87,7 @@ faked**:
 
 | Original | Replacement | What is not claimed |
 |---|---|---|
-| 18/18 clean | per-row attribution to missing host services | clean 18/18 |
+| 18/18 clean | per-row attribution to missing host services; 2026-11-01 web-layer experiment blocked (no promotion) | clean 18/18 |
 | 5-author 30-minute median | machine dry run + self-serve submission format | a human median |
 | J8 browser render | module-load probe + shape preflight | UI correctness |
 
@@ -113,13 +113,15 @@ result.
 
 | Repo | Commit | CI |
 |---|---|---|
-| `dsh-standards` | `cfe29c5` (latest) | governance / cross-platform / round-robin success |
+| `dsh-standards` | `8535131` (HEAD @ 2026-11-01) | governance / cross-platform / round-robin success |
 | `dsh-plugin-portal` | `f882144` | CI success |
-| `dsh-plugin-guide` | `e75cd9f` | verify-kit / plugin-doctor / pages success |
-| `dsh-plugin-kit` | `9897213` | ci success |
+| `dsh-primer` | `97f26db` | verify-kit / plugin-doctor / Release success |
+| `dsh-scaffold` | `40893ab` (migration; main `5f9a17d`) | ci / plugin-doctor success at migration |
 | `dsh-catalog` | `a272d06` | ci + deploy success |
 | `dsh-plugin-certification` | `2f27666` | Checks success |
-| `dsh-cert-mcp` | `4f0cf72` | smoke / plugin-doctor / registry-drift success |
+| `dsh-cert-mcp` | `4f0cf72` (release; main `f7b1088`) | smoke / plugin-doctor / registry-drift success |
+
+> 旧 `dsh-plugin-doctor` / `dsh-plugin-kit` / `dsh-plugin-guide` / `dsh-plugin-upgrade` 只作指针；新包名见 `49`。上表是迁移/发布提交的快照，不逐个声称各仓当前 HEAD 的 CI。
 
 ## Verification
 
@@ -131,6 +133,7 @@ node 40-checker/scripts/evidence-chain.mjs verify
 node 40-checker/scripts/stale-check.mjs
 node 40-checker/scripts/attestation-check.mjs
 node 40-checker/scripts/claim-check.mjs
+node 40-checker/scripts/doc-commands-check.mjs
 node publish/verify.mjs --id DSH-ATT-2026-001
 ```
 
@@ -138,10 +141,16 @@ node publish/verify.mjs --id DSH-ATT-2026-001
 
 1. `dsh-plugin-certification` keeps the historical `certified` brand; the
    standard repo’s schema/files/IDs are migrated, that separate repo is not.
-2. No external official/market/developer adoption yet; the kits are “rejectable
-   artifacts”, not adoption evidence.
+2. No external official/market/developer adoption and no external reviewer yet;
+   the kits are “rejectable artifacts”, not adoption evidence.
 3. J3/J7 are fixture-level runtime, not ecosystem-wide; J8 is module-load only,
    not UI render.
+4. The surveillance workflow exists but has no GitHub run; the 2026-11-01 local
+   run passed (1 record / 0 issues). `workflow_dispatch` needs auth, so the CI
+   first run is `blocked`, not done.
+5. The web-layer richbase experiment is `blocked`: `bundle-smoke` cannot supply
+   `webStartup`/`cmdlineArgs`/`webApp`/`fileUploads`. No row was promoted; the
+   base 10 verified / 8 partial result stands.
 
 These are **scope boundaries**, not hidden PASS claims. The replaced P2 items
 (18/18 clean, 5-author median, J8 render) are recorded in the replacement table

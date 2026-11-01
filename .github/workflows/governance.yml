@@ -49,6 +49,9 @@ jobs:
       - name: Public claims
         run: node 40-checker/scripts/claim-check.mjs
 
+      - name: Documented first-party commands
+        run: node 40-checker/scripts/doc-commands-check.mjs
+
       - name: J5/J8 static preflight
         run: node 40-checker/scripts/journey-disclosure-shape.mjs --package 40-checker/fixtures/good
 

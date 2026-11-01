@@ -1,6 +1,6 @@
 #!/usr/bin/env node
 /**
- * entry18-ci.mjs — reproducible full base-profile G0–G3 runtime evidence for
+ * entry18-ci.mjs — reproducible base- or web-layer G0–G3 runtime evidence for
  * the 18 ENTRY packages.
  *
  * One invocation serves one CI matrix shard (`--only <id>`), or all shards in
@@ -36,6 +36,7 @@
  *   --farm <dir>                 farm directory (default: <tmp>/dsh-entry18-farm-<pid>)
  *   --dsh-root <dir>             installed @deepseek-ai/dsh package root
  *                                (default: `<npm root -g>/@deepseek-ai/dsh`)
+ *   --web [patch]                also apply the web layer (default: @deepseek-ai/dsh-web-app/cordis.patch.yml)
  *   --expected-dsh-version <v>   fail before booting when the installed version differs
  *   --fixture <mode>             auto | published-tarball | git-clone (default: auto)
  *   --smoke-timeout <ms>         bundle-smoke boot budget (default: 150000)
@@ -66,6 +67,7 @@ const SMOKE_SCRIPT = path.join(STD, '40-checker', 'scripts', 'bundle-smoke.mjs')
 const DEFAULT_OUT = path.join(STD, '40-checker', 'results', 'entry', '18', 'fullbase')
 const HOST_ENTRY = path.join('@deepseek-ai', 'dsh-app-boot', 'lib', 'index.js')
 const BASE_PATCH = path.join('@deepseek-ai', 'dsh-base', 'cordis.patch.yml')
+const WEB_PATCH = path.join('@deepseek-ai', 'dsh-web-app', 'cordis.patch.yml')
 const FARM_MARKER = '.entry18-farm'
 const MAX_LOG_BYTES = 4 * 1024 * 1024
 const NPM = process.platform === 'win32' ? 'npm.cmd' : 'npm'
@@ -79,6 +81,7 @@ function usage() {
   --out <dir>                  result dir (default: 40-checker/results/entry/18/fullbase)
   --farm <dir>                 farm dir (default: <tmp>/dsh-entry18-farm-<pid>)
   --dsh-root <dir>             @deepseek-ai/dsh package root (default: <npm root -g>/@deepseek-ai/dsh)
+  --web [patch]                also apply the web layer (default: @deepseek-ai/dsh-web-app/cordis.patch.yml)
   --expected-dsh-version <v>   refuse to run on a different installed DSH version
   --fixture <mode>             auto | published-tarball | git-clone
   --smoke-timeout <ms>         bundle-smoke boot budget (default 150000)
@@ -92,7 +95,7 @@ function parseArgs(argv) {
   const options = {
     only: null, all: false, summary: false,
     out: DEFAULT_OUT, farm: null, dshRoot: null,
-    expectedDshVersion: null, fixture: 'auto',
+    expectedDshVersion: null, fixture: 'auto', web: null,
     smokeTimeout: 150_000, installTimeout: 300_000, fetchTimeout: 300_000,
     keepFarm: false, verbose: false,
   }
@@ -110,6 +113,15 @@ function parseArgs(argv) {
     else if (arg === '--out') options.out = path.resolve(next())
     else if (arg === '--farm') options.farm = path.resolve(next())
     else if (arg === '--dsh-root') options.dshRoot = path.resolve(next())
+    else if (arg === '--web') {
+      const value = argv[i + 1]
+      if (value !== undefined && !value.startsWith('-')) {
+        options.web = path.resolve(value)
+        i += 1
+      } else {
+        options.web = 'auto'
+      }
+    }
     else if (arg === '--expected-dsh-version') options.expectedDshVersion = next()
     else if (arg === '--fixture') options.fixture = next()
     else if (arg === '--keep-farm') options.keepFarm = true
@@ -393,14 +405,14 @@ function writeLog(outDir, id, lines) {
 
 function baseRow(row, context) {
   return {
-    schema: 'dsh-entry18-fullbase/1',
+    schema: context.webPatch ? 'dsh-entry18-web/1' : 'dsh-entry18-fullbase/1',
     id: row.id,
     name: row.name,
     version: row.version,
     source: row.source,
     spec: row.spec,
-    profile: 'base',
-    base: { layer: 'dsh-base/cordis.patch.yml', webLayer: false },
+    profile: context.webPatch ? 'web' : 'base',
+    base: { layer: 'dsh-base/cordis.patch.yml', webLayer: Boolean(context.webPatch), webLayerPath: context.webPatch ?? null },
     environment: process.env.GITHUB_ACTIONS === 'true' ? 'github-actions' : 'local',
     dshVersion: context.dshVersion,
     dshVersionExpected: context.options.expectedDshVersion,
@@ -409,6 +421,7 @@ function baseRow(row, context) {
       depsRoot: context.layout.depsRoot,
       appBoot: context.layout.appBoot,
       basePatch: context.layout.basePatch,
+      webPatch: context.webPatch ?? null,
     },
     startedAt: context.startedAt,
     finishedAt: null,
@@ -434,9 +447,9 @@ function baseRow(row, context) {
 function runShard(row, options, context) {
   const startedAt = context.startedAt
   const lines = []
-  lines.push(`# entry18 fullbase shard: ${row.id}`)
+  lines.push(`# entry18 ${context.webPatch ? 'web' : 'fullbase'} shard: ${row.id}`)
   lines.push(`# name=${row.name} version=${row.version} source=${row.source} spec=${row.spec}`)
-  lines.push(`# dshVersion=${context.dshVersion} profile=base webLayer=false environment=${process.env.GITHUB_ACTIONS === 'true' ? 'github-actions' : 'local'}`)
+  lines.push(`# dshVersion=${context.dshVersion} profile=${context.webPatch ? 'web' : 'base'} webLayer=${Boolean(context.webPatch)} environment=${process.env.GITHUB_ACTIONS === 'true' ? 'github-actions' : 'local'}`)
   lines.push(`# startedAt=${startedAt}`)
   const record = baseRow(row, context)
   // A shard that dies before writing must not leave an older row behind for
@@ -511,6 +524,7 @@ function runShard(row, options, context) {
       '--package', packageDir,
       '--host', context.layout.appBoot,
       '--base', context.layout.basePatch,
+      ...(context.webPatch ? ['--web', context.webPatch] : []),
       '--bare', `${farmDir}${path.sep}`,
       '--timeout', String(options.smokeTimeout),
       '--json',
@@ -564,11 +578,11 @@ function runShard(row, options, context) {
   }
 }
 
-function summarize(manifest, outDir, targetDshVersion) {
+function summarize(manifest, outDir, targetDshVersion, requestedProfile = 'base') {
   const rows = manifest.rows.map((row) => {
     const file = path.join(outDir, `${row.id}.json`)
     if (!fs.existsSync(file)) {
-      return { id: row.id, name: row.name, version: row.version, source: row.source, status: 'missing', fixture: null, g3State: null, targetRows: null, active: null, elapsedMs: null, error: null }
+      return { id: row.id, name: row.name, version: row.version, source: row.source, profile: null, status: 'missing', fixture: null, g3State: null, targetRows: null, active: null, elapsedMs: null, error: null }
     }
     const record = readJson(file)
     return {
@@ -576,6 +590,7 @@ function summarize(manifest, outDir, targetDshVersion) {
       name: row.name,
       version: row.version,
       source: row.source,
+      profile: record.profile ?? null,
       status: record.status,
       verdict: record.verdict ?? record.status,
       fixture: record.fixture,
@@ -594,11 +609,15 @@ function summarize(manifest, outDir, targetDshVersion) {
     verdicts[row.verdict ?? row.status] = (verdicts[row.verdict ?? row.status] ?? 0) + 1
   }
   const dshVersions = [...new Set(rows.map((row) => row.dshVersion).filter(Boolean))]
+  const profiles = new Set(rows.map((row) => row.profile).filter(Boolean))
+  const profile = profiles.has('web') ? 'web' : profiles.has('base') ? 'base' : requestedProfile
   return {
-    schema: 'dsh-entry18-fullbase-summary/1',
+    schema: profile === 'web' ? 'dsh-entry18-web-summary/1' : 'dsh-entry18-fullbase-summary/1',
     generatedAt: new Date().toISOString(),
-    profile: 'base',
-    note: 'Aggregates the <id>.json rows present in this directory. Run the entry18-runtime workflow to fill all 18 shards.',
+    profile,
+    note: profile === 'web'
+      ? 'Aggregates the <id>.json rows present in this directory with the web layer; a missing row is not a pass.'
+      : 'Aggregates the <id>.json rows present in this directory. Run the entry18-runtime workflow to fill all 18 shards.',
     targetDshVersion,
     dshVersions,
     count: rows.length,
@@ -616,7 +635,7 @@ async function main() {
   if (manifest.rows.length !== 18) throw new Error(`manifest has ${manifest.rows.length} rows, expected 18`)
   if (options.summary) {
     fs.mkdirSync(options.out, { recursive: true })
-    const summary = summarize(manifest, options.out, manifest.targetDshVersion)
+    const summary = summarize(manifest, options.out, manifest.targetDshVersion, options.web ? 'web' : 'base')
     writeJson(path.join(options.out, 'summary.json'), summary)
     console.log(`summary: ${summary.present}/${summary.count} rows present, status=${JSON.stringify(summary.status)}, verdicts=${JSON.stringify(summary.verdicts)}`)
     return 0
@@ -627,17 +646,22 @@ async function main() {
   if (options.expectedDshVersion && dshVersion !== options.expectedDshVersion) {
     throw new Error(`installed DSH is ${dshVersion}, expected ${options.expectedDshVersion}`)
   }
+  const webPatch = options.web
+    ? (options.web === 'auto' ? path.join(layout.depsRoot, WEB_PATCH) : options.web)
+    : null
+  if (webPatch && !fs.existsSync(webPatch)) throw new Error(`web patch not found: ${webPatch}`)
   const selected = options.all
     ? manifest.rows
     : [manifest.rows.find((row) => row.id === options.only) ?? (() => { throw new Error(`unknown id: ${options.only}`) })()]
   fs.mkdirSync(options.out, { recursive: true })
-  console.log(`entry18 fullbase: ${selected.length} shard(s), dsh ${dshVersion} at ${layout.dir}`)
+  console.log(`entry18 ${webPatch ? 'web' : 'fullbase'}: ${selected.length} shard(s), dsh ${dshVersion} at ${layout.dir}`)
   console.log(`deps root: ${layout.depsRoot}`)
-  console.log(`base-only: ${layout.basePatch} (no web layer)`)
+  console.log(`base: ${layout.basePatch}`)
+  console.log(webPatch ? `web layer: ${webPatch}` : 'web layer: none')
 
   let exitCode = 0
   for (const row of selected) {
-    const record = runShard(row, options, { layout, dshVersion, options, startedAt: new Date().toISOString() })
+    const record = runShard(row, options, { layout, dshVersion, options, webPatch, startedAt: new Date().toISOString() })
     writeJson(path.join(options.out, `${row.id}.json`), record)
     const verdict = record.status === 'error'
       ? `error(${record.error?.stage}: ${record.error?.message})`
@@ -646,7 +670,7 @@ async function main() {
     if (record.status === 'error') exitCode = 3
   }
   if (options.all) {
-    const summary = summarize(manifest, options.out, manifest.targetDshVersion)
+    const summary = summarize(manifest, options.out, manifest.targetDshVersion, webPatch ? 'web' : 'base')
     writeJson(path.join(options.out, 'summary.json'), summary)
     console.log(`summary: ${summary.present}/${summary.count} rows, status=${JSON.stringify(summary.status)}, verdicts=${JSON.stringify(summary.verdicts)}`)
   }

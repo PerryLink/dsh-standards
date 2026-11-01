@@ -1,10 +1,10 @@
-# 平台占位状态（2026-10-31）
+# 平台占位状态（2026-10-31，2026-11-01 更新）
 
-> 只占名字，不代表认证/官方。 canonical: `dsh-standards`。
+> 2026-11-01 更新：`PerryLink/dsh-standards` 已转 **public**；`PerryLink/dsh-standard` 仍是私有 alias。canonical 仍是 `dsh-standards`，本地 `origin` 应指它。
 
 | 平台 | `dsh-standard` | `dsh-standards` | 说明 |
 |---|---|---|---|
-| GitHub | **私有仓** `PerryLink/dsh-standard` | **私有仓** `PerryLink/dsh-standards`（README 指向主仓） | 主仓 247 个 tree 条目；alias 只放 README |
+| GitHub | **私有仓** `PerryLink/dsh-standard`（alias） | **public 仓** `PerryLink/dsh-standards`（README 指向主仓） | 主仓 2026-11-01 转 public；alias 只放 README |
 | npm | **被 npm 拒绝**：名称与 `ts-standard` 过近，403 | **已发布** `dsh-standards@0.0.3` | 备选 `@perrylink/dsh-standard@0.0.2`、`@perrylink/dsh-standards@0.0.3` 已发布 |
 | PyPI | **已发布** `dsh-standard@0.0.2` | **已发布** `dsh-standards@0.0.2` | wheel 占位 + `canonical()` 指针；不是可用库 |
 | Gitee | **私有仓** `perrylink/dsh-standard` | **私有仓** `perrylink/dsh-standards` | 空仓 + README 指针 |

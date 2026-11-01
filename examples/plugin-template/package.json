@@ -1,0 +1,39 @@
+{
+  "name": "dsh-plugin-template",
+  "version": "0.0.0",
+  "description": "Replace with a one-line purpose.",
+  "license": "Apache-2.0",
+  "type": "module",
+  "main": "./index.mjs",
+  "exports": {
+    ".": "./index.mjs"
+  },
+  "files": [
+    "index.mjs",
+    "README.md"
+  ],
+  "engines": {
+    "dsh": ">=0.2.2-alpha.2 <0.3.0"
+  },
+  "dsh": {
+    "manifestVersion": 1,
+    "kind": "plugin",
+    "capabilities": [],
+    "labels": [],
+    "standards": {
+      "schema": "dsh-levels/1",
+      "entry": {
+        "status": "not-run",
+        "evidence": null
+      },
+      "flow": {
+        "status": "not-run",
+        "evidence": null
+      },
+      "boost": {
+        "status": "not-measured",
+        "evidence": null
+      }
+    }
+  }
+}

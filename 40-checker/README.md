@@ -2,6 +2,8 @@
 
 > 版本：0.1.0 ｜ 日期：2026-10-31 ｜ 标准：DS-C v1.0.0 ｜ 许可：Apache-2.0
 > 零依赖，Node ≥ 20。只读目标包；不修改被检对象。
+>
+> **未发布到 npm。** npm 上的 `dsh-plugin-verify` 是另一个项目；`dsh-levels` 也是第三方包。请从本仓运行 `node bin/...`，不要 `npx dsh-plugin-verify` / `npx dsh-levels`。
 
 ## 1. 它做什么
 
@@ -188,6 +190,7 @@ src/runtime.mjs             DSC-04..09
 scripts/host-farm.mjs       临时 host farm（符号链接依赖 + npm install/build）
 scripts/m1-sidecar.mjs      format-1 索引 → levels.json（index-only + pilot 合并）
 scripts/m2-runner.mjs       M2：临时 HOME/DSH_HOME、超时杀进程树、unshare/landlock
+scripts/doc-commands-check.mjs  文档命令/模板一致性（防第三方 npx）
 scripts/landlock-exec.c      Landlock fs 写限制 launcher（C，按需编译）
 scripts/apply-overlay.mjs   把 T5 overlay 应用到包副本（不碰上游）
 src/report.mjs              text/json/SARIF + 结论门
