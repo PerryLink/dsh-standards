@@ -1,0 +1,18 @@
+{
+  "schema": "dsh-certificate-index/1",
+  "updatedAt": "2026-11-01",
+  "certificates": [
+    {
+      "certificateId": "DSH-CERT-2026-001",
+      "repo": "PerryLink/dsh-auto-review",
+      "version": "0.15.0",
+      "grade": "A",
+      "claimLevel": "self-reported",
+      "status": "draft",
+      "issuedAt": "2026-11-01",
+      "expiresAt": "2027-11-01",
+      "verifyUrl": "https://github.com/PerryLink/dsh-plugin-certification",
+      "file": "publish/certificates/DSH-CERT-2026-001.json"
+    }
+  ]
+}

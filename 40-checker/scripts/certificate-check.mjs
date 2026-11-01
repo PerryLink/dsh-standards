@@ -114,7 +114,7 @@ export function main(argv = process.argv.slice(2)) {
       console.error(`certificate-check: directory not found: ${full}`)
       return 2
     }
-    files = fs.readdirSync(full).filter((name) => name.endsWith('.json')).map((name) => path.join(full, name)).sort()
+    files = fs.readdirSync(full).filter((name) => name.endsWith('.json') && name !== 'index.json').map((name) => path.join(full, name)).sort()
   }
   if (files.length === 0) {
     console.error('certificate-check: no certificate JSON found')

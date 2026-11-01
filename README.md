@@ -56,6 +56,7 @@ node scripts/governance-check.mjs
 node scripts/certificate-check.mjs
 node scripts/claim-check.mjs
 node scripts/dco-check.mjs --range HEAD~1..HEAD
+node ../publish/verify.mjs --id DSH-CERT-2026-001
 
 # LEV-7 有界并行基准
 cd ../examples/boost
@@ -69,7 +70,7 @@ node lev7-bench.mjs 64 20
 - 18 包 base-only runtime：**18/18 有原始 JSON；10/18 G3 verified，8 partial，0 error**；host gate 后 **8 clean + 2 reject + 8 partial**；
 - client runtime：**15/15 `client-module-loaded`**（真实 Chromium）；web-app **4/4 loaded**；
 - 不可用：**0 plugin code FAIL；2 host-gate reject（telemetry/verification）**；
-- 检查器：**52/52 tests**（含新增 27 个治理/DCO/证书/声明测试）；
+- 检查器：**59/59 tests**（含新增 34 个治理/DCO/证书/声明/验真测试）；
 - J1：**6 PASS + 1 WARN**；LEV-3：volatile **0/20** vs control **20/20** remount；LEV-6：稳定 prefix **100%** vs 易变 **0%**；LEV-7：**8.24×**（合成，非生产基线）。
 
 ## 治理与贡献

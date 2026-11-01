@@ -27,6 +27,7 @@ jobs:
           40-checker/test/dco.test.mjs
           40-checker/test/certificate.test.mjs
           40-checker/test/claim.test.mjs
+          40-checker/test/verify.test.mjs
 
       - name: Roles, contributors, reviewers, COI
         run: node 40-checker/scripts/governance-check.mjs
@@ -36,6 +37,12 @@ jobs:
 
       - name: Public claims
         run: node 40-checker/scripts/claim-check.mjs
+
+      - name: Verify the example record
+        run: node publish/verify.mjs --id DSH-CERT-2026-001
+
+      - name: Shell syntax
+        run: bash -n adoption/official/repro.sh
 
       - name: Fetch the base branch for the DCO range
         if: github.event_name == 'pull_request'

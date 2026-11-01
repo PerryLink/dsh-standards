@@ -8,7 +8,7 @@
 |---|---|---|---|
 | `official/` | DeepSeek/Cordis team | a 30-minute reproducible experiment, field data, limits, open issues | they can re-run and refute without trusting us |
 | `market/` | plugin directories/portals | a read-only label format, verify URL, status, disclaimer, revocation | they can render without auditing, and withdraw in one cycle |
-| `developer/` | plugin authors | a 30-minute path, checklists, error catalog, migration card | first evidence record in ≤30 minutes |
+| `developer/` | plugin authors | a 30-minute path, three checklists, error catalog, not-claims | first evidence record in ≤30 minutes |
 
 ## What is shared
 
@@ -22,6 +22,15 @@
 - The official kit does not ask for endorsement.
 - The market kit does not ask the market to audit.
 - The developer kit does not promise a pass.
+
+## What exists now
+
+- `developer/`: `QUICKSTART.md`, `CHECKLIST-entry.md`, `CHECKLIST-flow.md`,
+  `CHECKLIST-boost.md`, `ERRORS.md`, `NOT-CLAIMS.md`.
+- `official/`: `BRIEF.md`, `repro.sh` (smoke-tested on a fixture), `LIMITS.md`.
+- `market/`: `DISCLAIMER.md`, `label.schema.json`, `REVOCATION.md`.
+- `publish/verify.mjs`: look up a certificate/attestation ID, validate it, and
+  print status/scope/expiry; `--online` checks evidence URLs.
 
 ## Status
 
