@@ -1,0 +1,21 @@
+{
+  "name": "@dsh-fixtures/bundle-with-server",
+  "version": "0.9.0",
+  "license": "MIT",
+  "type": "module",
+  "main": "./server.mjs",
+  "exports": {
+    ".": "./server.mjs"
+  },
+  "engines": {
+    "dsh": ">=0.2.2-alpha.2 <0.3.0"
+  },
+  "dsh": {
+    "manifestVersion": 1,
+    "bundle": {
+      "patch": "./cordis.patch.yml"
+    },
+    "capabilities": [],
+    "labels": []
+  }
+}

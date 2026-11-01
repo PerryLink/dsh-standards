@@ -1,0 +1,106 @@
+{
+  "schema": "dsh-flow-runtime/1",
+  "package": "@dsh-fixtures/bundle-with-server",
+  "version": "1.0.0",
+  "previous": "0.9.0",
+  "mode": "j1-j2-j4-j6-runtime",
+  "checks": [
+    {
+      "id": "J1.profile",
+      "result": "PASS",
+      "reason": "create profile exit=0",
+      "stderr": ""
+    },
+    {
+      "id": "J1.install",
+      "result": "PASS",
+      "reason": "add exit=0",
+      "stderr": "Already up to date\n\ndependencies:\n+ @dsh-fixtures/bundle-with-server <- ../../../../mnt/c/Users/zzhdz/WorkBuddy/2026-10-30-16-02-58/dsh-standard/40-checker/fixtures/bundle\n\nDone in 34ms using pnpm v12.15.0\n"
+    },
+    {
+      "id": "J1.dump",
+      "result": "PASS",
+      "reason": "dump exit=0",
+      "stderr": ""
+    },
+    {
+      "id": "J1.layer",
+      "result": "PASS",
+      "reason": "layer/entry appears in dump"
+    },
+    {
+      "id": "J2.disable",
+      "result": "PASS",
+      "reason": "row fixture-bundle-server disabled",
+      "stderr": ""
+    },
+    {
+      "id": "J2.enable",
+      "result": "PASS",
+      "reason": "row fixture-bundle-server enabled again",
+      "stderr": ""
+    },
+    {
+      "id": "J1.remove",
+      "result": "PASS",
+      "reason": "remove exit=0",
+      "stderr": "Already up to date\n\ndependencies:\n- @dsh-fixtures/bundle-with-server link:/mnt/c/Users/zzhdz/WorkBuddy/2026-10-30-16-02-58/dsh-standard/40-checker/fixtures/bundle\n\nDone in 19ms using pnpm v12.15.0\n"
+    },
+    {
+      "id": "J1.clean",
+      "result": "PASS",
+      "reason": "layer/dependency gone after remove"
+    },
+    {
+      "id": "J4.tree-load",
+      "result": "PASS",
+      "reason": "keyless boot reached the credential boundary",
+      "stderr": "\ndsh: MISSING_CREDENTIAL: llm-deepseek: no API key for provider route \"deepseek-official\"; store DEEPSEEK_API_KEY through the credentials service (the web Models page writes it), or export DEEPSEEK_API_KEY in the launching environment\n"
+    },
+    {
+      "id": "J6.upgrade",
+      "result": "PASS",
+      "reason": "upgrade 0.9.0->1.0.0 exit=0, installed=0.9.0",
+      "stderr": "[WARN] Replaced \"@dsh-fixtures/bundle-with-server\" (\"link:/mnt/c/Users/zzhdz/WorkBuddy/2026-10-30-16-02-58/dsh-standard/40-checker/fixtures/bundle\") with \"/mnt/c/Users/zzhdz/WorkBuddy/2026-10-30-16-02-58/dsh-standard/40-checker/fixtures/bundle-v0\" from a different source.\nAlready up to date\n\ndependencies:\n+ @dsh-fixtures/bundle-with-server <- ../../../../mnt/c/Users/zzhdz/WorkBuddy/2026-10-30-16-02-58/dsh-standard/40-checker/fixtures/bundle-v0\n\nDone in 47ms using pnpm v12.15.0\n"
+    },
+    {
+      "id": "J6.upgrade-current",
+      "result": "PASS",
+      "reason": "current install exit=0, installed=1.0.0",
+      "stderr": "[WARN] Replaced \"@dsh-fixtures/bundle-with-server\" (\"link:/mnt/c/Users/zzhdz/WorkBuddy/2026-10-30-16-02-58/dsh-standard/40-checker/fixtures/bundle-v0\") with \"/mnt/c/Users/zzhdz/WorkBuddy/2026-10-30-16-02-58/dsh-standard/40-checker/fixtures/bundle\" from a different source.\nAlready up to date\n\ndependencies:\n+ @dsh-fixtures/bundle-with-server <- ../../../../mnt/c/Users/zzhdz/WorkBuddy/2026-10-30-16-02-58/dsh-standard/40-checker/fixtures/bundle\n\nDone in 52ms using pnpm v12.15.0\n"
+    },
+    {
+      "id": "J6.rollback",
+      "result": "PASS",
+      "reason": "rollback exit=0, installed=0.9.0",
+      "stderr": "[WARN] Replaced \"@dsh-fixtures/bundle-with-server\" (\"link:/mnt/c/Users/zzhdz/WorkBuddy/2026-10-30-16-02-58/dsh-standard/40-checker/fixtures/bundle\") with \"/mnt/c/Users/zzhdz/WorkBuddy/2026-10-30-16-02-58/dsh-standard/40-checker/fixtures/bundle-v0\" from a different source.\nAlready up to date\n\ndependencies:\n+ @dsh-fixtures/bundle-with-server <- ../../../../mnt/c/Users/zzhdz/WorkBuddy/2026-10-30-16-02-58/dsh-standard/40-checker/fixtures/bundle-v0\n\nDone in 53ms using pnpm v12.15.0\n"
+    },
+    {
+      "id": "J3.config",
+      "result": "not-run",
+      "reason": "invalid-config harness not implemented; do not claim J3"
+    },
+    {
+      "id": "J5.permissions",
+      "result": "not-run",
+      "reason": "permissions/disclosure review is manual"
+    },
+    {
+      "id": "J7.observe",
+      "result": "not-run",
+      "reason": "observability probe not implemented"
+    },
+    {
+      "id": "J8.client",
+      "result": "not-run",
+      "reason": "client-shape probe not implemented"
+    }
+  ],
+  "summary": {
+    "pass": 12,
+    "warn": 0,
+    "fail": 0,
+    "notRun": 4
+  },
+  "conclusion": "flow-warn"
+}
