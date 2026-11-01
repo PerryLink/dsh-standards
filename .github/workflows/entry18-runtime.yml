@@ -111,7 +111,7 @@ jobs:
 
       - name: Download shard evidence
         continue-on-error: true
-        uses: actions/download-artifact@v4
+        uses: actions/download-artifact@v8
         with:
           pattern: entry18-fullbase-*
           path: 40-checker/results/entry/18/fullbase
