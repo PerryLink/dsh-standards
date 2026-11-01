@@ -1,0 +1,45 @@
+{
+  "schema": "dsh-flow-disclosure-shape/1",
+  "generatedAt": "2026-11-01T05:48:02.999Z",
+  "package": "@dsh-fixtures/client-missing",
+  "version": "1.0.0",
+  "checks": {
+    "J5": {
+      "machine": "WARN",
+      "humanReview": "required",
+      "declared": {
+        "capabilities": false,
+        "labels": false,
+        "commitments": false
+      },
+      "forbiddenWords": false,
+      "declaration": [
+        {
+          "id": "DSC-11",
+          "result": "WARN"
+        },
+        {
+          "id": "DSC-12",
+          "result": "PASS"
+        },
+        {
+          "id": "DSC-13",
+          "result": "WARN"
+        }
+      ],
+      "reason": "permissions/disclosure judgement is still human"
+    },
+    "J8": {
+      "machine": "FAIL",
+      "humanReview": "required for UI/render",
+      "hasClient": true,
+      "clientExport": false,
+      "serverEntry": true,
+      "reason": "client shape checked statically; render not tested"
+    }
+  },
+  "limitations": [
+    "J5 is a disclosure preflight, not a security review",
+    "J8 is a shape preflight, not a browser render probe"
+  ]
+}

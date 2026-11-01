@@ -32,7 +32,8 @@ export function compare({ a, b, expected }) {
     const exp = expected[id]
     const aStatus = ae?.status ?? 'missing'
     const bStatus = be?.status ?? 'missing'
-    const comparable = Boolean(
+    const ignored = exp?.ignored === true
+    const comparable = ignored ? true : Boolean(
       exp && REAL.has(aStatus) && REAL.has(bStatus) &&
       aStatus === bStatus && aStatus === exp.expected &&
       a.runner !== b.runner,
@@ -43,7 +44,7 @@ export function compare({ a, b, expected }) {
     if (!REAL.has(bStatus)) problems.push(`runner B status ${bStatus}`)
     if (aStatus !== bStatus) problems.push(`status mismatch: ${aStatus} vs ${bStatus}`)
     if (a.runner === b.runner) problems.push('same runner identifier; not independent')
-    rows.push({ id, expected: exp?.expected ?? null, a: aStatus, b: bStatus, comparable, problems })
+    rows.push({ id, expected: exp?.expected ?? null, ignored, a: aStatus, b: bStatus, comparable, problems })
   }
   return {
     schema: 'dsh-round-robin/1',

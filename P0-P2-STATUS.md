@@ -23,8 +23,8 @@
 | STD-07 not-applicable/sunset | DONE | schema enum + `docs/sunset.md` |
 | STD-09 security/privacy scope | DONE | `docs/scope-security.md` |
 | STD-11 claimLevel | DONE | `evidence.schema.json`, `attestation.schema.json` |
-| EVD-01 J3 invalid config | NOT DONE | no invalid-config runtime harness |
-| EVD-02 J5 permissions | PARTIAL | manual checklist + static declaration checks; no runtime probe |
+| EVD-01 J3 invalid config | DONE (fixture-level) | `journey-config-observe.mjs` + `flow-config` fixture: field path, valid, default |
+| EVD-02 J5 permissions | DONE (preflight) | `journey-disclosure-shape.mjs`: declarations + forbidden words; human review still required |
 | EVD-08 doctor blocked/G4 | DONE (G4) | G4 static; doctor `blocked` is a separate repo task |
 | EVD-09 report schema | DONE | `spec/schemas/report.schema.json` |
 | EVD-10 reference suite | DONE | `spec/reference-suite.json` |
@@ -55,8 +55,8 @@
 
 | Task | Status | Evidence / gap |
 |---|---|---|
-| EVD-03 J7 observability | NOT DONE | no runtime log probe |
-| EVD-04 J8 client shapes | PARTIAL | `web-probe.mjs` exists; not wired into FLOW |
+| EVD-03 J7 observability | DONE (fixture-level) | `journey-config-observe.mjs`: start line + credential boundary |
+| EVD-04 J8 client shapes | PARTIAL | shape preflight + `web-probe.mjs`; no render probe in FLOW |
 | EVD-05 10 packages | DONE | 10 real packages; 4 second-wave J4 pass, 1 (`verification`) recorded FAIL |
 | EVD-07 18/18 clean | NOT DONE | 10 verified / 8 partial; attribution only |
 | EVD-11 round-robin | PARTIAL | harness + known answers; two runs are the same runner → `comparable:false` |
@@ -117,7 +117,7 @@ node publish/verify.mjs --id DSH-ATT-2026-001
 
 ## What is still genuinely open
 
-1. J3/J5/J7/J8 runtime harness (only J1/J2/J4/J6 are runtime).
+1. J8 browser render is still not a FLOW record; J3/J7 are fixture-level runtime, not ecosystem-wide.
 2. 18/18 clean (10/8 today); the 10-package FLOW sample is done, with one recorded `verification` failure.
 3. 30-minute trial with 5 authors (protocol only).
 4. Independent second round-robin runner (`comparable:false` today).

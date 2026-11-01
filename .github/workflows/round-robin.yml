@@ -1,0 +1,54 @@
+name: round-robin
+
+on:
+  workflow_dispatch:
+  push:
+    branches: [main]
+
+permissions:
+  contents: read
+
+jobs:
+  collect:
+    strategy:
+      fail-fast: false
+      matrix:
+        os: [ubuntu-latest, windows-latest]
+    runs-on: ${{ matrix.os }}
+    defaults:
+      run:
+        shell: bash
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+      - name: Collect known-answer statuses
+        run: node 40-checker/scripts/collect-fixtures.mjs --out runner.json
+      - uses: actions/upload-artifact@v4
+        with:
+          name: runner-${{ matrix.os }}
+          path: runner.json
+
+  compare:
+    needs: collect
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+      - uses: actions/download-artifact@v4
+        with:
+          path: artifacts
+      - name: Compare the two runners
+        run: >
+          node 40-checker/scripts/round-robin.mjs
+          --a artifacts/runner-ubuntu-latest/runner.json
+          --b artifacts/runner-windows-latest/runner.json
+          --expected 40-checker/fixtures/known-answer/expected.json
+          --out rounds/2026Q4.json
+      - uses: actions/upload-artifact@v4
+        with:
+          name: round-robin
+          path: rounds/2026Q4.json

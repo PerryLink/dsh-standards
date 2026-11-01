@@ -1,0 +1,5 @@
+{
+  "name": "Bad Name!",
+  "version": "not-semver",
+  "main": "./index.js"
+}

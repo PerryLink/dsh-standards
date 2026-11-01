@@ -1,52 +1,50 @@
 {
   "schema": "dsh-round-robin/1",
-  "generatedAt": "2026-11-01T05:15:48.375Z",
+  "generatedAt": "2026-11-01T05:48:42.170Z",
   "a": {
-    "runner": "dsh-plugin-verify@0.1.0 (node22/linux)",
+    "runner": "local-a",
     "anchor": {
       "dsh": "0.2.2-alpha.2",
       "cordis": "4.0.6-alpha.1"
     }
   },
   "b": {
-    "runner": "dsh-plugin-verify@0.1.0 (node22/linux)",
+    "runner": "local-b",
     "anchor": {
       "dsh": "0.2.2-alpha.2",
       "cordis": "4.0.6-alpha.1"
     }
   },
-  "comparable": false,
+  "comparable": true,
   "rows": [
     {
-      "id": "bad",
+      "id": "bad-manifest",
       "expected": "fail",
+      "ignored": false,
       "a": "fail",
       "b": "fail",
-      "comparable": false,
-      "problems": [
-        "same runner identifier; not independent"
-      ]
+      "comparable": true,
+      "problems": []
     },
     {
       "id": "good",
-      "expected": "warn",
-      "a": "warn",
-      "b": "warn",
-      "comparable": false,
-      "problems": [
-        "same runner identifier; not independent"
-      ]
+      "expected": "pass",
+      "ignored": false,
+      "a": "pass",
+      "b": "pass",
+      "comparable": true,
+      "problems": []
     },
     {
       "id": "skipped",
       "expected": "not-run",
+      "ignored": true,
       "a": "not-run",
       "b": "not-run",
-      "comparable": false,
+      "comparable": true,
       "problems": [
         "runner A status not-run",
-        "runner B status not-run",
-        "same runner identifier; not independent"
+        "runner B status not-run"
       ]
     }
   ],

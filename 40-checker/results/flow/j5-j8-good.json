@@ -1,0 +1,45 @@
+{
+  "schema": "dsh-flow-disclosure-shape/1",
+  "generatedAt": "2026-11-01T05:48:02.615Z",
+  "package": "@dsh-fixtures/good-plugin",
+  "version": "1.0.0",
+  "checks": {
+    "J5": {
+      "machine": "PASS",
+      "humanReview": "required",
+      "declared": {
+        "capabilities": true,
+        "labels": true,
+        "commitments": false
+      },
+      "forbiddenWords": false,
+      "declaration": [
+        {
+          "id": "DSC-11",
+          "result": "PASS"
+        },
+        {
+          "id": "DSC-12",
+          "result": "PASS"
+        },
+        {
+          "id": "DSC-13",
+          "result": "PASS"
+        }
+      ],
+      "reason": "permissions/disclosure judgement is still human"
+    },
+    "J8": {
+      "machine": "WARN",
+      "humanReview": "required for UI/render",
+      "hasClient": false,
+      "clientExport": false,
+      "serverEntry": true,
+      "reason": "no dsh.client declaration"
+    }
+  },
+  "limitations": [
+    "J5 is a disclosure preflight, not a security review",
+    "J8 is a shape preflight, not a browser render probe"
+  ]
+}

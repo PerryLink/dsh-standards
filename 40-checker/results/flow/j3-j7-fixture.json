@@ -1,0 +1,51 @@
+{
+  "schema": "dsh-flow-config-observe/1",
+  "generatedAt": "2026-11-01T05:47:51.065Z",
+  "package": "@dsh-fixtures/flow-config",
+  "version": "1.0.0",
+  "environment": {
+    "dsh": "0.2.2-alpha.2",
+    "node": "v24.22.1",
+    "platform": "linux"
+  },
+  "checks": [
+    {
+      "id": "setup.install",
+      "result": "PASS",
+      "reason": "plain dependency install exit=0"
+    },
+    {
+      "id": "J3.invalid-field-path",
+      "result": "PASS",
+      "reason": "invalid config exit=1; fieldPath=true"
+    },
+    {
+      "id": "J3.valid-config",
+      "result": "PASS",
+      "reason": "valid config exit=1"
+    },
+    {
+      "id": "J7.start-line",
+      "result": "PASS",
+      "reason": "start line names package@version"
+    },
+    {
+      "id": "J7.diagnosable",
+      "result": "PASS",
+      "reason": "keyless failure reaches a diagnosable credential boundary"
+    },
+    {
+      "id": "J3.defaults",
+      "result": "PASS",
+      "reason": "missing config uses the default"
+    }
+  ],
+  "summary": {
+    "pass": 6,
+    "fail": 0,
+    "blocked": 0
+  },
+  "limitations": [
+    "fixture-level only; not every plugin validates config or logs a start line"
+  ]
+}

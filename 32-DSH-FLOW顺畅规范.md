@@ -5,7 +5,7 @@
 > **依据**：`94-开发建议-顺畅.md`、`87` 的 8 条用户旅程、`81` 的验收缺口。
 > **不是**：认证、排名、完整契约审计；未跑=WARN，不冒充 PASS。
 > **对外状态**：内部草案；J3/J5/J7/J8 未跑，暂不作为对外规范。
-> **当前 runtime**：fixture 上 J1/J2/J4/J6 12 PASS；10 个真实包上 **78 PASS / 4 FAIL / 2 blocked / 66 not-run**（`results/flow/real/`）；J3/J5/J7/J8 仍 `not-run`。
+> **当前 runtime**：fixture 上 J1/J2/J4/J6 12 PASS；10 个真实包上 **78 PASS / 4 FAIL / 2 blocked / 66 not-run**（`results/flow/real/`）；J3/J7 有 fixture 级 runtime；J5/J8 有 static preflight；J8 浏览器渲染仍 `not-run`。
 > **已知未完成**：J1–J8 的完整 runtime harness 尚未落成；`journey.mjs` 仍有 static-prep。
 > **三层模型**：`34`；作者清单：`35`；生命周期：`36`。
 
@@ -95,7 +95,7 @@
 
 - 做法见 `94-开发建议-顺畅.md`。
 - 已有 `40-checker/scripts/journey.mjs`：static-prep 检查 J1/J2/J3/J4/J5/J6/J7/J8 的 manifest/README/source/client 证据，runtime 项标 `not-run`。
-- 已有 `journey-runtime.mjs`：J1 install/remove + J2 enable/disable + J4 keyless tree-load + J6 upgrade/rollback；J3/J5/J7/J8 仍 `not-run`。
+- 已有 `journey-runtime.mjs`：J1 install/remove + J2 enable/disable + J4 keyless tree-load + J6 upgrade/rollback；J3/J7 有 fixture 级 runtime；J5/J8 有 static preflight；J8 浏览器渲染仍 `not-run`。
 - 首条实测：`results/flow/journey-fixture-bundle.json`（旧 J1）与 `journey-fixture-j1-j2-j4-j6.json`（新 12 PASS）。
 - 下一步：J3 坏配置、J4 首次启动、J6 升级/回滚、J8 headless/web。
 - 在 runtime harness 落地前，报告只能写 `flow-not-run`，不能写 `flow-pass`。
