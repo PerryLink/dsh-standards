@@ -9,4 +9,5 @@
   `spec/schemas/report.schema.json`, `evidence/` hash chain.
 - Added G4 static check, clause-map, stale-check, surveillance, dashboard.
 - Added developer/official/market kits and `publish/verify.mjs` / `verify.html`.
-- CI: governance checks, 59+ tests, attestation verify, shell syntax.
+- CI: governance checks, 72 tests, attestation verify, shell syntax, cross-platform matrix.
+- Cross-repo: portal `f882144` (levels + verify), guide `e75cd9f` (scaffolder placeholder), kit `9897213` (manual template), catalog `914b793` (levels sidecar).

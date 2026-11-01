@@ -39,10 +39,10 @@
 | CRT-07 status machine | DONE | scheme transitions + schema |
 | CRT-11 report/attestation split | DONE | report has no grade; attestation has no checks |
 | CRT-12 scope/limitations | DONE | `scope.excluded` required |
-| MKT-01/03/04/08/10 | PARTIAL | label schema/disclaimer/revocation done; portal is in the portal repo |
+| MKT-01/03/04/08/10 | DONE | portal `f882144`: 99-repo levels, attestation mirror, verify page, checks 8-11 |
 | DEV-01 checklists | DONE | `CHECKLIST-{entry,flow,boost}.md` |
 | DEV-03 error catalog | DONE | `ERRORS.md` |
-| DEV-05 kit template | PARTIAL | kit repo agent; not in this repo |
+| DEV-05 kit template | DONE | guide `e75cd9f` scaffolder + kit `9897213` manual template; `dsh.standards` not-run |
 | DEV-06 single CLI | PARTIAL | `level-audit` has `nextActions`; no `dsh-levels audit` |
 | DEV-08 bilingual parity | PARTIAL | translation rules; no parity script |
 | DEV-09 minimal examples | DONE | `examples/boost`, fixtures, `QUICKSTART` |
@@ -69,8 +69,8 @@
 | CRT-08 status history | DONE | `history[]` in schema/example |
 | CRT-09 verify page | DONE | `publish/verify.mjs` + `verify.html` |
 | CRT-10 rubric | DONE | `scheme/rubric.json` |
-| MKT-02 verify page | DONE (standard) | `publish/verify.html`; portal repo separate |
-| MKT-05/06/07 catalog | PARTIAL | catalog repo agent; sidecar not in this repo |
+| MKT-02 verify page | DONE | `publish/verify.html` + portal `verify.html` (f882144) |
+| MKT-05/06/07 catalog | DONE (peerRange) / PARTIAL (dshVersion) | catalog `914b793`: 109-package sidecar, `withdrawn`, `/v1/levels`; no `dshVersion` field |
 | DEV-02 30-min trial | NOT DONE | protocol only (`TIME-TRIAL.md`), no 5-author data |
 | DEV-04 migration card | DONE | `MIGRATION.md` |
 | DEV-07 training | DONE | `TRAINING.md` |
@@ -91,6 +91,16 @@
 | Tests | DONE |
 | Historical docs banner | DONE (39/40/42/84/86/89) |
 | Old paths | Removed; no compatibility alias (draft repo, no external consumers) |
+
+## Cross-repo commits
+
+| Repo | Commit | CI |
+|---|---|---|
+| `dsh-standards` | `1c60245`, `b491bda` | governance + cross-platform success |
+| `dsh-plugin-portal` | `f882144` | CI success |
+| `dsh-plugin-guide` | `e75cd9f` | verify-kit / plugin-doctor / pages success |
+| `dsh-plugin-kit` | `9897213` | ci success |
+| `dsh-catalog` | `914b793` | ci + deploy success |
 
 ## Verification
 
