@@ -67,10 +67,11 @@ function main() {
   delete env.OPENAI_API_KEY
   const dsh = options.dsh || (process.platform === 'win32' ? 'dsh.cmd' : 'dsh')
   const checks = []
+  let dshVersion = null
   const add = (id, result, reason, extra = {}) => checks.push({ id, result, reason, ...extra })
   try {
     const version = sh(dsh, ['--version'], env, 30_000)
-    const dshVersion = (version.stdout || '').trim()
+    dshVersion = (version.stdout || '').trim()
     const create = sh(dsh, ['--profile', profile, '--from-default-profile', 'headless', '--dump-config'], env, options.timeout)
     add('J1.profile', create.status === 0 ? 'PASS' : 'FAIL', `create profile exit=${create.status}`, { stderr: create.stderr.slice(0, 500) })
     let addResult = sh(dsh, ['plugin', '--profile', profile, 'add', pkg], env, options.timeout)

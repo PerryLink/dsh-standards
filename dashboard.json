@@ -1,6 +1,6 @@
 {
   "schema": "dsh-dashboard/1",
-  "generatedAt": "2026-11-01T05:40:38.979Z",
+  "generatedAt": "2026-11-01T05:42:39.508Z",
   "entry": {
     "resultFiles": 20,
     "claim": "18/18 recognized static; 10 G3 verified, 8 partial (see results/entry/18/README.md)"
@@ -10,16 +10,16 @@
     "summary": {
       "packages": 10,
       "checks": {
-        "pass": 74,
+        "pass": 78,
         "warn": 0,
-        "fail": 8,
+        "fail": 4,
         "blocked": 2,
         "partial": 0,
         "notRun": 66
       },
       "verdicts": {
-        "pass": 19,
-        "fail": 6,
+        "pass": 23,
+        "fail": 2,
         "blocked": 1,
         "partial": 2,
         "notRun": 12

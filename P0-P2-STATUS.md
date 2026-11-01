@@ -57,7 +57,7 @@
 |---|---|---|
 | EVD-03 J7 observability | NOT DONE | no runtime log probe |
 | EVD-04 J8 client shapes | PARTIAL | `web-probe.mjs` exists; not wired into FLOW |
-| EVD-05 10 packages | DONE | 10 real packages (5 first wave + 5 second wave); 5 second-wave J4 failures recorded |
+| EVD-05 10 packages | DONE | 10 real packages; 4 second-wave J4 pass, 1 (`verification`) recorded FAIL |
 | EVD-07 18/18 clean | NOT DONE | 10 verified / 8 partial; attribution only |
 | EVD-11 round-robin | PARTIAL | harness + known answers; two runs are the same runner → `comparable:false` |
 | EVD-15 stale clock | DONE | `stale-check.mjs`; fixed-date test |
@@ -118,7 +118,7 @@ node publish/verify.mjs --id DSH-ATT-2026-001
 ## What is still genuinely open
 
 1. J3/J5/J7/J8 runtime harness (only J1/J2/J4/J6 are runtime).
-2. 18/18 clean (10/8 today); the 10-package FLOW sample is done, with 5 recorded J4 failures.
+2. 18/18 clean (10/8 today); the 10-package FLOW sample is done, with one recorded `verification` failure.
 3. 30-minute trial with 5 authors (protocol only).
 4. Independent second round-robin runner (`comparable:false` today).
 5. Portal/catalog changes live in their own repos (agent output, pending commit).

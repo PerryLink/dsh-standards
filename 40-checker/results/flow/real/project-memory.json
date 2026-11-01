@@ -1,6 +1,6 @@
 {
   "schema": "dsh-flow-real/1",
-  "generatedAt": "2026-11-01T05:36:29.867Z",
+  "generatedAt": "2026-11-01T05:42:24.424Z",
   "id": "project-memory",
   "package": "@yolk_vat-y/dsh-project-memory",
   "version": "0.6.7",
@@ -56,19 +56,24 @@
     "exit": 0,
     "ignoredScripts": true,
     "note": "third-party lifecycle scripts were not run (--ignore-scripts)",
-    "stdout": "\nadded 4 packages in 3s\n",
+    "stdout": "\nup to date in 706ms\n",
     "stderr": "",
     "error": null
   },
   "previous": null,
   "gate": null,
   "journey": {
-    "command": "/home/yy/opt/node-v24.22.1-linux-x64/bin/node /mnt/c/Users/zzhdz/WorkBuddy/2026-10-30-16-02-58/dsh-standard/40-checker/scripts/journey-runtime.mjs --package /tmp/flow-sample/project-memory --dsh dsh --json",
-    "exit": 1,
+    "command": "/home/yy/opt/node-v24.22.1-linux-x64/bin/node /mnt/c/Users/zzhdz/WorkBuddy/2026-10-30-16-02-58/dsh-standard/40-checker/scripts/journey-runtime.mjs --package /tmp/flow-sample/project-memory --dsh /tmp/dsh022/node_modules/@deepseek-ai/dsh/lib/bin.js --json",
+    "exit": 0,
     "parseError": null,
     "stderr": "",
     "result": {
       "schema": "dsh-flow-runtime/1",
+      "environment": {
+        "dsh": "0.2.2-alpha.2",
+        "node": "v24.22.1",
+        "platform": "linux"
+      },
       "package": "@yolk_vat-y/dsh-project-memory",
       "version": "0.6.7",
       "previous": null,
@@ -113,7 +118,7 @@
           "id": "J1.remove",
           "result": "PASS",
           "reason": "remove exit=0",
-          "stderr": "Already up to date\n\ndependencies:\n- @yolk_vat-y/dsh-project-memory link:/tmp/flow-sample/project-memory\n\nDone in 31ms using pnpm v12.15.0\n"
+          "stderr": "Already up to date\n\ndependencies:\n- @yolk_vat-y/dsh-project-memory link:/tmp/flow-sample/project-memory\n\nDone in 19ms using pnpm v12.15.0\n"
         },
         {
           "id": "J1.clean",
@@ -122,9 +127,9 @@
         },
         {
           "id": "J4.tree-load",
-          "result": "FAIL",
-          "reason": "boot exit=0; no credential-boundary message",
-          "stderr": ""
+          "result": "PASS",
+          "reason": "keyless boot reached the credential boundary",
+          "stderr": "\ndsh: MISSING_CREDENTIAL: llm-deepseek: no API key for provider route \"deepseek-official\"; store DEEPSEEK_API_KEY through the credentials service (the web Models page writes it), or export DEEPSEEK_API_KEY in the launching environment\n"
         },
         {
           "id": "J6.upgrade",
@@ -158,13 +163,13 @@
         }
       ],
       "summary": {
-        "pass": 8,
+        "pass": 9,
         "warn": 0,
-        "fail": 1,
+        "fail": 0,
         "blocked": 0,
         "notRun": 6
       },
-      "conclusion": "flow-fail"
+      "conclusion": "flow-warn"
     }
   },
   "layerProbe": null,
@@ -208,7 +213,7 @@
       "id": "J1.remove",
       "result": "PASS",
       "reason": "remove exit=0",
-      "stderr": "Already up to date\n\ndependencies:\n- @yolk_vat-y/dsh-project-memory link:/tmp/flow-sample/project-memory\n\nDone in 31ms using pnpm v12.15.0\n"
+      "stderr": "Already up to date\n\ndependencies:\n- @yolk_vat-y/dsh-project-memory link:/tmp/flow-sample/project-memory\n\nDone in 19ms using pnpm v12.15.0\n"
     },
     {
       "id": "J1.clean",
@@ -217,9 +222,9 @@
     },
     {
       "id": "J4.tree-load",
-      "result": "FAIL",
-      "reason": "boot exit=0; no credential-boundary message",
-      "stderr": ""
+      "result": "PASS",
+      "reason": "keyless boot reached the credential boundary",
+      "stderr": "\ndsh: MISSING_CREDENTIAL: llm-deepseek: no API key for provider route \"deepseek-official\"; store DEEPSEEK_API_KEY through the credentials service (the web Models page writes it), or export DEEPSEEK_API_KEY in the launching environment\n"
     },
     {
       "id": "J6.upgrade",
@@ -255,7 +260,7 @@
   "verdicts": {
     "J1": "pass",
     "J2": "pass",
-    "J4": "fail",
+    "J4": "pass",
     "J6": "not-run"
   },
   "classification": "clean",
@@ -266,20 +271,20 @@
   ],
   "summary": {
     "checks": {
-      "pass": 8,
+      "pass": 9,
       "warn": 0,
-      "fail": 1,
+      "fail": 0,
       "blocked": 0,
       "partial": 0,
       "notRun": 6
     },
     "verdicts": {
-      "pass": 2,
-      "fail": 1,
+      "pass": 3,
+      "fail": 0,
       "blocked": 0,
       "partial": 0,
       "notRun": 1
     }
   },
-  "conclusion": "flow-fail"
+  "conclusion": "flow-warn"
 }

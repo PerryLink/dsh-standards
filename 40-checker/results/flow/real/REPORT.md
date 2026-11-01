@@ -4,7 +4,7 @@ Generated: 2026-11-01 (Asia/Shanghai)
 Scope: a **representative sample of 10** of the 18 packages in `40-checker/samples/entry18.json`.
 This is **not** a run over all 18, and it is **not** full FLOW coverage.
 
-> **Second wave (2026-11-02)**: 5 more npm packages were added (`daily-log`, `project-memory`, `qiushi`, `status-rotator`, `verification`). They ran against the local `dsh 0.2.1-rc.5`, while the first wave used `0.2.2-alpha.2`. **Do not compare J4 pass rates across waves**; the host differs. The second wave records J4 failures as failures, not as “not-run”.
+> **Second wave (2026-11-02)**: 5 more npm packages were added (`daily-log`, `project-memory`, `qiushi`, `status-rotator`, `verification`). All 10 samples now use the same anchor, `dsh 0.2.2-alpha.2`. The one verification failure is recorded as a failure, not rewritten.
 
 ## Environment
 
@@ -326,10 +326,10 @@ No commit or push was made. `journey-runtime.mjs` is unmodified.
 
 | id | J1 | J2 | J4 | J6 | Note |
 |---|---|---|---|---|---|
-| `daily-log` | PASS | PASS | FAIL | not-run | J4 failure recorded |
-| `project-memory` | PASS | PASS | FAIL | not-run | J4 failure recorded |
-| `qiushi` | PASS | PASS | FAIL | not-run | J4 failure recorded |
-| `status-rotator` | PASS | PASS | FAIL | not-run | J4 failure recorded |
+| `daily-log` | PASS | PASS | PASS | not-run | — |
+| `project-memory` | PASS | PASS | PASS | not-run | — |
+| `qiushi` | PASS | PASS | PASS | not-run | — |
+| `status-rotator` | PASS | PASS | PASS | not-run | — |
 | `verification` | FAIL | not-run | FAIL | not-run | install failure; no PASS invented |
 
-Aggregate over all 10 packages: **74 PASS / 8 FAIL / 2 BLOCKED / 66 not-run** checks (see `index.json`). The 5 second-wave J4 failures are a real signal: keyless boot did not reach the expected credential boundary on this host, and the harness recorded `FAIL` rather than rewriting it to PASS.
+Aggregate over all 10 packages: **78 PASS / 4 FAIL / 2 BLOCKED / 66 not-run** checks (see `index.json`). The single second-wave failure (`verification`) is recorded as `FAIL`; the other four second-wave packages pass J1/J2/J4.

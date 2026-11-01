@@ -1,6 +1,6 @@
 {
   "schema": "dsh-flow-real/1",
-  "generatedAt": "2026-11-01T05:39:36.976Z",
+  "generatedAt": "2026-11-01T05:42:31.708Z",
   "id": "verification",
   "package": "dsh-verification-receipt",
   "version": "0.1.0",
@@ -45,19 +45,24 @@
     "exit": 0,
     "ignoredScripts": true,
     "note": "third-party lifecycle scripts were not run (--ignore-scripts)",
-    "stdout": "\nup to date, audited 1 package in 898ms\n\nfound 0 vulnerabilities\n",
+    "stdout": "\nup to date, audited 1 package in 795ms\n\nfound 0 vulnerabilities\n",
     "stderr": "",
     "error": null
   },
   "previous": null,
   "gate": null,
   "journey": {
-    "command": "/home/yy/opt/node-v24.22.1-linux-x64/bin/node /mnt/c/Users/zzhdz/WorkBuddy/2026-10-30-16-02-58/dsh-standard/40-checker/scripts/journey-runtime.mjs --package /tmp/flow-sample/verification --dsh dsh --json",
+    "command": "/home/yy/opt/node-v24.22.1-linux-x64/bin/node /mnt/c/Users/zzhdz/WorkBuddy/2026-10-30-16-02-58/dsh-standard/40-checker/scripts/journey-runtime.mjs --package /tmp/flow-sample/verification --dsh /tmp/dsh022/node_modules/@deepseek-ai/dsh/lib/bin.js --json",
     "exit": 1,
     "parseError": null,
     "stderr": "",
     "result": {
       "schema": "dsh-flow-runtime/1",
+      "environment": {
+        "dsh": "0.2.2-alpha.2",
+        "node": "v24.22.1",
+        "platform": "linux"
+      },
       "package": "dsh-verification-receipt",
       "version": "0.1.0",
       "previous": null,
@@ -73,7 +78,7 @@
           "id": "J1.install",
           "result": "BLOCKED",
           "reason": "host compatibility gate rejected the install (no exemption granted)",
-          "stderr": "\ndsh: installation rejected: Plugin dsh-verification-receipt@0.1.0 is incompatible with dsh 0.2.1-rc.5: requirements {\"@deepseek-ai/dsh-session\":\">=0.1.0-rc.5 <0.1.0\"}. Running it may cause crashes or data loss. Update the plugin or install a plugin version compatible with this dsh runtime. To accept this risk explicitly, grant the exact-version exemption for dsh-verification-receipt@0.1.0 on dsh 0.2.1-rc.5 with `dsh plugin allow-version` or the plugin manager, then retry the installation or restart dsh. Exact-version exemption: not active.\ndsh: nothing was installed.\ndsh: to accept the risk, run: dsh plugin --profile flow-journey allow-version dsh-verification-receipt@0.1.0 --dsh-version 0.2.1-rc.5 --accept-risk\ndsh: plugin command failed; diagnostics: /tmp/dsh-journey-eOY8M0/profiles/flo"
+          "stderr": "\ndsh: installation rejected: Plugin dsh-verification-receipt@0.1.0 is incompatible with dsh 0.2.2-alpha.2: requirements {\"@deepseek-ai/dsh-session\":\">=0.1.0-rc.5 <0.1.0\"}. Running it may cause crashes or data loss. Update the plugin or install a plugin version compatible with this dsh runtime. To accept this risk explicitly, grant the exact-version exemption for dsh-verification-receipt@0.1.0 on dsh 0.2.2-alpha.2 with `dsh plugin allow-version` or the plugin manager, then retry the installation or restart dsh. Exact-version exemption: not active.\ndsh: nothing was installed.\ndsh: to accept the risk, run: dsh plugin --profile flow-journey allow-version dsh-verification-receipt@0.1.0 --dsh-version 0.2.2-alpha.2 --accept-risk\ndsh: plugin command failed; diagnostics: /tmp/dsh-journey-7c2BA7/pro"
         },
         {
           "id": "J1.dump",
@@ -95,7 +100,7 @@
           "id": "J1.remove",
           "result": "FAIL",
           "reason": "remove exit=1",
-          "stderr": "Error: ERR_PNPM_CANNOT_REMOVE_MISSING_DEPS\n\n  × removing a package\n  ╰─▶ Cannot remove 'dsh-verification-receipt': project has no dependencies of\n      any kind\n\ndsh: plugin command failed; diagnostics: /tmp/dsh-journey-eOY8M0/profiles/flow-journey/.plugin-manager/logs/operation-Hn3XuR/pnpm.log\n"
+          "stderr": "Error: ERR_PNPM_CANNOT_REMOVE_MISSING_DEPS\n\n  × removing a package\n  ╰─▶ Cannot remove 'dsh-verification-receipt': project has no dependencies of\n      any kind\n\ndsh: plugin command failed; diagnostics: /tmp/dsh-journey-7c2BA7/profiles/flow-journey/.plugin-manager/logs/operation-UU4ak3/pnpm.log\n"
         },
         {
           "id": "J1.clean",
@@ -106,7 +111,7 @@
           "id": "J4.tree-load",
           "result": "FAIL",
           "reason": "reinstall exit=1",
-          "stderr": "\ndsh: installation rejected: Plugin dsh-verification-receipt@0.1.0 is incompatible with dsh 0.2.1-rc.5: requirements {\"@deepseek-ai/dsh-session\":\">=0.1.0-rc.5 <0.1.0\"}. Running it may cause crashes or data loss. Update the plugin or install a plugin version compatible with this dsh runtime. To accept this risk explicitly, grant the exact-version exemption for dsh-verification-receipt@0.1.0 on dsh 0.2.1-rc.5 with `dsh plugin allow-version` or the plugin manager, then retry the installation or res"
+          "stderr": "\ndsh: installation rejected: Plugin dsh-verification-receipt@0.1.0 is incompatible with dsh 0.2.2-alpha.2: requirements {\"@deepseek-ai/dsh-session\":\">=0.1.0-rc.5 <0.1.0\"}. Running it may cause crashes or data loss. Update the plugin or install a plugin version compatible with this dsh runtime. To accept this risk explicitly, grant the exact-version exemption for dsh-verification-receipt@0.1.0 on dsh 0.2.2-alpha.2 with `dsh plugin allow-version` or the plugin manager, then retry the installation "
         },
         {
           "id": "J6.upgrade",
@@ -161,7 +166,7 @@
       "id": "J1.install",
       "result": "BLOCKED",
       "reason": "host compatibility gate rejected the install (no exemption granted)",
-      "stderr": "\ndsh: installation rejected: Plugin dsh-verification-receipt@0.1.0 is incompatible with dsh 0.2.1-rc.5: requirements {\"@deepseek-ai/dsh-session\":\">=0.1.0-rc.5 <0.1.0\"}. Running it may cause crashes or data loss. Update the plugin or install a plugin version compatible with this dsh runtime. To accept this risk explicitly, grant the exact-version exemption for dsh-verification-receipt@0.1.0 on dsh 0.2.1-rc.5 with `dsh plugin allow-version` or the plugin manager, then retry the installation or restart dsh. Exact-version exemption: not active.\ndsh: nothing was installed.\ndsh: to accept the risk, run: dsh plugin --profile flow-journey allow-version dsh-verification-receipt@0.1.0 --dsh-version 0.2.1-rc.5 --accept-risk\ndsh: plugin command failed; diagnostics: /tmp/dsh-journey-eOY8M0/profiles/flo"
+      "stderr": "\ndsh: installation rejected: Plugin dsh-verification-receipt@0.1.0 is incompatible with dsh 0.2.2-alpha.2: requirements {\"@deepseek-ai/dsh-session\":\">=0.1.0-rc.5 <0.1.0\"}. Running it may cause crashes or data loss. Update the plugin or install a plugin version compatible with this dsh runtime. To accept this risk explicitly, grant the exact-version exemption for dsh-verification-receipt@0.1.0 on dsh 0.2.2-alpha.2 with `dsh plugin allow-version` or the plugin manager, then retry the installation or restart dsh. Exact-version exemption: not active.\ndsh: nothing was installed.\ndsh: to accept the risk, run: dsh plugin --profile flow-journey allow-version dsh-verification-receipt@0.1.0 --dsh-version 0.2.2-alpha.2 --accept-risk\ndsh: plugin command failed; diagnostics: /tmp/dsh-journey-7c2BA7/pro"
     },
     {
       "id": "J1.dump",
@@ -183,7 +188,7 @@
       "id": "J1.remove",
       "result": "FAIL",
       "reason": "remove exit=1",
-      "stderr": "Error: ERR_PNPM_CANNOT_REMOVE_MISSING_DEPS\n\n  × removing a package\n  ╰─▶ Cannot remove 'dsh-verification-receipt': project has no dependencies of\n      any kind\n\ndsh: plugin command failed; diagnostics: /tmp/dsh-journey-eOY8M0/profiles/flow-journey/.plugin-manager/logs/operation-Hn3XuR/pnpm.log\n"
+      "stderr": "Error: ERR_PNPM_CANNOT_REMOVE_MISSING_DEPS\n\n  × removing a package\n  ╰─▶ Cannot remove 'dsh-verification-receipt': project has no dependencies of\n      any kind\n\ndsh: plugin command failed; diagnostics: /tmp/dsh-journey-7c2BA7/profiles/flow-journey/.plugin-manager/logs/operation-UU4ak3/pnpm.log\n"
     },
     {
       "id": "J1.clean",
@@ -194,7 +199,7 @@
       "id": "J4.tree-load",
       "result": "FAIL",
       "reason": "reinstall exit=1",
-      "stderr": "\ndsh: installation rejected: Plugin dsh-verification-receipt@0.1.0 is incompatible with dsh 0.2.1-rc.5: requirements {\"@deepseek-ai/dsh-session\":\">=0.1.0-rc.5 <0.1.0\"}. Running it may cause crashes or data loss. Update the plugin or install a plugin version compatible with this dsh runtime. To accept this risk explicitly, grant the exact-version exemption for dsh-verification-receipt@0.1.0 on dsh 0.2.1-rc.5 with `dsh plugin allow-version` or the plugin manager, then retry the installation or res"
+      "stderr": "\ndsh: installation rejected: Plugin dsh-verification-receipt@0.1.0 is incompatible with dsh 0.2.2-alpha.2: requirements {\"@deepseek-ai/dsh-session\":\">=0.1.0-rc.5 <0.1.0\"}. Running it may cause crashes or data loss. Update the plugin or install a plugin version compatible with this dsh runtime. To accept this risk explicitly, grant the exact-version exemption for dsh-verification-receipt@0.1.0 on dsh 0.2.2-alpha.2 with `dsh plugin allow-version` or the plugin manager, then retry the installation "
     },
     {
       "id": "J6.upgrade",
