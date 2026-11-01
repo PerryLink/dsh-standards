@@ -2,6 +2,11 @@
 
 > **Status: BLOCKED (host profile), not a plugin FAIL.** This was a time-boxed
 > experiment; it did not promote any row and did not produce a clean 18/18.
+>
+> **Follow-up:** the real web profile runner in `../realweb/REPORT.md` did
+> activate all 8 former partials (8/8 `verified`; combined 16 clean + 2
+> `verified-gate-reject`). The `bundle-smoke --web` result below remains the
+> historical blocked experiment; it is not superseded as a hash-chained record.
 
 ## What ran
 

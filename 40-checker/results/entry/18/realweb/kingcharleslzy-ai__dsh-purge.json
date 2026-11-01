@@ -1,0 +1,75 @@
+{
+  "schema": "dsh-entry18-web/1",
+  "id": "kingcharleslzy-ai__dsh-purge",
+  "name": "dsh-purge-community",
+  "version": "1.6.67",
+  "spec": "github:kingcharleslzy-ai/dsh-purge#84c7f61a42944cda4dac70c95d6f1233318996e4",
+  "profile": "web",
+  "method": {
+    "runner": "real-dsh-web-profile",
+    "install": "manual-profile-symlink",
+    "base": "dsh-base/cordis.patch.yml",
+    "web": "dsh-web-app/cordis.patch.yml",
+    "args": [
+      "--no-open",
+      "--port",
+      "18403"
+    ],
+    "manifestRewrite": "removed devDependencies+scripts"
+  },
+  "environment": {
+    "node": "v24.22.1",
+    "platform": "linux",
+    "dshVersion": null
+  },
+  "startedAt": "2026-11-01T11:19:05.103Z",
+  "finishedAt": "2026-11-01T11:19:37.283Z",
+  "elapsedMs": 32180,
+  "status": "verified",
+  "verdict": "verified",
+  "compatibility": "error",
+  "compatibilityError": "Cannot access 'evaluatePluginCompatibility' before initialization",
+  "targetRows": 5,
+  "active": 5,
+  "rows": [
+    {
+      "id": "include:dsh-purge",
+      "state": 2,
+      "disabled": false
+    },
+    {
+      "id": "include:dsh-purge-redteam",
+      "state": 2,
+      "disabled": false
+    },
+    {
+      "id": "include:dsh-purge-presets",
+      "state": 2,
+      "disabled": false
+    },
+    {
+      "id": "include:dsh-purge-redteam-store",
+      "state": 2,
+      "disabled": false
+    },
+    {
+      "id": "include:dsh-purge-redteam-ui",
+      "state": 2,
+      "disabled": false
+    }
+  ],
+  "entries": 202,
+  "notClaimed": [
+    "UI correctness",
+    "security",
+    "production readiness",
+    "official endorsement"
+  ],
+  "error": null,
+  "source": "github",
+  "artifact": {
+    "source": "github",
+    "resolved": "84c7f61a42944cda4dac70c95d6f1233318996e4"
+  },
+  "targetNames": 5
+}

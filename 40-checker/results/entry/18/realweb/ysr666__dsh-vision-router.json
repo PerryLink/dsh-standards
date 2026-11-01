@@ -1,0 +1,61 @@
+{
+  "schema": "dsh-entry18-web/1",
+  "id": "ysr666__dsh-vision-router",
+  "name": "dsh-vision-router",
+  "version": "3.1.0",
+  "spec": "dsh-vision-router@3.1.0",
+  "profile": "web",
+  "method": {
+    "runner": "real-dsh-web-profile",
+    "install": "manual-profile-symlink",
+    "base": "dsh-base/cordis.patch.yml",
+    "web": "dsh-web-app/cordis.patch.yml",
+    "args": [
+      "--no-open",
+      "--port",
+      "18407"
+    ],
+    "manifestRewrite": "removed devDependencies+scripts"
+  },
+  "environment": {
+    "node": "v24.22.1",
+    "platform": "linux",
+    "dshVersion": null
+  },
+  "startedAt": "2026-11-01T11:19:55.583Z",
+  "finishedAt": "2026-11-01T11:20:01.288Z",
+  "elapsedMs": 5705,
+  "status": "verified",
+  "verdict": "verified",
+  "compatibility": "admit",
+  "compatibilityError": null,
+  "targetRows": 2,
+  "active": 2,
+  "rows": [
+    {
+      "id": "include:vision-router-web-connection-ready",
+      "state": 2,
+      "disabled": false
+    },
+    {
+      "id": "include:vision-router",
+      "state": 2,
+      "disabled": false
+    }
+  ],
+  "entries": 199,
+  "notClaimed": [
+    "UI correctness",
+    "security",
+    "production readiness",
+    "official endorsement"
+  ],
+  "error": null,
+  "source": "npm",
+  "artifact": {
+    "source": "npm",
+    "resolved": "dsh-vision-router@3.1.0",
+    "tarball": "dsh-vision-router-3.1.0.tgz"
+  },
+  "targetNames": 2
+}

@@ -37,7 +37,7 @@ Canonical：https://github.com/PerryLink/dsh-standards
 - 治理：`roles` / `reviewers` / `mark-policy` / `scheme` / DCT 已 **active**（D-014）。
 - 评价记录：`DSH-ATT-2026-001` 为 **active**，但仍是 `selfAssessed` / `self-reported`，不是独立验证。
 - 标准仓测试：**73/73**。
-- ENTRY：10 verified / 8 partial；FLOW：10 个真实包 **78 PASS / 4 FAIL / 2 BLOCKED / 66 not-run**；BOOST：8/8 measured（synthetic/loader，不是生产基线）。
+- ENTRY：base-only 10 verified / 8 partial；real web profile 18/18 verified（16 clean + 2 **verified-gate-reject**）；18/18 clean 未达成；FLOW：10 个真实包 **78 PASS / 4 FAIL / 2 BLOCKED / 66 not-run**；BOOST：8/8 measured（synthetic/loader，不是生产基线）。
 - J8 只有 module-load，没有 UI render；5 人 30 分钟中位数用机器干跑替代。
 - 配套包：`dsh-clinic` 0.8.0、`dsh-scaffold` 0.2.0、`dsh-primer` 0.4.1、`dsh-codemod` 3.0.2；`dsh-cert-mcp` 0.2.12。
 - 旧仓保留为指针/备份；旧 npm 包已 deprecate；`dsh-toolkit` 被 npm 拒绝，kit 实际名为 `dsh-scaffold`。

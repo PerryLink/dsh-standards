@@ -1,0 +1,70 @@
+{
+  "schema": "dsh-entry18-web/1",
+  "id": "mmparko__dsh-purge",
+  "name": "dsh-purge",
+  "version": "1.1.71",
+  "spec": "github:mmparko/dsh-purge#033e6bd1e0f101352b39075ecd0d758ffef26b76",
+  "profile": "web",
+  "method": {
+    "runner": "real-dsh-web-profile",
+    "install": "manual-profile-symlink",
+    "base": "dsh-base/cordis.patch.yml",
+    "web": "dsh-web-app/cordis.patch.yml",
+    "args": [
+      "--no-open",
+      "--port",
+      "18404"
+    ],
+    "manifestRewrite": "removed scripts"
+  },
+  "environment": {
+    "node": "v24.22.1",
+    "platform": "linux",
+    "dshVersion": null
+  },
+  "startedAt": "2026-11-01T11:19:37.481Z",
+  "finishedAt": "2026-11-01T11:19:47.280Z",
+  "elapsedMs": 9799,
+  "status": "verified",
+  "verdict": "verified",
+  "compatibility": "error",
+  "compatibilityError": "Cannot access 'evaluatePluginCompatibility' before initialization",
+  "targetRows": 4,
+  "active": 4,
+  "rows": [
+    {
+      "id": "include:dsh-purge",
+      "state": 2,
+      "disabled": false
+    },
+    {
+      "id": "include:dsh-purge-redteam",
+      "state": 2,
+      "disabled": false
+    },
+    {
+      "id": "include:dsh-purge-redteam-store",
+      "state": 2,
+      "disabled": false
+    },
+    {
+      "id": "include:dsh-purge-redteam-ui",
+      "state": 2,
+      "disabled": false
+    }
+  ],
+  "entries": 201,
+  "notClaimed": [
+    "UI correctness",
+    "security",
+    "production readiness",
+    "official endorsement"
+  ],
+  "error": null,
+  "source": "github",
+  "artifact": {
+    "source": "github",
+    "resolved": "033e6bd1e0f101352b39075ecd0d758ffef26b76"
+  },
+  "targetNames": 4
+}

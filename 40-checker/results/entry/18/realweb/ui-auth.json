@@ -1,0 +1,56 @@
+{
+  "schema": "dsh-entry18-web/1",
+  "id": "ui-auth",
+  "name": "dsh-ui-auth",
+  "version": "0.7.1",
+  "spec": "dsh-ui-auth@0.7.1",
+  "profile": "web",
+  "method": {
+    "runner": "real-dsh-web-profile",
+    "install": "manual-profile-symlink",
+    "base": "dsh-base/cordis.patch.yml",
+    "web": "dsh-web-app/cordis.patch.yml",
+    "args": [
+      "--no-open",
+      "--port",
+      "18406"
+    ],
+    "manifestRewrite": "removed devDependencies+scripts"
+  },
+  "environment": {
+    "node": "v24.22.1",
+    "platform": "linux",
+    "dshVersion": null
+  },
+  "startedAt": "2026-11-01T11:19:50.646Z",
+  "finishedAt": "2026-11-01T11:19:55.340Z",
+  "elapsedMs": 4694,
+  "status": "verified",
+  "verdict": "verified",
+  "compatibility": "error",
+  "compatibilityError": "Cannot access 'evaluatePluginCompatibility' before initialization",
+  "targetRows": 1,
+  "active": 1,
+  "rows": [
+    {
+      "id": "include:dsh-ui-auth",
+      "state": 2,
+      "disabled": false
+    }
+  ],
+  "entries": 198,
+  "notClaimed": [
+    "UI correctness",
+    "security",
+    "production readiness",
+    "official endorsement"
+  ],
+  "error": null,
+  "source": "npm",
+  "artifact": {
+    "source": "npm",
+    "resolved": "dsh-ui-auth@0.7.1",
+    "tarball": "dsh-ui-auth-0.7.1.tgz"
+  },
+  "targetNames": 1
+}

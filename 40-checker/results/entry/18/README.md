@@ -12,6 +12,9 @@ Generated: 2026-10-31T13:24:19.371Z (static) · 2026-11-01 (runtime)
   first shard (`SeaOf0__dsh-redteam-model`) was **blocked** because
   `bundle-smoke` cannot supply `webStartup`/`cmdlineArgs`/`webApp`; no row was
   promoted. See `richbase/REPORT.md`.
+- **Real web profile** (`realweb/`): 8/8 former partials `verified`; combined
+  18/18 `verified` (16 clean + 2 `verified-gate-reject`); 18/18 clean not
+  claimed. See `realweb/REPORT.md`.
 - **Target-only** (`targetonly/`): earlier attempt without the base layer; it is
   retained only as an intermediate artifact, not as the runtime result.
 - The old "runtime JSON is still missing / 7/18" note is obsolete. The

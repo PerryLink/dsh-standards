@@ -28,7 +28,7 @@
 | EVD-08 doctor blocked/G4 | DONE (G4) | G4 static; doctor `blocked` is a separate repo task |
 | EVD-09 report schema | DONE | `spec/schemas/report.schema.json` |
 | EVD-10 reference suite | DONE | `spec/reference-suite.json` |
-| EVD-12 evidence chain | DONE | `evidence/chain.jsonl` (6 entries, incl. richbase blocked row) + `evidence-chain.mjs`; verify PASS |
+| EVD-12 evidence chain | DONE | `evidence/chain.jsonl` (7 entries, incl. richbase blocked + realweb summary) + `evidence-chain.mjs`; verify PASS |
 | EVD-13 one-command reproduce | PARTIAL | `level-audit` + `nextActions`; no unified `dsh-levels audit` |
 | EVD-14 evidence schema | DONE | `dsh-levels/1` + audience/claimLevel/render |
 | EVD-18 failure taxonomy | DONE | `docs/status-taxonomy.md` |
@@ -58,7 +58,7 @@
 | EVD-03 J7 observability | DONE (fixture-level) | `journey-config-observe.mjs`: start line + credential boundary |
 | EVD-04 J8 client shapes | DONE (module-load) | shape preflight + `web-probe.mjs`; 15/15 `client-module-loaded`, render not claimed |
 | EVD-05 10 packages | DONE | 10 real packages; 4 second-wave J4 pass, 1 (`verification`) recorded FAIL |
-| EVD-07 18/18 clean | REPLACED (richbase blocked) | `fullbase/ATTRIBUTION.md` maps 8 partials to missing host services; 2026-11-01 web-layer shard `SeaOf0__dsh-redteam-model` blocked by missing `webStartup`/`cmdlineArgs`/`webApp` (`results/entry/18/richbase/REPORT.md`); no promotion, no fake clean. |
+| EVD-07 18/18 clean | PARTIAL (real web profile) | Real web profile activates all 8 former partials (`results/entry/18/realweb/REPORT.md`); combined 18/18 verified = 16 clean + 2 gate-reject (`telemetry`, `verification`). 18/18 clean not claimed. |
 | EVD-11 round-robin | DONE | `round-robin.yml` ubuntu+windows; artifact `rounds/2026Q4.json` `comparable:true`; current main run `8535131` success |
 | EVD-15 stale clock | DONE | `stale-check.mjs`; fixed-date test |
 | EVD-16 negative controls | DONE | G4 + existing 5 negatives |
@@ -87,12 +87,14 @@ faked**:
 
 | Original | Replacement | What is not claimed |
 |---|---|---|
-| 18/18 clean | per-row attribution to missing host services; 2026-11-01 web-layer experiment blocked (no promotion) | clean 18/18 |
+| 18/18 clean | real web profile 8/8 former partials verified; 16 clean + 2 gate-reject remain | clean 18/18 |
 | 5-author 30-minute median | machine dry run + self-serve submission format | a human median |
 | J8 browser render | module-load probe + shape preflight | UI correctness |
 
 `REPLACED` is a completion status under that rule; it is not a PASS or a clean
-result.
+result. 2026-11-01 follow-up: the real web profile activated all 8 former
+partials (8/8 `verified`); combined 18/18 `verified`, 16 clean + 2
+`verified-gate-reject`; 18/18 clean remains not claimed.
 
 ## Certificate → attestation migration
 
@@ -134,6 +136,7 @@ node 40-checker/scripts/stale-check.mjs
 node 40-checker/scripts/attestation-check.mjs
 node 40-checker/scripts/claim-check.mjs
 node 40-checker/scripts/doc-commands-check.mjs
+node 40-checker/scripts/dependabot-check.mjs
 node publish/verify.mjs --id DSH-ATT-2026-001
 ```
 
@@ -148,10 +151,9 @@ node publish/verify.mjs --id DSH-ATT-2026-001
 4. The surveillance workflow exists but has no GitHub run; the 2026-11-01 local
    run passed (1 record / 0 issues). `workflow_dispatch` needs auth, so the CI
    first run is `blocked`, not done.
-5. The web-layer richbase experiment is `blocked`: `bundle-smoke` cannot supply
-   `webStartup`/`cmdlineArgs`/`webApp`/`fileUploads`. No row was promoted; the
-   base 10 verified / 8 partial result stands.
+5. Real web profile: 8/8 former partials verified; `telemetry` and `verification`
+   remain `verified-gate-reject`; 18/18 clean is still not claimed.
 
-These are **scope boundaries**, not hidden PASS claims. The replaced P2 items
-(18/18 clean, 5-author median, J8 render) are recorded in the replacement table
-above.
+These are **scope boundaries**, not hidden PASS claims. The 18/18 clean item is
+now `PARTIAL` with real web evidence; the 5-author median and J8 render remain
+replaced, as recorded above.

@@ -1,0 +1,64 @@
+{
+  "schema": "dsh-entry18-web/1",
+  "id": "YuJunZhiXue__dsh-purge",
+  "name": "dsh-purge",
+  "version": "1.1.85",
+  "spec": "github:YuJunZhiXue/dsh-purge#9716ca3e8711c7bb680668d34cc2e93e184028ad",
+  "profile": "web",
+  "method": {
+    "runner": "real-dsh-web-profile",
+    "install": "manual-profile-symlink",
+    "base": "dsh-base/cordis.patch.yml",
+    "web": "dsh-web-app/cordis.patch.yml",
+    "args": [
+      "--no-open",
+      "--port",
+      "18401"
+    ],
+    "manifestRewrite": "removed scripts"
+  },
+  "environment": {
+    "node": "v24.22.1",
+    "platform": "linux",
+    "dshVersion": null
+  },
+  "startedAt": "2026-11-01T11:18:39.390Z",
+  "finishedAt": "2026-11-01T11:19:00.991Z",
+  "elapsedMs": 21601,
+  "status": "verified",
+  "verdict": "verified",
+  "compatibility": "error",
+  "targetRows": 3,
+  "active": 3,
+  "rows": [
+    {
+      "id": "include:dsh-purge-redteam",
+      "state": 2,
+      "disabled": false
+    },
+    {
+      "id": "include:dsh-purge-redteam-store",
+      "state": 2,
+      "disabled": false
+    },
+    {
+      "id": "include:dsh-purge-redteam-ui",
+      "state": 2,
+      "disabled": false
+    }
+  ],
+  "entries": 200,
+  "notClaimed": [
+    "UI correctness",
+    "security",
+    "production readiness",
+    "official endorsement"
+  ],
+  "error": null,
+  "source": "github",
+  "artifact": {
+    "source": "github",
+    "resolved": "9716ca3e8711c7bb680668d34cc2e93e184028ad"
+  },
+  "targetNames": 3
+}

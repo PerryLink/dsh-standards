@@ -191,6 +191,9 @@ scripts/host-farm.mjs       临时 host farm（符号链接依赖 + npm install/
 scripts/m1-sidecar.mjs      format-1 索引 → levels.json（index-only + pilot 合并）
 scripts/m2-runner.mjs       M2：临时 HOME/DSH_HOME、超时杀进程树、unshare/landlock
 scripts/doc-commands-check.mjs  文档命令/模板一致性（防第三方 npx）
+scripts/dependabot-check.mjs    no-Dependabot 策略检查
+scripts/entry18-web.mjs         真实 web profile 的 ENTRY row 检查（runProfile）
+scripts/entry18-realweb-summary.mjs  realweb rows → summary.json（含行哈希）
 scripts/landlock-exec.c      Landlock fs 写限制 launcher（C，按需编译）
 scripts/apply-overlay.mjs   把 T5 overlay 应用到包副本（不碰上游）
 src/report.mjs              text/json/SARIF + 结论门

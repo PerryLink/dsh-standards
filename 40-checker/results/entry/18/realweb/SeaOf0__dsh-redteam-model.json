@@ -1,0 +1,104 @@
+{
+  "schema": "dsh-entry18-web/1",
+  "id": "SeaOf0__dsh-redteam-model",
+  "name": "@dsh-external/dsh-redteam-model",
+  "version": "1.1.2",
+  "spec": "github:SeaOf0/dsh-redteam-model#ce24bb25e35df8c8514e00e0d98f1a36d2e2a562",
+  "profile": "web",
+  "method": {
+    "runner": "real-dsh-web-profile",
+    "install": "manual-profile-symlink",
+    "base": "dsh-base/cordis.patch.yml",
+    "web": "dsh-web-app/cordis.patch.yml",
+    "args": [
+      "--no-open",
+      "--port",
+      "18400"
+    ],
+    "manifestRewrite": "removed devDependencies+scripts"
+  },
+  "environment": {
+    "node": "v24.22.1",
+    "platform": "linux",
+    "dshVersion": null
+  },
+  "startedAt": "2026-11-01T11:17:26.704Z",
+  "finishedAt": "2026-11-01T11:18:39.200Z",
+  "elapsedMs": 72496,
+  "status": "verified",
+  "verdict": "verified",
+  "compatibility": "error",
+  "targetRows": 11,
+  "active": 11,
+  "rows": [
+    {
+      "id": "include:dsh-redteam-model",
+      "state": 2,
+      "disabled": false
+    },
+    {
+      "id": "include:preset-redteam",
+      "state": 2,
+      "disabled": false
+    },
+    {
+      "id": "include:preset-pentest",
+      "state": 2,
+      "disabled": false
+    },
+    {
+      "id": "include:preset-code-audit",
+      "state": 2,
+      "disabled": false
+    },
+    {
+      "id": "include:preset-binary-analysis",
+      "state": 2,
+      "disabled": false
+    },
+    {
+      "id": "include:preset-attack-defense",
+      "state": 2,
+      "disabled": false
+    },
+    {
+      "id": "include:preset-av-evasion",
+      "state": 2,
+      "disabled": false
+    },
+    {
+      "id": "include:preset-incident-response",
+      "state": 2,
+      "disabled": false
+    },
+    {
+      "id": "include:preset-cloud-security",
+      "state": 2,
+      "disabled": false
+    },
+    {
+      "id": "include:preset-ctf-solver",
+      "state": 2,
+      "disabled": false
+    },
+    {
+      "id": "include:preset-asset-mapping",
+      "state": 2,
+      "disabled": false
+    }
+  ],
+  "entries": 208,
+  "notClaimed": [
+    "UI correctness",
+    "security",
+    "production readiness",
+    "official endorsement"
+  ],
+  "error": null,
+  "source": "github",
+  "artifact": {
+    "source": "github",
+    "resolved": "ce24bb25e35df8c8514e00e0d98f1a36d2e2a562"
+  },
+  "targetNames": 2
+}
