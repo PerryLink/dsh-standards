@@ -85,6 +85,19 @@ node lev7-bench.mjs 64 20
 - 检查器：**73/73 tests**（含治理/DCO/评价记录/声明/验真/链/漂移测试）；
 - J1：**6 PASS + 1 WARN**；LEV-3：volatile **0/20** vs control **20/20** remount；LEV-6：稳定 prefix **100%** vs 易变 **0%**；LEV-7：**8.24×**（合成，非生产基线）。
 
+## 给插件开发者：什么时候用哪个工具
+
+| 阶段 | 命令 | 工具 | 产出 |
+|---|---|---|---|
+| 开始 | `dsh-dev new` / `dsh-start new` | dsh-plugin-start | 可安装骨架 |
+| 静态预检 | `dsh-dev check` / `dsh-ready` | dsh-plugin-ready | static report（host `not-run`） |
+| 宿主契约 | `dsh-clinic --only R,K,X` | dsh-plugin-doctor/clinic | 宿主契约 |
+| 隔离安装 | `dsh-test-drive` | dsh-test-drive | C3 证据 |
+| 市场提交 | `entry-validate --host-evidence` | 本仓 40-checker | C1–C8 + C3 |
+| 工具管理 | `dsh-tools list/doctor/install` | dsh-plugin-tools | 版本/安装指引 |
+
+完整图见 [docs/DEVELOPER-JOURNEY.md](docs/DEVELOPER-JOURNEY.md)；工具家族见 [dsh-plugin-devtools](https://github.com/PerryLink/dsh-plugin-devtools)。旧名项目见 [RENAMES.md](RENAMES.md)。
+
 ## 治理与贡献
 
 - 角色与权限：`governance/roles.json`；一页说明：`GOVERNANCE.md`
