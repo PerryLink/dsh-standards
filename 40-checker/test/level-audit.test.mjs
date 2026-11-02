@@ -52,6 +52,8 @@ function validCard(expiresAt = '2099-01-01', generatedAt = '2026-11-01') {
     expiresAt,
     recordHash: `sha256:${'a'.repeat(64)}`,
     claimLevel: 'self-reported',
+    issuer: 'fixture',
+    selfAssessed: true,
   }
 }
 

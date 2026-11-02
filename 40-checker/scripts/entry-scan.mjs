@@ -105,8 +105,16 @@ async function scanRepo(repo, meta) {
     }
     const main = typeof pkg.main === 'string' ? pkg.main : typeof pkg.exports?.['.'] === 'string' ? pkg.exports['.'] : pkg.exports?.['.']?.import
     if (typeof main === 'string') files.push(main)
+    const paths = new Set()
+    const treeRes = await api(`/repos/${repo}/git/trees/${encodeURIComponent(meta.default_branch)}?recursive=1`)
+    if (treeRes.ok && Array.isArray(treeRes.json.tree)) {
+      for (const item of treeRes.json.tree) paths.add(item.path)
+    }
     for (const file of [...new Set(files)]) {
-      if (await fileExists(repo, meta.default_branch, file)) writePlaceholder(dir, file)
+      const clean = file.replace(/^\.\//, '')
+      if (paths.has(clean) || (!treeRes.ok && await fileExists(repo, meta.default_branch, file))) {
+        writePlaceholder(dir, file)
+      }
     }
     const metaFile = path.join(dir, 'meta.json')
     fs.writeFileSync(metaFile, JSON.stringify({
@@ -156,6 +164,8 @@ async function main() {
     schema: 'dsh-entry-scan/1',
     generatedAt: new Date().toISOString(),
     method: 'static GitHub contents API; C3 not-run; no plugin code executed; file existence only for patch/client/main',
+    disclaimer: '非官方 · 非认证 · 非安全审计 · 非背书 · 无担保',
+    notClaimed: ['official standard', 'certification', 'security audit', 'ranking', 'market acceptance', 'external adoption'],
     total: scanned.length,
     summary: {
       pass: scanned.filter(r => r.conclusion.status === 'pass').length,

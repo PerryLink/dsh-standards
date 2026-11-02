@@ -20,9 +20,9 @@ This is an execution note, not a claim. It records what was built and what was n
 
 ## Not done
 
-- Ten **real third-party** entries: a first read-only scan of five public plugins found C4/C5/C6 false positives (many plugins do not declare `engines.dsh`; build output is often not committed; `dsh-web` has no `repository` field). Fixed: C4 absent is a warning; C5/C6 build output is a warning; C6 repository is optional. A full ten-plugin scan is still pending, and a scan is not external adoption.
+- Ten **real third-party** entries were scanned read-only. Result: 0 pass, 0 pass-with-warnings, 9 incomplete (C3 not-run), 1 fail (`omdsh-dev/dsh-llm-fallbacks` has no license). The first five exposed C4/C5/C6 false positives; fixed: C4 absent is a warning; C5/C6 build output is a warning; C6 repository is optional. A scan is not external adoption and C3 still needs a real host install.
 - Partner 1:1, host smoke, BOOST B1-B6, council, legal pack, official/group outreach.
-- No independent reviewer; no `verified` claim.
+- No independent reviewer; no `verified` claim. The `reviews/2026-11-02-p0-self-review.md` is an adversarial self-review, not independent.
 
 ## Next
 

@@ -1,0 +1,770 @@
+{
+  "schema": "dsh-entry-scan/1",
+  "generatedAt": "2026-11-02T05:32:23.717Z",
+  "method": "static GitHub contents API; C3 not-run; no plugin code executed; file existence only for patch/client/main",
+  "disclaimer": "非官方 · 非认证 · 非安全审计 · 非背书 · 无担保",
+  "notClaimed": [
+    "official standard",
+    "certification",
+    "security audit",
+    "ranking",
+    "market acceptance",
+    "external adoption"
+  ],
+  "total": 10,
+  "summary": {
+    "pass": 0,
+    "passWithWarnings": 0,
+    "incomplete": 9,
+    "fail": 1
+  },
+  "repos": [
+    {
+      "repo": "dsh-market/dsh-market",
+      "stars": 10162,
+      "package": "dshmarket",
+      "version": "1.73.8",
+      "filesChecked": [
+        "./cordis.patch.yml",
+        "./client/client.js",
+        "lib/index.js"
+      ],
+      "conclusion": {
+        "status": "incomplete",
+        "passed": 6,
+        "failed": [],
+        "warnings": [
+          "C4"
+        ],
+        "notRun": [
+          "C3"
+        ],
+        "notApplicable": []
+      },
+      "checks": [
+        {
+          "id": "C1",
+          "status": "pass",
+          "detail": "repo=dsh-market/dsh-market, topic=true, archived=false",
+          "evidence": "https://github.com/dsh-market/dsh-market"
+        },
+        {
+          "id": "C2",
+          "status": "pass",
+          "detail": "dsh.bundle.patch exists: ./cordis.patch.yml",
+          "evidence": null
+        },
+        {
+          "id": "C3",
+          "status": "not-run",
+          "detail": "no --meta.installCommand; install line not verified",
+          "evidence": null
+        },
+        {
+          "id": "C4",
+          "status": "warn",
+          "detail": "no declared engines.dsh or @deepseek-ai/dsh peer range; host compatibility unknown",
+          "evidence": null
+        },
+        {
+          "id": "C5",
+          "status": "pass",
+          "detail": "exports[\"./client\"] exists: ./client/client.js",
+          "evidence": null
+        },
+        {
+          "id": "C6",
+          "status": "pass",
+          "detail": "entry lib/index.js; description/license/repository present",
+          "evidence": null
+        },
+        {
+          "id": "C7",
+          "status": "pass",
+          "detail": "version 1.73.8; commit c01a967a2603; pushedAt 2026-11-01 (1d old)",
+          "evidence": null
+        },
+        {
+          "id": "C8",
+          "status": "pass",
+          "detail": "no grade/rank/endorsement fields; claimLevel=reference (or not supplied)",
+          "evidence": null
+        }
+      ],
+      "exit": 3
+    },
+    {
+      "repo": "ccch1mneyyy/dsh-TUI",
+      "stars": 6543,
+      "package": "@deepseek-harness-tui/dsh-tui",
+      "version": "0.18.0",
+      "filesChecked": [
+        "./cordis.patch.yml",
+        "lib/types/index.js"
+      ],
+      "conclusion": {
+        "status": "incomplete",
+        "passed": 5,
+        "failed": [],
+        "warnings": [
+          "C4"
+        ],
+        "notRun": [
+          "C3"
+        ],
+        "notApplicable": [
+          "C5"
+        ]
+      },
+      "checks": [
+        {
+          "id": "C1",
+          "status": "pass",
+          "detail": "repo=ccch1mneyyy/dsh-TUI, topic=true, archived=false",
+          "evidence": "https://github.com/ccch1mneyyy/dsh-TUI"
+        },
+        {
+          "id": "C2",
+          "status": "pass",
+          "detail": "dsh.bundle.patch exists: ./cordis.patch.yml",
+          "evidence": null
+        },
+        {
+          "id": "C3",
+          "status": "not-run",
+          "detail": "no --meta.installCommand; install line not verified",
+          "evidence": null
+        },
+        {
+          "id": "C4",
+          "status": "warn",
+          "detail": "no declared engines.dsh or @deepseek-ai/dsh peer range; host compatibility unknown",
+          "evidence": null
+        },
+        {
+          "id": "C5",
+          "status": "not-applicable",
+          "detail": "no dsh.client; client export not required",
+          "evidence": null
+        },
+        {
+          "id": "C6",
+          "status": "pass",
+          "detail": "entry lib/types/index.js; description/license/repository present",
+          "evidence": null
+        },
+        {
+          "id": "C7",
+          "status": "pass",
+          "detail": "version 0.18.0; commit a0630f4b1f49; pushedAt 2026-11-02 (0d old)",
+          "evidence": null
+        },
+        {
+          "id": "C8",
+          "status": "pass",
+          "detail": "no grade/rank/endorsement fields; claimLevel=reference (or not supplied)",
+          "evidence": null
+        }
+      ],
+      "exit": 3
+    },
+    {
+      "repo": "omdsh-dev/DSH-better-sidebar",
+      "stars": 4811,
+      "package": "dsh-better-sidebar",
+      "version": "0.28.2",
+      "filesChecked": [
+        "./cordis.patch.yml",
+        "./lib/client.js",
+        "lib/index.js"
+      ],
+      "conclusion": {
+        "status": "incomplete",
+        "passed": 5,
+        "failed": [],
+        "warnings": [
+          "C4",
+          "C5"
+        ],
+        "notRun": [
+          "C3"
+        ],
+        "notApplicable": []
+      },
+      "checks": [
+        {
+          "id": "C1",
+          "status": "pass",
+          "detail": "repo=omdsh-dev/DSH-better-sidebar, topic=true, archived=false",
+          "evidence": "https://github.com/omdsh-dev/DSH-better-sidebar"
+        },
+        {
+          "id": "C2",
+          "status": "pass",
+          "detail": "dsh.bundle.patch exists: ./cordis.patch.yml",
+          "evidence": null
+        },
+        {
+          "id": "C3",
+          "status": "not-run",
+          "detail": "no --meta.installCommand; install line not verified",
+          "evidence": null
+        },
+        {
+          "id": "C4",
+          "status": "warn",
+          "detail": "no declared engines.dsh or @deepseek-ai/dsh peer range; host compatibility unknown",
+          "evidence": null
+        },
+        {
+          "id": "C5",
+          "status": "warn",
+          "detail": "exports[\"./client\"] is declared at ./lib/client.js, but the built file is not committed; declaration present",
+          "evidence": null
+        },
+        {
+          "id": "C6",
+          "status": "pass",
+          "detail": "entry lib/index.js; description/license/repository present",
+          "evidence": null
+        },
+        {
+          "id": "C7",
+          "status": "pass",
+          "detail": "version 0.28.2; commit 2d736f5496fe; pushedAt 2026-10-30 (3d old)",
+          "evidence": null
+        },
+        {
+          "id": "C8",
+          "status": "pass",
+          "detail": "no grade/rank/endorsement fields; claimLevel=reference (or not supplied)",
+          "evidence": null
+        }
+      ],
+      "exit": 3
+    },
+    {
+      "repo": "zhu1090093659/dsh-web",
+      "stars": 9928,
+      "package": "dsh-web",
+      "version": "0.4.13",
+      "filesChecked": [
+        "./packages/dsh-web-all/cordis.patch.yml"
+      ],
+      "conclusion": {
+        "status": "incomplete",
+        "passed": 4,
+        "failed": [],
+        "warnings": [
+          "C4",
+          "C6"
+        ],
+        "notRun": [
+          "C3"
+        ],
+        "notApplicable": [
+          "C5"
+        ]
+      },
+      "checks": [
+        {
+          "id": "C1",
+          "status": "pass",
+          "detail": "repo=zhu1090093659/dsh-web, topic=true, archived=false",
+          "evidence": "https://github.com/zhu1090093659/dsh-web"
+        },
+        {
+          "id": "C2",
+          "status": "pass",
+          "detail": "dsh.bundle.patch exists: ./packages/dsh-web-all/cordis.patch.yml",
+          "evidence": null
+        },
+        {
+          "id": "C3",
+          "status": "not-run",
+          "detail": "no --meta.installCommand; install line not verified",
+          "evidence": null
+        },
+        {
+          "id": "C4",
+          "status": "warn",
+          "detail": "no declared engines.dsh or @deepseek-ai/dsh peer range; host compatibility unknown",
+          "evidence": null
+        },
+        {
+          "id": "C5",
+          "status": "not-applicable",
+          "detail": "no dsh.client; client export not required",
+          "evidence": null
+        },
+        {
+          "id": "C6",
+          "status": "warn",
+          "detail": "repository is missing; C1 supplies the repo URL, but a package repository field is recommended",
+          "evidence": null
+        },
+        {
+          "id": "C7",
+          "status": "pass",
+          "detail": "version 0.4.13; commit b66448efaec9; pushedAt 2026-11-02 (0d old)",
+          "evidence": null
+        },
+        {
+          "id": "C8",
+          "status": "pass",
+          "detail": "no grade/rank/endorsement fields; claimLevel=reference (or not supplied)",
+          "evidence": null
+        }
+      ],
+      "exit": 3
+    },
+    {
+      "repo": "dshplugin/dsh-plugin-hub",
+      "stars": 422,
+      "package": "dsh-plugin",
+      "version": "2.2.7",
+      "filesChecked": [
+        "./cordis.patch.yml",
+        "./client/client.js",
+        "lib/index.js"
+      ],
+      "conclusion": {
+        "status": "incomplete",
+        "passed": 6,
+        "failed": [],
+        "warnings": [
+          "C4"
+        ],
+        "notRun": [
+          "C3"
+        ],
+        "notApplicable": []
+      },
+      "checks": [
+        {
+          "id": "C1",
+          "status": "pass",
+          "detail": "repo=dshplugin/dsh-plugin-hub, topic=true, archived=false",
+          "evidence": "https://github.com/dshplugin/dsh-plugin-hub"
+        },
+        {
+          "id": "C2",
+          "status": "pass",
+          "detail": "dsh.bundle.patch exists: ./cordis.patch.yml",
+          "evidence": null
+        },
+        {
+          "id": "C3",
+          "status": "not-run",
+          "detail": "no --meta.installCommand; install line not verified",
+          "evidence": null
+        },
+        {
+          "id": "C4",
+          "status": "warn",
+          "detail": "no declared engines.dsh or @deepseek-ai/dsh peer range; host compatibility unknown",
+          "evidence": null
+        },
+        {
+          "id": "C5",
+          "status": "pass",
+          "detail": "exports[\"./client\"] exists: ./client/client.js",
+          "evidence": null
+        },
+        {
+          "id": "C6",
+          "status": "pass",
+          "detail": "entry lib/index.js; description/license/repository present",
+          "evidence": null
+        },
+        {
+          "id": "C7",
+          "status": "pass",
+          "detail": "version 2.2.7; commit e3916054f490; pushedAt 2026-11-01 (1d old)",
+          "evidence": null
+        },
+        {
+          "id": "C8",
+          "status": "pass",
+          "detail": "no grade/rank/endorsement fields; claimLevel=reference (or not supplied)",
+          "evidence": null
+        }
+      ],
+      "exit": 3
+    },
+    {
+      "repo": "omdsh-dev/dsh-genui",
+      "stars": 839,
+      "package": "@changfenhuang/dsh-genui",
+      "version": "0.15.0",
+      "filesChecked": [
+        "./cordis.patch.yml",
+        "./lib/client.js",
+        "lib/index.js"
+      ],
+      "conclusion": {
+        "status": "incomplete",
+        "passed": 6,
+        "failed": [],
+        "warnings": [
+          "C5"
+        ],
+        "notRun": [
+          "C3"
+        ],
+        "notApplicable": []
+      },
+      "checks": [
+        {
+          "id": "C1",
+          "status": "pass",
+          "detail": "repo=omdsh-dev/dsh-genui, topic=true, archived=false",
+          "evidence": "https://github.com/omdsh-dev/dsh-genui"
+        },
+        {
+          "id": "C2",
+          "status": "pass",
+          "detail": "dsh.bundle.patch exists: ./cordis.patch.yml",
+          "evidence": null
+        },
+        {
+          "id": "C3",
+          "status": "not-run",
+          "detail": "no --meta.installCommand; install line not verified",
+          "evidence": null
+        },
+        {
+          "id": "C4",
+          "status": "pass",
+          "detail": "engines.dsh = ^0.2.0-rc.1 || ^0.2.1-rc.1 || ^0.2.2-alpha.2 (declared range; runtime not tested)",
+          "evidence": null
+        },
+        {
+          "id": "C5",
+          "status": "warn",
+          "detail": "exports[\"./client\"] is declared at ./lib/client.js, but the built file is not committed; declaration present",
+          "evidence": null
+        },
+        {
+          "id": "C6",
+          "status": "pass",
+          "detail": "entry lib/index.js; description/license/repository present",
+          "evidence": null
+        },
+        {
+          "id": "C7",
+          "status": "pass",
+          "detail": "version 0.15.0; commit 66e385acee33; pushedAt 2026-11-01 (1d old)",
+          "evidence": null
+        },
+        {
+          "id": "C8",
+          "status": "pass",
+          "detail": "no grade/rank/endorsement fields; claimLevel=reference (or not supplied)",
+          "evidence": null
+        }
+      ],
+      "exit": 3
+    },
+    {
+      "repo": "omdsh-dev/dsh-advisor",
+      "stars": 33,
+      "package": "dsh-advisor",
+      "version": "0.6.5",
+      "filesChecked": [
+        "./cordis.patch.yml",
+        "./lib/client.js",
+        "./lib/index.js"
+      ],
+      "conclusion": {
+        "status": "incomplete",
+        "passed": 5,
+        "failed": [],
+        "warnings": [
+          "C4",
+          "C5"
+        ],
+        "notRun": [
+          "C3"
+        ],
+        "notApplicable": []
+      },
+      "checks": [
+        {
+          "id": "C1",
+          "status": "pass",
+          "detail": "repo=omdsh-dev/dsh-advisor, topic=true, archived=false",
+          "evidence": "https://github.com/omdsh-dev/dsh-advisor"
+        },
+        {
+          "id": "C2",
+          "status": "pass",
+          "detail": "dsh.bundle.patch exists: ./cordis.patch.yml",
+          "evidence": null
+        },
+        {
+          "id": "C3",
+          "status": "not-run",
+          "detail": "no --meta.installCommand; install line not verified",
+          "evidence": null
+        },
+        {
+          "id": "C4",
+          "status": "warn",
+          "detail": "no declared engines.dsh or @deepseek-ai/dsh peer range; host compatibility unknown",
+          "evidence": null
+        },
+        {
+          "id": "C5",
+          "status": "warn",
+          "detail": "exports[\"./client\"] is declared at ./lib/client.js, but the built file is not committed; declaration present",
+          "evidence": null
+        },
+        {
+          "id": "C6",
+          "status": "pass",
+          "detail": "entry ./lib/index.js; description/license/repository present",
+          "evidence": null
+        },
+        {
+          "id": "C7",
+          "status": "pass",
+          "detail": "version 0.6.5; commit dd967b37d01d; pushedAt 2026-10-30 (3d old)",
+          "evidence": null
+        },
+        {
+          "id": "C8",
+          "status": "pass",
+          "detail": "no grade/rank/endorsement fields; claimLevel=reference (or not supplied)",
+          "evidence": null
+        }
+      ],
+      "exit": 3
+    },
+    {
+      "repo": "omdsh-dev/dsh-mnemon",
+      "stars": 830,
+      "package": "dsh-mnemon",
+      "version": "0.5.38",
+      "filesChecked": [
+        "./cordis.patch.yml",
+        "./lib/client.js",
+        "lib/index.js"
+      ],
+      "conclusion": {
+        "status": "incomplete",
+        "passed": 6,
+        "failed": [],
+        "warnings": [
+          "C5"
+        ],
+        "notRun": [
+          "C3"
+        ],
+        "notApplicable": []
+      },
+      "checks": [
+        {
+          "id": "C1",
+          "status": "pass",
+          "detail": "repo=omdsh-dev/dsh-mnemon, topic=true, archived=false",
+          "evidence": "https://github.com/omdsh-dev/dsh-mnemon"
+        },
+        {
+          "id": "C2",
+          "status": "pass",
+          "detail": "dsh.bundle.patch exists: ./cordis.patch.yml",
+          "evidence": null
+        },
+        {
+          "id": "C3",
+          "status": "not-run",
+          "detail": "no --meta.installCommand; install line not verified",
+          "evidence": null
+        },
+        {
+          "id": "C4",
+          "status": "pass",
+          "detail": "engines.dsh = >=0.2.0-rc.2 <0.2.1-0 || >=0.2.1-rc.1 <0.3.0-0 (declared range; runtime not tested)",
+          "evidence": null
+        },
+        {
+          "id": "C5",
+          "status": "warn",
+          "detail": "exports[\"./client\"] is declared at ./lib/client.js, but the built file is not committed; declaration present",
+          "evidence": null
+        },
+        {
+          "id": "C6",
+          "status": "pass",
+          "detail": "entry lib/index.js; description/license/repository present",
+          "evidence": null
+        },
+        {
+          "id": "C7",
+          "status": "pass",
+          "detail": "version 0.5.38; commit a4ad2d695517; pushedAt 2026-11-01 (1d old)",
+          "evidence": null
+        },
+        {
+          "id": "C8",
+          "status": "pass",
+          "detail": "no grade/rank/endorsement fields; claimLevel=reference (or not supplied)",
+          "evidence": null
+        }
+      ],
+      "exit": 3
+    },
+    {
+      "repo": "omdsh-dev/dsh-llm-fallbacks",
+      "stars": 25,
+      "package": "dsh-llm-fallbacks",
+      "version": "0.6.13",
+      "filesChecked": [
+        "./bundle/cordis.patch.yml",
+        "./dist/client/index.js",
+        "./dist/index.js"
+      ],
+      "conclusion": {
+        "status": "fail",
+        "passed": 4,
+        "failed": [
+          "C6"
+        ],
+        "warnings": [
+          "C4",
+          "C5"
+        ],
+        "notRun": [
+          "C3"
+        ],
+        "notApplicable": []
+      },
+      "checks": [
+        {
+          "id": "C1",
+          "status": "pass",
+          "detail": "repo=omdsh-dev/dsh-llm-fallbacks, topic=true, archived=false",
+          "evidence": "https://github.com/omdsh-dev/dsh-llm-fallbacks"
+        },
+        {
+          "id": "C2",
+          "status": "pass",
+          "detail": "dsh.bundle.patch exists: ./bundle/cordis.patch.yml",
+          "evidence": null
+        },
+        {
+          "id": "C3",
+          "status": "not-run",
+          "detail": "no --meta.installCommand; install line not verified",
+          "evidence": null
+        },
+        {
+          "id": "C4",
+          "status": "warn",
+          "detail": "no declared engines.dsh or @deepseek-ai/dsh peer range; host compatibility unknown",
+          "evidence": null
+        },
+        {
+          "id": "C5",
+          "status": "warn",
+          "detail": "exports[\"./client\"] is declared at ./dist/client/index.js, but the built file is not committed; declaration present",
+          "evidence": null
+        },
+        {
+          "id": "C6",
+          "status": "fail",
+          "detail": "package.json missing: license",
+          "evidence": null
+        },
+        {
+          "id": "C7",
+          "status": "pass",
+          "detail": "version 0.6.13; commit ed4f91aed844; pushedAt 2026-10-30 (3d old)",
+          "evidence": null
+        },
+        {
+          "id": "C8",
+          "status": "pass",
+          "detail": "no grade/rank/endorsement fields; claimLevel=reference (or not supplied)",
+          "evidence": null
+        }
+      ],
+      "exit": 2
+    },
+    {
+      "repo": "omdsh-dev/dsh-annotation",
+      "stars": 159,
+      "package": "@changfenhuang/dsh-annotation",
+      "version": "1.4.11",
+      "filesChecked": [
+        "./cordis.patch.yml",
+        "./client.js",
+        "lib/index.js"
+      ],
+      "conclusion": {
+        "status": "incomplete",
+        "passed": 6,
+        "failed": [],
+        "warnings": [
+          "C4"
+        ],
+        "notRun": [
+          "C3"
+        ],
+        "notApplicable": []
+      },
+      "checks": [
+        {
+          "id": "C1",
+          "status": "pass",
+          "detail": "repo=omdsh-dev/dsh-annotation, topic=true, archived=false",
+          "evidence": "https://github.com/omdsh-dev/dsh-annotation"
+        },
+        {
+          "id": "C2",
+          "status": "pass",
+          "detail": "dsh.bundle.patch exists: ./cordis.patch.yml",
+          "evidence": null
+        },
+        {
+          "id": "C3",
+          "status": "not-run",
+          "detail": "no --meta.installCommand; install line not verified",
+          "evidence": null
+        },
+        {
+          "id": "C4",
+          "status": "warn",
+          "detail": "no declared engines.dsh or @deepseek-ai/dsh peer range; host compatibility unknown",
+          "evidence": null
+        },
+        {
+          "id": "C5",
+          "status": "pass",
+          "detail": "exports[\"./client\"] exists: ./client.js",
+          "evidence": null
+        },
+        {
+          "id": "C6",
+          "status": "pass",
+          "detail": "entry lib/index.js; description/license/repository present",
+          "evidence": null
+        },
+        {
+          "id": "C7",
+          "status": "pass",
+          "detail": "version 1.4.11; commit 14111b20b47f; pushedAt 2026-10-14 (19d old)",
+          "evidence": null
+        },
+        {
+          "id": "C8",
+          "status": "pass",
+          "detail": "no grade/rank/endorsement fields; claimLevel=reference (or not supplied)",
+          "evidence": null
+        }
+      ],
+      "exit": 3
+    }
+  ]
+}

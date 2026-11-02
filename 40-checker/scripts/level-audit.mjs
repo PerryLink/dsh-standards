@@ -183,7 +183,7 @@ function classifyFlow(evidence) {
 
 const BOOST_CARD_FIELDS = [
   'subject', 'host', 'method', 'scope', 'command', 'result', 'negativeControl',
-  'generatedAt', 'expiresAt', 'recordHash', 'claimLevel',
+  'generatedAt', 'expiresAt', 'recordHash', 'claimLevel', 'issuer', 'selfAssessed',
 ]
 const BOOST_CLAIM_LEVELS = new Set(['self-reported', 'self-assessed', 'host-reviewed', 'independent', 'reference'])
 const DATE_RE = /^\d{4}-\d{2}-\d{2}$/
@@ -201,6 +201,7 @@ function validateEvidenceCard(card) {
   if (!DATE_RE.test(String(card.expiresAt ?? ''))) missing.push('expiresAt(date)')
   if (!HASH_RE.test(String(card.recordHash ?? ''))) missing.push('recordHash(sha256)')
   if (!BOOST_CLAIM_LEVELS.has(String(card.claimLevel ?? ''))) missing.push('claimLevel')
+  if (typeof card.selfAssessed !== 'boolean') missing.push('selfAssessed(boolean)')
   if (missing.length > 0) {
     return { valid: false, missing, reason: `evidence card missing/invalid: ${missing.join(', ')}` }
   }
@@ -270,7 +271,7 @@ function nextActions(entry, flow, boost) {
   for (const warning of entry.warnings) actions.push(`ENTRY: consider ${warning.id} — ${warning.reason}`)
   if (entry.state === 'recognized') actions.push('ENTRY: run with --host to replace static recognition with a real G0-G3 boot')
   if (flow.state === 'not-run') actions.push('FLOW: record J1-J8 in a flow-evidence JSON; do not claim FLOW until they run')
-  if (boost.state === 'not-measured') actions.push('BOOST: attach LEV evidence cards (subject/host/method/scope/command/result/negativeControl/generatedAt/expiresAt/recordHash/claimLevel); a status alone is not measured')
+  if (boost.state === 'not-measured') actions.push('BOOST: attach LEV evidence cards (subject/host/method/scope/command/result/negativeControl/generatedAt/expiresAt/recordHash/claimLevel/issuer/selfAssessed); a status alone is not measured')
   if (boost.state === 'stale') actions.push('BOOST: refresh stale evidence cards before claiming measured')
   return actions
 }
