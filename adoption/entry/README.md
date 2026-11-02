@@ -47,4 +47,4 @@ Exit codes: `0` pass / pass-with-warnings; `2` fail; `3` incomplete (missing met
 
 ## Samples
 
-`fixtures/` contains eleven small packages used by `40-checker/test/entry-validate.test.mjs`: one good, one without meta, one build-output pass-with-warnings, seven deliberate failures (client-only, missing patch, `engines: "*"`, missing client export, missing metadata, missing version, forbidden label), and one peer-range pass.
+`fixtures/` contains twelve small packages used by `40-checker/test/entry-validate.test.mjs`: one good, one without meta, one build-output pass-with-warnings, one ordered patch-list pass, seven deliberate failures (client-only, missing patch, `engines: "*"`, missing client export, missing metadata, missing version, forbidden label), and one peer-range pass.

@@ -99,16 +99,22 @@ function run(dir, meta) {
       repoOk ? `https://github.com/${meta.repo}` : null))
   }
 
-  // C2 — dsh.bundle + existing patch
+  // C2 — dsh.bundle + existing patch (one path or an ordered list)
   const bundle = dsh.bundle
+  const patchValue = bundle?.patch
+  const patches = Array.isArray(patchValue)
+    ? patchValue.filter(item => typeof item === 'string' && item.length > 0)
+    : typeof patchValue === 'string' && patchValue.length > 0
+      ? [patchValue]
+      : null
   if (!bundle || typeof bundle !== 'object' || Array.isArray(bundle)) {
     checks.push(check('C2', 'fail', 'dsh.bundle is missing; dsh.client alone is not installable'))
-  } else if (typeof bundle.patch !== 'string' || bundle.patch.length === 0) {
-    checks.push(check('C2', 'fail', 'dsh.bundle.patch is missing'))
-  } else if (!fileExists(dir, bundle.patch)) {
-    checks.push(check('C2', 'fail', `dsh.bundle.patch does not exist: ${bundle.patch}`))
+  } else if (!patches || patches.length === 0) {
+    checks.push(check('C2', 'fail', 'dsh.bundle.patch is missing or empty'))
   } else {
-    checks.push(check('C2', 'pass', `dsh.bundle.patch exists: ${bundle.patch}`))
+    const missing = patches.filter(file => !fileExists(dir, file))
+    if (missing.length > 0) checks.push(check('C2', 'fail', `dsh.bundle.patch file(s) missing: ${missing.join(', ')}`))
+    else checks.push(check('C2', 'pass', `dsh.bundle.patch exists: ${patches.join(', ')}`))
   }
 
   // C3 — tested compose/install line
@@ -153,7 +159,9 @@ function run(dir, meta) {
 
   // C6 — entry + metadata
   const main = pkg.main ?? resolveExport(pkg.exports?.['.'])
-  const patch = typeof dsh.bundle?.patch === 'string' ? dsh.bundle.patch : null
+  const patch = Array.isArray(dsh.bundle?.patch)
+    ? dsh.bundle.patch.find(item => typeof item === 'string' && item.length > 0) ?? null
+    : typeof dsh.bundle?.patch === 'string' ? dsh.bundle.patch : null
   const missingMeta = ['description', 'license'].filter(field => {
     const value = pkg[field]
     return value === undefined || value === null || value === '' || (typeof value === 'object' && Object.keys(value).length === 0)

@@ -1,0 +1,30 @@
+{
+  "name": "@dsh-fixtures/entry-patch-list",
+  "version": "1.0.0",
+  "description": "Ordered patch list fixture.",
+  "license": "MIT",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/dsh-fixtures/entry-patch-list"
+  },
+  "type": "module",
+  "main": "./index.js",
+  "exports": {
+    ".": "./index.js",
+    "./client": "./client.js"
+  },
+  "engines": {
+    "dsh": ">=0.2.2-alpha.2 <0.3.0"
+  },
+  "dsh": {
+    "bundle": {
+      "patch": [
+        "./cordis.patch.yml",
+        "./second.patch.yml"
+      ]
+    },
+    "client": {
+      "platform": "web"
+    }
+  }
+}

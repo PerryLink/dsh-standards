@@ -73,3 +73,10 @@ test('entry-validate: a declared but uncommitted build output is a warning, not 
   assert.equal(json.checks.find(row => row.id === 'C6').status, 'pass')
   assert.deepEqual(json.conclusion.failed, [])
 })
+
+test('entry-validate: an ordered dsh.bundle.patch list is accepted', () => {
+  const { out, json } = result('patch-list')
+  assert.equal(out.status, 0, out.stderr)
+  assert.equal(json.checks.find(row => row.id === 'C2').status, 'pass')
+  assert.equal(json.conclusion.status, 'pass')
+})

@@ -97,6 +97,7 @@ async function scanRepo(repo, meta) {
     fs.writeFileSync(path.join(dir, 'package.json'), JSON.stringify(pkg, null, 2))
     const files = []
     if (typeof pkg.dsh.bundle?.patch === 'string') files.push(pkg.dsh.bundle.patch)
+    else if (Array.isArray(pkg.dsh.bundle?.patch)) files.push(...pkg.dsh.bundle.patch.filter(item => typeof item === 'string'))
     if (pkg.dsh.client) {
       const client = typeof pkg.exports?.['./client'] === 'string'
         ? pkg.exports['./client']
