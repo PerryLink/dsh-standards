@@ -14,7 +14,7 @@ This is an execution note, not a claim. It records what was built and what was n
 
 ## Verified
 
-- `cd 40-checker && npm test`: 92/92 pass.
+- `cd 40-checker && npm test`: 95/95 pass.
 - `governance-check`, `attestation-check`, `claim-check`, `stale-check`, `evidence-chain verify`, `doc-commands-check`, `dependabot-check`: 0 errors.
 - `label-sync` / `label-drift` / `label-verify`: pass on the sample, stale at 2028-01-01, unknown hash is a 404.
 
@@ -26,6 +26,7 @@ This is an execution note, not a claim. It records what was built and what was n
 
 ## Next
 
+0b. The 30-project corpus baseline is in `/mnt/d/Projects/dsh/deepseek-community-hub/00-live/study-2026-11-02/corpus-baseline.jsonl`; it has no PerryLink plugins and uses 15/10/5.
 0. Read `docs/full-test-plan-2026-11-02.md` for the 8–12 week pilot protocol (freeze, pre-register, C3, market difference table, communication).
 1. Run `entry-validate` on ten real public plugins; record false positives/negatives. The first five already exposed three false positives; fix before adding checks.
 2. One 1:1 with dsh-desktop (Fabric RFC 0004) and one with dsh-market (detail sidecar); no standard/co-management ask.

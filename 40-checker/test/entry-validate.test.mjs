@@ -4,6 +4,7 @@ import { spawnSync } from 'node:child_process'
 import { fileURLToPath } from 'node:url'
 import path from 'node:path'
 import fs from 'node:fs'
+import os from 'node:os'
 
 const HERE = path.dirname(fileURLToPath(import.meta.url))
 const STD = path.resolve(HERE, '..', '..')
@@ -79,4 +80,51 @@ test('entry-validate: an ordered dsh.bundle.patch list is accepted', () => {
   assert.equal(out.status, 0, out.stderr)
   assert.equal(json.checks.find(row => row.id === 'C2').status, 'pass')
   assert.equal(json.conclusion.status, 'pass')
+})
+
+function hostEvidence(status) {
+  const dir = fs.mkdtempSync(path.join(os.tmpdir(), 'dsh-entry-host-'))
+  const file = path.join(dir, 'host.json')
+  fs.writeFileSync(file, JSON.stringify({
+    status,
+    command: 'dsh plugin --profile test add @dsh-fixtures/entry-good',
+    host: 'dsh 0.2.2-alpha.2 / cordis 4.0.6-alpha.1',
+    evidence: 'https://example.invalid/host-install/1',
+    generatedAt: '2026-11-02',
+  }))
+  return { dir, file, cleanup: () => fs.rmSync(dir, { recursive: true, force: true }) }
+}
+
+test('entry-validate: a passed host install upgrades C3 to pass', () => {
+  const h = hostEvidence('pass')
+  try {
+    const out = spawnSync(process.execPath, [SCRIPT, path.join(FIXTURES, 'good'), '--json', '--meta', path.join(FIXTURES, 'good', 'meta.json'), '--host-evidence', h.file], { encoding: 'utf8', timeout: 30_000 })
+    assert.equal(out.status, 0, out.stderr)
+    const json = JSON.parse(out.stdout)
+    assert.equal(json.checks.find(row => row.id === 'C3').status, 'pass')
+    assert.equal(json.conclusion.status, 'pass')
+  } finally { h.cleanup() }
+})
+
+test('entry-validate: a failed host install fails C3', () => {
+  const h = hostEvidence('fail')
+  try {
+    const out = spawnSync(process.execPath, [SCRIPT, path.join(FIXTURES, 'good'), '--json', '--meta', path.join(FIXTURES, 'good', 'meta.json'), '--host-evidence', h.file], { encoding: 'utf8', timeout: 30_000 })
+    assert.equal(out.status, 2)
+    const json = JSON.parse(out.stdout)
+    assert.equal(json.checks.find(row => row.id === 'C3').status, 'fail')
+    assert.ok(json.conclusion.failed.includes('C3'))
+  } finally { h.cleanup() }
+})
+
+test('entry-validate: a blocked host install is incomplete, not a pass', () => {
+  const h = hostEvidence('blocked')
+  try {
+    const out = spawnSync(process.execPath, [SCRIPT, path.join(FIXTURES, 'good'), '--json', '--meta', path.join(FIXTURES, 'good', 'meta.json'), '--host-evidence', h.file], { encoding: 'utf8', timeout: 30_000 })
+    assert.equal(out.status, 3)
+    const json = JSON.parse(out.stdout)
+    assert.equal(json.checks.find(row => row.id === 'C3').status, 'blocked')
+    assert.ok(json.conclusion.blocked.includes('C3'))
+    assert.equal(json.conclusion.status, 'incomplete')
+  } finally { h.cleanup() }
 })

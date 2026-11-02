@@ -25,6 +25,7 @@ Usage:
 
 Options:
   --meta <file>     JSON: repo, topics, archived, commit, pushedAt, installCommand, claimLevel
+  --host-evidence <file>  JSON: { status: pass|fail|blocked|not-run, command, host, evidence, generatedAt }
   --format text|json  default text
   --out <file>      write the JSON result
   --help            show this help
@@ -33,7 +34,7 @@ Exit codes: 0 pass/pass-with-warnings; 2 fail; 3 incomplete/not-run.`)
 }
 
 function parseArgs(argv) {
-  const options = { dir: null, meta: null, format: 'text', out: null }
+  const options = { dir: null, meta: null, hostEvidence: null, format: 'text', out: null }
   for (let i = 0; i < argv.length; i += 1) {
     const arg = argv[i]
     const next = () => {
@@ -43,6 +44,7 @@ function parseArgs(argv) {
       return value
     }
     if (arg === '--meta') options.meta = next()
+    else if (arg === '--host-evidence') options.hostEvidence = next()
     else if (arg === '--json') options.format = 'json'
     else if (arg === '--format') options.format = next()
     else if (arg === '--out') options.out = next()
@@ -88,8 +90,8 @@ function run(dir, meta) {
   const checks = []
 
   // C1 — public repo + topic
-  if (!meta) {
-    checks.push(check('C1', 'not-run', 'no --meta; cannot verify public repo or dsh-plugin topic'))
+  if (!meta || (!meta.repo && !Array.isArray(meta.topics))) {
+    checks.push(check('C1', 'not-run', 'no --meta repo/topics; cannot verify public repo or dsh-plugin topic'))
   } else {
     const repoOk = typeof meta.repo === 'string' && /^[^/\s]+\/[^/\s]+$/.test(meta.repo)
     const topicOk = Array.isArray(meta.topics) && meta.topics.includes('dsh-plugin')
@@ -117,14 +119,19 @@ function run(dir, meta) {
     else checks.push(check('C2', 'pass', `dsh.bundle.patch exists: ${patches.join(', ')}`))
   }
 
-  // C3 — tested compose/install line
-  if (!meta?.installCommand) {
-    checks.push(check('C3', 'not-run', 'no --meta.installCommand; install line not verified'))
+  // C3 — tested compose/install line (or an explicit host-install evidence object)
+  const host = meta?.hostInstall
+  if (host) {
+    const status = ['pass', 'fail', 'blocked', 'not-run'].includes(host.status) ? host.status : 'blocked'
+    const detail = `hostInstall ${status}: ${host.command ?? 'no command'}${host.host ? ` (${host.host})` : ''}${host.evidence ? ` ${host.evidence}` : ''}`
+    checks.push(check('C3', status, detail, host.evidence ?? null))
+  } else if (!meta?.installCommand) {
+    checks.push(check('C3', 'not-run', 'no --meta.installCommand or --host-evidence; install line not verified'))
   } else {
     const command = String(meta.installCommand)
     const name = typeof pkg.name === 'string' ? pkg.name : ''
     const ok = command.includes('dsh plugin') && (name.length === 0 || command.includes(name) || command.includes('add'))
-    checks.push(check('C3', ok ? 'pass' : 'fail', `installCommand: ${command}`))
+    checks.push(check('C3', ok ? 'pass' : 'fail', `installCommand (declared, not executed): ${command}`))
   }
 
   // C4 — engines.dsh or peer range
@@ -209,10 +216,17 @@ function run(dir, meta) {
 
   const failed = checks.filter(row => row.status === 'fail')
   const notRun = checks.filter(row => row.status === 'not-run')
+  const blocked = checks.filter(row => row.status === 'blocked')
   const warnings = checks.filter(row => row.status === 'warn')
+  const advisories = []
+  if (!dsh.manifestVersion) advisories.push({ id: 'A1', detail: 'dsh.manifestVersion is missing; the reference template declares 1' })
+  if (!pkg.engines?.node) advisories.push({ id: 'A2', detail: 'engines.node is missing; the reference template recommends >=24' })
+  if (dsh.client && dsh.client.platform !== 'web') advisories.push({ id: 'A3', detail: 'dsh.client.platform is not web' })
+  if (!pkg.exports?.['./locale/en.json']) advisories.push({ id: 'A4', detail: 'exports["./locale/en.json"] is missing; display metadata may be absent' })
+  if (!pkg.icon && !pkg.exports?.['./icon']) advisories.push({ id: 'A5', detail: 'icon is missing; the host will use the default artwork' })
   let status = 'pass'
   if (failed.length > 0) status = 'fail'
-  else if (notRun.length > 0) status = 'incomplete'
+  else if (notRun.length > 0 || blocked.length > 0) status = 'incomplete'
   else if (warnings.length > 0) status = 'pass-with-warnings'
   return {
     schema: 'dsh-entry-audit/1',
@@ -226,8 +240,10 @@ function run(dir, meta) {
       failed: failed.map(row => row.id),
       warnings: warnings.map(row => row.id),
       notRun: notRun.map(row => row.id),
+      blocked: blocked.map(row => row.id),
       notApplicable: checks.filter(row => row.status === 'not-applicable').map(row => row.id),
     },
+    advisories,
     claimLevel: 'reference',
     notClaimed: ['official standard', 'certification', 'security audit', 'ranking', 'market acceptance', 'production baseline'],
   }
@@ -249,7 +265,11 @@ function main() {
   if (!fs.existsSync(CHECKLIST_PATH)) throw new Error(`missing checklist: ${CHECKLIST_PATH}`)
   const checklist = readJson(CHECKLIST_PATH, 'checklist.json')
   if (checklist.schema !== 'dsh-entry-checklist/1') throw new Error(`unsupported checklist schema: ${checklist.schema}`)
-  const meta = options.meta ? readJson(path.resolve(options.meta), '--meta') : null
+  let meta = options.meta ? readJson(path.resolve(options.meta), '--meta') : null
+  if (options.hostEvidence) {
+    const host = readJson(path.resolve(options.hostEvidence), '--host-evidence')
+    meta = { ...(meta ?? {}), hostInstall: host }
+  }
   const result = run(options.dir, meta)
   const output = options.format === 'json' ? JSON.stringify(result, null, 2) : render(result)
   if (options.out) {
