@@ -1,5 +1,3 @@
-> **Moved:** this project is now **[dsh-plugin-spec](https://github.com/PerryLink/dsh-plugin-spec)**. This repository stays as a pointer/backup; new work happens in the new home. Old npm packages `@perrylink/dsh-standard` and `@perrylink/dsh-standards` are deprecated; reference `dsh-plugin-spec`.
-
 # dsh-standards
 
 > **非官方、非认证、非安全审计。** 这是 DSH 插件规范与实践草稿（canonical: dsh-standards），不代表 DeepSeek 官方背书。

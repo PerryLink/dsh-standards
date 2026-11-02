@@ -21,6 +21,10 @@ Use a temporary host/profile; do not touch the real profile.
 4. Record exit code, stdout/stderr, whether the plugin row is disabled, and whether the field path is printed.
 5. Expected: non-zero exit or explicit `FAILED` with the field path; actual: note exactly what happened.
 
+## Clean control (required)
+
+The first control used `port: "not-a-number"` **and** a missing host; it failed on `$.host`, not `$.port`. That is confounded. Rerun with a valid host and only an invalid port; expect `$.port`. Also wait for the URL and then kill; do not use timeout exit 124 as the config result. Keep unknown-key behavior separate: Schemastery preserves unknown keys by design, so it is a warning/UX issue, not the same bug as wrong type/enum.
+
 ## What to report
 
 - Host version/Cordis version/OS; command; config; expected; actual; log excerpt.
