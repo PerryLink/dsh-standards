@@ -122,16 +122,16 @@ function run(dir, meta) {
   // C3 — tested compose/install line (or an explicit host-install evidence object)
   const host = meta?.hostInstall
   if (host) {
-    const status = ['pass', 'fail', 'blocked', 'not-run'].includes(host.status) ? host.status : 'blocked'
+    const status = ['pass', 'fail', 'blocked', 'not-run', 'not-applicable'].includes(host.status) ? host.status : 'blocked'
     const detail = `hostInstall ${status}: ${host.command ?? 'no command'}${host.host ? ` (${host.host})` : ''}${host.evidence ? ` ${host.evidence}` : ''}`
     checks.push(check('C3', status, detail, host.evidence ?? null))
   } else if (!meta?.installCommand) {
-    checks.push(check('C3', 'not-run', 'no --meta.installCommand or --host-evidence; install line not verified'))
+    checks.push(check('C3', 'not-applicable', 'C3 is flow-only; run J1 or pass --host-evidence for install evidence'))
   } else {
     const command = String(meta.installCommand)
     const name = typeof pkg.name === 'string' ? pkg.name : ''
     const ok = command.includes('dsh plugin') && (name.length === 0 || command.includes(name) || command.includes('add'))
-    checks.push(check('C3', ok ? 'pass' : 'fail', `installCommand (declared, not executed): ${command}`))
+    checks.push(check('C3', ok ? 'pass' : 'fail', `installCommand (declared; FLOW J1 still required for install evidence): ${command}`))
   }
 
   // C4 — engines.dsh or peer range
@@ -224,6 +224,7 @@ function run(dir, meta) {
   if (dsh.client && dsh.client.platform !== 'web') advisories.push({ id: 'A3', detail: 'dsh.client.platform is not web' })
   if (!pkg.exports?.['./locale/en.json']) advisories.push({ id: 'A4', detail: 'exports["./locale/en.json"] is missing; display metadata may be absent' })
   if (!pkg.icon && !pkg.exports?.['./icon']) advisories.push({ id: 'A5', detail: 'icon is missing; the host will use the default artwork' })
+  if (meta?.safety && !['clean', 'mentions-only'].includes(meta.safety)) advisories.push({ id: 'A6', detail: `safety category ${meta.safety}: requires review before C3` })
   let status = 'pass'
   if (failed.length > 0) status = 'fail'
   else if (notRun.length > 0 || blocked.length > 0) status = 'incomplete'

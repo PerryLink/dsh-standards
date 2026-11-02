@@ -47,7 +47,13 @@
 - BOOST：B1–B6 fixture；B8 只对子集、固定环境、20 次 p50/p95。
 - 市场：awesome/dsh-market/hub/radar/TUI/skillhub 的实际规则；形成差异表，不评分。
 
-### 1.5 修复实验
+### 1.4b Pilot 结果（2026-11-02）
+
+- 30 个第三方样本：C3 15 跑，14 pass / 0 fail / 1 blocked；C3 无区分度。
+- C3 已降为 FLOW-only；entry re-run：2 pass / 19 pass-with-warnings / 1 incomplete / 8 fail。
+- 8 fail 仍是 C1/C2/C6 静态问题；不是 C3。
+
+## 1.5 修复实验
 
 - 只做最小、可逆、不改行为的修改：补 `dsh.bundle.patch`、`engines.dsh`、`./client` export、license/description、dispose。
 - 每次修改只动一个变量；before/after 用同一环境、同一命令。
@@ -100,7 +106,7 @@
 | --- | --- | --- |
 | C1 public/topic | 通过 | 保留硬门槛 |
 | C2 bundle/patch | 字符串/数组 | 保留硬门槛；必须检查所有 patch 文件 |
-| C3 compose/install | `not-run` 无 host | **待验证是否降为 FLOW**：市场要“能安装/有验证”，不要求作者交一条已测 compose |
+| C3 compose/install | **已降为 FLOW-only** | 2026-11-02 pilot：15 个 host install，14 pass / 0 fail / 1 blocked；C3 无区分度；J1 成为 FLOW 必跑 |
 | C4 engines/peer | 缺失 warning | **待验证是否降为 host profile**：dsh-market/TUI/web 要，awesome/0xsline/handbook 不要求 |
 | C5 client export | 构建产物缺失 warning | **待验证是否只做 host profile**：只有 web/TUI/sidebar 有意义 |
 | C6 metadata/entry | repository warning；license fail | **待验证 license 是否降为 legal/profile**：awesome 不要求 license；但它是法律/市场信号 |

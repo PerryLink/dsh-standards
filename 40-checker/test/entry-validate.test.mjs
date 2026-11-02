@@ -128,3 +128,29 @@ test('entry-validate: a blocked host install is incomplete, not a pass', () => {
     assert.equal(json.conclusion.status, 'incomplete')
   } finally { h.cleanup() }
 })
+
+test('entry-validate: C3 is flow-only when no host evidence is supplied', () => {
+  const dir = fs.mkdtempSync(path.join(os.tmpdir(), 'dsh-c3-flow-'))
+  try {
+    const meta = JSON.parse(fs.readFileSync(path.join(FIXTURES, 'good', 'meta.json'), 'utf8'))
+    delete meta.installCommand
+    const metaFile = path.join(dir, 'meta.json')
+    fs.writeFileSync(metaFile, JSON.stringify(meta))
+    const out = spawnSync(process.execPath, [SCRIPT, path.join(FIXTURES, 'good'), '--json', '--meta', metaFile], { encoding: 'utf8', timeout: 30_000 })
+    assert.equal(out.status, 0, out.stderr)
+    const json = JSON.parse(out.stdout)
+    assert.equal(json.checks.find(row => row.id === 'C3').status, 'not-applicable')
+    assert.equal(json.conclusion.status, 'pass')
+  } finally { fs.rmSync(dir, { recursive: true, force: true }) }
+})
+
+test('entry-validate: host evidence can mark C3 not-applicable for a host/directory sample', () => {
+  const h = hostEvidence('not-applicable')
+  try {
+    const out = spawnSync(process.execPath, [SCRIPT, path.join(FIXTURES, 'good'), '--json', '--meta', path.join(FIXTURES, 'good', 'meta.json'), '--host-evidence', h.file], { encoding: 'utf8', timeout: 30_000 })
+    assert.equal(out.status, 0, out.stderr)
+    const json = JSON.parse(out.stdout)
+    assert.equal(json.checks.find(row => row.id === 'C3').status, 'not-applicable')
+    assert.equal(json.conclusion.status, 'pass')
+  } finally { h.cleanup() }
+})
