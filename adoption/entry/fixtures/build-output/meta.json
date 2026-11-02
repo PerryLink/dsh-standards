@@ -1,0 +1,11 @@
+{
+  "repo": "dsh-fixtures/entry-build-output",
+  "topics": [
+    "dsh-plugin"
+  ],
+  "archived": false,
+  "commit": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+  "pushedAt": "2026-11-01",
+  "installCommand": "dsh plugin --profile web add @dsh-fixtures/entry-build-output",
+  "claimLevel": "reference"
+}

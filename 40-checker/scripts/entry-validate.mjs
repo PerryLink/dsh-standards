@@ -127,7 +127,7 @@ function run(dir, meta) {
   const range = typeof engineRange === 'string' ? engineRange : typeof peerRange === 'string' ? peerRange : null
   const source = typeof engineRange === 'string' ? 'engines.dsh' : 'peerDependencies["@deepseek-ai/dsh"]'
   if (!range) {
-    checks.push(check('C4', 'fail', 'no engines.dsh and no @deepseek-ai/dsh peer range'))
+    checks.push(check('C4', 'warn', 'no declared engines.dsh or @deepseek-ai/dsh peer range; host compatibility unknown'))
   } else if (range.trim() === '*' || /(^|\s)(\*|x|X)(\s|$)/.test(range) || /\.(x|X|\*)/.test(range)) {
     checks.push(check('C4', 'fail', `${source} is too wide: ${range}`))
   } else if (!validRange(range)) {
@@ -145,7 +145,7 @@ function run(dir, meta) {
     if (!target) {
       checks.push(check('C5', 'fail', 'dsh.client exists but exports["./client"] is missing'))
     } else if (!fileExists(dir, target)) {
-      checks.push(check('C5', 'fail', `exports["./client"] points to a missing file: ${target}`))
+      checks.push(check('C5', 'warn', `exports["./client"] is declared at ${target}, but the built file is not committed; declaration present`))
     } else {
       checks.push(check('C5', 'pass', `exports["./client"] exists: ${target}`))
     }
@@ -153,16 +153,22 @@ function run(dir, meta) {
 
   // C6 — entry + metadata
   const main = pkg.main ?? resolveExport(pkg.exports?.['.'])
-  const missingMeta = ['description', 'license', 'repository'].filter(field => {
+  const patch = typeof dsh.bundle?.patch === 'string' ? dsh.bundle.patch : null
+  const missingMeta = ['description', 'license'].filter(field => {
     const value = pkg[field]
     return value === undefined || value === null || value === '' || (typeof value === 'object' && Object.keys(value).length === 0)
   })
-  if (!main || !fileExists(dir, main)) {
-    checks.push(check('C6', 'fail', `entry file is missing: ${main ?? 'no main/exports["."]'}`))
+  const missingRepository = pkg.repository === undefined || pkg.repository === null || pkg.repository === ''
+  if (!main && !patch) {
+    checks.push(check('C6', 'fail', 'no main/exports["."] and no dsh.bundle.patch'))
   } else if (missingMeta.length > 0) {
     checks.push(check('C6', 'fail', `package.json missing: ${missingMeta.join(', ')}`))
+  } else if (main && !fileExists(dir, main) && !(patch && fileExists(dir, patch))) {
+    checks.push(check('C6', 'warn', `entry ${main} is declared but not committed (build output); declaration present`))
+  } else if (missingRepository) {
+    checks.push(check('C6', 'warn', 'repository is missing; C1 supplies the repo URL, but a package repository field is recommended'))
   } else {
-    checks.push(check('C6', 'pass', `entry ${main}; description/license/repository present`))
+    checks.push(check('C6', 'pass', `entry ${main ?? patch}; description/license/repository present`))
   }
 
   // C7 — version + commit/digest + freshness

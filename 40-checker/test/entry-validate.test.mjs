@@ -64,3 +64,12 @@ test('entry-validate: a peer range is an accepted C4 source', () => {
   assert.equal(out.status, 0, out.stderr)
   assert.equal(json.checks.find(row => row.id === 'C4').status, 'pass')
 })
+
+test('entry-validate: a declared but uncommitted build output is a warning, not a fail', () => {
+  const { out, json } = result('build-output')
+  assert.equal(out.status, 0, out.stderr)
+  assert.equal(json.conclusion.status, 'pass-with-warnings')
+  assert.ok(json.conclusion.warnings.includes('C5'))
+  assert.equal(json.checks.find(row => row.id === 'C6').status, 'pass')
+  assert.deepEqual(json.conclusion.failed, [])
+})
