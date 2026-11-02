@@ -58,6 +58,12 @@ Use the JSON, not a badge. The top-level `status` is one of
 - [ ] Expected: a reader can recompute `stale` from `expiresAt`.
 - [ ] A new date does not make old evidence new.
 
+## J5 — README permissions (author aid)
+
+- [ ] README has a `Permissions & data access` section: reads/writes/network/credentials/background.
+- [ ] It matches the actual code; do not claim "no permissions" when it reads/writes.
+- [ ] This is **not** an ENTRY gate; it is J5 evidence for FLOW.
+
 ## Final record
 
 ```json

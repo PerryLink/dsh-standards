@@ -14,7 +14,7 @@ This is an execution note, not a claim. It records what was built and what was n
 
 ## Verified
 
-- `cd 40-checker && npm test`: 97/97 pass.
+- `cd 40-checker && npm test`: 98/98 pass.
 - `governance-check`, `attestation-check`, `claim-check`, `stale-check`, `evidence-chain verify`, `doc-commands-check`, `dependabot-check`: 0 errors.
 - `label-sync` / `label-drift` / `label-verify`: pass on the sample, stale at 2028-01-01, unknown hash is a 404.
 
@@ -26,7 +26,7 @@ This is an execution note, not a claim. It records what was built and what was n
 
 ## Next
 
-0a. C3 is flow-only after the 2026-11-02 pilot; see `adoption/entry/C3-DECISION-2026-11-02.md`.
+0a. C3 is flow-only after the 2026-11-02 pilot; see `adoption/entry/C3-DECISION-2026-11-02.md`. C6 license is A7 advisory; see `adoption/entry/C6-DECISION-2026-11-02.md`. J3/J5/BOOST protocols: `docs/HOST-J3-CONFIG-REPRO-2026-11-02.md`, `adoption/developer/PERMISSIONS.md`, `docs/BOOST-FIXTURES-2026-11-02.md`.
 0b. The 30-project corpus baseline is in `/mnt/d/Projects/dsh/deepseek-community-hub/00-live/study-2026-11-02/corpus-baseline.jsonl`; it has no PerryLink plugins and uses 15/10/5.
 0. Read `docs/full-test-plan-2026-11-02.md` for the 8–12 week pilot protocol (freeze, pre-register, C3, market difference table, communication).
 1. Run `entry-validate` on ten real public plugins; record false positives/negatives. The first five already exposed three false positives; fix before adding checks.

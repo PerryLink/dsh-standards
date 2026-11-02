@@ -154,3 +154,19 @@ test('entry-validate: host evidence can mark C3 not-applicable for a host/direct
     assert.equal(json.conclusion.status, 'pass')
   } finally { h.cleanup() }
 })
+
+test('entry-validate: a missing license is A7 advisory, not a C6 fail', () => {
+  const dir = fs.mkdtempSync(path.join(os.tmpdir(), 'dsh-c6-license-'))
+  try {
+    const src = path.join(FIXTURES, 'good')
+    for (const name of ['index.js', 'client.js', 'cordis.patch.yml', 'meta.json']) fs.copyFileSync(path.join(src, name), path.join(dir, name))
+    const pkg = JSON.parse(fs.readFileSync(path.join(src, 'package.json'), 'utf8'))
+    delete pkg.license
+    fs.writeFileSync(path.join(dir, 'package.json'), JSON.stringify(pkg))
+    const out = spawnSync(process.execPath, [SCRIPT, dir, '--json', '--meta', path.join(dir, 'meta.json')], { encoding: 'utf8', timeout: 30_000 })
+    assert.equal(out.status, 0, out.stderr)
+    const json = JSON.parse(out.stdout)
+    assert.equal(json.checks.find(row => row.id === 'C6').status, 'pass')
+    assert.ok(json.advisories.some(row => row.id === 'A7'))
+  } finally { fs.rmSync(dir, { recursive: true, force: true }) }
+})

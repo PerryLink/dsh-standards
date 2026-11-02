@@ -169,11 +169,12 @@ function run(dir, meta) {
   const patch = Array.isArray(dsh.bundle?.patch)
     ? dsh.bundle.patch.find(item => typeof item === 'string' && item.length > 0) ?? null
     : typeof dsh.bundle?.patch === 'string' ? dsh.bundle.patch : null
-  const missingMeta = ['description', 'license'].filter(field => {
+  const missingMeta = ['description'].filter(field => {
     const value = pkg[field]
     return value === undefined || value === null || value === '' || (typeof value === 'object' && Object.keys(value).length === 0)
   })
   const missingRepository = pkg.repository === undefined || pkg.repository === null || pkg.repository === ''
+  const missingLicense = pkg.license === undefined || pkg.license === null || pkg.license === ''
   if (!main && !patch) {
     checks.push(check('C6', 'fail', 'no main/exports["."] and no dsh.bundle.patch'))
   } else if (missingMeta.length > 0) {
@@ -224,6 +225,7 @@ function run(dir, meta) {
   if (dsh.client && dsh.client.platform !== 'web') advisories.push({ id: 'A3', detail: 'dsh.client.platform is not web' })
   if (!pkg.exports?.['./locale/en.json']) advisories.push({ id: 'A4', detail: 'exports["./locale/en.json"] is missing; display metadata may be absent' })
   if (!pkg.icon && !pkg.exports?.['./icon']) advisories.push({ id: 'A5', detail: 'icon is missing; the host will use the default artwork' })
+  if (missingLicense) advisories.push({ id: 'A7', detail: 'license is missing; legal/market profile, not an ENTRY hard fail' })
   if (meta?.safety && !['clean', 'mentions-only'].includes(meta.safety)) advisories.push({ id: 'A6', detail: `safety category ${meta.safety}: requires review before C3` })
   let status = 'pass'
   if (failed.length > 0) status = 'fail'

@@ -38,7 +38,7 @@
     },
     {
       "id": "C6",
-      "title": "Real entry declaration plus description/license (repository optional)",
+      "title": "Real entry declaration plus description (license/repository are advisories)",
       "kind": "metadata",
       "required": true
     },
@@ -60,6 +60,7 @@
     "C3 is flow-only: without --host-evidence it is not-applicable, not a missing ENTRY check. J1 is the required FLOW evidence.",
     "A safety category other than clean/mentions-only is advisory A6; do not auto-run C3 for it.",
     "C3 may use --host-evidence; pass/fail/blocked are preserved, and blocked is incomplete, never a pass.",
+    "C6 requires description and an entry declaration; a missing license is advisory A7 (legal/market profile), not a hard ENTRY fail.",
     "C4 is a declared range; absent is a warning, not a hard failure. A too-wide/invalid range fails.",
     "C5 is not-applicable without a client; a declared but uncommitted build output is a warning.",
     "C6 checks the entry declaration and metadata; a declared but uncommitted build output is a warning.",

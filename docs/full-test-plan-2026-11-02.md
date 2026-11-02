@@ -109,7 +109,7 @@
 | C3 compose/install | **已降为 FLOW-only** | 2026-11-02 pilot：15 个 host install，14 pass / 0 fail / 1 blocked；C3 无区分度；J1 成为 FLOW 必跑 |
 | C4 engines/peer | 缺失 warning | **待验证是否降为 host profile**：dsh-market/TUI/web 要，awesome/0xsline/handbook 不要求 |
 | C5 client export | 构建产物缺失 warning | **待验证是否只做 host profile**：只有 web/TUI/sidebar 有意义 |
-| C6 metadata/entry | repository warning；license fail | **待验证 license 是否降为 legal/profile**：awesome 不要求 license；但它是法律/市场信号 |
+| C6 metadata/entry | **license → A7 advisory** | 2026-11-02：license 是 legal/market profile；description/entry 仍是硬门槛；re-run 7 fail（之前 8） |
 | C7 version/commit | 通过 | 保持 version；commit/freshness 只 warning |
 | C8 no grade/rank | 通过 | **只约束我们的 label**；不能要求市场去掉自己的 score/Verified/等级 |
 | FLOW J1–J8 | 未全跑 | 先在 10 个项目上跑适用 journey；市场特有要求进 profile |

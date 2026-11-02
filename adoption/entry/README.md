@@ -13,7 +13,7 @@ Decision record: [`C3-DECISION-2026-11-02.md`](./C3-DECISION-2026-11-02.md). C3 
 | C3 | FLOW J1 install/uninstall evidence (flow-only) | The install command/result was recorded | Every profile/version works |
 | C4 | `engines.dsh` or `@deepseek-ai/dsh` peer range | A compatibility claim exists | The claim is true at runtime |
 | C5 | `dsh.client` has an existing `./client` export | The client entry is present | The UI renders correctly |
-| C6 | Entry declaration + description/license (repository optional) | Basic identity and metadata exist | The code is real or original |
+| C6 | Entry declaration + description (license A7; repository optional) | Basic identity and metadata exist | The code is real or original |
 | C7 | Version + commit/digest + freshness | The subject is identifiable and recent | The version is correct or secure |
 | C8 | No grade/rank; `claimLevel=reference` | The record is not a certification | The plugin is good |
 
@@ -59,7 +59,7 @@ C3 becomes `pass`/`fail`/`blocked`/`not-applicable`; a `blocked` host install ke
 
 - A market may add stricter rules; those belong in a market/host profile, not here.
 - C1/C3/C7 are `not-run` without metadata; the tool never upgrades a skip to a pass.
-- C6 is a metadata/entry declaration check; a missing repository field is a warning, and a human still has to inspect the code.
+- C6 is a metadata/entry declaration check; a missing repository field is a warning, a missing license is advisory A7 (legal/market profile), and a human still has to inspect the code.
 - C8 is a policy check; it does not make the plugin trustworthy.
 
 ## Samples
