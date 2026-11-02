@@ -41,7 +41,7 @@
 
 对每个项目记录：
 
-- 静态：`entry-validate --meta`、`entry-scan`、dsh-plugin-guide/doctor、相关市场检查。
+- 静态：`entry-validate --meta`、`entry-scan`、`dsh-primer`/`dsh-clinic`（scoped 精确版本）、hyzyn check-package-contents/check-dsh-peers、相关市场检查；doctor 的 skip/degraded 不记 pass。
 - 宿主：临时 `DSH_HOME` + 临时 profile；安装 → 启动 → 命令 → 禁用 → 卸载；记录文件/进程/端口/storage 残留。
 - FLOW：J1–J8 中适用的 journey；不适用记 `not-applicable`。
 - BOOST：B1–B6 fixture；B8 只对子集、固定环境、20 次 p50/p95。
@@ -81,9 +81,18 @@
 - `dshdev`：`web`/`desktop`/`desktop bundle`/`check-deps`，可做 host smoke。
 - 用途：C5/C6 的构建面、B8 的 bundle/启动测量、C3 的宿主 smoke；不要直接复制其私有工具链。
 
-### 2.3 其他
+### 2.3 工具命名与版本（重要）
 
-`bugmaker2/dsh-plugin-template`、`hyzyn/dsh-plugin-kit`、`kun2-5code/dsh-plugin-template`、`DEVbyQIN/dsh-plugin-kit`：对比 scaffold/validator；`PerryLink/dsh-plugin-guide`/`doctor` 作为基线工具，不把它的输出当标准通过；`dshbase`/`dsh-plugin.market`/`dshfind` 作为标签/评分对照。
+- `dsh-plugin-guide` 已迁 `dsh-primer`，`dsh-plugin-doctor` 已迁 `dsh-clinic`；用 scoped 精确版本，**不要 npx 裸名**（裸名是另一个项目）。记录工具版本/SPEC/DSH 版本。
+- `dsh-clinic`（doctor）：SPEC v1 是 R0–R8 + K1–K14 + D0–D3/D9 + CC1–CC5/3；工具分组另含 X（X1–X5 宿主契约），**X 不是 SPEC v1 检查项**。五态 + `skip`，`exit 6` = degraded；**skip/degraded 不是 pass**；R2/R4 依赖 built；D 依赖 network/pnpm，只证明 sandbox，不等于真宿主安装；doctor PASS 不等于 C1–C8 全过/认证/安全。
+- 建议命令：`--repo <dir> --no-smoke --only R,K --json`；需要宿主兼容时 `--only R,K,X --dsh-install <dsh>`（X 用宿主 `evaluatePluginCompatibility`）；D 只在临时目录/网络允许时跑，不把 D PASS 当 C3。
+
+### 2.4 其他
+
+`bugmaker2/dsh-plugin-template`（旧 Node/DSH、`dsh.plugin.json` 不是宿主 manifest）、`hyzyn/dsh-plugin-kit`（live-host-smoke、check-package-contents、check-dsh-peers）、`kun2-5code/dsh-plugin-template`（六形态/14 UI/volatile）、`DEVbyQIN/dsh-plugin-kit`（scaffolder/validator）；`dsh-tauri`、`dsh-web`、`dsh-TUI`、`DSH-better-sidebar`、`dsh-market` 的 tests/scripts 可做 C3/C5/C6/FLOW；`dshbase`/`dsh-plugin.market`/`dshfind` 作为标签/评分对照。
+
+**借 8：** omdsh contracts；omdsh harness.ts；morlay `cordis-client.ts`；morlay `package-exports` 的 engines 推导；hyzyn `live-host-smoke.mjs`；hyzyn `check-package-contents.mjs`；hyzyn `check-dsh-peers.mjs`；doctor SPEC + R/K。
+**不借 3：** bugmaker2 的旧 `dsh.plugin.json`/Node22/DSH0.1；morlay 整套 `@local` dts/typert/devkit（太重，只借 client/export）；doctor 的 D/PASS 当标准通过（网络/pnpm、非确定、skip≠pass、degraded exit 6、非认证）。
 
 ## 3. 三标准要验证什么
 
@@ -152,7 +161,7 @@
 
 | 周 | 动作 | Gate |
 | --- | --- | --- |
-| 0–1 | 冻结 checklist；预注册 10 项目；golden set + 负向 control；host harness | 工具在 golden set 上 FP/FN ≤10%；C3 可跑 |
+| 0–1 | 冻结 checklist；预注册 10 项目；golden set + 负向 control；host harness（hyzyn live-host-smoke 或 dsh-clinic D + 真 host） | 工具在 golden set 上 FP/FN ≤10%；C3 可跑；skip/degraded 不当 pass |
 | 2–3 | 30 项目静态 baseline；10–15 个 host install；市场差异表 | 至少 10 个 C3 有结果；至少 2 家市场规则映射 |
 | 4–5 | 10–15 个本地修复实验；before/after；performance 子集 | 0 第三方公开改动；每个修改只动一个变量 |
 | 6–7 | BOOST B1–B6；hold-out 验证；写 aggregate | hold-out 不调参；性能波动 >20% 标 not-run |
@@ -187,5 +196,6 @@
 
 - `omdsh-dev/plugin-template`（README、docs/dsh-plugin-contracts.md、tests/harness.ts、tests/plugin.test.ts）
 - `morlay/dsh-plugin`（devpackages/tsdown-plugin-cordis、devkit、dshdev、dts-prepare）
-- 各市场 README/CONTRIBUTING/CI；dshfind/dshbase/dsh-plugin.market 的标签/数据
+- `hyzyn/dsh-plugin-kit`（live-host-smoke、check-package-contents、check-dsh-peers）、`dsh-tauri`/`dsh-web`/`dsh-TUI`/`DSH-better-sidebar` 的 tests/scripts
+- `PerryLink/dsh-primer`（guide）与 `dsh-clinic`（doctor）SPEC；各市场 README/CONTRIBUTING/CI；dshfind/dshbase/dsh-plugin.market 的标签/数据
 - 本仓库：`adoption/entry/real-scan-2026-11-02.json`、`reviews/2026-11-02-p0-self-review.md`
