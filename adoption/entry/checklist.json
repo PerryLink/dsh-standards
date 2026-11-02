@@ -1,0 +1,73 @@
+{
+  "schema": "dsh-entry-checklist/1",
+  "version": "0.1.0",
+  "status": "draft",
+  "nonOfficial": true,
+  "description": "Static, market-compatible entry checks for DSH plugins. It is a pre-submit helper, not a gate, certification, ranking, or security audit.",
+  "checks": [
+    {
+      "id": "C1",
+      "title": "Public repository and dsh-plugin topic",
+      "kind": "metadata",
+      "required": true
+    },
+    {
+      "id": "C2",
+      "title": "dsh.bundle with an existing patch file",
+      "kind": "manifest",
+      "required": true
+    },
+    {
+      "id": "C3",
+      "title": "A tested compose/install line",
+      "kind": "host",
+      "required": true
+    },
+    {
+      "id": "C4",
+      "title": "engines.dsh or @deepseek-ai/dsh peer range",
+      "kind": "manifest",
+      "required": true
+    },
+    {
+      "id": "C5",
+      "title": "dsh.client has an existing ./client export",
+      "kind": "manifest",
+      "required": false
+    },
+    {
+      "id": "C6",
+      "title": "Real entry plus description, license, repository",
+      "kind": "metadata",
+      "required": true
+    },
+    {
+      "id": "C7",
+      "title": "Version, commit/digest, and freshness",
+      "kind": "metadata",
+      "required": true
+    },
+    {
+      "id": "C8",
+      "title": "No grade/rank and claimLevel=reference",
+      "kind": "policy",
+      "required": true
+    }
+  ],
+  "rules": [
+    "C1/C3/C7 need --meta; without it they are not-run, never upgraded to pass.",
+    "C5 is not-applicable when the plugin ships no client.",
+    "C6 checks the entry file and metadata only; code reality remains a human sample.",
+    "C8 rejects grade/score/rank/official/certified/secure/recommended fields and non-reference claimLevel.",
+    "A pass here is not a market acceptance, certification, security audit, or quality ranking."
+  ],
+  "notClaimed": [
+    "official standard",
+    "certification",
+    "security audit",
+    "ranking",
+    "market acceptance",
+    "production baseline"
+  ],
+  "disclaimer": "非官方 · 非认证 · 非安全审计 · 非背书 · 无担保"
+}

@@ -1,0 +1,41 @@
+{
+  "schema": "dsh-label-index/1",
+  "generatedAt": "2026-11-02",
+  "source": "adoption/market/sample-source.json",
+  "spec": {
+    "labels": "dsh-market-label/1",
+    "checklist": "dsh-entry-checklist/1"
+  },
+  "records": [
+    {
+      "schema": "dsh-market-label/1",
+      "subject": {
+        "repo": "dsh-fixtures/entry-good",
+        "version": "1.0.0",
+        "commit": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa"
+      },
+      "level": "entry",
+      "status": "static",
+      "claimLevel": "reference",
+      "scope": {
+        "dsh": ">=0.2.2-alpha.2 <0.3.0",
+        "cordis": "4.0.6-alpha.1",
+        "platform": "linux-x64"
+      },
+      "validity": {
+        "generatedAt": "2026-11-02",
+        "expiresAt": "2027-02-02"
+      },
+      "evidence": [
+        {
+          "url": "https://github.com/dsh-fixtures/entry-good",
+          "sha256": "bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb"
+        }
+      ],
+      "disclaimer": "非官方 · 非认证 · 非安全审计 · 非背书 · 无担保",
+      "verifyUrl": "https://example.invalid/verify/label",
+      "issuer": "dsh-standards",
+      "recordHash": "sha256:97f040b2111c364aacb43066b2f58471c9ca507c26ee90749ff6d1af0b37402f"
+    }
+  ]
+}

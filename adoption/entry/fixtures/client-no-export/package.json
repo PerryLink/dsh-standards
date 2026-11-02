@@ -1,0 +1,26 @@
+{
+  "name": "@dsh-fixtures/entry-client-no-export",
+  "version": "1.0.0",
+  "description": "Entry checklist fixture.",
+  "license": "MIT",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/dsh-fixtures/entry-good"
+  },
+  "type": "module",
+  "main": "./index.js",
+  "exports": {
+    ".": "./index.js"
+  },
+  "engines": {
+    "dsh": ">=0.2.2-alpha.2 <0.3.0"
+  },
+  "dsh": {
+    "bundle": {
+      "patch": "./cordis.patch.yml"
+    },
+    "client": {
+      "platform": "web"
+    }
+  }
+}

@@ -1,0 +1,27 @@
+{
+  "name": "@dsh-fixtures/entry-peer-ok",
+  "version": "1.0.0",
+  "description": "Entry checklist fixture.",
+  "license": "MIT",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/dsh-fixtures/entry-good"
+  },
+  "type": "module",
+  "main": "./index.js",
+  "exports": {
+    ".": "./index.js",
+    "./client": "./client.js"
+  },
+  "dsh": {
+    "bundle": {
+      "patch": "./cordis.patch.yml"
+    },
+    "client": {
+      "platform": "web"
+    }
+  },
+  "peerDependencies": {
+    "@deepseek-ai/dsh": ">=0.2.2-alpha.2 <0.3.0"
+  }
+}

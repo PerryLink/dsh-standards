@@ -44,7 +44,8 @@ Options:
   --bare <dir>             bare-module farm for the bundle smoke
   --no-runtime             force static ENTRY even when --host is given
   --flow-evidence <file>   JSON: { "J1": { "status": "pass|fail|not-run", "evidence": "..." }, ... }
-  --boost-evidence <file>  JSON: { "LEV-3": { "status": "measured|not-measured|failed", "evidence": "..." }, ... }
+  --boost-evidence <file>  JSON: { "LEV-3": { "status": "measured|not-measured|failed", "evidenceCard": { ... } }, ... }
+                            measured requires a valid evidence card; a status-only row is downgraded to not-measured
   --timeout <ms>           checker timeout, default 150000
   --format text|json       default text
   --out <file>             write the JSON result
@@ -180,6 +181,37 @@ function classifyFlow(evidence) {
   }
 }
 
+const BOOST_CARD_FIELDS = [
+  'subject', 'host', 'method', 'scope', 'command', 'result', 'negativeControl',
+  'generatedAt', 'expiresAt', 'recordHash', 'claimLevel',
+]
+const BOOST_CLAIM_LEVELS = new Set(['self-reported', 'self-assessed', 'host-reviewed', 'independent', 'reference'])
+const DATE_RE = /^\d{4}-\d{2}-\d{2}$/
+const HASH_RE = /^sha256:[0-9a-f]{64}$/
+
+function validateEvidenceCard(card) {
+  if (!card || typeof card !== 'object' || Array.isArray(card)) {
+    return { valid: false, missing: ['evidenceCard'], reason: 'missing evidence card' }
+  }
+  const missing = []
+  for (const field of BOOST_CARD_FIELDS) {
+    if (card[field] === undefined || card[field] === null || card[field] === '') missing.push(field)
+  }
+  if (!DATE_RE.test(String(card.generatedAt ?? ''))) missing.push('generatedAt(date)')
+  if (!DATE_RE.test(String(card.expiresAt ?? ''))) missing.push('expiresAt(date)')
+  if (!HASH_RE.test(String(card.recordHash ?? ''))) missing.push('recordHash(sha256)')
+  if (!BOOST_CLAIM_LEVELS.has(String(card.claimLevel ?? ''))) missing.push('claimLevel')
+  if (missing.length > 0) {
+    return { valid: false, missing, reason: `evidence card missing/invalid: ${missing.join(', ')}` }
+  }
+  const generated = Date.parse(`${card.generatedAt}T00:00:00Z`)
+  const expires = Date.parse(`${card.expiresAt}T00:00:00Z`)
+  if (!Number.isFinite(generated) || !Number.isFinite(expires) || expires < generated) {
+    return { valid: false, missing: ['validity'], reason: 'evidence card has invalid generatedAt/expiresAt' }
+  }
+  return { valid: true, missing: [], reason: null }
+}
+
 function classifyBoost(evidence) {
   const ids = ['LEV-1', 'LEV-2', 'LEV-3', 'LEV-4', 'LEV-5', 'LEV-6', 'LEV-7', 'LEV-8']
   if (!evidence) {
@@ -192,20 +224,42 @@ function classifyBoost(evidence) {
   const practices = {}
   for (const id of ids) {
     const row = evidence[id] ?? evidence[id.toLowerCase()]
-    const status = row?.status
+    const declared = row?.status
+    const card = row?.evidenceCard ?? (row?.evidence && typeof row.evidence === 'object' ? row.evidence : null)
+    const cardCheck = validateEvidenceCard(card)
+    let status = 'not-measured'
+    if (declared === 'failed') status = 'failed'
+    else if (declared === 'measured' && cardCheck.valid) status = 'measured'
     practices[id] = {
-      status: ['measured', 'not-measured', 'failed'].includes(status) ? status : 'not-measured',
-      evidence: row?.evidence ?? null,
+      status,
+      declared: ['measured', 'not-measured', 'failed'].includes(declared) ? declared : 'not-measured',
+      evidence: typeof row?.evidence === 'string' ? row.evidence : null,
+      evidenceCard: card,
+      card: cardCheck,
     }
   }
   const failed = ids.filter(id => practices[id].status === 'failed')
   const measured = ids.filter(id => practices[id].status === 'measured')
+  const today = new Date().toISOString().slice(0, 10)
+  const stale = measured.filter(id => String(practices[id].evidenceCard.expiresAt) < today)
+  const invalid = ids.filter(id => practices[id].declared === 'measured' && !practices[id].card.valid)
+  let state = 'not-measured'
+  if (failed.length > 0) state = 'failed'
+  else if (stale.length > 0) state = 'stale'
+  else if (measured.length === ids.length) state = 'measured'
+  const reasons = []
+  if (failed.length > 0) reasons.push(`failed practices: ${failed.join(', ')}`)
+  if (stale.length > 0) reasons.push(`stale evidence cards: ${stale.join(', ')}`)
+  if (invalid.length > 0) reasons.push(`measured without a valid evidence card: ${invalid.join(', ')}`)
+  if (failed.length === 0 && stale.length === 0 && measured.length !== ids.length) {
+    reasons.push(`${measured.length}/8 practices have valid measured evidence cards`)
+  }
   return {
-    state: failed.length > 0 ? 'failed' : measured.length === ids.length ? 'measured' : 'not-measured',
-    reason: failed.length > 0
-      ? `failed practices: ${failed.join(', ')}`
-      : `${measured.length}/8 practices have measured evidence`,
+    state,
+    reason: reasons.join('; '),
     practices,
+    validCards: measured.length,
+    invalidCards: invalid.length,
   }
 }
 
@@ -216,7 +270,8 @@ function nextActions(entry, flow, boost) {
   for (const warning of entry.warnings) actions.push(`ENTRY: consider ${warning.id} — ${warning.reason}`)
   if (entry.state === 'recognized') actions.push('ENTRY: run with --host to replace static recognition with a real G0-G3 boot')
   if (flow.state === 'not-run') actions.push('FLOW: record J1-J8 in a flow-evidence JSON; do not claim FLOW until they run')
-  if (boost.state === 'not-measured') actions.push('BOOST: attach LEV evidence cards; this tool does not benchmark for you')
+  if (boost.state === 'not-measured') actions.push('BOOST: attach LEV evidence cards (subject/host/method/scope/command/result/negativeControl/generatedAt/expiresAt/recordHash/claimLevel); a status alone is not measured')
+  if (boost.state === 'stale') actions.push('BOOST: refresh stale evidence cards before claiming measured')
   return actions
 }
 
