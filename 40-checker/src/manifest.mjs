@@ -204,6 +204,11 @@ export function runManifestChecks(dir, options = {}) {
     manifestDetails.push(detail('C-1.2', 'PASS', `entry resolves via ${entry.source}: ${entry.relative}`, [entry.relative]))
   } else if (entry.buildHint) {
     manifestDetails.push(detail('C-1.2', 'WARN', `entry not present in checkout; source/build hint exists (${entry.sourceEntry ?? 'build script'})`, ['package.json#scripts']))
+  } else if (kind === 'bundle' && patch.present) {
+    // 2026-11-04: a bundle that ships only a cordis.patch.yml has no runtime entry
+    // by design (dsh.bundle.patch is the carrier). Report NA, not WARN, so the
+    // mandatory coverage is not charged for something the package never claimed.
+    manifestDetails.push(detail('C-1.2', 'NA', 'patch-only bundle; no runtime entry by design', patch.files.map(f => f.relative)))
   } else if (kind === 'bundle' || kind === 'client') {
     manifestDetails.push(detail('C-1.2', 'WARN', `no runtime entry; ${kind} packages may be patch/client only`, ['package.json#exports']))
   } else if (Array.isArray(manifest.workspaces) || (manifest.workspaces && typeof manifest.workspaces === 'object')) {

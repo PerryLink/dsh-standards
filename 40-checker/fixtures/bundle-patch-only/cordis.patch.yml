@@ -1,0 +1,3 @@
+- insert:
+    - id: fixture-bundle-server
+      name: './server.mjs'

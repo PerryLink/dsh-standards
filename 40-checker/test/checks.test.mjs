@@ -21,6 +21,14 @@ test('good fixture passes manifest and version checks', () => {
   assert.equal(result.checks[2].result, 'NA')
 })
 
+test('patch-only bundle reports C-1.2 as NA, not WARN', () => {
+  const result = runManifestChecks(path.join(here, '..', 'fixtures', 'bundle-patch-only'))
+  const dsc01 = result.checks.find((check) => check.id === 'DSC-01')
+  const entry = dsc01.details.find((detail) => detail.item === 'C-1.2')
+  assert.equal(entry.result, 'NA')
+  assert.match(entry.reason, /patch-only bundle/)
+})
+
 test('bad fixture fails version and warns licence', () => {
   const result = runManifestChecks(bad)
   assert.equal(result.checks[0].result, 'WARN')
