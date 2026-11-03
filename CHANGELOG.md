@@ -1,5 +1,8 @@
 # Changelog
 
+## 2026-11-03 — Node 24.9 baseline
+- Require Node >=24.9.0 to match DeepSeek Harness 0.2.2-alpha.3.
+
 ## 2026-11-02 — P0–P2, Apache-2.0, and attestation migration
 
 - Renamed certificate → attestation (`dsh-attestation/1`, `DSH-ATT-*`,
