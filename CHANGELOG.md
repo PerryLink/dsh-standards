@@ -10,6 +10,12 @@
 - `private: true` and workspace roots report NA instead of WARN/FAIL.
 - A directory without `package.json` returns exit 3 (usage), matching `dsh-levels`.
 
+## 1.0.0 — 2026-11-03
+
+- First 1.x release: `dsh-standards` becomes the public execution umbrella — it ships the conformance checker, the level audit and the canonical specification files.
+- Public commands: `dsh-standards` (checker) and `dsh-levels` (three-layer audit).
+- The prose guide lives in `dsh-plugin-guide`; the low-level rule text stays in `dsh-plugin-spec`.
+
 ## 1.0.1 — 2026-11-03
 
 - 打包：`files` 收窄，不再把 `40-checker/results/` 打进 npm 包（此前包含第三方插件结果、截图与本机路径）。
