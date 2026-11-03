@@ -63,19 +63,85 @@ function upperForTilde(version) {
   return { ...version, minor: version.minor + 1, patch: 0, prerelease: [] }
 }
 
-function tokenizeAlternative(alternative) {
-  const tokens = []
+function parsePartial(text) {
+  const match = /^v?(\d+)(?:\.(\d+|[xX*]))?(?:\.(\d+|[xX*]))?(?:-([0-9A-Za-z.-]+))?$/.exec(text.trim())
+  if (!match) return null
+  return {
+    major: Number(match[1]),
+    minor: match[2] === undefined || /[xX*]/.test(match[2]) ? null : Number(match[2]),
+    patch: match[3] === undefined || /[xX*]/.test(match[3]) ? null : Number(match[3]),
+    prerelease: match[4] ? match[4].split('.') : [],
+  }
+}
+
+function fullVersion(partial) {
+  return { major: partial.major, minor: partial.minor ?? 0, patch: partial.patch ?? 0, prerelease: partial.prerelease }
+}
+function nextMinor(partial) { return { major: partial.major, minor: (partial.minor ?? 0) + 1, patch: 0, prerelease: [] } }
+function nextMajor(partial) { return { major: partial.major + 1, minor: 0, patch: 0, prerelease: [] } }
+function fmt(version) {
+  const base = `${version.major}.${version.minor}.${version.patch}`
+  return version.prerelease && version.prerelease.length ? `${base}-${version.prerelease.join('.')}` : base
+}
+
+function expandToken(raw) {
+  if (raw === '*' || raw === 'x' || raw === 'X') return '*'
+  const match = /^(>=|<=|>|<|=|\^|~)?\s*v?(\d+)(?:\.(\d+|[xX*]))?(?:\.(\d+|[xX*]))?(?:-([0-9A-Za-z.-]+))?$/.exec(raw)
+  if (!match) return null
+  const op = match[1] ?? '='
+  const partial = {
+    major: Number(match[2]),
+    minor: match[3] === undefined || /[xX*]/.test(match[3]) ? null : Number(match[3]),
+    patch: match[4] === undefined || /[xX*]/.test(match[4]) ? null : Number(match[4]),
+    prerelease: match[5] ? match[5].split('.') : [],
+  }
+  const low = fullVersion(partial)
+  const noMinor = partial.minor === null
+  const noPatch = partial.patch === null
+  if (!noMinor && !noPatch) return `${op}${fmt(low)}`
+  switch (op) {
+    case '^':
+    case '~':
+    case '=':
+      return noMinor ? `>=${fmt(low)} <${fmt(nextMajor(partial))}` : `>=${fmt(low)} <${fmt(nextMinor(partial))}`
+    case '>=': return `>=${fmt(low)}`
+    case '>': return noMinor ? `>=${fmt(nextMajor(partial))}` : `>=${fmt(nextMinor(partial))}`
+    case '<': return `<${fmt(low)}`
+    case '<=': return noMinor ? `<${fmt(nextMajor(partial))}` : `<${fmt(nextMinor(partial))}`
+    default: return null
+  }
+}
+
+/** Hyphen ranges and x-ranges are normalized before tokenizing. */
+function expandAlternative(alternative) {
   const text = alternative.trim()
-  if (text === '' || text === '*' || text === 'x' || text === 'X') return [{ op: '*', version: null }]
-  // Insert a space between a comparator and its version when written as ">=1.2.3"
-  // (already no space) and split on whitespace.
+  if (text === '' || text === '*' || text === 'x' || text === 'X') return '*'
+  const hyphen = /^(.+?)\s+-\s+(.+)$/.exec(text)
+  if (hyphen) {
+    const left = parsePartial(hyphen[1])
+    const right = parsePartial(hyphen[2])
+    if (!left || !right) return null
+    const low = `>=${fmt(fullVersion(left))}`
+    if (right.minor === null) return `${low} <${fmt(nextMajor(right))}`
+    if (right.patch === null) return `${low} <${fmt(nextMinor(right))}`
+    return `${low} <=${fmt(fullVersion(right))}`
+  }
+  const parts = []
   for (const raw of text.split(/\s+/)) {
-    let token = raw
-    if (token === '*' || token === 'x' || token === 'X') {
-      tokens.push({ op: '*', version: null })
-      continue
-    }
-    const match = /^(>=|<=|>|<|=|\^|~)?\s*v?(\d+\.\d+\.\d+(?:-[0-9A-Za-z.-]+)?(?:\+[0-9A-Za-z.-]+)?)$/.exec(token)
+    const expanded = expandToken(raw)
+    if (expanded === null) return null
+    parts.push(expanded)
+  }
+  return parts.join(' ')
+}
+
+function tokenizeAlternative(alternative) {
+  const expanded = expandAlternative(alternative)
+  if (expanded === null) return null
+  if (expanded === '*') return [{ op: '*', version: null }]
+  const tokens = []
+  for (const raw of expanded.split(/\s+/)) {
+    const match = /^(>=|<=|>|<|=|\^|~)?\s*v?(\d+\.\d+\.\d+(?:-[0-9A-Za-z.-]+)?(?:\+[0-9A-Za-z.-]+)?)$/.exec(raw)
     if (!match) return null
     const op = match[1] ?? '='
     const version = parseVersion(match[2])

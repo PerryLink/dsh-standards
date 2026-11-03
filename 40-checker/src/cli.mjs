@@ -13,7 +13,7 @@ const DEFAULT_COMMIT = 'ce7073d51254c26cd63b22a60835b8f948deb447'
 const DEFAULT_CORDIS = '4.0.6-alpha.1'
 
 function usage() {
-  return `dsh-plugin-verify ${VERSION} — DS-C conformance checker (MVP)
+  return `${process.env.DSH_CHECKER_BRAND || 'dsh-plugin-verify ' + VERSION} — DS-C conformance checker (MVP)
 
 Usage:
   dsh-plugin-verify <package-dir> [options]

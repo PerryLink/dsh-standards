@@ -1,3 +1,10 @@
+## 1.0.1 — 2026-11-03
+
+- 打包：`files` 收窄，不再把 `40-checker/results/` 打进 npm 包（此前包含第三方插件结果、截图与本机路径）。
+- 文档：`npx dsh-levels` 会装到第三方包，改为 `npx -p dsh-standards dsh-levels`；修正不存在的 `bin/` 路径；测试数 73→98。
+- CLI：`dsh-standards --help` 首行显示自己的包名与版本。
+- 检查器：`exports["."]` 指向缺失文件时不再回退到 `main`。
+
 # Changelog
 
 ## 2026-11-03 — Node 24.9 baseline

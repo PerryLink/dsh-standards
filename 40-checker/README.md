@@ -3,7 +3,7 @@
 > 版本：0.1.0 ｜ 日期：2026-10-31 ｜ 标准：DS-C v1.0.0 ｜ 许可：Apache-2.0
 > 零依赖，Node ≥ 20。只读目标包；不修改被检对象。
 >
-> **未发布到 npm。** npm 上的 `dsh-plugin-verify` 是另一个项目；`dsh-levels` 也是第三方包。请从本仓运行 `node bin/...`，不要 `npx dsh-plugin-verify` / `npx dsh-levels`。
+> **发行方式**：本仓直接运行时用 `node 40-checker/bin/...`；npm 上通过 `dsh-standards` 包分发（提供 `dsh-standards` 与 `dsh-levels` 两个命令）。不要用 `npx dsh-plugin-verify`、`npx dsh-levels`——npm 上这两个名字属于其他项目。
 
 ## 1. 它做什么
 
@@ -50,7 +50,7 @@ node bin/dsh-plugin-verify.mjs /path/to/plugin --format sarif --out report.sarif
 # package：作者本地
 node bin/dsh-plugin-verify.mjs ./my-plugin
 
-# listing：市场门禁
+# listing：市场条目校验（收录前提醒，不是门禁）
 node bin/dsh-plugin-verify.mjs ./my-plugin \
   --profile listing \
   --market-index ./market.json \

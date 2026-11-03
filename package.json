@@ -13,15 +13,24 @@
     "dsh-levels": "./bin/dsh-levels.mjs"
   },
   "files": [
-    "40-checker",
+    "bin",
+    "40-checker/bin",
+    "40-checker/src",
+    "40-checker/scripts",
+    "40-checker/samples",
+    "40-checker/fixtures",
+    "40-checker/test",
+    "40-checker/package.json",
+    "40-checker/README.md",
     "spec",
     "docs",
-    "bin",
     "README.md",
+    "CHANGELOG.md",
     "LICENSE",
     "LICENSE-APACHE",
     "LICENSE-CC-BY",
-    "NOTICE.md"
+    "NOTICE.md",
+    "NOTICE"
   ],
   "scripts": {
     "test": "node --test 40-checker/test/*.test.mjs",

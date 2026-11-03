@@ -17,7 +17,7 @@
 
 | 层 | 规范/实践 | 当前状态 |
 |---|---|---|
-| 1 | **DSH-ENTRY 入门规范** | 18/18 `recognized`；base-only 10/18 verified（8 clean + 2 gate-reject）；real web profile 18/18 verified（16 clean + 2 gate-reject）；client 15/15 loaded；18/18 clean 未达成 |
+| 1 | **DSH-ENTRY 入门规范** | 18/18 `recognized`；base-only 10/18 有 runtime 证据（8 clean + 2 reject）；real web profile 16/18 无告警、2 个 host-gate reject（自评，无独立复核）；client 15/15 loaded；18/18 clean 未达成 |
 | 2 | **DSH-FLOW 顺畅规范** | draft；fixture 上 J1/J2/J4/J6 **12 PASS**；J3/J7 fixture runtime；J5/J8 static preflight；10 个真实包 **78 PASS / 4 FAIL / 2 blocked / 66 not-run** |
 | 3 | **DSH-BOOST 加速实践** | draft；LEV-1–8 **8/8 measured**（loader / context / provider-capture / synthetic timer；非生产基线） |
 
@@ -57,21 +57,21 @@
 ```bash
 # Published umbrella (package `dsh-standards`)
 npx dsh-standards <plugin-dir> --scope entry --entry-claim static
-npx dsh-levels audit <dir> --format json
+npx -p dsh-standards dsh-levels <dir> --format json
 
 # From a source checkout
 cd 40-checker
 node --test test/*.test.mjs
 
 # 只做结构识别（不声明运行）
-node bin/dsh-plugin-verify.mjs <plugin-dir> --scope entry --entry-claim static
+node 40-checker/bin/dsh-plugin-verify.mjs <plugin-dir> --scope entry --entry-claim static
 
 # 声明运行（bundle 需要 host）
-node bin/dsh-plugin-verify.mjs <bundle-dir> --scope entry \
+node 40-checker/bin/dsh-plugin-verify.mjs <bundle-dir> --scope entry \
   --host /path/to/@deepseek-ai/dsh-app-boot/lib/index.js
 
 # 三层自检（ENTRY 自动；FLOW/BOOST 证据文件）
-node bin/dsh-levels.mjs audit <dir> --format json
+node bin/dsh-levels.mjs <dir> --format json
 
 # J1 安装/卸载旅程
 node scripts/journey-runtime.mjs --package <dir> --json
@@ -95,7 +95,7 @@ node lev7-bench.mjs 64 20
 - 18 包 base-only runtime：**18/18 有原始 JSON；10/18 G3 verified，8 partial，0 error**；host gate 后 **8 clean + 2 reject + 8 partial**；
 - client runtime：**15/15 `client-module-loaded`**（真实 Chromium）；web-app **4/4 loaded**；
 - 不可用：**0 plugin code FAIL；2 host-gate reject（telemetry/verification）**；
-- 检查器：**73/73 tests**（含治理/DCO/评价记录/声明/验真/链/漂移测试）；
+- 检查器：**98/98 tests**（含治理/DCO/评价记录/声明/验真/链/漂移测试）；
 - J1：**6 PASS + 1 WARN**；LEV-3：volatile **0/20** vs control **20/20** remount；LEV-6：稳定 prefix **100%** vs 易变 **0%**；LEV-7：**8.24×**（合成，非生产基线）。
 
 ## 给插件开发者：什么时候用哪个工具

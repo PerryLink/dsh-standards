@@ -31,6 +31,19 @@ function inside(root, target) {
 export function resolveEntry(dir, manifest) {
   const candidates = []
   const exportTarget = rootExportTarget(manifest)
+  if (exportTarget) {
+    const absolute = path.resolve(dir, exportTarget)
+    if (!inside(dir, absolute)) {
+      return { exists: false, escape: true, source: 'exports["."]', target: exportTarget, absolute }
+    }
+    if (!isFile(absolute)) {
+      const sourceCandidates = ['src/index.ts', 'src/index.tsx', 'src/index.js', 'src/index.mjs']
+      const sourceEntry = sourceCandidates.find(relative => isFile(path.join(dir, relative))) ?? null
+      const scripts = isObject(manifest.scripts) ? manifest.scripts : {}
+      const buildHint = Boolean(sourceEntry) || ['build', 'prepare', 'compile'].some(name => typeof scripts[name] === 'string')
+      return { exists: false, escape: false, source: 'exports["."]', target: exportTarget, absolute, declaredMissing: true, sourceEntry, buildHint }
+    }
+  }
   if (exportTarget) candidates.push({ source: 'exports["."]', target: exportTarget })
   if (typeof manifest.main === 'string' && manifest.main.trim() !== '') candidates.push({ source: 'main', target: manifest.main })
   for (const fallback of ['index.js', 'index.mjs', 'index.cjs', 'index.ts']) candidates.push({ source: 'fallback', target: fallback })
@@ -183,6 +196,10 @@ export function runManifestChecks(dir, options = {}) {
   }
   if (entry.escape) {
     manifestDetails.push(detail('C-1.2', 'FAIL', `entry escapes the package: ${entry.target}`, ['package.json#exports']))
+  } else if (entry.declaredMissing && entry.buildHint) {
+    manifestDetails.push(detail('C-1.2', 'WARN', `exports["."] target missing; build hint exists (${entry.sourceEntry ?? 'build script'})`, ['package.json#exports']))
+  } else if (entry.declaredMissing) {
+    manifestDetails.push(detail('C-1.2', 'FAIL', `exports["."] points to a missing file: ${entry.target}`, ['package.json#exports']))
   } else if (entry.exists) {
     manifestDetails.push(detail('C-1.2', 'PASS', `entry resolves via ${entry.source}: ${entry.relative}`, [entry.relative]))
   } else if (entry.buildHint) {

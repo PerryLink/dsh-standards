@@ -15,4 +15,5 @@ if (argv.includes('--version') || argv.includes('-v')) {
   process.exit(0)
 }
 
+process.env.DSH_CHECKER_BRAND = `dsh-standards ${pkg.version} (checker 0.1.0)`
 await import('../40-checker/bin/dsh-plugin-verify.mjs')
