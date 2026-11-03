@@ -45,7 +45,10 @@ export function buildReport({ subject, anchor, checks, g4 = null, scope, profile
     ? adjustedChecks.map(item => runtimeIds.has(item.id) ? { ...item, result: 'NA', coverage: 'not-run', reason: 'out of scope for M1 static-only' } : item)
     : adjustedChecks
   const byId = new Map(effectiveChecks.map(item => [item.id, item]))
-  const selected = mandatory.map(id => byId.get(id)).filter(Boolean)
+  const selectedAll = mandatory.map(id => byId.get(id)).filter(Boolean)
+  // Advisory checks are reported but never move the verdict.
+  const selected = selectedAll.filter(item => item.advisory !== true)
+  const advisoryWarnings = selectedAll.filter(item => item.advisory === true && item.result === 'WARN')
   const missing = mandatory.filter(id => !byId.has(id))
   const failed = selected.filter(item => item.result === 'FAIL')
   const errored = selected.filter(item => item.result === 'ERROR')
@@ -80,6 +83,7 @@ export function buildReport({ subject, anchor, checks, g4 = null, scope, profile
   if (failed.length > 0) reasonParts.push(`FAIL: ${failed.map(item => item.id).join(', ')}`)
   if (notRunIds.length > 0) reasonParts.push(`not run: ${notRunIds.join(', ')}`)
   if (warnings.length > 0) reasonParts.push(`WARN: ${warnings.map(item => item.id).join(', ')}`)
+  if (advisoryWarnings.length > 0) reasonParts.push(`advisory: ${advisoryWarnings.map(item => item.id).join(', ')}`)
 
   return {
     schema: 'dsh-conformance/1',
@@ -92,6 +96,7 @@ export function buildReport({ subject, anchor, checks, g4 = null, scope, profile
       mandatory: mandatory.length,
       pass: pass.length,
       warn: warnings.length,
+      advisory: advisoryWarnings.length,
       fail: failed.length,
       na: selected.filter(item => item.result === 'NA').length,
       notRun: notRunIds.length,

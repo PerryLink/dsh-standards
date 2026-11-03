@@ -206,6 +206,8 @@ export function runManifestChecks(dir, options = {}) {
     manifestDetails.push(detail('C-1.2', 'WARN', `entry not present in checkout; source/build hint exists (${entry.sourceEntry ?? 'build script'})`, ['package.json#scripts']))
   } else if (kind === 'bundle' || kind === 'client') {
     manifestDetails.push(detail('C-1.2', 'WARN', `no runtime entry; ${kind} packages may be patch/client only`, ['package.json#exports']))
+  } else if (Array.isArray(manifest.workspaces) || (manifest.workspaces && typeof manifest.workspaces === 'object')) {
+    manifestDetails.push(detail('C-1.2', 'NA', 'workspace root; run the checker on a package subdirectory', ['package.json#workspaces']))
   } else {
     manifestDetails.push(detail('C-1.2', 'FAIL', 'no resolvable runtime entry', ['package.json#exports', 'package.json#main']))
   }
@@ -224,7 +226,7 @@ export function runManifestChecks(dir, options = {}) {
     manifestDetails.push(detail('C-1.5', 'PASS', `license=${manifest.license}`))
   }
   if (manifest.private === true) {
-    manifestDetails.push(detail('C-1.6', 'WARN', 'private:true; not publishable to a registry', ['package.json#private']))
+    manifestDetails.push(detail('C-1.6', 'NA', 'private:true; not publishable to a registry', ['package.json#private']))
   }
   const manifestResult = worst(manifestDetails.map(item => item.result))
   const manifestCheck = check({

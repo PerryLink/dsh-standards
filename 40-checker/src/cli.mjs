@@ -4,7 +4,7 @@ import { fileURLToPath } from 'node:url'
 import { runManifestChecks, DEFAULT_RUNTIME_VERSION } from './manifest.mjs'
 import { checkCapabilities, checkCredentials, checkImportTimeAdvisory, checkLabels } from './declarations.mjs'
 import { runRuntimeChecks } from './runtime.mjs'
-import { spawnSync } from 'node:child_process'
+import { spawn, spawnSync } from 'node:child_process'
 import { readSources } from './util.mjs'
 import { buildReport, writeReport } from './report.mjs'
 
@@ -133,6 +133,51 @@ function parseArgs(argv) {
   return options
 }
 
+function runtimeNotRun(reason) {
+  const meta = {
+    'DSC-04': ['C-4', 'L1'], 'DSC-05': ['C-5', 'L1'], 'DSC-06': ['C-6', 'L1+L2'],
+    'DSC-07': ['C-7', 'L2'], 'DSC-08': ['C-8', 'L3'], 'DSC-09': ['C-9', 'L1'],
+  }
+  return Object.entries(meta).map(([id, [clause, layer]]) => ({
+    id, clause, layer, result: 'ERROR', coverage: 'not-run', reason,
+    details: [], evidence: [], method: 'M', advisory: false,
+  }))
+}
+
+/**
+ * L1-L3 run in a child process so that a plugin cannot block the event loop,
+ * read the checker's environment, or kill the process. The child is hard-killed
+ * after timeoutMs + 3s; a kill is reported as not-run, never as a pass.
+ */
+function isolatedRuntimeChecks(input) {
+  return new Promise((resolve) => {
+    const script = path.resolve(path.dirname(fileURLToPath(import.meta.url)), '..', 'scripts', 'runtime-child.mjs')
+    const child = spawn(process.execPath, [script], { stdio: ['pipe', 'pipe', 'pipe'] })
+    let out = ''
+    let err = ''
+    const timer = setTimeout(() => { try { child.kill('SIGKILL') } catch {} }, input.timeoutMs + 3000)
+    child.stdout.on('data', (chunk) => { out += chunk })
+    child.stderr.on('data', (chunk) => { err += chunk })
+    child.on('error', (error) => {
+      clearTimeout(timer)
+      resolve(runtimeNotRun(`L1 child failed to start: ${error.message}`))
+    })
+    child.on('exit', (code, signal) => {
+      clearTimeout(timer)
+      if (signal === 'SIGKILL' || signal === 'SIGTERM') {
+        return resolve(runtimeNotRun(`L1 killed after ${input.timeoutMs}ms; plugin blocked the event loop`))
+      }
+      try {
+        const parsed = JSON.parse(out)
+        resolve(parsed.checks)
+      } catch {
+        resolve(runtimeNotRun(`L1 child produced no JSON (exit ${code}): ${String(err).slice(0, 200)}`))
+      }
+    })
+    child.stdin.end(JSON.stringify(input))
+  })
+}
+
 async function entryRunCheck(kind, runtimeChecks, options, dir) {
   const byId = new Map(runtimeChecks.map(item => [item.id, item]))
   const c4 = byId.get('DSC-04')
@@ -204,6 +249,10 @@ export async function main(argv = process.argv.slice(2)) {
     process.stderr.write(`dsh-plugin-verify: target must be a package directory (tarball support is not in the MVP): ${dir}\n`)
     return 3
   }
+  if (!fs.existsSync(path.join(dir, 'package.json'))) {
+    process.stderr.write(`dsh-plugin-verify: not a package directory (no package.json): ${dir}\n`)
+    return 3
+  }
 
   const { manifest, kind, kindInferred, entry, patch, g4, checks: manifestChecks } = runManifestChecks(dir, {
     runtimeVersion: options.runtimeVersion,
@@ -223,6 +272,7 @@ export async function main(argv = process.argv.slice(2)) {
     { id: 'DSC-12', clause: 'C-12', layer: 'L0', result: 'ERROR', coverage: 'not-run', reason: 'manifest unavailable', details: [], evidence: [], method: 'M', advisory: false },
     { id: 'DSC-13', clause: 'C-13', layer: 'L0', result: 'ERROR', coverage: 'not-run', reason: 'manifest unavailable', details: [], evidence: [], method: 'M', advisory: false },
   ]
+  const declarationAdjusted = declarationChecks.map(item => (item.result === 'WARN' && ['DSC-11', 'DSC-13'].includes(item.id) ? { ...item, advisory: true } : item))
   const advisoryChecks = [checkImportTimeAdvisory(sources)]
 
   if (options.scope === 'entry' && options.entryRuntime === 'server-entry' && kind !== 'plugin') options.treatAsPlugin = true
@@ -248,9 +298,9 @@ export async function main(argv = process.argv.slice(2)) {
       result: 'ERROR', coverage: 'not-run', reason, details: [], evidence: [], method: 'M', advisory: false,
     }))
   } else {
-    runtimeChecks = await runRuntimeChecks({
+    runtimeChecks = await isolatedRuntimeChecks({
       dir, manifest, kind: runtimeKind, entry: runtimeEntry,
-      runtimePath: options.runtime, timeoutMs: options.timeoutMs, sources,
+      runtimePath: options.runtime, timeoutMs: options.timeoutMs,
     })
   }
 
@@ -260,8 +310,17 @@ export async function main(argv = process.argv.slice(2)) {
     ...runtimeChecks,
     runCheck,
     advisoryChecks[0],
-    ...declarationChecks,
+    ...declarationAdjusted,
   ]
+
+  if (g4?.result === 'FAIL') {
+    const dsc01 = checks.find(item => item.id === 'DSC-01')
+    if (dsc01 && dsc01.result !== 'FAIL') {
+      dsc01.result = 'FAIL'
+      dsc01.reason = dsc01.reason ? `${dsc01.reason}; ${g4.reason ?? 'G4 failed'}` : (g4.reason ?? 'G4 failed')
+      dsc01.details = [...(dsc01.details ?? []), { item: 'G4', result: 'FAIL', reason: g4.reason ?? 'client shape failed' }]
+    }
+  }
 
   const subject = {
     mode: options.profile === 'listing' || options.profile === 'both' ? 'listing' : 'package',

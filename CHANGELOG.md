@@ -1,3 +1,11 @@
+## 1.0.2 — 2026-11-03
+
+- L1–L3 run in a child process and are hard-killed on timeout; a blocked event loop is reported as `not-run`, never a pass.
+- `dsh.capabilities` / `dsh.labels` warnings are advisory: still reported, no longer flip the verdict.
+- A `g4` client-shape failure now fails DSC-01 instead of being dropped.
+- `private: true` and workspace roots report NA instead of WARN/FAIL.
+- A directory without `package.json` returns exit 3 (usage), matching `dsh-levels`.
+
 ## 1.0.1 — 2026-11-03
 
 - 打包：`files` 收窄，不再把 `40-checker/results/` 打进 npm 包（此前包含第三方插件结果、截图与本机路径）。
