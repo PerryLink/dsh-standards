@@ -1,3 +1,7 @@
+## 1.0.3 — 2026-11-03
+
+- Published from GitHub Actions with npm provenance (OIDC); local token publishes are retired.
+
 ## 1.0.2 — 2026-11-03
 
 - L1–L3 run in a child process and are hard-killed on timeout; a blocked event loop is reported as `not-run`, never a pass.
