@@ -1,0 +1,57 @@
+{
+  "name": "dsh-standards",
+  "version": "1.0.0",
+  "description": "DSH plugin standards and conformance checks: ENTRY/FLOW checks plus BOOST guidance. Non-official; no certification or ranking.",
+  "type": "module",
+  "main": "40-checker/src/index.mjs",
+  "exports": {
+    ".": "./40-checker/src/index.mjs",
+    "./package.json": "./package.json"
+  },
+  "bin": {
+    "dsh-standards": "./bin/dsh-standards.mjs",
+    "dsh-levels": "./bin/dsh-levels.mjs"
+  },
+  "files": [
+    "40-checker",
+    "spec",
+    "docs",
+    "bin",
+    "README.md",
+    "LICENSE",
+    "LICENSE-APACHE",
+    "LICENSE-CC-BY",
+    "NOTICE.md"
+  ],
+  "scripts": {
+    "test": "node --test 40-checker/test/*.test.mjs",
+    "test:fixtures": "node bin/dsh-standards.mjs 40-checker/fixtures/good --scope entry --entry-claim static --format text"
+  },
+  "engines": {
+    "node": ">=20"
+  },
+  "keywords": [
+    "dsh",
+    "dsh-plugin",
+    "deepseek-harness",
+    "cordis",
+    "standards",
+    "checker",
+    "conformance",
+    "entry",
+    "flow",
+    "boost"
+  ],
+  "license": "Apache-2.0",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/PerryLink/dsh-standards.git"
+  },
+  "homepage": "https://github.com/PerryLink/dsh-standards#readme",
+  "bugs": {
+    "url": "https://github.com/PerryLink/dsh-standards/issues"
+  },
+  "publishConfig": {
+    "access": "public"
+  }
+}

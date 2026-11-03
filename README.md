@@ -1,4 +1,10 @@
-> **Moved:** this project is now **[dsh-plugin-spec](https://github.com/PerryLink/dsh-plugin-spec)**. This repository stays as a pointer/backup; new work happens in the new home. Old npm packages `@perrylink/dsh-standard` and `@perrylink/dsh-standards` are deprecated; reference `dsh-plugin-spec`.
+> **Execution home.** `dsh-standards` is the public execution umbrella for the
+> three DSH layers: it ships the conformance checker, the level audit, and the
+> canonical specification files. The prose guide is
+> **[dsh-plugin-guide](https://github.com/PerryLink/dsh-plugin-guide)**; the
+> low-level rule text remains in
+> **[dsh-plugin-spec](https://github.com/PerryLink/dsh-plugin-spec)**.
+> The old npm reservation (`dsh-standards@0.0.3`) is replaced by this 1.x line.
 
 # dsh-standards
 
@@ -49,6 +55,11 @@
 ## 快速命令
 
 ```bash
+# Published umbrella (package `dsh-standards`)
+npx dsh-standards <plugin-dir> --scope entry --entry-claim static
+npx dsh-levels audit <dir> --format json
+
+# From a source checkout
 cd 40-checker
 node --test test/*.test.mjs
 
