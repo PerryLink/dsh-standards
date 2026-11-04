@@ -213,3 +213,10 @@ test('DSC-10.4: a read-only openSync is not a write mutation', () => {
   const check = checkImportTimeAdvisory(readSources(dir), result.entry?.relative)
   assert.equal(check.result, 'PASS', check.reason)
 })
+
+test('DSC-10: no source files is NA, not WARN', () => {
+  const dir = path.join(here, '..', 'fixtures', 'no-source')
+  const check = checkImportTimeAdvisory(readSources(dir), 'index.mjs')
+  assert.equal(check.result, 'NA', check.reason)
+  assert.match(check.reason, /no source/)
+})

@@ -81,14 +81,14 @@ export function checkImportTimeAdvisory(sources, entryRelative = null) {
   for (const item of entryPatterns) {
     for (const hit of regexHits(entrySources, item.pattern)) hits.push({ ...hit, pattern: item.name })
   }
-  const result = hits.length > 0 ? 'WARN' : sources.length === 0 ? 'WARN' : 'PASS'
+  const result = hits.length > 0 ? 'WARN' : sources.length === 0 ? 'NA' : 'PASS'
   return check({
     id: 'DSC-10',
     clause: 'C-10',
     layer: 'L0',
     result,
     advisory: true,
-    reason: hits.length > 0 ? `advisory: ${hits.length} import-time side-effect clue(s)` : sources.length === 0 ? 'no source files scanned' : '',
+    reason: hits.length > 0 ? `advisory: ${hits.length} import-time side-effect clue(s)` : sources.length === 0 ? 'no source files scanned; C-10 not-run' : '',
     details: hits.slice(0, 20).map(hit => detail('C-10.1/2/4', 'WARN', `${hit.pattern} at ${hit.file}:${hit.line}`, [`${hit.file}:${hit.line}`])),
     evidence: hitEvidence(hits),
   })
