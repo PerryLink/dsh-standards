@@ -595,29 +595,40 @@ export const provide = ['greet']      // 并在 apply 里 ctx.provide('greet', .
 
 | 子项 | 检查 | 结果 |
 |---|---|---|
-| C-10.1 | 入口模块顶层 `AwaitExpression` | 命中 → advisory WARN |
-| C-10.2 | 模块顶层 `process.on` / `process.env=` / 裸 `setInterval` / 立即 `void main()` | 命中 → advisory WARN |
-| C-10.3 | 通过 `import './side-effectful'` 间接引入的副作用 | 不可判（X-3）→ not-run |
+| C-10.1 | 入口模块（及入口的本地相对 `import` 闭包）中的顶层 `AwaitExpression` | 命中 → advisory WARN |
+| C-10.2 | 同上：顶层 `process.on` / `process.env.X=` / 裸 `setInterval` / 立即 `void main()` | 命中 → advisory WARN |
+| C-10.3 | 入口的本地相对 `import` 闭包（`./`、`../`，解析 `.js/.mjs/.cjs/.ts/.tsx/.jsx`） | 展开分析；入口/闭包 import 了包（非相对路径）或本地模块解析不到时，在 details 记 `C-10.3 not-run`（仅 coverage 说明，不改变 PASS/WARN） |
+| C-10.4 | 入口/闭包顶层 fs 写操作（`writeFileSync`/`appendFileSync`/`mkdirSync`/`rmSync`/`unlinkSync` 等）或子进程调用（`execSync`/`execFileSync`/`spawnSync`/`execFile`/`spawn` 等） | 命中 → advisory WARN |
+
+> **实现方式**：DSC-10 已从行首正则升级为真 AST（`acorn.parse`，vendor 到 `40-checker/vendor/acorn.mjs`，MIT）。只遍历入口模块及其**本地相对** `import` 闭包；函数体、箭头函数体、class 方法体里的调用不算，但顶层 `if`/`try`/循环体属于 import 期执行，照常判定。
+>
+> C-10.3 是 **coverage note**，不是 WARN 触发器：入口（或闭包内）import 包、或相对 import 解析不到时，在 details 里记一条 `C-10.3 not-run`；DSC-10 的 PASS/WARN 仍只由 C-10.1/C-10.2/C-10.4 是否命中决定。
+>
+> `acorn` 解析失败（例如源文件包含 acorn 不支持的 TypeScript 语法）时，DSC-10 记 `ERROR`/`not-run`，并在 details 给出文件与行号；不静默 PASS。
+>
+> C-10.4 只扫 fs **写**；只读 `openSync` 不算写。成员调用 `fs.writeFileSync(...)` 与裸调用 `writeFileSync(...)` 同等判定。
 
 **三值期望**：
 
 | 值 | 条件 |
 |---|---|
-| PASS | 无 C-10.1/C-10.2 命中 |
-| WARN | 任一命中；或 C-10.3 not-run |
+| PASS | 无 C-10.1/C-10.2/C-10.4 命中；C-10.3 的 not-run 说明不改变结果 |
+| WARN | 任一 C-10.1/C-10.2/C-10.4 命中 |
+| ERROR | 入口/闭包 AST 解析失败（含 TS 语法）→ coverage=not-run |
 | FAIL | **永不**。C-10 是 advisory，不产生 FAIL，不影响 exit code |
-| NA | `--no-static` 或入口不可读 |
+| NA | 没有扫描到任何源文件 |
 
 **已知反例**：
-- 纯正则扫"顶层 await"会在模板字符串里的 `await` 上假阳性：`REPO/packages/workflow/workflow-ptc/src/host.ts:27`（X-3）。
-- 跨文件/跨包副作用（`import './side-effectful'`、依赖包自己 `process.on`）AST 判不了，需要全程序分析（X-3）。
-- 仓库自己的机械门是 `scripts/verify-no-top-level-await.ts:29`，它用 AST，不用正则。
+- 旧实现用行首正则扫"顶层 await"，会在模板字符串里的 `await` 上假阳性：`REPO/packages/workflow/workflow-ptc/src/host.ts:27`（X-3）。AST 实现不再受模板字符串与注释干扰。
+- 跨包副作用（`import 'some-package'` 后由包自己执行 `process.on`）仍不可判；记为 `C-10.3 not-run`，不冒充已分析。
+- TypeScript 源码（类型注解、装饰器等）超出 acorn 语法范围；当前记 `ERROR`/`not-run`，这是已知边界，不当作 PASS。
 
 **证据锚点**：
+- `40-checker/vendor/acorn.mjs`：vendored acorn 8.19.0（MIT，见 `40-checker/vendor/LICENSE`）。
+- `40-checker/src/declarations.mjs`：最小递归 walker、module-scope 过滤、本地 import 闭包解析与 C-10.3 coverage note。
 - `REPO/docs/defensive-patterns/package-surface.md:227-233`："Package modules do not await at module scope… a module-scope wait makes every importer's evaluation wait."
 - `REPO/scripts/verify-no-top-level-await.ts:29`：机械 gate 的实现；`REPO/scripts/run-gates.ts:423` 注册为 `no-top-level-await`。
 - `REPO/docs/defensive-patterns/general.md:104-122`：模块级共享状态的 owner 规则。
-- `REPO/packages/workflow/workflow-ptc/src/host.ts:27`：正则假阳性实例。
 
 **正面示例**：
 
@@ -646,7 +657,7 @@ export function apply(ctx: Context) {
 | C-11.1 | `dsh.capabilities` 是字符串数组，每个 ID 在 §8.1 闭集内 | 非法 ID → FAIL；字段缺失 → WARN |
 | C-11.2 | **字段存在时**，高信号触发必须申报（映射见下表） | 字段存在且漏报 → FAIL；字段缺失 → 不评估，C-11 整体 WARN（过渡期） |
 | C-11.3 | bundle patch 不得启用 `@deepseek-ai/dsh-plugin-manager/tools` | 启用 → FAIL |
-| C-11.4 | 源码/配置中的 `danger-full-access` 字面量 | 命中 → WARN（可能只是文档） |
+| C-11.4 | 源码/配置中 `danger-full-access` 的 AST 字符串字面量；注释、等值比较、文档字符串不算（见下） | 真实授权/命令上下文或未知上下文 → WARN |
 | C-11.5 | 声明了但实测没有对应触发 | WARN（过度声明是安全的，但会误导） |
 
 **C-11.2 触发映射**：
@@ -670,8 +681,9 @@ export function apply(ctx: Context) {
 
 | 值 | 条件 |
 |---|---|
-| PASS | C-11.1 字段存在/合法；C-11.2 无漏报；C-11.3 未启用 |
+| PASS | C-11.1 字段存在/合法；C-11.2 无漏报；C-11.3 未启用；C-11.4 无命中 |
 | WARN | 字段缺失（过渡期，C-11.2 不评估）；C-11.4 命中；C-11.5 过度声明；触发信号不确定（动态调用） |
+| ERROR | AST 解析失败导致 C-11.4 not-run（coverage=not-run，不冒充 PASS） |
 | FAIL | 非法 ID；字段存在但 C-11.2 漏报；C-11.3 启用 |
 | NA | `dsh.kind` 非 plugin/bundle |
 
@@ -704,6 +716,8 @@ export function apply(ctx: Context) {
 
 **边界说明**：`dsh.capabilities` **不是权限门控**。宿主不读它，也没有运行时沙箱；它只是"装载期声明 + UI 披露"。一个插件完全可以声明 `[]` 然后裸 `import node:fs`，C-11 抓不到。这是 D5 的已知边界，必须在徽章文案里写明"非安全审计"。
 
+**C-11.4 字符串边界（与 C-12.4 同一判定）**：只统计**值恰为** `danger-full-access` 的 AST 字符串字面量（含模板字符串的静态部分）。注释不在 AST 里；等值比较（`==`/`===`/`!=`/`!==` 任一侧）不算。`console.log/info/warn/error/debug` 的参数、对象属性 key 为 `desc`/`description`/`message`/`reason`/`help`/`label`/`title`/`comment` 的字符串视为**文档字符串**，不 WARN。`.set(...)`/`.resolve(...)` 参数、对象属性 key 为 `mode`/`sandboxPolicy`/`sandbox_permissions`（含嵌套对象）、spawn 类调用的 args 数组元素、`case "danger-full-access":` 以及未知上下文视为真实授权/命令字符串，WARN（未知默认保守）。AST 解析失败时 C-11.4 记 `ERROR`/`not-run`，不冒充 PASS。
+
 **过渡规则**：本 commit 宿主不读 `dsh.capabilities`，因此字段**缺失**只记 WARN，C-11.2 不评估；一旦字段存在，漏报高信号能力就是 FAIL。这条规则防止把"标准刚发布"变成"所有存量插件立刻不合格"，同时保证已声明者不能造假。宿主采纳该字段后，过渡规则失效。
 
 ---
@@ -712,22 +726,23 @@ export function apply(ctx: Context) {
 
 **要求（祈使句）**：不得绕过 `ctx.credentials` 直接读取 `$DSH_HOME/.credentials.yaml` 或 `credentials-local` 内部 API；凭据 provider 必须声明 `credentials:provider`；不得在未声明时注册全局 `shell`/`credentials`/`sandboxPolicy`/`sandbox`/`deepseekAccount` provider；调用 `listRecords()` 必须声明 `credentials:list`。
 
-**判定方式**：L0 静态（DSC-12）：manifest + AST/文本扫描。
+**判定方式**：L0 静态（DSC-12）：manifest + AST（字符串字面量上下文判定）。
 
 | 子项 | 检查 | 结果 |
 |---|---|---|
 | C-12.1 | 源码出现 `.credentials.yaml`、`CREDENTIALS_FILENAME`、`credentials-local` 内部导入、`$DSH_HOME` 凭据路径字面量 | 命中且无 `credentials:provider` → FAIL；有声明 → PASS |
 | C-12.2 | 调用 `ctx.credentials.listRecords()`：字段存在但未声明 `credentials:list` → FAIL；字段缺失 → WARN（过渡） | 见左 |
 | C-12.3 | 检测到全局 seam provider 注册（`shell`/`credentials`/`sandboxPolicy`/`sandbox`/`deepseekAccount`）但声明不明确 | WARN（advisory；AST 归属判断可能误报） |
-| C-12.4 | 源码/配置出现 `danger-full-access` / `--add-dir` 字面量 | WARN |
+| C-12.4 | 源码/配置中出现值为 `danger-full-access` / `--add-dir` 的 AST 字符串字面量；注释、等值比较、文档字符串不算（见下） | 真实授权/命令上下文或未知上下文 → WARN |
 | C-12.5 | 动态 `import()` / 字符串拼接绕过 | 不可判 → not-run |
 
 **三值期望**：
 
 | 值 | 条件 |
 |---|---|
-| PASS | C-12.1 无命中或已声明 provider；C-12.2 已声明；C-12.3 无命中 |
-| WARN | 字段缺失时 C-12.2 命中；C-12.3 命中但归属不明；C-12.4 命中；C-12.5 not-run |
+| PASS | C-12.1 无命中或已声明 provider；C-12.2 已声明；C-12.3 无命中；C-12.4 无命中 |
+| WARN | 字段缺失时 C-12.2 命中；C-12.3 命中但归属不明；C-12.4 命中真实授权/命令或未知上下文；C-12.5 not-run |
+| ERROR | AST 解析失败导致 C-12.4 not-run（coverage=not-run，不冒充 PASS） |
 | FAIL | C-12.1 命中且未声明；字段存在时 C-12.2 命中且未声明 |
 | NA | 没有凭据/全局 shell 面 |
 
@@ -754,6 +769,8 @@ export function apply(ctx: Context) {
 **建议分级**：DS-C 强制（C-12.1/C-12.2）；C-12.3/C-12.4 为 WARN。
 
 **边界说明**：C-12 是**声明一致性检查，不是安全审计**。它不判"插件有没有把 token 发出去"，也不判"provider 实现是否安全"；这些超出 D5。过渡规则：`dsh.capabilities` 字段缺失时，C-12.2 只记 WARN；字段存在时，`listRecords()` 未声明 `credentials:list` 才是 FAIL。C-12.1 的直接读 backing file 不享受过渡：它本身就是明确绕过。
+
+**C-12.4 文档字符串 / 命令字符串边界**（C-11.4 使用同一判定，只查 `danger-full-access`）：只统计**值恰为** `danger-full-access` 或 `--add-dir` 的 AST 字符串字面量（含模板字符串静态部分）。注释与 AST 无关地自动排除；等值比较（`==`/`===`/`!=`/`!==` 任一侧）不算。以下视为**文档字符串**，不 WARN：`console.log/info/warn/error/debug` 的参数；对象属性 key 为 `desc`/`description`/`message`/`reason`/`help`/`label`/`title`/`comment` 的值；只用于日志拼接的模板字符串。以下视为**真实授权/命令字符串**，WARN：`.set(...)`/`.resolve(...)` 的参数；对象属性 key 为 `mode`/`sandboxPolicy`/`sandbox_permissions`（含嵌套对象）；spawn 类调用（`spawn`/`spawnSync`/`exec`/`execSync`/`execFile`/`execFileSync`）的 args 数组元素；`case "danger-full-access":`。**未知上下文默认 WARN**，保持保守。AST 解析失败（如 TS 语法）时 C-12.4 记 `ERROR`/`not-run`。
 
 ---
 
@@ -1115,7 +1132,7 @@ E 路的 MVP 13 项（L0-1/2/3 + L1-1/3/4/5 + L2-1/2/4 + L3-1/3/5）只覆盖 C-
 |---|---|---|---|
 | X-1 | 漏写 `inject` 能否靠冒烟发现 | 依赖就绪时 `ctx.foo` 正常返回；只有整条链都找不到才抛（`reflect.ts:172-176`） | 不进 C-4；C-9.3 只做静态 WARN，DS-R R-1 才要求 |
 | X-2 | 只看 `getEffects()` 判泄漏 | 未登记资源 Cordis 不知道（`fiber.ts:720`） | C-6/C-7 明写 `leakScope: registered-only`；句柄泄漏 advisory |
-| X-3 | 扫顶层语句判 import 期副作用 | 跨文件/跨包传播；正则假阳性（`host.ts:27`） | C-10 全条 advisory，不 FAIL |
+| X-3 | 扫顶层语句判 import 期副作用 | 跨包传播、acorn 无法解析 TS/JSX；旧正则假阳性（`host.ts:27`） | C-10 全条 advisory，不 FAIL；本地相对 import 闭包展开，包/解析失败只记 not-run |
 | X-4 | "进程没崩"判配置大声失败 | 异常被 `_reload` catch，只置 FAILED（`fiber.ts:693-701`） | C-4/C-7 断言 `state === FAILED`，不断言"没崩" |
 | X-5 | 跑一次判 waterfall 是否调 next | 只覆盖走过的那条路径（`events.ts:253`） | R-5 静态 + 人工；不进 DS-C |
 | X-6 | `@mode` 与分发点交叉校验 | 只对字面量事件名有效；动态名不可判 | R-4 只判字面量；动态名 WARN |
