@@ -47,6 +47,28 @@ function labelList(manifest) {
   return { defined: true, list: value, error: null }
 }
 
+
+// C-12.4 / C-11.4 are literal warnings. A literal in a comment or on either side
+// of an equality comparison is not a grant; keep the warning for executable and
+// documentation-string contexts. Line numbers are preserved by replacing comment
+// characters with spaces.
+function stripComments(text) {
+  return text
+    .replace(/\/\*[\s\S]*?\*\//g, (m) => m.replace(/[^\n]/g, ' '))
+    .replace(/\/\/[^\n]*/g, (m) => ' '.repeat(m.length))
+}
+
+function filterLiteralHits(sources, pattern) {
+  return regexHits(sources, pattern).filter((hit) => {
+    const source = sources.find((item) => item.relative === hit.file)
+    if (!source) return true
+    const line = stripComments(source.text).split('\n')[hit.line - 1] || ''
+    if (!line.includes(hit.text)) return false
+    const before = line.slice(Math.max(0, line.indexOf(hit.text) - 32), line.indexOf(hit.text))
+    return !/(?:===|!==|==|!=)\s*['"`]?$/.test(before)
+  })
+}
+
 function hitEvidence(hits, limit = 3) {
   return hits.slice(0, limit).map(hit => `${hit.file}:${hit.line}`)
 }
@@ -134,7 +156,7 @@ export function checkCapabilities(manifest, sources, patch) {
   if (patch?.enabledPluginManagerTools) {
     details.push(detail('C-11.3', 'FAIL', 'bundle patch enables @deepseek-ai/dsh-plugin-manager/tools', ['dsh.bundle.patch']))
   }
-  const dangerHits = regexHits(sources, /danger-full-access/g)
+  const dangerHits = filterLiteralHits(sources, /danger-full-access/g)
   if (dangerHits.length > 0) details.push(detail('C-11.4', 'WARN', 'danger-full-access literal found', hitEvidence(dangerHits)))
   if (details.length === 0) details.push(detail('C-11.1', 'PASS', 'dsh.capabilities is declared and consistent with static triggers'))
 
@@ -189,7 +211,7 @@ export function checkCredentials(manifest, sources) {
 
   const providerHits = regexHits(sources, /ctx\.provide\(\s*['"](?:shell|credentials|sandboxPolicy|sandbox|deepseekAccount)['"]/g)
   if (providerHits.length > 0) details.push(detail('C-12.3', 'WARN', 'global seam provider registration detected; declaration ownership needs review', hitEvidence(providerHits)))
-  const dangerHits = regexHits(sources, /danger-full-access|--add-dir/g)
+  const dangerHits = filterLiteralHits(sources, /danger-full-access|--add-dir/g)
   if (dangerHits.length > 0) details.push(detail('C-12.4', 'WARN', 'danger-full-access/--add-dir literal found', hitEvidence(dangerHits)))
   details.push(...validateCommitments(manifest), ...validateDisclosure(manifest))
 

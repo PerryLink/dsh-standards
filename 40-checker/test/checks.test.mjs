@@ -228,3 +228,28 @@ test('DSC-10.2: flags an immediate module-scope void main()', () => {
   assert.equal(check.result, 'WARN', check.reason)
   assert.ok(check.details.some((detail) => /immediate main/.test(detail.reason)), JSON.stringify(check.details))
 })
+
+test('DSC-12 C-12.4: ignores comment-only literals', () => {
+  const dir = path.join(here, '..', 'fixtures', 'c12-comment')
+  const check = checkCredentials({}, readSources(dir))
+  assert.equal(check.result, 'PASS', check.reason)
+})
+
+test('DSC-12 C-12.4: ignores equality comparisons', () => {
+  const dir = path.join(here, '..', 'fixtures', 'c12-compare')
+  const check = checkCredentials({}, readSources(dir))
+  assert.equal(check.result, 'PASS', check.reason)
+})
+
+test('DSC-12 C-12.4: still flags an actual set() grant', () => {
+  const dir = path.join(here, '..', 'fixtures', 'c12-grant')
+  const check = checkCredentials({}, readSources(dir))
+  assert.equal(check.result, 'WARN', check.reason)
+  assert.ok(check.details.some((detail) => detail.item === 'C-12.4'), JSON.stringify(check.details))
+})
+
+test('DSC-12 C-12.4: keeps a documentation string as a warning', () => {
+  const dir = path.join(here, '..', 'fixtures', 'c12-string')
+  const check = checkCredentials({}, readSources(dir))
+  assert.equal(check.result, 'WARN', check.reason)
+})
