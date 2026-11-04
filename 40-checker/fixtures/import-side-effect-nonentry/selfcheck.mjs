@@ -3,3 +3,6 @@
 import { mkdirSync } from 'node:fs'
 
 mkdirSync('/tmp/dsh-fixture-selfcheck', { recursive: true })
+
+// Same class of module-scope work, but still outside the entry module.
+globalThis.__dshFixtureSelfcheck = true

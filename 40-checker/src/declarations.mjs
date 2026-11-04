@@ -60,12 +60,12 @@ export function checkImportTimeAdvisory(sources, entryRelative = null) {
     { name: 'top-level process.env assignment', pattern: /^process\.env\.[A-Za-z_][A-Za-z0-9_]*\s*=/m },
     { name: 'top-level globalThis assignment', pattern: /^globalThis\.[A-Za-z_][A-Za-z0-9_]*\s*=/m },
   ]
-  // C-10.4 is about the entry module evaluating a write/spawn on import. Keep it
-  // entry-scoped: the same line in a shipped helper is C-10.3 (not-run), not a hit.
+  // C-10.1/2/4 are about the entry module. Keep all of them entry-scoped: the same
+  // line in a shipped helper is not on the entry's import path (C-10.3), not a hit.
   const entryPatterns = [
     {
       name: 'top-level fs mutation',
-      pattern: /^(?:fs\s*\.\s*)?(?:writeFileSync|appendFileSync|mkdirSync|rmSync|unlinkSync|rmdirSync|renameSync|copyFileSync|chmodSync|symlinkSync|truncateSync|openSync|writeSync)\s*\(/m,
+      pattern: /^(?:fs\s*\.\s*)?(?:writeFileSync|appendFileSync|mkdirSync|rmSync|unlinkSync|rmdirSync|renameSync|copyFileSync|chmodSync|symlinkSync|truncateSync|writeSync)\s*\(/m,
     },
     {
       name: 'top-level subprocess spawn',
@@ -73,10 +73,11 @@ export function checkImportTimeAdvisory(sources, entryRelative = null) {
     },
   ]
   const hits = []
-  for (const item of patterns) {
-    for (const hit of regexHits(sources, item.pattern)) hits.push({ ...hit, pattern: item.name })
-  }
+  // If no entry is supplied (programmatic API callers), fall back to all sources.
   const entrySources = entryRelative ? sources.filter(item => item.relative === entryRelative) : sources
+  for (const item of patterns) {
+    for (const hit of regexHits(entrySources, item.pattern)) hits.push({ ...hit, pattern: item.name })
+  }
   for (const item of entryPatterns) {
     for (const hit of regexHits(entrySources, item.pattern)) hits.push({ ...hit, pattern: item.name })
   }

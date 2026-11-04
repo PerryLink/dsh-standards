@@ -1,3 +1,9 @@
+## 1.0.5 — 2026-11-04
+
+- C-10.1/C-10.2 也改为只扫**入口模块**，与 C-10.4 一致；随包的 samples/probes/selfcheck 不再命中（89 条里 8/9、dev 里多条属于这一类）。
+- C-10.4 不再把只读 `openSync` 当写操作（它没有写标志）。
+- 新增 fixture `import-open-readonly`，扩展 `import-side-effect-nonentry`（根目录 selfcheck，含 globalThis）；测试 102 → 104。
+
 ## 1.0.4 — 2026-11-04
 
 - DSC-10 新增 C-10.4：入口模块顶层 fs 写操作（`writeFileSync`/`appendFileSync`/`mkdirSync`/`rmSync`/`unlinkSync` 等）与子进程调用（`execSync`/`execFileSync`/`spawnSync` 等）记为 advisory WARN，仍然永不 FAIL。

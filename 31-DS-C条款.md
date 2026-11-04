@@ -596,13 +596,15 @@ export const provide = ['greet']      // 并在 apply 里 ctx.provide('greet', .
 | 子项 | 检查 | 结果 |
 |---|---|---|
 | C-10.1 | 入口模块顶层 `AwaitExpression` | 命中 → advisory WARN |
-| C-10.2 | 模块顶层 `process.on` / `process.env=` / 裸 `setInterval` / 立即 `void main()` | 命中 → advisory WARN |
+| C-10.2 | 入口模块顶层 `process.on` / `process.env=` / 裸 `setInterval` / 立即 `void main()` | 命中 → advisory WARN |
 | C-10.3 | 通过 `import './side-effectful'` 间接引入的副作用 | 不可判（X-3）→ not-run |
 | C-10.4 | 入口模块顶层 fs 写操作（`writeFileSync`/`appendFileSync`/`mkdirSync`/`rmSync`/`unlinkSync` 等）或子进程调用（`execSync`/`execFileSync`/`spawnSync` 等） | 命中 → advisory WARN |
 
 > C-10.4 只扫**入口模块**：同一行出现在随包发布的自检脚本、示例脚本里，且不在入口的 import 链上，就不是 import 期路径，不判（不命中）。C-10.3 只指入口确实 import 的间接副作用。
 >
-> **已知边界（1.0.4 未改）**：C-10.1/C-10.2 目前仍按历史行为扫描全部源文件，与 C-10.4 的入口作用域不一致；`openSync` 只读打开也会被当写操作；C-10.2 的“立即 `void main()`”尚未实现。这些都留给下一轮，不在本轮改。
+> **1.0.5 起**：C-10.1/C-10.2/C-10.4 都只扫**入口模块**；只读 `openSync` 不再算 fs 写。
+>
+> **已知边界（1.0.5 未改）**：C-10.2 的“立即 `void main()`”尚未实现；C-10.3 的间接 import 链没有 not-run 输出；实现仍是行首正则，不是 AST。这些留给下一轮。
 
 **三值期望**：
 

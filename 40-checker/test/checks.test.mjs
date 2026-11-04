@@ -199,3 +199,17 @@ test('DSC-10.4: a clean entry module still passes', () => {
   const check = checkImportTimeAdvisory(readSources(good), result.entry?.relative)
   assert.equal(check.result, 'PASS', check.reason)
 })
+
+test('DSC-10.1/2: the existing patterns are entry-scoped too', () => {
+  const dir = path.join(here, '..', 'fixtures', 'import-side-effect-nonentry')
+  const result = runManifestChecks(dir)
+  const check = checkImportTimeAdvisory(readSources(dir), result.entry?.relative)
+  assert.equal(check.result, 'PASS', check.reason)
+})
+
+test('DSC-10.4: a read-only openSync is not a write mutation', () => {
+  const dir = path.join(here, '..', 'fixtures', 'import-open-readonly')
+  const result = runManifestChecks(dir)
+  const check = checkImportTimeAdvisory(readSources(dir), result.entry?.relative)
+  assert.equal(check.result, 'PASS', check.reason)
+})
