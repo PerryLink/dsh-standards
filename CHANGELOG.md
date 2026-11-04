@@ -1,3 +1,8 @@
+## 1.1.2 — 2026-11-04
+
+- 修复 1.1.1 的发布失败：vendored `@babel/parser` 的 `node_modules/` 被根 `.gitignore` 忽略，CI checkout 缺依赖导致 `npm test` 失败。现在 force-add 四个 vendored 包（约 2 MB），并加 1.1.2 的回归说明。
+- 无行为变化；128 tests 仍全绿。
+
 ## 1.1.1 — 2026-11-04
 
 - AST 解析失败的语义修正：一个**非入口**文件解析失败时，C-11.4/C-12.4 记 `NA/not-run`、coverage `partial`，不再把整条强制检查打成 ERROR/incomplete；只有所有可分析文件都失败时才保持 ERROR/not-run。第三套 holdout 的 `dsh-expert-team` 暴露了这个 bug。
