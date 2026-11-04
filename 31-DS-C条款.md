@@ -653,7 +653,7 @@ export function apply(ctx: Context) {
 | C-11.1 | `dsh.capabilities` 是字符串数组，每个 ID 在 §8.1 闭集内 | 非法 ID → FAIL；字段缺失 → WARN |
 | C-11.2 | **字段存在时**，高信号触发必须申报（映射见下表） | 字段存在且漏报 → FAIL；字段缺失 → 不评估，C-11 整体 WARN（过渡期） |
 | C-11.3 | bundle patch 不得启用 `@deepseek-ai/dsh-plugin-manager/tools` | 启用 → FAIL |
-| C-11.4 | 源码/配置中的 `danger-full-access` 字面量 | 命中 → WARN（可能只是文档） |
+| C-11.4 | 源码/配置中的 `danger-full-access` 字面量（注释与等值比较除外；字符串仍算） | 命中 → WARN（可能只是文档） |
 | C-11.5 | 声明了但实测没有对应触发 | WARN（过度声明是安全的，但会误导） |
 
 **C-11.2 触发映射**：
@@ -726,7 +726,7 @@ export function apply(ctx: Context) {
 | C-12.1 | 源码出现 `.credentials.yaml`、`CREDENTIALS_FILENAME`、`credentials-local` 内部导入、`$DSH_HOME` 凭据路径字面量 | 命中且无 `credentials:provider` → FAIL；有声明 → PASS |
 | C-12.2 | 调用 `ctx.credentials.listRecords()`：字段存在但未声明 `credentials:list` → FAIL；字段缺失 → WARN（过渡） | 见左 |
 | C-12.3 | 检测到全局 seam provider 注册（`shell`/`credentials`/`sandboxPolicy`/`sandbox`/`deepseekAccount`）但声明不明确 | WARN（advisory；AST 归属判断可能误报） |
-| C-12.4 | 源码/配置出现 `danger-full-access` / `--add-dir` 字面量 | WARN |
+| C-12.4 | 源码/配置出现 `danger-full-access` / `--add-dir` 字面量（注释与等值比较除外；字符串仍算） | WARN |
 | C-12.5 | 动态 `import()` / 字符串拼接绕过 | 不可判 → not-run |
 
 **三值期望**：
