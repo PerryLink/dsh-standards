@@ -220,3 +220,11 @@ test('DSC-10: no source files is NA, not WARN', () => {
   assert.equal(check.result, 'NA', check.reason)
   assert.match(check.reason, /no source/)
 })
+
+test('DSC-10.2: flags an immediate module-scope void main()', () => {
+  const dir = path.join(here, '..', 'fixtures', 'import-void-main')
+  const result = runManifestChecks(dir)
+  const check = checkImportTimeAdvisory(readSources(dir), result.entry?.relative)
+  assert.equal(check.result, 'WARN', check.reason)
+  assert.ok(check.details.some((detail) => /immediate main/.test(detail.reason)), JSON.stringify(check.details))
+})

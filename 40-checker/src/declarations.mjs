@@ -59,6 +59,7 @@ export function checkImportTimeAdvisory(sources, entryRelative = null) {
     { name: 'top-level process.on', pattern: /^process\.on\s*\(/m },
     { name: 'top-level process.env assignment', pattern: /^process\.env\.[A-Za-z_][A-Za-z0-9_]*\s*=/m },
     { name: 'top-level globalThis assignment', pattern: /^globalThis\.[A-Za-z_][A-Za-z0-9_]*\s*=/m },
+    { name: 'top-level immediate main call', pattern: /^void\s+[A-Za-z_$][\w$]*\s*\(/m },
   ]
   // C-10.1/2/4 are about the entry module. Keep all of them entry-scoped: the same
   // line in a shipped helper is not on the entry's import path (C-10.3), not a hit.
