@@ -25,6 +25,12 @@
 
 # Changelog
 
+## 2026-11-04 — 0.2.2-alpha.3 baseline in the three-level docs
+
+- Add the 0.2.2-alpha.3 baseline table and six PR-review evidence gates to `35`.
+- Carry the baseline into `31` (ENTRY), `32` (FLOW R6) and the `33` BOOST card.
+- Fix the ENTRY checklist: Node `>=24.9.0`, `engines.dsh` precedence from 0.2.1-alpha.4, frozen lockfile / release-age evidence.
+
 ## 2026-11-03 — Node 24.9 baseline
 - Require Node >=24.9.0 to match DeepSeek Harness 0.2.2-alpha.3.
 

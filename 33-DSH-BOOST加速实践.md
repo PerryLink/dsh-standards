@@ -75,9 +75,9 @@ after:
   reloadMs: 600
   tokensPerTurn: 900
 environment:
-  dsh: 0.2.2-alpha.2
-  cordis: 4.0.6-alpha.1
-  node: 24
+  dsh: 0.2.2-alpha.3
+  cordis: 4.0.6-alpha.2
+  node: 24.9
 command: "node bench/hello.mjs"
 result: "startup -17%, reload -33%, tokens -25%"
 caveats: "单机单次，非性能基线"

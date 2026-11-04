@@ -30,7 +30,7 @@
 | R3 配置 | schema + 默认值；坏配置 FAILED + 字段路径；volatile 热改 | J3：空配置 boot；非法配置路径；0 restart | 配置是最大摩擦 |
 | R4 首次成功 | README 5 分钟 quickstart；错误三要素 | J4：五类故障逐条检查 | 第一次成功决定留存 |
 | R5 权限 | capabilities/labels/commitments/disclosure + README Permissions | J5：字段闭集 + README 一致 + 禁用词 0 | 权限不清晰会吓退用户 |
-| R6 升级/回滚/卸载 | SemVer/CHANGELOG/engines；卸载 0 残留；回滚 ≤2 命令 | J6：v1→数据→v2→回滚→读数据 | 升级/卸载是长期成本 |
+| R6 升级/回滚/卸载 | SemVer/CHANGELOG/engines（0.2.2 线 Node `>=24.9`；`engines.dsh` 0.2.1-alpha.4+ 单独决定）；卸载 0 残留；回滚 ≤2 命令 | J6：v1→数据→v2→回滚→读数据 | 升级/卸载是长期成本 |
 | R7 可观测 | 启动一行 `name@version`；失败/PENDING 可诊断；日志路径 | J7：正常/缺服务/端口占用 | 出问题能自己修 |
 | R8 client/server | `dsh.client` 三态；headless/sdk 可用或明确拒绝 | J8：headless/web/关闭 client；console error 0 | 同一插件多种运行形态 |
 
