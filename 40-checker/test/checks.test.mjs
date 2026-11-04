@@ -404,3 +404,11 @@ test('DSC-10/DSC-12: a broken .d.ts is skipped, not ERROR', () => {
   assert.equal(c10.result, 'PASS', c10.reason)
   assert.equal(c12.result, 'PASS', c12.reason)
 })
+
+test('DSC-12 C-12.4: one unparsable non-entry file is partial, not ERROR', () => {
+  const dir = path.join(here, '..', 'fixtures', 'parse-error-nonentry')
+  const check = checkCredentials({}, readSources(dir))
+  assert.notEqual(check.result, 'ERROR', check.reason)
+  assert.equal(check.coverage, 'partial')
+  assert.ok(check.details.some((detail) => detail.item === 'C-12.4' && /not-run/.test(detail.reason)), JSON.stringify(check.details))
+})

@@ -308,6 +308,7 @@ function findLiteralHits(sources, values) {
   const wanted = new Set(values)
   const hits = []
   const parseErrors = []
+  let parsedCount = 0
   for (const source of sources) {
     if (isDeclarationFile(source.relative)) continue
     const parsed = parseSource(source)
@@ -315,6 +316,7 @@ function findLiteralHits(sources, values) {
       parseErrors.push({ file: source.relative, line: parsed.error.line, message: parsed.error.message })
       continue
     }
+    parsedCount += 1
     walkAst(parsed.ast, (node, ancestors) => {
       const value = literalStringValue(node)
       if (value === null || !wanted.has(value)) return
@@ -323,7 +325,7 @@ function findLiteralHits(sources, values) {
       hits.push({ file: source.relative, line: node.loc?.start?.line ?? 1, text: value })
     })
   }
-  return { hits, parseErrors }
+  return { hits, parseErrors, parsedCount }
 }
 
 function literalCandidates(base) {
@@ -599,15 +601,16 @@ export function checkCapabilities(manifest, sources, patch) {
   if (dangerScan.hits.length > 0) {
     details.push(detail('C-11.4', 'WARN', `danger-full-access literal in ${dangerScan.hits.length} execution context(s)`, hitEvidence(dangerScan.hits)))
   }
+  const dangerUnparsableAll = dangerScan.parseErrors.length > 0 && dangerScan.parsedCount === 0
   if (dangerScan.parseErrors.length > 0) {
-    details.push(detail('C-11.4', 'ERROR', `not-run: ${dangerScan.parseErrors.length} source file(s) could not be parsed for string literals (${dangerScan.parseErrors[0].file}:${dangerScan.parseErrors[0].line})`, hitEvidence(dangerScan.parseErrors)))
+    details.push(detail('C-11.4', dangerUnparsableAll ? 'ERROR' : 'NA', `not-run: ${dangerScan.parseErrors.length} source file(s) could not be parsed for string literals (${dangerScan.parseErrors[0].file}:${dangerScan.parseErrors[0].line})`, hitEvidence(dangerScan.parseErrors)))
   }
   if (details.length === 0) details.push(detail('C-11.1', 'PASS', 'dsh.capabilities is declared and consistent with static triggers'))
 
   const result = worst(details.map(item => item.result))
   return check({
     id: 'DSC-11', clause: 'C-11', layer: 'L0', result,
-    coverage: dangerScan.parseErrors.length > 0 ? 'not-run' : 'full',
+    coverage: dangerUnparsableAll ? 'not-run' : dangerScan.parseErrors.length > 0 ? 'partial' : 'full',
     reason: details.filter(item => item.result !== 'PASS').map(item => `${item.item}: ${item.reason}`).join(' | '),
     details,
     evidence: ['package.json#dsh.capabilities', 'dsh.bundle.patch'],
@@ -660,15 +663,16 @@ export function checkCredentials(manifest, sources) {
   if (literalScan.hits.length > 0) {
     details.push(detail('C-12.4', 'WARN', `danger-full-access/--add-dir literal in ${literalScan.hits.length} execution context(s)`, hitEvidence(literalScan.hits)))
   }
+  const literalUnparsableAll = literalScan.parseErrors.length > 0 && literalScan.parsedCount === 0
   if (literalScan.parseErrors.length > 0) {
-    details.push(detail('C-12.4', 'ERROR', `not-run: ${literalScan.parseErrors.length} source file(s) could not be parsed for string literals (${literalScan.parseErrors[0].file}:${literalScan.parseErrors[0].line})`, hitEvidence(literalScan.parseErrors)))
+    details.push(detail('C-12.4', literalUnparsableAll ? 'ERROR' : 'NA', `not-run: ${literalScan.parseErrors.length} source file(s) could not be parsed for string literals (${literalScan.parseErrors[0].file}:${literalScan.parseErrors[0].line})`, hitEvidence(literalScan.parseErrors)))
   }
   details.push(...validateCommitments(manifest), ...validateDisclosure(manifest))
 
   const result = worst(details.map(item => item.result))
   return check({
     id: 'DSC-12', clause: 'C-12', layer: 'L0', result,
-    coverage: literalScan.parseErrors.length > 0 ? 'not-run' : 'full',
+    coverage: literalUnparsableAll ? 'not-run' : literalScan.parseErrors.length > 0 ? 'partial' : 'full',
     reason: details.filter(item => item.result !== 'PASS' && item.result !== 'NA').map(item => `${item.item}: ${item.reason}`).join(' | '),
     details,
     evidence: ['package.json#dsh.capabilities'],

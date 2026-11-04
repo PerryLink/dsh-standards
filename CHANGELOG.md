@@ -1,3 +1,8 @@
+## 1.1.1 — 2026-11-04
+
+- AST 解析失败的语义修正：一个**非入口**文件解析失败时，C-11.4/C-12.4 记 `NA/not-run`、coverage `partial`，不再把整条强制检查打成 ERROR/incomplete；只有所有可分析文件都失败时才保持 ERROR/not-run。第三套 holdout 的 `dsh-expert-team` 暴露了这个 bug。
+- 新增 fixture `parse-error-nonentry` 与 1 条测试；127 → 128。
+
 ## 1.1.0 — 2026-11-04
 
 - DSC-10 改为**真 AST**（vendored `@babel/parser`，支持 JS/TS/JSX；无运行时 npm 依赖）。只分析入口模块 + 本地相对 import 闭包；包导入/解析不到/`.d.ts` 记 C-10.3 coverage note（not-run），不再用行首正则。
