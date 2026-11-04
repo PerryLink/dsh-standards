@@ -3,7 +3,7 @@ import assert from 'node:assert/strict'
 import path from 'node:path'
 import { fileURLToPath } from 'node:url'
 import { runManifestChecks } from '../src/manifest.mjs'
-import { checkCapabilities, checkCredentials, checkLabels } from '../src/declarations.mjs'
+import { checkCapabilities, checkCredentials, checkImportTimeAdvisory, checkLabels } from '../src/declarations.mjs'
 import { readSources } from '../src/util.mjs'
 import { buildReport } from '../src/report.mjs'
 import { parseInstallSpec } from '../src/install-spec.mjs'
@@ -177,4 +177,25 @@ test('entry: static claim recognizes without runtime', () => {
   assert.equal(report.conclusion.status, 'pass')
   assert.equal(report.conclusion.level, 'DSH-ENTRY recognized')
   assert.equal(report.conclusion.exitCode, 0)
+})
+
+test('DSC-10.4: flags a module-scope fs mutation in the entry module', () => {
+  const dir = path.join(here, '..', 'fixtures', 'import-side-effect')
+  const result = runManifestChecks(dir)
+  const check = checkImportTimeAdvisory(readSources(dir), result.entry?.relative)
+  assert.equal(check.result, 'WARN', check.reason)
+  assert.ok(check.details.some((detail) => /top-level fs mutation/.test(detail.reason)), JSON.stringify(check.details))
+})
+
+test('DSC-10.4: ignores a module-scope fs mutation outside the entry module', () => {
+  const dir = path.join(here, '..', 'fixtures', 'import-side-effect-nonentry')
+  const result = runManifestChecks(dir)
+  const check = checkImportTimeAdvisory(readSources(dir), result.entry?.relative)
+  assert.equal(check.result, 'PASS', check.reason)
+})
+
+test('DSC-10.4: a clean entry module still passes', () => {
+  const result = runManifestChecks(good)
+  const check = checkImportTimeAdvisory(readSources(good), result.entry?.relative)
+  assert.equal(check.result, 'PASS', check.reason)
 })

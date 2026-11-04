@@ -598,12 +598,15 @@ export const provide = ['greet']      // 并在 apply 里 ctx.provide('greet', .
 | C-10.1 | 入口模块顶层 `AwaitExpression` | 命中 → advisory WARN |
 | C-10.2 | 模块顶层 `process.on` / `process.env=` / 裸 `setInterval` / 立即 `void main()` | 命中 → advisory WARN |
 | C-10.3 | 通过 `import './side-effectful'` 间接引入的副作用 | 不可判（X-3）→ not-run |
+| C-10.4 | 入口模块顶层 fs 写操作（`writeFileSync`/`appendFileSync`/`mkdirSync`/`rmSync`/`unlinkSync` 等）或子进程调用（`execSync`/`execFileSync`/`spawnSync` 等） | 命中 → advisory WARN |
+
+> C-10.4 只扫**入口模块**：同一行出现在随包发布的自检脚本、示例脚本里，不等于 import 该包就会执行，归 C-10.3（not-run），不命中。
 
 **三值期望**：
 
 | 值 | 条件 |
 |---|---|
-| PASS | 无 C-10.1/C-10.2 命中 |
+| PASS | 无 C-10.1/C-10.2/C-10.4 命中 |
 | WARN | 任一命中；或 C-10.3 not-run |
 | FAIL | **永不**。C-10 是 advisory，不产生 FAIL，不影响 exit code |
 | NA | `--no-static` 或入口不可读 |

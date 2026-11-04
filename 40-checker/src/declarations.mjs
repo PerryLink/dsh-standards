@@ -52,7 +52,7 @@ function hitEvidence(hits, limit = 3) {
 }
 
 /** DSC-10: advisory only; never FAIL. */
-export function checkImportTimeAdvisory(sources) {
+export function checkImportTimeAdvisory(sources, entryRelative = null) {
   const patterns = [
     { name: 'top-level await', pattern: /^await\s/m },
     { name: 'top-level setInterval', pattern: /^setInterval\s*\(/m },
@@ -60,9 +60,25 @@ export function checkImportTimeAdvisory(sources) {
     { name: 'top-level process.env assignment', pattern: /^process\.env\.[A-Za-z_][A-Za-z0-9_]*\s*=/m },
     { name: 'top-level globalThis assignment', pattern: /^globalThis\.[A-Za-z_][A-Za-z0-9_]*\s*=/m },
   ]
+  // C-10.4 is about the entry module evaluating a write/spawn on import. Keep it
+  // entry-scoped: the same line in a shipped helper is C-10.3 (not-run), not a hit.
+  const entryPatterns = [
+    {
+      name: 'top-level fs mutation',
+      pattern: /^(?:fs\s*\.\s*)?(?:writeFileSync|appendFileSync|mkdirSync|rmSync|unlinkSync|rmdirSync|renameSync|copyFileSync|chmodSync|symlinkSync|truncateSync|openSync|writeSync)\s*\(/m,
+    },
+    {
+      name: 'top-level subprocess spawn',
+      pattern: /^(?:execSync|execFileSync|spawnSync|execFile|spawn)\s*\(/m,
+    },
+  ]
   const hits = []
   for (const item of patterns) {
     for (const hit of regexHits(sources, item.pattern)) hits.push({ ...hit, pattern: item.name })
+  }
+  const entrySources = entryRelative ? sources.filter(item => item.relative === entryRelative) : sources
+  for (const item of entryPatterns) {
+    for (const hit of regexHits(entrySources, item.pattern)) hits.push({ ...hit, pattern: item.name })
   }
   const result = hits.length > 0 ? 'WARN' : sources.length === 0 ? 'WARN' : 'PASS'
   return check({
@@ -72,7 +88,7 @@ export function checkImportTimeAdvisory(sources) {
     result,
     advisory: true,
     reason: hits.length > 0 ? `advisory: ${hits.length} import-time side-effect clue(s)` : sources.length === 0 ? 'no source files scanned' : '',
-    details: hits.slice(0, 20).map(hit => detail('C-10.1/2', 'WARN', `${hit.pattern} at ${hit.file}:${hit.line}`, [`${hit.file}:${hit.line}`])),
+    details: hits.slice(0, 20).map(hit => detail('C-10.1/2/4', 'WARN', `${hit.pattern} at ${hit.file}:${hit.line}`, [`${hit.file}:${hit.line}`])),
     evidence: hitEvidence(hits),
   })
 }

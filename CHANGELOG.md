@@ -1,3 +1,9 @@
+## 1.0.4 — 2026-11-04
+
+- DSC-10 新增 C-10.4：入口模块顶层 fs 写操作（`writeFileSync`/`appendFileSync`/`mkdirSync`/`rmSync`/`unlinkSync` 等）与子进程调用（`execSync`/`execFileSync`/`spawnSync` 等）记为 advisory WARN，仍然永不 FAIL。
+- C-10.4 按条款只扫**入口模块**；同一行出现在随包发布的自检脚本里属于 C-10.3（not-run），不命中。
+- 新增 fixture `import-side-effect`、`import-side-effect-nonentry` 与 3 条回归测试；测试 99 → 102。
+
 ## 1.0.3 — 2026-11-03
 
 - Published from GitHub Actions with npm provenance (OIDC); local token publishes are retired.

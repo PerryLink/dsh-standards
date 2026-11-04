@@ -273,7 +273,7 @@ export async function main(argv = process.argv.slice(2)) {
     { id: 'DSC-13', clause: 'C-13', layer: 'L0', result: 'ERROR', coverage: 'not-run', reason: 'manifest unavailable', details: [], evidence: [], method: 'M', advisory: false },
   ]
   const declarationAdjusted = declarationChecks.map(item => (item.result === 'WARN' && ['DSC-11', 'DSC-13'].includes(item.id) ? { ...item, advisory: true } : item))
-  const advisoryChecks = [checkImportTimeAdvisory(sources)]
+  const advisoryChecks = [checkImportTimeAdvisory(sources, entry?.relative)]
 
   if (options.scope === 'entry' && options.entryRuntime === 'server-entry' && kind !== 'plugin') options.treatAsPlugin = true
   let runtimeKind = kind
