@@ -229,6 +229,46 @@ test('DSC-10.2: flags an immediate module-scope void main()', () => {
   assert.ok(check.details.some((detail) => /immediate main/.test(detail.reason)), JSON.stringify(check.details))
 })
 
+test('DSC-10.1/2: AST catches top-level await, timer, process hooks and globals', () => {
+  const text = [
+    "await Promise.resolve()",
+    'for await (const item of []) {}',
+    "setInterval(() => {}, 1000)",
+    "process.on('SIGINT', () => {})",
+    "process.env.DSH_FIXTURE = '1'",
+    'globalThis.__dshFixture = true',
+  ].join('\n')
+  const check = checkImportTimeAdvisory([{ relative: 'index.mjs', text }], 'index.mjs')
+  assert.equal(check.result, 'WARN', check.reason)
+  assert.equal(check.details.filter((detail) => /top-level await/.test(detail.reason)).length, 2)
+  for (const pattern of ['top-level setInterval', 'top-level process.on', 'top-level process.env assignment', 'top-level globalThis assignment']) {
+    assert.ok(check.details.some((detail) => detail.reason.includes(pattern)), `${pattern}: ${JSON.stringify(check.details)}`)
+  }
+})
+
+test('DSC-10.4: member fs writes and module-scope control flow count', () => {
+  const text = [
+    "import * as fs from 'node:fs'",
+    'if (process.env.DSH_FIXTURE) {',
+    "  fs.writeFileSync('/tmp/dsh-fixture-member-write.txt', 'x')",
+    '}',
+  ].join('\n')
+  const check = checkImportTimeAdvisory([{ relative: 'index.mjs', text }], 'index.mjs')
+  assert.equal(check.result, 'WARN', check.reason)
+  assert.ok(check.details.some((detail) => /top-level fs mutation/.test(detail.reason)), JSON.stringify(check.details))
+})
+
+test('DSC-10: function, arrow and class-method bodies are not module-scope side effects', () => {
+  const text = [
+    "function a() { writeFileSync('/tmp/a', 'x') }",
+    "const b = () => spawnSync('cmd')",
+    "class C { m() { process.on('x', () => {}) } }",
+    'const d = { n() { setInterval(() => {}, 1) } }',
+  ].join('\n')
+  const check = checkImportTimeAdvisory([{ relative: 'index.mjs', text }], 'index.mjs')
+  assert.equal(check.result, 'PASS', check.reason)
+})
+
 test('DSC-12 C-12.4: ignores comment-only literals', () => {
   const dir = path.join(here, '..', 'fixtures', 'c12-comment')
   const check = checkCredentials({}, readSources(dir))
@@ -248,8 +288,119 @@ test('DSC-12 C-12.4: still flags an actual set() grant', () => {
   assert.ok(check.details.some((detail) => detail.item === 'C-12.4'), JSON.stringify(check.details))
 })
 
-test('DSC-12 C-12.4: keeps a documentation string as a warning', () => {
+test('DSC-12 C-12.4: console-only documentation string is not a grant', () => {
   const dir = path.join(here, '..', 'fixtures', 'c12-string')
   const check = checkCredentials({}, readSources(dir))
+  assert.equal(check.result, 'PASS', check.reason)
+  assert.ok(!check.details.some((detail) => detail.item === 'C-12.4'), JSON.stringify(check.details))
+})
+
+test('DSC-12 C-12.4: console/desc documentation strings are not grants', () => {
+  const dir = path.join(here, '..', 'fixtures', 'c12-doc-string')
+  const check = checkCredentials({}, readSources(dir))
+  assert.equal(check.result, 'PASS', check.reason)
+  assert.ok(!check.details.some((detail) => detail.item === 'C-12.4'), JSON.stringify(check.details))
+})
+
+test('DSC-11 C-11.4: console/desc documentation strings are not danger literals', () => {
+  const dir = path.join(here, '..', 'fixtures', 'c12-doc-string')
+  const check = checkCapabilities({}, readSources(dir))
+  assert.ok(!check.details.some((detail) => detail.item === 'C-11.4'), JSON.stringify(check.details))
+})
+
+test('DSC-11 C-11.4: --add-dir alone is a C-12.4 concern, not C-11.4', () => {
+  const sources = [{ relative: 'index.mjs', text: "spawn('dsh', ['--add-dir', './docs'])\n" }]
+  const check = checkCapabilities({}, sources)
+  assert.ok(!check.details.some((detail) => detail.item === 'C-11.4'), JSON.stringify(check.details))
+})
+
+test('DSC-12 C-12.4: spawn args with --add-dir are a real command string', () => {
+  const dir = path.join(here, '..', 'fixtures', 'c12-command-arg')
+  const check = checkCredentials({}, readSources(dir))
   assert.equal(check.result, 'WARN', check.reason)
+  assert.ok(check.details.some((detail) => detail.item === 'C-12.4'), JSON.stringify(check.details))
+})
+
+test('DSC-12 C-12.4: set/resolve/mode/switch contexts are real grants', () => {
+  const text = [
+    "svc.set(session, 'danger-full-access')",
+    "svc.resolve('danger-full-access')",
+    "const policy = { sandboxPolicy: { mode: 'danger-full-access' } }",
+    "switch (mode) { case 'danger-full-access': break }",
+  ].join('\n')
+  const check = checkCredentials({}, [{ relative: 'index.mjs', text }])
+  assert.equal(check.result, 'WARN', check.reason)
+  const detail = check.details.find((item) => item.item === 'C-12.4')
+  assert.ok(detail, JSON.stringify(check.details))
+  assert.match(detail.reason, /\b4\b/)
+})
+
+test('DSC-12 C-12.4: nested command properties outrank documentation keys', () => {
+  const check = checkCredentials({}, [{ relative: 'index.mjs', text: "const policy = { sandboxPolicy: { description: 'danger-full-access' } }\n" }])
+  assert.equal(check.result, 'WARN', check.reason)
+})
+
+test('DSC-12 C-12.4: an unknown context stays a conservative warning', () => {
+  const check = checkCredentials({}, [{ relative: 'index.mjs', text: "const mode = 'danger-full-access'\n" }])
+  assert.equal(check.result, 'WARN', check.reason)
+})
+
+test('DSC-12 C-12.4: an unparsable source is not-run, not PASS', () => {
+  const check = checkCredentials({}, [{ relative: 'index.mjs', text: 'const broken = {\n' }])
+  assert.equal(check.result, 'ERROR', check.reason)
+  assert.equal(check.coverage, 'not-run')
+  assert.ok(check.details.some((detail) => detail.item === 'C-12.4' && /not-run/.test(detail.reason)), JSON.stringify(check.details))
+})
+
+test('DSC-10.3: follows a local relative import and flags its top-level fs mutation', () => {
+  const dir = path.join(here, '..', 'fixtures', 'import-local-side-effect')
+  const result = runManifestChecks(dir)
+  const check = checkImportTimeAdvisory(readSources(dir), result.entry?.relative)
+  assert.equal(check.result, 'WARN', check.reason)
+  assert.ok(check.details.some((detail) => /top-level fs mutation/.test(detail.reason) && /side-effectful\.mjs/.test(detail.reason)), JSON.stringify(check.details))
+})
+
+test('DSC-10.3: a package-only entry is PASS with a C-10.3 not-run coverage note', () => {
+  const dir = path.join(here, '..', 'fixtures', 'import-package-only')
+  const result = runManifestChecks(dir)
+  const check = checkImportTimeAdvisory(readSources(dir), result.entry?.relative)
+  assert.equal(check.result, 'PASS', check.reason)
+  const note = check.details.find((detail) => detail.item === 'C-10.3')
+  assert.ok(note, JSON.stringify(check.details))
+  assert.match(note.reason, /not-run/)
+  assert.match(note.reason, /node:path/)
+})
+
+test('DSC-10.3: an unresolved local import records not-run without becoming a WARN', () => {
+  const sources = [{ relative: 'index.mjs', text: "import './missing-module.mjs'\n" }]
+  const check = checkImportTimeAdvisory(sources, 'index.mjs')
+  assert.equal(check.result, 'PASS', check.reason)
+  assert.ok(check.details.some((detail) => detail.item === 'C-10.3' && /not-run/.test(detail.reason)), JSON.stringify(check.details))
+})
+
+test('DSC-10.3: a require inside a function is not an import-time edge', () => {
+  const sources = [
+    { relative: 'index.mjs', text: "function load() { return require('./side-effectful.mjs') }\n" },
+    { relative: 'side-effectful.mjs', text: "writeFileSync('/tmp/x', 'x')\n" },
+  ]
+  const check = checkImportTimeAdvisory(sources, 'index.mjs')
+  assert.equal(check.result, 'PASS', check.reason)
+  assert.ok(!check.details.some((detail) => /side-effectful/.test(detail.reason)), JSON.stringify(check.details))
+})
+
+test('DSC-10: an unparsable entry is ERROR/not-run, not PASS', () => {
+  const dir = path.join(here, '..', 'fixtures', 'import-parse-error')
+  const result = runManifestChecks(dir)
+  const check = checkImportTimeAdvisory(readSources(dir), result.entry?.relative)
+  assert.equal(check.result, 'ERROR', check.reason)
+  assert.equal(check.coverage, 'not-run')
+})
+
+test('DSC-10/DSC-12: a broken .d.ts is skipped, not ERROR', () => {
+  const dir = path.join(here, '..', 'fixtures', 'declaration-file')
+  const result = runManifestChecks(dir)
+  const c10 = checkImportTimeAdvisory(readSources(dir), result.entry?.relative)
+  const c12 = checkCredentials({}, readSources(dir))
+  assert.equal(c10.result, 'PASS', c10.reason)
+  assert.equal(c12.result, 'PASS', c12.reason)
 })

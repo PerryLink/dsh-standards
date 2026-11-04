@@ -1,3 +1,10 @@
+## 1.1.0 — 2026-11-04
+
+- DSC-10 改为**真 AST**（vendored `@babel/parser`，支持 JS/TS/JSX；无运行时 npm 依赖）。只分析入口模块 + 本地相对 import 闭包；包导入/解析不到/`.d.ts` 记 C-10.3 coverage note（not-run），不再用行首正则。
+- C-11.4 / C-12.4 改为 AST 字符串上下文：注释、等值比较、`console.*` 与 `desc`/`message`/`help` 等文档字符串不 WARN；`.set()`/`.resolve()`、`mode`/`sandboxPolicy`/`sandbox_permissions`、spawn/exec 的 `--add-dir` args 仍 WARN；未知上下文保守 WARN。
+- 声明文件 `.d.ts` 没有运行期行为，跳过 AST 扫描，避免一条坏声明把整条检查打成 ERROR。
+- 测试 110 → 127；新增 fixture `import-local-side-effect`、`import-package-only`、`import-parse-error`、`c12-doc-string`、`c12-command-arg`、`declaration-file`。
+
 ## 1.0.7 — 2026-11-04
 
 - DSC-10 C-10.2 补齐“立即 `void main()`”：入口顶层 `void name()` 现在记 advisory WARN（此前只查 await/timer/process.on/env/globalThis）。
