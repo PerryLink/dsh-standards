@@ -3,7 +3,7 @@
 > **版本**：v2.0.0-rc.1 ｜ **日期**：2026-10-31
 > **定位**：三套规范/实践的第二套；回答“装得上之后，用户能不能装得上、配得动、用得顺、卸得净”。
 > **依据**：`94-开发建议-顺畅.md`、`87` 的 8 条用户旅程、`81` 的验收缺口。
-> **不是**：认证、排名、完整契约审计；未跑=WARN，不冒充 PASS。
+> **不是**：认证、排名、完整契约审计；未跑=`not-run`，不冒充 PASS。
 > **对外状态**：内部草案；J3/J5/J7/J8 未跑，暂不作为对外规范。
 > **当前 runtime**：fixture 上 J1/J2/J4/J6 12 PASS；10 个真实包上 **78 PASS / 4 FAIL / 2 blocked / 66 not-run**（`results/flow/real/`）；J3/J7 有 fixture 级 runtime；J5/J8 有 static preflight；J8 浏览器渲染仍 `not-run`。
 > **已知未完成**：J1–J8 的完整 runtime harness 尚未落成；`journey.mjs` 仍有 static-prep。
@@ -51,7 +51,7 @@
 | J7 | 正常/缺服务/端口占用 | 三种都有可读诊断 | 只覆盖正常 | 崩溃无日志 |
 | J8 | headless/web/client off | 三态可用或明确拒绝 | 一态未测 | 宣称支持但崩溃 |
 
-**未跑=WARN，不冒充 PASS。** 每个 J 记录：命令、环境、结果、日志路径、时间。
+**未跑=`not-run`，不冒充 PASS。** 每个 J 记录：命令、环境、结果、日志路径、时间。
 
 ---
 
@@ -82,10 +82,11 @@
 
 | 状态 | 含义 |
 |---|---|
-| `flow-pass` | J1–J8 全 PASS，或 WARN 已披露且有替代路径 |
-| `flow-warn` | 至少 1 个 WARN，未跑不等于 PASS |
-| `flow-fail` | 至少 1 个 FAIL |
-| `flow-not-run` | 未跑/环境不足；不是 PASS |
+| `runtime` | 八个 journey 全部有 pass 证据 |
+| `failed` | 至少一个 journey 有可归因的 FAIL |
+| `not-run` | 没有证据，或不足八个 pass；不是 PASS |
+
+每个 journey 记 `pass` / `fail` / `not-run` / `manual`；没有 `flow-warn` 这种软通过。
 
 不设“通过率/等级”；不做市场门禁。
 
