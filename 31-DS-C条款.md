@@ -600,7 +600,9 @@ export const provide = ['greet']      // 并在 apply 里 ctx.provide('greet', .
 | C-10.3 | 通过 `import './side-effectful'` 间接引入的副作用 | 不可判（X-3）→ not-run |
 | C-10.4 | 入口模块顶层 fs 写操作（`writeFileSync`/`appendFileSync`/`mkdirSync`/`rmSync`/`unlinkSync` 等）或子进程调用（`execSync`/`execFileSync`/`spawnSync` 等） | 命中 → advisory WARN |
 
-> C-10.4 只扫**入口模块**：同一行出现在随包发布的自检脚本、示例脚本里，不等于 import 该包就会执行，归 C-10.3（not-run），不命中。
+> C-10.4 只扫**入口模块**：同一行出现在随包发布的自检脚本、示例脚本里，且不在入口的 import 链上，就不是 import 期路径，不判（不命中）。C-10.3 只指入口确实 import 的间接副作用。
+>
+> **已知边界（1.0.4 未改）**：C-10.1/C-10.2 目前仍按历史行为扫描全部源文件，与 C-10.4 的入口作用域不一致；`openSync` 只读打开也会被当写操作；C-10.2 的“立即 `void main()`”尚未实现。这些都留给下一轮，不在本轮改。
 
 **三值期望**：
 
