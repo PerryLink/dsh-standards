@@ -45,6 +45,8 @@
 | J1 | 临时 `DSH_HOME`、profile、tarball | add→dump→remove 全成功 | 需 `allowBuilds` 但有提示 | 手改 profile / remove 残留 |
 | J2 | 默认配置、开关 | 默认可用；开关后 dump 差异正确 | 需重启但已写明 | 开关无效/崩溃 |
 | J3 | `{}`、非法值、volatile 字段 | 空配置启动；非法 FAILED 带路径；0 restart | 迁移/未知键行为未写明 | 静默用默认值/崩溃 |
+
+> **适用性（2026-11-05 实测）**：J2/J3 只在插件暴露顶层 `enabled` 或配置 schema 时可判定；否则记 `not-run`，不判 fail。12 个训练插件里只有 `dsh-fast` 满足，其余 11 个按本条规定记 not-run。
 | J4 | README、日志、错误 | 5 分钟内成功；错误三要素 | 有步骤但缺错误处理 | 无 quickstart/无法启动 |
 | J5 | manifest、README | 字段闭集、README 一致、禁用词 0 | 字段缺失但 README 说明 | 冒充官方/权限不说明 |
 | J6 | 两个版本、数据 | 升级/回滚/卸载全成功 | 需手工迁移但有文档 | 数据丢失/无法回滚 |
