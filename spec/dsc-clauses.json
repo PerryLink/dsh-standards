@@ -4,19 +4,22 @@
     "id": "DS-C",
     "version": "1.0.0"
   },
-  "generatedAt": "2026-11-06",
+  "generatedAt": "2026-11-07",
   "source": [
     "31-DS-C条款.md",
     "31-DSH-ENTRY入门规范.md",
     "40-checker/src/cli.mjs",
-    "40-checker/src/permissions.mjs"
+    "40-checker/src/permissions.mjs",
+    "40-checker/src/report.mjs",
+    "40-checker/src/security.mjs",
+    "34-三层分级模型-GB-GBT-GBZ类比.md"
   ],
-  "note": "Stable list of DS-C parent clauses C-1..C-14 and every C-x.y sub-clause. `mandatory` means a violation can produce FAIL in an applicable profile; `advisory` means the checker reports it as advisory (check.advisory=true) and it never moves the verdict. C-3 is mandatory in listing only; C-14 is mandatory in entry scope only. Docs anchors point at the clause section that owns the sub-clause. The repository has no clauses.js; this list is derived from the 31-DS-C条款.md §2 tables plus the checker sources that emit DSC-01..DSC-14 (cli.mjs, permissions.mjs).",
+  "note": "Stable list of DS-C parent clauses C-1..C-22 and every C-x.y sub-clause. `mandatory` means a violation can produce FAIL in an applicable profile (or, for C-21, that the check is required for security coverage while findings cap at WARN); `advisory` means the checker reports it as advisory (check.advisory=true) and it never moves the verdict. C-1..C-14 are the baseline/entry set; C-15..C-22 are the 2026-11-07 security-scope extension and are NOT part of the DS-C package/listing mandatory set, so they never change the DS-C badge. In --scope security, C-15/C-16/C-17 can FAIL; C-21 is mandatory but WARN-only; C-18/C-19/C-20/C-22 are advisory; DSC-16 has no declaration-based exemption. Docs anchors point at the clause section that owns the sub-clause. The repository has no clauses.js; this list is derived from the 31-DS-C条款.md §2 tables plus the checker sources that emit DSC-01..DSC-22.",
   "counts": {
-    "clauses": 14,
-    "subclauses": 60,
-    "entries": 74,
-    "dscChecks": 14
+    "clauses": 22,
+    "subclauses": 91,
+    "entries": 113,
+    "dscChecks": 22
   },
   "clauses": [
     {
@@ -158,9 +161,97 @@
       "layer": "L1",
       "mandatory": true,
       "advisory": false,
-      "docs": "31-DSH-ENTRY入门规范.md#21-run-set",
+      "docs": "31-DSH-ENTRY入门规范.md#二entry-profile",
       "parent": null,
-      "note": "entry scope only (--scope entry); not part of the DS-C package/listing gate"
+      "note": "entry scope only (--scope entry); not part of the DS-C package/listing gate; docs anchor points at the entry-profile section (C-14 has no section in 31)"
+    },
+    {
+      "dsc": "DSC-15",
+      "clause": "C-15",
+      "title": "生命周期脚本",
+      "layer": "L0",
+      "mandatory": true,
+      "advisory": false,
+      "docs": "31-DS-C条款.md#c-15-生命周期脚本",
+      "parent": null,
+      "note": "security scope only; install-time preinstall/install/postinstall/prepare scripts; prepack/postpack not scanned in v1"
+    },
+    {
+      "dsc": "DSC-16",
+      "clause": "C-16",
+      "title": "动态执行",
+      "layer": "L0",
+      "mandatory": true,
+      "advisory": false,
+      "docs": "31-DS-C条款.md#c-16-动态执行",
+      "parent": null,
+      "note": "security scope only; eval/Function/vm/_compile/process.binding can FAIL; bare child_process is WARN"
+    },
+    {
+      "dsc": "DSC-17",
+      "clause": "C-17",
+      "title": "敏感文件",
+      "layer": "L0",
+      "mandatory": true,
+      "advisory": false,
+      "docs": "31-DS-C条款.md#c-17-敏感文件",
+      "parent": null,
+      "note": "security scope only; direct reads of system credentials or backing files can FAIL; .env is WARN"
+    },
+    {
+      "dsc": "DSC-18",
+      "clause": "C-18",
+      "title": "外联端点",
+      "layer": "L0",
+      "mandatory": false,
+      "advisory": true,
+      "docs": "31-DS-C条款.md#c-18-外联端点",
+      "parent": null,
+      "note": "security scope advisory (advisory:true); warn at most, never FAIL; missing egress capability is C-11.2"
+    },
+    {
+      "dsc": "DSC-19",
+      "clause": "C-19",
+      "title": "混淆与二进制",
+      "layer": "L0",
+      "mandatory": false,
+      "advisory": true,
+      "docs": "31-DS-C条款.md#c-19-混淆与二进制",
+      "parent": null,
+      "note": "security scope only; advisory, records opaque artifacts and sha256, never FAIL"
+    },
+    {
+      "dsc": "DSC-20",
+      "clause": "C-20",
+      "title": "提示词注入",
+      "layer": "L0",
+      "mandatory": false,
+      "advisory": true,
+      "docs": "31-DS-C条款.md#c-20-提示词注入",
+      "parent": null,
+      "note": "security scope only; advisory; v1 static heuristics, v2 FLOW runtime hook"
+    },
+    {
+      "dsc": "DSC-21",
+      "clause": "C-21",
+      "title": "供应链",
+      "layer": "L0",
+      "mandatory": true,
+      "advisory": false,
+      "docs": "31-DS-C条款.md#c-21-供应链",
+      "parent": null,
+      "note": "security scope mandatory (not-run => incomplete); name/scope findings cap at WARN, never FAIL; lockfile consistency not judged in v1"
+    },
+    {
+      "dsc": "DSC-22",
+      "clause": "C-22",
+      "title": "来源与完整性",
+      "layer": "L0",
+      "mandatory": false,
+      "advisory": true,
+      "docs": "31-DS-C条款.md#c-22-来源与完整性",
+      "parent": null,
+      "note": "security scope advisory; v1 records presence of dist.integrity / dsh.attestation / dsh.signature only; no signature or digest verification"
     },
     {
       "dsc": "DSC-01",
@@ -761,6 +852,316 @@
       "advisory": false,
       "docs": "31-DS-C条款.md#c-13-高风险类别强制标注",
       "parent": "C-13"
+    },
+    {
+      "dsc": "DSC-15",
+      "clause": "C-15.1",
+      "title": "危险命令形态（prepare 仅 WARN）",
+      "layer": "L0",
+      "mandatory": false,
+      "advisory": false,
+      "docs": "31-DS-C条款.md#c-15-生命周期脚本",
+      "parent": "C-15"
+    },
+    {
+      "dsc": "DSC-15",
+      "clause": "C-15.2",
+      "title": "普通生命周期脚本（WARN）/无脚本 PASS",
+      "layer": "L0",
+      "mandatory": true,
+      "advisory": false,
+      "docs": "31-DS-C条款.md#c-15-生命周期脚本",
+      "parent": "C-15"
+    },
+    {
+      "dsc": "DSC-15",
+      "clause": "C-15.3",
+      "title": "引用缺失脚本（prepare 仅 WARN）",
+      "layer": "L0",
+      "mandatory": true,
+      "advisory": false,
+      "docs": "31-DS-C条款.md#c-15-生命周期脚本",
+      "parent": "C-15"
+    },
+    {
+      "dsc": "DSC-15",
+      "clause": "C-15.4",
+      "title": "prepack/postpack 打包期脚本（v1 不扫）",
+      "layer": "L0",
+      "mandatory": false,
+      "advisory": false,
+      "docs": "31-DS-C条款.md#c-15-生命周期脚本",
+      "parent": "C-15"
+    },
+    {
+      "dsc": "DSC-16",
+      "clause": "C-16.1",
+      "title": "eval/Function/_compile/process.binding",
+      "layer": "L0",
+      "mandatory": true,
+      "advisory": false,
+      "docs": "31-DS-C条款.md#c-16-动态执行",
+      "parent": "C-16"
+    },
+    {
+      "dsc": "DSC-16",
+      "clause": "C-16.2",
+      "title": "vm.runIn*/Script/createContext",
+      "layer": "L0",
+      "mandatory": false,
+      "advisory": false,
+      "docs": "31-DS-C条款.md#c-16-动态执行",
+      "parent": "C-16"
+    },
+    {
+      "dsc": "DSC-16",
+      "clause": "C-16.3",
+      "title": "裸 child_process（WARN）/空参豁免",
+      "layer": "L0",
+      "mandatory": false,
+      "advisory": false,
+      "docs": "31-DS-C条款.md#c-16-动态执行",
+      "parent": "C-16"
+    },
+    {
+      "dsc": "DSC-16",
+      "clause": "C-16.4",
+      "title": "运行时拼代码/package import（not-run）",
+      "layer": "L0",
+      "mandatory": false,
+      "advisory": false,
+      "docs": "31-DS-C条款.md#c-16-动态执行",
+      "parent": "C-16"
+    },
+    {
+      "dsc": "DSC-17",
+      "clause": "C-17.1",
+      "title": "系统凭据/backing file 直接读",
+      "layer": "L0",
+      "mandatory": true,
+      "advisory": false,
+      "docs": "31-DS-C条款.md#c-17-敏感文件",
+      "parent": "C-17"
+    },
+    {
+      "dsc": "DSC-17",
+      "clause": "C-17.2",
+      "title": ".env / process.env 枚举（WARN）",
+      "layer": "L0",
+      "mandatory": true,
+      "advisory": false,
+      "docs": "31-DS-C条款.md#c-17-敏感文件",
+      "parent": "C-17"
+    },
+    {
+      "dsc": "DSC-17",
+      "clause": "C-17.3",
+      "title": "AST 解析失败 -> partial/not-run",
+      "layer": "L0",
+      "mandatory": false,
+      "advisory": false,
+      "docs": "31-DS-C条款.md#c-17-敏感文件",
+      "parent": "C-17"
+    },
+    {
+      "dsc": "DSC-17",
+      "clause": "C-17.4",
+      "title": "动态路径/readdir 前缀（not-run）",
+      "layer": "L0",
+      "mandatory": false,
+      "advisory": false,
+      "docs": "31-DS-C条款.md#c-17-敏感文件",
+      "parent": "C-17"
+    },
+    {
+      "dsc": "DSC-18",
+      "clause": "C-18.1",
+      "title": "可疑端点形态（WARN）",
+      "layer": "L0",
+      "mandatory": false,
+      "advisory": true,
+      "docs": "31-DS-C条款.md#c-18-外联端点",
+      "parent": "C-18"
+    },
+    {
+      "dsc": "DSC-18",
+      "clause": "C-18.2",
+      "title": "未披露端点差集（WARN）",
+      "layer": "L0",
+      "mandatory": false,
+      "advisory": true,
+      "docs": "31-DS-C条款.md#c-18-外联端点",
+      "parent": "C-18"
+    },
+    {
+      "dsc": "DSC-18",
+      "clause": "C-18.3",
+      "title": "调网点解析/动态（not-run）",
+      "layer": "L0",
+      "mandatory": false,
+      "advisory": true,
+      "docs": "31-DS-C条款.md#c-18-外联端点",
+      "parent": "C-18"
+    },
+    {
+      "dsc": "DSC-19",
+      "clause": "C-19.1",
+      "title": "文本不透明线索（长行/base64/熵）",
+      "layer": "L0",
+      "mandatory": false,
+      "advisory": true,
+      "docs": "31-DS-C条款.md#c-19-混淆与二进制",
+      "parent": "C-19"
+    },
+    {
+      "dsc": "DSC-19",
+      "clause": "C-19.2",
+      "title": "二进制清单与 sha256",
+      "layer": "L0",
+      "mandatory": false,
+      "advisory": true,
+      "docs": "31-DS-C条款.md#c-19-混淆与二进制",
+      "parent": "C-19"
+    },
+    {
+      "dsc": "DSC-19",
+      "clause": "C-19.3",
+      "title": "文件清单截断 -> partial/not-run",
+      "layer": "L0",
+      "mandatory": false,
+      "advisory": true,
+      "docs": "31-DS-C条款.md#c-19-混淆与二进制",
+      "parent": "C-19"
+    },
+    {
+      "dsc": "DSC-19",
+      "clause": "C-19.4",
+      "title": "只登记不判恶",
+      "layer": "L0",
+      "mandatory": false,
+      "advisory": true,
+      "docs": "31-DS-C条款.md#c-19-混淆与二进制",
+      "parent": "C-19"
+    },
+    {
+      "dsc": "DSC-20",
+      "clause": "C-20.1",
+      "title": "外部文本进入 systemPrompt（WARN）",
+      "layer": "L0",
+      "mandatory": false,
+      "advisory": true,
+      "docs": "31-DS-C条款.md#c-20-提示词注入",
+      "parent": "C-20"
+    },
+    {
+      "dsc": "DSC-20",
+      "clause": "C-20.2",
+      "title": "指令样字面量（英文，WARN）",
+      "layer": "L0",
+      "mandatory": false,
+      "advisory": true,
+      "docs": "31-DS-C条款.md#c-20-提示词注入",
+      "parent": "C-20"
+    },
+    {
+      "dsc": "DSC-20",
+      "clause": "C-20.3",
+      "title": "untrusted 包裹（v1 不判，not-run）",
+      "layer": "L0",
+      "mandatory": false,
+      "advisory": true,
+      "docs": "31-DS-C条款.md#c-20-提示词注入",
+      "parent": "C-20"
+    },
+    {
+      "dsc": "DSC-20",
+      "clause": "C-20.4",
+      "title": "运行时 hook（not-run）",
+      "layer": "L0",
+      "mandatory": false,
+      "advisory": true,
+      "docs": "31-DS-C条款.md#c-20-提示词注入",
+      "parent": "C-20"
+    },
+    {
+      "dsc": "DSC-21",
+      "clause": "C-21.1",
+      "title": "种子名编辑距离 <=1（WARN）",
+      "layer": "L0",
+      "mandatory": false,
+      "advisory": false,
+      "docs": "31-DS-C条款.md#c-21-供应链",
+      "parent": "C-21"
+    },
+    {
+      "dsc": "DSC-21",
+      "clause": "C-21.2",
+      "title": "scope 同形字/近似（listing FAIL）",
+      "layer": "L0",
+      "mandatory": false,
+      "advisory": false,
+      "docs": "31-DS-C条款.md#c-21-供应链",
+      "parent": "C-21"
+    },
+    {
+      "dsc": "DSC-21",
+      "clause": "C-21.3",
+      "title": "依赖 install 脚本/元数据缺失 -> not-run",
+      "layer": "L0",
+      "mandatory": false,
+      "advisory": false,
+      "docs": "31-DS-C条款.md#c-21-供应链",
+      "parent": "C-21"
+    },
+    {
+      "dsc": "DSC-21",
+      "clause": "C-21.4",
+      "title": "lockfile 一致性（v1 不判）",
+      "layer": "L0",
+      "mandatory": false,
+      "advisory": false,
+      "docs": "31-DS-C条款.md#c-21-供应链",
+      "parent": "C-21"
+    },
+    {
+      "dsc": "DSC-22",
+      "clause": "C-22.1",
+      "title": "dist.integrity 存在（integrity-only）",
+      "layer": "L0",
+      "mandatory": false,
+      "advisory": true,
+      "docs": "31-DS-C条款.md#c-22-来源与完整性",
+      "parent": "C-22"
+    },
+    {
+      "dsc": "DSC-22",
+      "clause": "C-22.2",
+      "title": "dsh.attestation / dsh.signature 存在（self-declared）",
+      "layer": "L0",
+      "mandatory": false,
+      "advisory": true,
+      "docs": "31-DS-C条款.md#c-22-来源与完整性",
+      "parent": "C-22"
+    },
+    {
+      "dsc": "DSC-22",
+      "clause": "C-22.3",
+      "title": "digest 比对/验签/registry metadata（v2，not-run）",
+      "layer": "L0",
+      "mandatory": false,
+      "advisory": true,
+      "docs": "31-DS-C条款.md#c-22-来源与完整性",
+      "parent": "C-22"
+    },
+    {
+      "dsc": "DSC-22",
+      "clause": "C-22.4",
+      "title": "无来源字段 -> NA/not-run",
+      "layer": "L0",
+      "mandatory": false,
+      "advisory": true,
+      "docs": "31-DS-C条款.md#c-22-来源与完整性",
+      "parent": "C-22"
     }
   ]
 }

@@ -123,6 +123,59 @@ export function listSourceFiles(root, options = {}) {
   return scanSourceFiles(root, options).paths
 }
 
+/**
+ * Inventory every file in a package (not only source extensions) without
+ * following symlinks. Used by the security checks for binary/obfuscation and
+ * script-reference analysis. Same skip directories as the source walker so
+ * node_modules/tests/docs do not dominate the sample.
+ * @param {string} root
+ * @param {{maxFiles?: number, maxBytes?: number}} [options]
+ */
+export function inventoryFiles(root, options = {}) {
+  const maxFiles = options.maxFiles ?? 1000
+  const maxBytes = options.maxBytes ?? 20_000_000
+  const files = []
+  let bytes = 0
+  let truncated = false
+  const walk = (directory) => {
+    if (files.length >= maxFiles || bytes >= maxBytes) {
+      truncated = true
+      return
+    }
+    let entries
+    try { entries = fs.readdirSync(directory, { withFileTypes: true }) } catch { return }
+    entries.sort((a, b) => a.name.localeCompare(b.name))
+    for (const entry of entries) {
+      if (files.length >= maxFiles || bytes >= maxBytes) {
+        truncated = true
+        return
+      }
+      const absolute = path.join(directory, entry.name)
+      if (entry.isDirectory()) {
+        if (SKIP_DIRECTORIES.has(entry.name)) continue
+        if (entry.name.startsWith('.')) continue
+        walk(absolute)
+        continue
+      }
+      if (!entry.isFile()) continue
+      let size = 0
+      try { size = fs.statSync(absolute).size } catch { continue }
+      if (bytes + size > maxBytes) {
+        truncated = true
+        continue
+      }
+      bytes += size
+      files.push({
+        file: absolute,
+        relative: posixRelative(root, absolute),
+        size,
+      })
+    }
+  }
+  walk(root)
+  return { files, stats: { files: files.length, bytes, maxFiles, maxBytes, truncated } }
+}
+
 /** Read all source files once, returning {file, relative, text} records. */
 export function readSources(root, options) {
   return scanSourceFiles(root, options).paths.map(file => ({

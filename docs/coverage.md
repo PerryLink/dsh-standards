@@ -1,4 +1,4 @@
-# 覆盖说明（14 项）— `dsh-standards check` 默认查什么
+# 覆盖说明（22 项口径）— `dsh-standards check` 默认查什么
 
 `dsh-standards check <package-dir>` 是作者入口。**默认 `--entry-claim static --no-exec`：不执行插件代码**。本文只描述这套默认，不把 `not-run` / `NA` 写成 PASS。
 
@@ -13,13 +13,15 @@ dsh-standards check <package-dir> \
 
 | 口径 | 数量 | 说明 |
 |---|---|---|
-| 报告固定携带 | **14** | `DSC-01` … `DSC-14` |
+| 完整口径 | **22** | `DSC-01` … `DSC-22`；`--scope security` 时 `checks[]` 带全 22 项 |
+| 默认 `checks[]` | **14** | `DSC-01` … `DSC-14`；默认 DS-C 判定只看这 14 项 |
 | 默认实际评估 | **6** | `DSC-01`、`DSC-02`、`DSC-10`、`DSC-11`、`DSC-12`、`DSC-13` |
 | 默认未检查 | **8** | `DSC-03`（NA）+ `DSC-04`–`DSC-09`（not-run）+ `DSC-14`（NA） |
+| 默认 security 块 | **8** | `DSC-15`–`DSC-22` 在 `security` 块里跑 advisory；FAIL 封顶 WARN，不改变 DS-C 结论 |
 
 `not checked` 桶把 NA / not-run / ERROR 都列出来；**没检查不等于通过**。`DSC-10` 是 advisory，只提供信号，不改变结论。
 
-## 14 项逐条
+## 22 项逐条
 
 | ID | 层 | 默认状态 | 默认为什么 | 怎么开启 |
 |---|---|---|---|---|
@@ -37,6 +39,33 @@ dsh-standards check <package-dir> \
 | `DSC-12` | L0 | **检查** | 凭据 backing file、`listRecords`、seam、commitments/disclosure 形状 | 默认即查 |
 | `DSC-13` | L0 | **检查** | `dsh.labels` / `upstream` / 禁用语标签 | 默认即查 |
 | `DSC-14` | L1 | **NA** | 默认 `entry-claim=static`，不声明运行时证据 | `--scope entry --entry-claim runtime --runtime <...>`（bundle 加 `--host`） |
+| `DSC-15` | L0 | **advisory（security 块）** | 默认 scope 下 FAIL 封顶 WARN | `--scope security`；生命周期脚本，可 FAIL |
+| `DSC-16` | L0 | **advisory（security 块）** | 默认 scope 下 FAIL 封顶 WARN | `--scope security`；动态执行，可 FAIL |
+| `DSC-17` | L0 | **advisory（security 块）** | 默认 scope 下 FAIL 封顶 WARN | `--scope security`；敏感文件，可 FAIL |
+| `DSC-18` | L0 | **advisory（security 块）** | 端点线索，永不 FAIL | `--scope security`；外联端点 |
+| `DSC-19` | L0 | **advisory（security 块）** | 只登记不判恶 | `--scope security`；混淆/二进制 |
+| `DSC-20` | L0 | **advisory（security 块）** | 语义不可判、误报高 | `--scope security`；提示词注入 |
+| `DSC-21` | L0 | **advisory WARN（security 块）** | 名字线索；默认 scope 不 FAIL | `--scope security`；供应链，强制项但只 WARN |
+| `DSC-22` | L0 | **advisory（security 块）** | 只有字段自证 | `--scope security`；来源/完整性，v1 只读字段 |
+
+## security scope（C-15～C-22）
+
+`--scope security` 是**独立、opt-in** 的安全范围。它把 8 项加入 `checks[]`（14 → 22），但**不改变** `DS-C` 徽章、也不并入 DS-C 的 11/12 条强制。它只降低风险，**不证明无恶意**：
+
+| 项 | security scope 判定 | 触发 |
+|---|---|---|
+| `DSC-15` 生命周期脚本 | **blocking**（可 FAIL） | 安装期 `curl\|sh`、`base64 -d`、`node -e`、`sh -c`、`powershell -enc`、引用缺失脚本、写 `$HOME`/`/etc` |
+| `DSC-16` 动态执行 | **blocking**（可 FAIL） | `eval`/`new Function(非空)`/`vm`/`module._compile`/`process.binding` → FAIL；裸 `child_process` → WARN |
+| `DSC-17` 敏感文件 | **blocking**（可 FAIL） | 直接读 `~/.ssh`、`$DSH_HOME` credentials、`id_rsa`、`.aws`、`.npmrc`、`.netrc` 等；`.env` 只 WARN |
+| `DSC-18` 外联端点 | **advisory**（永不 FAIL） | 非 https、userinfo、公网裸 IP、webhook/paste/ngrok/onion、未披露端点 |
+| `DSC-19` 混淆/二进制 | **advisory** | 二进制 sha256、超长单行、大块 base64、高熵；只登记不判恶 |
+| `DSC-20` 提示词注入 | **advisory** | 外部文本进 systemPrompt、指令样字面量、无 untrusted 包裹；语义不可判 |
+| `DSC-21` 供应链 | **blocking（强制项）/ WARN（发现封顶）** | scope 同形字/近似 scope、近似名、元数据缺失；**永不 FAIL**，但未跑会使 security `incomplete` |
+| `DSC-22` 来源/完整性 | **advisory**（永不 FAIL） | 只读 `dist.integrity` / `dsh.attestation` / `dsh.signature` 字段是否存在；不验签、不比对 digest；无输入即 `not-run` |
+
+**默认不改变判定**：不传 `--scope security` 时，这 8 项不进 `checks[]`，只在 `security` 块里以 `scope=advisory` 运行；任何 FAIL 封顶 WARN，`DS-C` 的 11/12 条强制集合与 exit code 不变。security 的 FAIL 不能撤销 `DS-C` PASS，`DS-C` PASS 也不能证明 security 通过。
+
+**边界**：C-15/C-16/C-17 可以 FAIL；C-21 是强制项但发现只到 WARN；C-18/C-19/C-20/C-22 是 advisory；其余安全面（实际网络流量、审批绕过、同进程逃逸、client DOM、`!!js` 配置、Remote 调用方身份）**没有机械判据**。任何 PASS 都只是"本次覆盖内未见该类线索"，不是"安全/已审计"。
 
 ## 执行 opt-in
 
@@ -44,7 +73,8 @@ dsh-standards check <package-dir> \
 
 - `--runtime <path>`：Cordis 运行时的 `lib/index.js`，开启 L1–L3；
 - `--host <file>`：app-boot 入口，开启 bundle 的 G0–G3 冒烟；
-- `--entry-claim runtime`：entry 门声明运行时证据（通常还要配 `--runtime` / `--host`）。
+- `--entry-claim runtime`：entry 门声明运行时证据（通常还要配 `--runtime` / `--host`）；
+- `--scope security`：只跑 C-15～C-22 的静态/元数据检查，**仍不执行插件代码**（C-15 只读脚本文本，不跑 `npm install`）。
 
 想保留运行时声明但只看静态结果，显式加 `--no-exec`。`--runtime-version` 只是 anchor，**不是**执行开关。
 
@@ -68,8 +98,11 @@ dsh-standards check <package-dir> \
 ## 复核命令
 
 ```sh
-# 默认：6/14 评估，8 项 not-run/NA
-dsh-standards check <package-dir> --json | node -e 'let s="";process.stdin.on("data",d=>s+=d).on("end",()=>{const r=JSON.parse(s);console.log(r.coverage.checked+"/"+r.coverage.total);console.log(r.anchor);console.log(r.safety)})'
+# 默认：6/14 评估，8 项 not-run/NA；security 块是 advisory
+dsh-standards check <package-dir> --json | node -e 'let s="";process.stdin.on("data",d=>s+=d).on("end",()=>{const r=JSON.parse(s);console.log(r.coverage.checked+"/"+r.coverage.total);console.log(r.anchor);console.log(r.security)})'
+
+# 默认 + security scope：checks[] 变 22 项（不执行插件）
+dsh-standards check <package-dir> --scope security --json | node -e 'let s="";process.stdin.on("data",d=>s+=d).on("end",()=>{const r=JSON.parse(s);console.log(r.coverage.checked+"/"+r.coverage.total);console.log(r.security)})'
 
 # 显式声明宿主版本，仍不执行插件
 dsh-standards check <package-dir> --host-version 0.2.2-rc.1

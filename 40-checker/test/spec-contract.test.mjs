@@ -12,7 +12,7 @@ const STD = path.resolve(HERE, '..', '..')
 const readJson = relative => JSON.parse(fs.readFileSync(path.join(STD, relative), 'utf8'))
 const readText = relative => fs.readFileSync(path.join(STD, relative), 'utf8')
 
-const DSC_IDS = Array.from({ length: 14 }, (_, index) => `DSC-${String(index + 1).padStart(2, '0')}`)
+const DSC_IDS = Array.from({ length: 22 }, (_, index) => `DSC-${String(index + 1).padStart(2, '0')}`)
 const CLAUSE_OF = {
   'DSC-01': ['C-1', 'L0'],
   'DSC-02': ['C-2', 'L0'],
@@ -28,6 +28,14 @@ const CLAUSE_OF = {
   'DSC-12': ['C-12', 'L0'],
   'DSC-13': ['C-13', 'L0'],
   'DSC-14': ['C-14', 'L1'],
+  'DSC-15': ['C-15', 'L0'],
+  'DSC-16': ['C-16', 'L0'],
+  'DSC-17': ['C-17', 'L0'],
+  'DSC-18': ['C-18', 'L0'],
+  'DSC-19': ['C-19', 'L0'],
+  'DSC-20': ['C-20', 'L0'],
+  'DSC-21': ['C-21', 'L0'],
+  'DSC-22': ['C-22', 'L0'],
 }
 const BOOST_CARD_FIELDS = [
   'subject', 'host', 'method', 'scope', 'command', 'result', 'negativeControl',
@@ -132,20 +140,20 @@ test('boost-card schema: exactly the 13 level-audit fields, and the example roun
   assert.equal(recordHash, expected, 'recordHash must be sha256 over the card without that field')
 })
 
-test('dsc clauses: C-1..C-14, every C-x.y, and a dsc id on every entry', () => {
+test('dsc clauses: C-1..C-22, every C-x.y, and a dsc id on every entry', () => {
   const doc = readJson('spec/dsc-clauses.json')
   assert.equal(doc.schema, 'dsh-dsc-clauses/1')
   assert.equal(doc.standard.id, 'DS-C')
   const entries = doc.clauses
   assert.ok(Array.isArray(entries))
   const ids = new Set(entries.map(entry => entry.clause))
-  for (let index = 1; index <= 14; index += 1) assert.ok(ids.has(`C-${index}`), `missing parent C-${index}`)
-  assert.equal(doc.counts.clauses, 14)
+  for (let index = 1; index <= 22; index += 1) assert.ok(ids.has(`C-${index}`), `missing parent C-${index}`)
+  assert.equal(doc.counts.clauses, 22)
   const subclauses = entries.filter(entry => /^C-[0-9]+\.[0-9]+$/.test(entry.clause))
   assert.equal(doc.counts.subclauses, subclauses.length)
   assert.equal(doc.counts.entries, entries.length)
-  assert.equal(doc.counts.dscChecks, 14)
-  assert.equal(new Set(entries.map(entry => entry.dsc)).size, 14)
+  assert.equal(doc.counts.dscChecks, 22)
+  assert.equal(new Set(entries.map(entry => entry.dsc)).size, 22)
   for (const entry of entries) {
     assert.match(entry.dsc, /^DSC-[0-9]{2}$/, `${entry.clause} has no dsc`)
     assert.match(entry.clause, /^C-[0-9]+(?:\.[0-9]+)?$/)
@@ -172,6 +180,7 @@ test('dsc clauses: C-1..C-14, every C-x.y, and a dsc id on every entry', () => {
   assert.equal(byClause['C-10'].mandatory, false)
   assert.equal(byClause['C-14'].dsc, 'DSC-14')
   assert.match(byClause['C-14'].docs, /^31-DSH-ENTRY/)
+  assert.equal(byClause['C-15'].dsc, 'DSC-15')
 })
 
 test('flow example: structurally valid v2 document, all 8 journeys bound', () => {

@@ -15,7 +15,8 @@
     "coverage",
     "buckets",
     "metrics",
-    "conclusion"
+    "conclusion",
+    "security"
   ],
   "properties": {
     "schema": {
@@ -78,6 +79,9 @@
       "type": "object",
       "additionalProperties": true,
       "description": "Additive block for explicit runtime runs (dsh-runtime-checks/1): executed, modes, durationMs, isolation, reason, failure, checks, entry."
+    },
+    "security": {
+      "$ref": "#/$defs/security"
     }
   },
   "$defs": {
@@ -616,6 +620,10 @@
         "howToEnable": {
           "type": "string",
           "description": "Additive: command/flag that would let this row run, for NA/ERROR/partial rows."
+        },
+        "security": {
+          "type": "boolean",
+          "description": "Hygiene only: DSC-15..DSC-22 security check."
         }
       }
     },
@@ -702,7 +710,8 @@
           "enum": [
             "ds-c",
             "entry",
-            "mvp"
+            "mvp",
+            "security"
           ]
         },
         "subset": {
@@ -846,6 +855,70 @@
         },
         "ruleMissing": {
           "type": "boolean"
+        }
+      }
+    },
+    "security": {
+      "type": "object",
+      "additionalProperties": false,
+      "description": "Additive security view (DSC-15..DSC-22). In --scope security the checks keep their real verdict and DSC-15/16/17/21 are mandatory; in every other scope a FAIL is capped to WARN. This block never changes the default verdict and never proves the absence of malicious code.",
+      "required": [
+        "scope",
+        "status",
+        "checks",
+        "blocking",
+        "warn",
+        "advisory",
+        "notRun"
+      ],
+      "properties": {
+        "scope": {
+          "enum": [
+            "security",
+            "advisory"
+          ]
+        },
+        "status": {
+          "enum": [
+            "pass",
+            "warn",
+            "fail",
+            "incomplete"
+          ]
+        },
+        "checks": {
+          "type": "array",
+          "items": {
+            "$ref": "#/$defs/check"
+          }
+        },
+        "blocking": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          },
+          "description": "Check ids with result FAIL (only possible in --scope security)."
+        },
+        "warn": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          },
+          "description": "Non-advisory check ids with result WARN."
+        },
+        "advisory": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          },
+          "description": "Advisory check ids with result WARN."
+        },
+        "notRun": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          },
+          "description": "Check ids that are NA, ERROR, or coverage=not-run."
         }
       }
     }

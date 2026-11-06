@@ -474,5 +474,201 @@
     "fix": "补 dsh.client 的 package-root 行与 client 导出；确认构建产物在 files 里；用 --entry-runtime server-entry/client probe 复跑。",
     "docs": "docs/entry.md#client-files",
     "severityHint": "fail"
+  },
+  "C-15": {
+    "title": "安装生命周期脚本必须可审计",
+    "why": "preinstall/install/postinstall/prepare 在用户权限下执行，是安装期唯一的静态可见面。",
+    "fix": "读 package.json#scripts 的四个生命周期字段；危险形态（下载并管道执行、base64 解码、node -e、shell -c、引用 $HOME/~/etc、引用缺失脚本）必须修掉。",
+    "docs": "docs/security.md#6-dependencies-build-and-publish-dsc-15-dsc-21-dsc-22",
+    "severityHint": "fail"
+  },
+  "C-15.1": {
+    "title": "不得在安装脚本里下载并执行远程代码",
+    "why": "curl|sh、base64 -d、node -e、sh -c、powershell -enc 等形态无法审计且直接执行安装者权限。",
+    "fix": "删除这些形态，改用随包发布的构建脚本或显式脚本文件；prepare 的同类形态按 WARN 处理。",
+    "docs": "docs/security.md#6-dependencies-build-and-publish-dsc-15-dsc-21-dsc-22",
+    "severityHint": "fail"
+  },
+  "C-15.2": {
+    "title": "生命周期脚本本身按 WARN/证据处理",
+    "why": "存在安装脚本不等于恶意，但它决定安装期会执行什么，需要被记录。",
+    "fix": "把命令写成可审阅的脚本文件（如 node scripts/build.mjs）并在包内提供该文件；不执行下载或内联代码。",
+    "docs": "docs/security.md#6-dependencies-build-and-publish-dsc-15-dsc-21-dsc-22",
+    "severityHint": "warn"
+  },
+  "C-15.3": {
+    "title": "脚本引用必须存在",
+    "why": "引用不存在的脚本文件会让安装直接失败，或掩盖真正要执行的命令。",
+    "fix": "核对 node 脚本路径与 npm run 目标都在 package.json#scripts 和包内存在。",
+    "docs": "docs/security.md#6-dependencies-build-and-publish-dsc-15-dsc-21-dsc-22",
+    "severityHint": "fail"
+  },
+  "C-16": {
+    "title": "服务端入口不得包含不可审计的动态执行",
+    "why": "eval/new Function/vm 可把外部字符串变成代码，静态检查与能力声明都无法覆盖。",
+    "fix": "移除动态执行；如确实需要，改成显式、可审阅的模块加载，并在评审中说明数据来源。",
+    "docs": "docs/security.md#4-files-subprocesses-and-dynamic-execution-dsc-15-dsc-16-dsc-17-dsc-19",
+    "severityHint": "fail"
+  },
+  "C-16.1": {
+    "title": "eval / new Function 属于 code:dynamic",
+    "why": "它们绕过静态审阅，常与解码/混淆载荷组合出现。",
+    "fix": "不要用 eval/new Function；把需要的行为写成静态函数。空参 new Function(\"\") 探针不判定。",
+    "docs": "docs/security.md#4-files-subprocesses-and-dynamic-execution-dsc-15-dsc-16-dsc-17-dsc-19",
+    "severityHint": "fail"
+  },
+  "C-16.2": {
+    "title": "vm / module._compile / process.binding 同样不可审计",
+    "why": "这些接口能加载任意代码或绕过模块系统。",
+    "fix": "移除 vm.runIn*、Module._compile、process.binding；改用普通 ESM import。",
+    "docs": "docs/security.md#4-files-subprocesses-and-dynamic-execution-dsc-15-dsc-16-dsc-17-dsc-19",
+    "severityHint": "fail"
+  },
+  "C-16.3": {
+    "title": "child_process 是需要声明的子进程能力",
+    "why": "子进程可执行任意命令并绕过进程内 seam。",
+    "fix": "如确需子进程，声明 subprocess 能力并在评审中说明命令与输入边界。",
+    "docs": "docs/security.md#4-files-subprocesses-and-dynamic-execution-dsc-15-dsc-16-dsc-17-dsc-19",
+    "severityHint": "warn"
+  },
+  "C-16.4": {
+    "title": "包依赖/不可解析导入使闭包不完整",
+    "why": "闭包外的 package 导入与解析失败意味着本检查没有看到全部服务端代码。",
+    "fix": "把入口与本地依赖放进扫描预算；无法解析的本地导入要修正。",
+    "docs": "docs/security.md#4-files-subprocesses-and-dynamic-execution-dsc-15-dsc-16-dsc-17-dsc-19",
+    "severityHint": "advisory"
+  },
+  "C-17": {
+    "title": "不得读取系统凭据文件",
+    "why": "~/.ssh、~/.dsh 凭据、.aws/.npmrc/.netrc/.pypi、tokens* 属于系统凭据，插件不应直接读取。",
+    "fix": "改用 ctx.credentials 的受控接口；文件读取只针对包内或用户显式提供的路径。",
+    "docs": "docs/security.md#2-credentials-and-sensitive-files-dsc-17",
+    "severityHint": "fail"
+  },
+  "C-17.1": {
+    "title": "敏感路径不能作为文件读取 API 的实参",
+    "why": "实参回溯命中说明代码确实在读取凭据路径，注释或普通字符串不算。",
+    "fix": "删除该读取；凭据通过 ctx.credentials.resolve 等 seam 获取。",
+    "docs": "docs/security.md#2-credentials-and-sensitive-files-dsc-17",
+    "severityHint": "fail"
+  },
+  "C-17.2": {
+    "title": "读取 .env 只是 WARN 但需要理由",
+    "why": ".env 可能合法，但它常含令牌且不应被插件默认读取。",
+    "fix": "确认 .env 是用户显式提供的输入；不要把 .env 读取当作凭据 seam。",
+    "docs": "docs/security.md#2-credentials-and-sensitive-files-dsc-17",
+    "severityHint": "warn"
+  },
+  "C-17.3": {
+    "title": "枚举 process.env 并与外联同现需要审查",
+    "why": "Object.keys(process.env) 加 fetch 是常见的外泄形态。",
+    "fix": "只读取具名环境变量；不要枚举全部环境并与网络调用组合。",
+    "docs": "docs/security.md#2-credentials-and-sensitive-files-dsc-17",
+    "severityHint": "warn"
+  },
+  "C-18": {
+    "title": "外联端点应可披露",
+    "why": "端点本身不判恶意，但非 https、webhook/paste/ngrok/onion、公网裸 IP 与未披露端点值得人工复核。",
+    "fix": "在 dsh.disclosure.endpoints 列出 https 端点；移除可疑主机与非 https 调用。",
+    "docs": "docs/security.md#3-egress-endpoints-dsc-18",
+    "severityHint": "warn"
+  },
+  "C-18.1": {
+    "title": "可疑外联端点",
+    "why": "webhook/paste/ngrok/onion、非 https、URL userinfo、公网裸 IP 会削弱来源与传输可信度。",
+    "fix": "改用已披露的 https API；确需回调时在 disclosure 中说明用途与保留策略。",
+    "docs": "docs/security.md#3-egress-endpoints-dsc-18",
+    "severityHint": "warn"
+  },
+  "C-18.2": {
+    "title": "端点未列入 dsh.disclosure.endpoints",
+    "why": "声明了 disclosure 却漏列实际调用点，用户无法核对出站流量。",
+    "fix": "把 fetch/http(s).request 的 https 端点补进 disclosure.endpoints。",
+    "docs": "docs/security.md#3-egress-endpoints-dsc-18",
+    "severityHint": "warn"
+  },
+  "C-18.3": {
+    "title": "端点解析只登记，不因 URL 字面量判定",
+    "why": "动态拼接 URL 无法静态确定；本检查不会仅凭 URL 字面量下结论。",
+    "fix": "运行时用抓包/网络策略核对；静态侧保持端点可读。",
+    "docs": "docs/security.md#3-egress-endpoints-dsc-18",
+    "severityHint": "advisory"
+  },
+  "C-19": {
+    "title": "混淆文本与二进制只登记不判恶",
+    "why": "长行、base64、高熵与 .wasm/.node/.so 可能是合法产物，也可能是隐藏载荷。",
+    "fix": "保留 sourcemap 与可读源码；二进制给出构建来源与 sha256。",
+    "docs": "docs/security.md#4-files-subprocesses-and-dynamic-execution-dsc-15-dsc-16-dsc-17-dsc-19",
+    "severityHint": "advisory"
+  },
+  "C-19.1": {
+    "title": "混淆文本线索",
+    "why": "单行 >20k、base64 ≥4k、熵 >7.5 只是线索，不是恶意判定。",
+    "fix": "发布可读构建产物并附 sourcemap；解释必须保留的生成代码。",
+    "docs": "docs/security.md#4-files-subprocesses-and-dynamic-execution-dsc-15-dsc-16-dsc-17-dsc-19",
+    "severityHint": "advisory"
+  },
+  "C-19.2": {
+    "title": "二进制产物记录 sha256",
+    "why": "二进制无法静态审阅，只能记录摘要供人工比对。",
+    "fix": "在发布说明中给出二进制的构建来源与 sha256；优先发布源码。",
+    "docs": "docs/security.md#4-files-subprocesses-and-dynamic-execution-dsc-15-dsc-16-dsc-17-dsc-19",
+    "severityHint": "advisory"
+  },
+  "C-20": {
+    "title": "提示词注入只做线索",
+    "why": "静态无法判断语义是防护规则还是注入指令，故只登记不判恶意。",
+    "fix": "把外部文本显式包裹为不可信数据；systemPrompt 使用静态指令，不从工具结果直接拼接。",
+    "docs": "docs/security.md#5-tool-output-and-prompt-injection-dsc-20",
+    "severityHint": "advisory"
+  },
+  "C-20.1": {
+    "title": "systemPrompt 出现指令样文本或外部实参",
+    "why": "指令样字面量、来自 fetch/工具结果的实参值得人工复核。",
+    "fix": "用边界标记包裹外部文本；systemPrompt 保持静态，测试/规则表应排除在扫描之外。",
+    "docs": "docs/security.md#5-tool-output-and-prompt-injection-dsc-20",
+    "severityHint": "advisory"
+  },
+  "C-21": {
+    "title": "依赖名与官方/常见名过于相似",
+    "why": "编辑距离 ≤1、scope 同形字是 typosquat 的典型形态，但相似不等于恶意。",
+    "fix": "核对依赖来源；优先使用精确的官方包名与 lockfile 校验。",
+    "docs": "docs/security.md#6-dependencies-build-and-publish-dsc-15-dsc-21-dsc-22",
+    "severityHint": "warn"
+  },
+  "C-21.1": {
+    "title": "依赖名与已知包名相差一个编辑距离",
+    "why": "dsh-toools 之类的名字会误导安装者。",
+    "fix": "改成正确的包名；确认 registry 上的发布者与仓库。",
+    "docs": "docs/security.md#6-dependencies-build-and-publish-dsc-15-dsc-21-dsc-22",
+    "severityHint": "warn"
+  },
+  "C-21.2": {
+    "title": "依赖 scope 与官方 scope 同形",
+    "why": "@deepseek-aii 等 scope 会伪装成官方命名空间。",
+    "fix": "只使用真实的 @deepseek-ai scope，或改用你自己的 scope。",
+    "docs": "docs/security.md#6-dependencies-build-and-publish-dsc-15-dsc-21-dsc-22",
+    "severityHint": "warn"
+  },
+  "C-21.3": {
+    "title": "依赖安装脚本与传递元数据 not-run",
+    "why": "包内没有依赖树/registry 元数据，不能假装检查过；无 lockfile 不作为缺陷。",
+    "fix": "需要时提供 lockfile 与 registry 元数据；本检查不因缺 lockfile 扣分。",
+    "docs": "docs/security.md#6-dependencies-build-and-publish-dsc-15-dsc-21-dsc-22",
+    "severityHint": "advisory"
+  },
+  "C-22": {
+    "title": "来源/完整性只做 advisory",
+    "why": "dist.integrity 只证 tarball 与 registry 一致；attestation/签名存在也不等于可信。",
+    "fix": "提供 integrity 或 attestation；人工核对发布者与构建链，本检查不写“已验证”。",
+    "docs": "docs/security.md#6-dependencies-build-and-publish-dsc-15-dsc-21-dsc-22",
+    "severityHint": "advisory"
+  },
+  "C-22.1": {
+    "title": "完整性/来源输入缺失即 not-run",
+    "why": "没有 registry 元数据或 attestation 时无法判断，缺失不等于失败。",
+    "fix": "在发布流程中生成 provenance/attestation，并把 dist.integrity 一并保留。",
+    "docs": "docs/security.md#6-dependencies-build-and-publish-dsc-15-dsc-21-dsc-22",
+    "severityHint": "advisory"
   }
 }

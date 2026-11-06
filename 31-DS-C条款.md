@@ -2,10 +2,10 @@
 
 > **v1 历史命名**：v2 以 `89-三套标准命名决定.md` 为准（DSH-ENTRY / DSH-FLOW / DSH-BOOST）；本文件保留旧码作历史，不在新文档引用。
 
-> **版本**：v1.0.0-rc.1（T1 定稿候选，待项目发起人与工作组确认）
-> **日期**：2026-10-31
-> **依据**：`01-项目纲领.md`、`03-可行性与条款草案.md`、`10-输入/源码取证索引.md`、`00-索引.md`、`20-研究底稿/B-Cordis契约可判定性矩阵.md`、`20-研究底稿/C-安全基线与权限面.md`、`20-研究底稿/E-一致性检查器可行性.md`，以及 `deepseek-harness` 源码实测（commit `ce7073d51254c26cd63b22a60835b8f948deb447`，2026-10-30）。
-> **覆盖条款**：C-1 ～ C-13（13 条编号；C-10 为 advisory；C-3 仅 listing profile，见 §1.3 与 §6.1）。
+> **版本**：v1.0.0-rc.2（T1 定稿候选；2026-11-07 增补 C-15～C-22 安全扩展）
+> **日期**：2026-11-07
+> **依据**：`01-项目纲领.md`、`03-可行性与条款草案.md`、`10-输入/源码取证索引.md`、`00-索引.md`、`20-研究底稿/B-Cordis契约可判定性矩阵.md`、`20-研究底稿/C-安全基线与权限面.md`、`20-研究底稿/E-一致性检查器可行性.md`，以及 `deepseek-harness` 源码实测（commit `ce7073d51254c26cd63b22a60835b8f948deb447`，2026-10-30）与 2026-11-07 安全审计（宿主 0.2.2-rc.1）。
+> **覆盖条款**：C-1 ～ C-22（22 条编号）。C-1～C-14 是基线/入口面；C-15～C-22 是 2026-11-07 新增的 **security scope** 扩展，默认 DS-C package/listing 判定不变。C-10/C-18/C-19/C-20/C-22 为 advisory；C-3 仅 listing profile；C-21 是 security 强制项但发现封顶 WARN。
 > **已知未完成项**：
 > 1. 检查器已实现（T2）：16 tests；10 个 GitHub 样本 + 4 个 npm bundle 的 L0；L1–L3 13/14 真实包（`41`/`81`）。本文件仍只定义检查项 ID、判定方式与覆盖门。
 > 2. C-3 的 listing 模式依赖市场索引与 placement；真实 3 个 format-1 快照（3,823/3,993/4,092）已用宿主 `parseMarketIndex` 验证 0 解析错误；T3 的 schema 补丁仍是提案。package 模式下 C-3 为 NA。
@@ -13,6 +13,7 @@
 > 4. 红队类、隐藏的破限行为无法机械识别；C-13 只判"声明一致性"，不判"行为真实性"。
 > 5. 跨进程冷重挂（L3-4）不在 DS-C 内；同进程重挂无法重置 ESM 缓存。
 > 6. Q3/Q4/Q5 为建议答案，待发起人/工作组拍板。
+> 7. **C-15～C-22 只降低风险，不证明无恶意**：每条的 PASS 只代表"本次声明的静态/元数据覆盖内未见该类线索"；同进程插件仍可 `import node:fs`、裸 `fetch`、运行时读远程代码。C-14 是 entry scope 专属，不在本文 §2 展开（定义见 `31-DSH-ENTRY入门规范.md` §2.1–2.2）。
 
 ---
 
@@ -54,6 +55,8 @@ C-3 是 **listing 属性**：package 模式下 C-3 整体输出 `NA`（reason: i
 - `listing`（市场门禁）：12 条强制 = 上述 11 条 + C-3。
 
 两个 profile 的徽章必须分别写 `DS-C (package)` / `DS-C (listing)`，不得混写。
+
+**security scope（新增，opt-in）**：`dsh-standards check <package-dir> --scope security` 单独评估 C-15～C-22，报告写 `security.status`（`pass` / `warn` / `fail` / `incomplete`）。它**不并入**上面两个 profile 的强制集合，也**不改变** `DS-C` 徽章；C-15/C-16/C-17 的 FAIL 只影响 security 结论与 `--scope security` 的 exit code。security scope 不能写成"安全/已审计"，也不能替代人工评审。默认 `--scope ds-c` 下这 8 项只在 `security` 块里以 advisory 模式运行（FAIL 封顶 WARN），不进 `checks[]`，不改变 DS-C 结论。
 
 ### 1.4 三值、NA 与覆盖度（禁止假绿）
 
@@ -101,6 +104,7 @@ DS-C 的符合性绑定五元锚，缺一不可：
 
 - **不做安全审计**：`ctx.*` 的 seam 不是权限边界。三处源码自陈：`fs-sandbox` 的 fence 是 "policy check in TRUSTED code … NOT a kernel boundary"（`REPO/packages/fs/fs-sandbox/src/index.ts:10-16`）；`plugin-manager/tools.ts:108` 明写 "installed Host code runs outside the workspace sandbox"；`cordis-host-runner/sandbox.ts:8` 明写 "is not containment"。
 - **不做运行时沙箱/门控**：同进程插件可 `import node:fs` / 裸 `fetch` 绕过一切 seam（`20/C` §4(d-2)）。C-11/C-12 只做**装载期声明一致性 + 披露**。
+- **不证明"无恶意"**：C-15～C-22 是风险线索与阻断项，不是恶意软件判定。静态检查只能发现已知形态；运行时拼路径、远程取代码、反射调用都不可判。任何 PASS 都不得写成"安全""已审计""无风险"。
 - **不排名、不打分、不设 star/下载量门槛**。
 - **不把"市场收录"当安全背书**。
 
@@ -833,6 +837,265 @@ export function apply(ctx: Context) {
 
 ---
 
+> **C-14 的位置**：C-14（运行证据：plugin L1 / bundle G0–G3）是 `--scope entry` 专属，定义见 `31-DSH-ENTRY入门规范.md` §2.1–2.2；它不是 DS-C package/listing 门的一部分，故不在本节展开。
+
+> **scope 说明**：C-15～C-22 在默认 `--scope ds-c` 下仍会运行，但只在 `security` 块里、标 `security.scope=advisory`，FAIL 封顶 WARN，不改变 DS-C 结论；下面写的 PASS/WARN/FAIL 是 `--scope security` 下的判定。
+
+### C-15 生命周期脚本
+
+> **判定**：**blocking**（仅 `--scope security`；默认 DS-C 不评估）。安装脚本在 `dsh plugin add` 时以当前用户权限执行，安装完成后不可见，manifest 里的命令串是安装前唯一可见面。
+
+**要求（祈使句）**：`preinstall` / `install` / `postinstall` / `prepare` 的命令串必须可枚举、可审计（`prepack`/`postpack` 不在 v1 扫描面）；命令串不得出现"下载后立即执行"、解码执行、内联 shell/PowerShell、引用缺失脚本，也不得引用 `$HOME`/`~`/`/etc`。
+
+**判定方式**：L0 静态（DSC-15）。只读 `package.json#scripts` 的命令串，**不打开脚本文件正文**（v1 不做正文审计）；按 `node <file>` / `npm run <name>` 引用检查目标是否存在；**不执行** `npm install` / `npm pack`，checker 侧 `npm pack` 已带 `--ignore-scripts`。`prepack`/`postpack` 不在 v1 扫描面。
+
+| 子项 | 检查 | 结果 |
+|---|---|---|
+| C-15.1 | 危险命令形态：`curl`/`wget` 管道到 shell、`base64 -d`、`node -e`、`sh -c`、`powershell -enc`、`$HOME`/`~`/`/etc` | 命中 → FAIL；`prepare` → WARN |
+| C-15.2 | 普通生命周期脚本：`node scripts/x.mjs`、`tsc`、`vitest`、`npm run build`；无脚本 → PASS | 命中 → WARN（`prepare` 同） |
+| C-15.3 | 引用缺失脚本：`node <file>` 目标不存在、`npm run <name>` 未定义 | 命中 → FAIL；`prepare` → WARN |
+| C-15.4 | `prepack`/`postpack`（打包期脚本） | v1 不扫 → `not-run` 说明 |
+
+**三值期望**：
+
+| 值 | 条件 |
+|---|---|
+| PASS | 没有生命周期脚本 |
+| WARN | 普通安装期脚本（C-15.2）；`prepare` 的危险/缺失形态；profile 的 `allowBuilds` 不可见 |
+| FAIL | C-15.1 或 C-15.3 命中 |
+| NA | `dsh.kind` 非 plugin/bundle |
+
+**误报与抑制**：构建脚本很普遍（审计样本 31/53 个包有脚本），故只对**命令串里的不可审计形态** FAIL；`node scripts/build.mjs` 只 WARN。`prepare` 是 scaffold 为 git 安装保留的常见字段，危险/缺失形态只 WARN，不 FAIL。白名单不适用：v1 不读脚本正文，`scripts/build.mjs` 里面做什么看不到，因此普通脚本只能 WARN，不能升 PASS。Windows 下 `cmd /c` 与 `powershell -Command` 同等处理。
+
+**与 DSC 的对应**：`DSC-15`。它扩展现有 `C-3.4`：C-3.4 只看"有脚本无声明"，C-15 读命令串并按形态判 FAIL/WARN，且只在 security scope 可 FAIL。
+
+**边界说明**：v1 只读命令串、不读脚本体，也不执行；脚本正文可以运行时从网络取代码，或经依赖的 install 脚本执行。`prepack`/`postpack`（打包期）不在 v1 扫描面。C-15 的 PASS 只表示"manifest 里没有已见危险形态"，不是"安装安全"。
+
+---
+
+### C-16 动态执行
+
+> **判定**：**blocking**（仅 `--scope security`）。动态执行默认不可审计；本项没有"声明后放行"的例外，命中即 FAIL。
+
+**要求（祈使句）**：服务端入口闭包不得使用 `eval`、`new Function`（空参探针除外）、`vm.runIn*`/`vm.Script`/`vm.createContext`、`module._compile`、`process.binding`；不得直接 `require`/`import` `child_process` 绕过 `ctx.subprocess`。
+
+**判定方式**：L0 静态（DSC-16）。只扫服务端入口及其**本地相对 import 闭包**；`lib/client.js`/浏览器 bundle 不扫（避免把打包器探针当插件行为）；`new Function("")` / `new Function()` 空参探针豁免。
+
+| 子项 | 检查 | 结果 |
+|---|---|---|
+| C-16.1 | 闭包内 `eval`、`new Function(非空)`、`module._compile`、`process.binding` | 命中 → FAIL |
+| C-16.2 | 闭包内 `vm.runIn*`、`vm.Script`、`vm.createContext` | 命中 → FAIL |
+| C-16.3 | 闭包内 `require('child_process')` / `import('node:child_process')` 等裸子进程入口；空参 `new Function("")`/`lib/client.js` 豁免 | 子进程 → WARN；空参/client → 不计负 |
+| C-16.4 | 字符串拼接 `import()`、`Function(atob(...))`、运行时从远程取代码；package import/解析失败 | 静态不可判 → `not-run`/`partial`，不冒充 PASS |
+
+**三值期望**：
+
+| 值 | 条件 |
+|---|---|
+| PASS | C-16.1/C-16.2/C-16.3 均无命中；C-16.4 的 package import/unresolved 只写 `coverage: partial`，不改 PASS |
+| WARN | 仅 C-16.3 命中（裸 `child_process`） |
+| FAIL | C-16.1 或 C-16.2 任一命中 |
+| NA | 没有可扫描的源文件；或 `dsh.kind` 非 plugin/bundle |
+
+**误报与抑制**：打包进 bundle 的 ajv 会用 `new Function("")` 探 `allowsEval`（`dsh-budget/lib/client.js`、`dsh-library/lib/index.js`），空参豁免；浏览器 bundle 不扫。Babel/TS 解析失败记 `ERROR`/`not-run`，不判 PASS；AST 只认真实调用，不把 `typeof eval` 当执行。
+
+**与 DSC 的对应**：`DSC-16`。扩展 `C-11.2` 触发表：C-11.2 只认 `ctx.*`、裸 `fetch` 等文本，不认 `eval`/`vm`/node 内置模块；C-10.4 只覆盖 import 期 fs/子进程，不覆盖 eval。动态执行没有声明放行（checker 不读取 `code:dynamic` 之类的字段）。
+
+**边界说明**：动态执行的判定高度依赖静态形态；`globalThis['ev'+'al']`、`require('vm')`、WebAssembly、远程代码加载都可绕过。PASS 不是"没有动态执行"，只是"本次闭包内没有可见形态"。
+
+---
+
+### C-17 敏感文件
+
+> **判定**：**blocking**（仅 `--scope security`）。系统凭据文件没有宿主 seam 可授权，读到即越权；`.env` 与 env 枚举只到 WARN。
+
+**要求（祈使句）**：不得直接读取 `~/.ssh`、`id_rsa`、`~/.aws`、`.npmrc`、`.netrc`、`.pypi`、`tokens*`、`$DSH_HOME`/`~/.dsh` 下的 credentials 文件或 `credentials-local` 内部实现；凭据必须经 `ctx.credentials.resolve()` / `credentialRef()` 读取；不得为外发而枚举 `process.env`。
+
+**判定方式**：L0 静态（DSC-17）。只对**读 API** 的实参回溯：`readFile*`、`openSync`（只读标志）、`readJson`、`createReadStream`；字符串字面量、`path.join` 常量折叠、模板静态段可判；`Object.keys(process.env)` 单独记一条 WARN。
+
+| 子项 | 检查 | 结果 |
+|---|---|---|
+| C-17.1 | 读 API 实参指向 `~/.ssh`（整个目录）、`id_rsa`、`.aws`（整个目录）、`.npmrc`、`.netrc`、`.pypi`、`tokens*`、`$DSH_HOME`/`~/.dsh` credentials | 命中 → FAIL；经 `ctx.credentials.resolve` → 豁免 |
+| C-17.2 | `.env`（排除 `.example`/`.sample`/`.template`/`.dist`）；`Object.keys(process.env)` + 同闭包出站 | 命中 → WARN |
+| C-17.3 | AST 解析失败 | `coverage: partial` + ERROR/not-run，不冒充 PASS |
+| C-17.4 | 动态路径、`readdir` + 前缀匹配（如 `/^\.?credentials/`） | 静态不可判 → `not-run`，靠人工/运行时 |
+
+**三值期望**：
+
+| 值 | 条件 |
+|---|---|
+| PASS | 无 C-17.1/C-17.2 命中；凭据读取都经 seam |
+| WARN | 仅 C-17.2 命中 |
+| FAIL | C-17.1 命中 |
+| NA | 没有可扫描源文件 |
+
+**误报与抑制**：`.env` 是合法开发形态（审计样本 `dsh-github-bot/src` 5 文件、`dsh-clinic/lib` 4 文件），故只 WARN，不 FAIL；`.env.example`/`.sample`/`.template`/`.dist` 不计。`~/.aws/config`（非凭据）与 `~/.ssh/known_hosts`（公钥）按路径仍可能 FAIL，需人工确认——v1 不做逐文件语义区分。`readdir` + 正则前缀匹配（如 `/^\.?credentials/`）是已知绕过：静态看不到实际读取，只能靠人工/运行时，不得因"没看到字面量"判 PASS。**证据只记文件:行与 API，不复制被读内容或 token 值。**
+
+**与 DSC 的对应**：`DSC-17`。扩展现有 `C-12.1`：C-12.1 只看四个字面量（多处需靠近 `readFile`，±6 行窗口启发），可被 `readdir` + 前缀匹配绕过；C-17 改为读 API 实参回溯，覆盖面更宽，但仍是静态。
+
+**边界说明**：同用户进程本来就能读这些文件；C-17 判的是"插件代码有没有直接读"，不是"文件是否真的不可读"。经 `ctx.credentials` 读也可能把值外发，C-18 只能看调网点，不能证明数据流。
+
+---
+
+### C-18 外联端点
+
+> **判定**：**advisory**（仅 `--scope security`）。端点是披露问题；C-18 自身**永不 FAIL**，报告标 `advisory: true`，不改变 verdict；未声明 `network:egress` 仍由 `C-11.2` 判 FAIL。
+
+**要求（祈使句）**：出站调用必须使用常量 allowlist、https、精确 hostname；不得把模型/用户输入直接拼进 URL；不得访问 webhook/paste/ngrok/onion 等高风险端点；第三方端点必须披露到 `dsh.disclosure.endpoints`。
+
+**判定方式**：L0 静态（DSC-18）。只解析**调网点**：`fetch`、`http(s).request`、`axios`、`WebSocket`、`ctx.web` 的首个参数；不扫包内所有 URL 字面量（审计校准：45 包 388 个 URL 字面量/39 host，扫字面量噪声过大）。`disclosure.endpoints` 存在时做差集；字段缺失不 WARN（未声明不等于已披露）。
+
+| 子项 | 检查 | 结果 |
+|---|---|---|
+| C-18.1 | 解析调网点实参：常量 URL、`new URL`、模板静态段、变量回溯一层；可疑形态（非 https、userinfo、公网裸 IP、webhook/paste/ngrok/onion、punycode） | 解析不到 → `not-run`；可疑 → WARN（loopback/`localhost`/`127.0.0.1` 豁免） |
+| C-18.2 | `dsh.disclosure.endpoints` 存在时，调网点 host 不在披露列表 | 差集非空 → WARN |
+| C-18.3 | 运行时拼 URL、重定向、DNS、`Function` 生成的 URL | 静态不可判 → `not-run` |
+
+**三值期望**：
+
+| 值 | 条件 |
+|---|---|
+| PASS | 无调网点；或全部 https + 非可疑 + 已披露 |
+| WARN | C-18.1/C-18.2 命中；`not-run` 的不可判项单独列出 |
+| FAIL | **永不**（未声明 `network:egress` 由 C-11.2 判 FAIL） |
+| NA | 没有出站面 |
+
+**误报与抑制**：只扫调网点，不扫 README/测试/错误信息里的 URL；本地 bridge、OAuth 回调的 loopback 豁免。私网地址（10/8、192.168/16）当前不判可疑（本地模型/代理常用），只登记 norm/host。`dsh.disclosure` 字段名仍由 T4 定稿，字段缺失不判负。重定向目标、DNS 解析、运行时拼接都不可见；`not-run` 不等于安全。
+
+**与 DSC 的对应**：`DSC-18`。扩展 `C-11.2`（能力声明）与 `C-12.7`（披露形状）：C-11.2 判"有没有声明 egress"，C-18 判"声明之后端点长什么样"。
+
+**边界说明**：宿主没有出口策略，`web_fetch` 可访问私网；allowlist 只是插件自律。C-18 的 PASS 不能证明"没有外发"，只能证明"可见调网点都在 allowlist/披露内"。
+
+---
+
+### C-19 混淆与二进制
+
+> **判定**：**advisory**（仅 `--scope security`）。编码与二进制本身无善恶；本项只登记不可审计的产物，**不判恶、不 FAIL**。
+
+**要求（祈使句）**：不得以混淆文本、大块 base64、高熵 blob 或无可读源码的二进制作为唯一发布形态；wasm/native 依赖必须附源码、构建方法与 sha256；压缩产物应带 sourcemap 或可复现构建说明。
+
+**判定方式**：L0（DSC-19）。`inventoryFiles()` 遍历包内所有扩展名（不读内容），对 `.wasm`/`.node`/`.so`/`.dll`/`.dylib`/`.exe` 记 sha256；文本按行/块统计。
+
+| 子项 | 检查 | 结果 |
+|---|---|---|
+| C-19.1 | 文本不透明线索：单行 >20,000 字符且无 sourcemap；连续 base64 ≥4,000 字符；熵 >7.5 且文件 >4 KB | 命中 → WARN |
+| C-19.2 | 二进制清单：`.wasm`/`.node`/`.so`/`.dll`/`.dylib`/`.exe`，逐文件 sha256 | 命中 → WARN，`details` 记路径/大小/sha256 |
+| C-19.3 | 文件清单被预算截断 | `coverage: partial` + `not-run` 说明，不冒充已扫完 |
+| C-19.4 | 只登记，不判恶；有源码/sha256/构建说明只降低人工成本，不改 PASS/FAIL | 永不 FAIL |
+
+**三值期望**：
+
+| 值 | 条件 |
+|---|---|
+| PASS | 无 C-19.1～C-19.3 命中 |
+| WARN | 任一命中；`details` 列出路径、类型、sha256、原因 |
+| FAIL | **永不** |
+| NA | 没有可清点文件 |
+
+**误报与抑制**：合法 wasm/native 很常见（sqlite、图像编解码、native addon），minified bundle 也常见；阈值取审计样本的 5 倍余量（45 包 466 文件，最长行 3,818；≥500 的 base64 段为 0）。只登记不判恶；`details` 不得渲染成"恶意"。不反编译、不执行、不联网查 hash。
+
+**与 DSC 的对应**：`DSC-19`。新增项；C-10 只看 import 期副作用，不扫二进制/编码。它与 C-22 互补：C-19 给"不可读"，C-22 给"来源字段是否存在"。
+
+**边界说明**：混淆可以合法（代码保护），也可以恶意（隐藏载荷）；静态只量形态。PASS 不代表"没有隐藏代码"，WARN 也不代表"有恶意"。
+
+---
+
+### C-20 提示词注入
+
+> **判定**：**advisory**（仅 `--scope security`）。语义不可判、误报高；v1 只给静态线索，运行时 hook 留 v2。**永不 FAIL**。
+
+**要求（祈使句）**：外部文本（工具结果、网页、文件、会话）不得直接进入 system prompt 或拼成指令；必须用固定 untrusted 前缀 + 每次随机边界 + JSON 转义包裹；工具名/描述必须静态可审查，不得由外部内容生成。
+
+**判定方式**：L0 静态 AST（DSC-20 v1）。只看 `ctx.systemPrompt.section/context/variable` 的实参；外部性判断限于函数参数、`fetch`/`request`/工具结果（同函数 2 跳内）；指令样字面量按 AST 上下文判定；`rules/guards/defend/detect/policy/patterns` 路径文件整文件跳过。**不检测包裹是否真的存在**，那需要运行时 hook。
+
+| 子项 | 检查 | 结果 |
+|---|---|---|
+| C-20.1 | `systemPrompt` 注册/投影的实参来自函数参数、`fetch`、工具返回值或外部文件（同函数 2 跳内） | 命中 → WARN |
+| C-20.2 | 指令样字面量：`ignore/disregard/forget ... previous/prior/above`、`you are now`、`do not tell/reveal`、`system prompt`、`act as` | 指令上下文 → WARN；`.test`/`.match`/`.includes`/`RegExp`/文档字符串 → 排除 |
+| C-20.3 | 外部文本是否有 untrusted 前缀/随机边界/JSON 转义 | v1 **不判** → `not-run`（需人工/v2 运行时） |
+| C-20.4 | 运行时 system 段装配 hook | 未安装 → `not-run` |
+
+**三值期望**：
+
+| 值 | 条件 |
+|---|---|
+| PASS | 无 C-20.1/C-20.2 命中；报告标 `static-only`（包裹与运行时未判） |
+| WARN | C-20.1 或 C-20.2 命中 |
+| FAIL | **永不** |
+| NA | 没有可扫描源文件 |
+
+**误报与抑制**：`dsh-defend/lib/index.js:381` 正是防护规则，纯文本扫会误杀防御插件；因此按路径整文件跳过规则/防护文件，并在 AST 里排除 `.test`/`.match`/`.includes`/`RegExp`/文档字符串。v1 的指令模式只覆盖英文；中文指令（"忽略之前""你现在是"）当前不判，不能因此认为没有注入。外部文本"无边界"本身不等于注入，v1 不做该判定。
+
+**与 DSC 的对应**：`DSC-20`。与 `C-13.2` 互补：C-13.2 只判"有没有打 `prompt-modification` 标签"，不检测注入内容；C-20 看内容线索，但仍不判"是否真的污染了模型"。
+
+**边界说明**：提示词注入本质是语义问题；静态分不清"检测规则"与"注入指令"，也看不到运行时拼接。真正的边界是运行时把外部输出标 untrusted、禁止进入指令层，并由宿主执行。C-20 的 PASS 不能证明"没有注入"。
+
+---
+
+### C-21 供应链
+
+> **判定**：**blocking（security scope 强制项；发现只到 WARN，永不 FAIL）**。security scope 下 C-21 未跑（not-run/NA/ERROR）会让 `security.status=incomplete`；名字/scope 线索只报 WARN。来源可固定性由 C-3 判。
+
+**要求（祈使句）**：依赖名不得与种子包近似到可冒充；scope 不得用同形字（`@deepseek-aii`、`0`/`O`、`l`/`1`）；非 registry 依赖必须钉 commit（C-3.3）；依赖带 install 脚本或传递依赖无 registry 元数据时必须 `not-run`，不得假绿；无 lockfile 不判缺陷，lockfile 一致性不在 v1 判定内。
+
+**判定方式**：L0 静态（DSC-21）。读 `dependencies`/`devDependencies`/`peerDependencies`/`optionalDependencies`；与 19 个种子名（`@deepseek-ai/dsh-*`、`cordis`、`@cordisjs/core`、`schemastery`、`cosmokit`）做编辑距离；transitive 元数据与 lockfile 一致性不在 v1 判定内。
+
+| 子项 | 检查 | 结果 |
+|---|---|---|
+| C-21.1 | 依赖名与种子名编辑距离 ≤1 且非精确匹配 | WARN（listing 下仍 WARN，不单独 FAIL） |
+| C-21.2 | scope 同形字/近似 scope（`@deepseek-aii`、`@deepseek-ai-*`、`0`/`O`、`l`/`1`） | listing/package 均 WARN（不 FAIL；只有未跑才 incomplete） |
+| C-21.3 | 依赖带 install 脚本，或传递依赖无 registry 元数据 | `not-run`（列出依赖），不判 PASS |
+| C-21.4 | lockfile 一致性（v1 不判；后续增强） | 记 `not-run`，不计负 |
+
+**三值期望**：
+
+| 值 | 条件 |
+|---|---|
+| PASS | 无近似/同形字 |
+| WARN | C-21.1、C-21.2（listing/package 均 WARN） |
+| FAIL | **永不**（未固定来源走 C-3.3；名字线索只 WARN） |
+| NA | 没有依赖；或没有可读 manifest |
+
+**误报与抑制**：`schemastery`/`cosmokit` 是真实包，白名单；git/本地 flow 的名字可能合法，只 WARN。4/53 个包无 lockfile，故无 lockfile 不判缺陷；lockfile 一致性不在 v1。编辑距离 ≤1 会有合法近似名，故只 WARN；同形字/近似 scope 也只 WARN，不 FAIL。传递依赖必须联网查 registry，离线时 `not-run`。
+
+**与 DSC 的对应**：`DSC-21`。扩展 `C-3.3`/`C-3.4`：C-3 判"来源是否钉住、可否追溯"，C-21 判"名字是否冒充、元数据是否足以判断"。
+
+**边界说明**：typosquat 是概率信号；注册者可以合法使用近似名。C-21 的 PASS 不能证明"依赖未被投毒"；lockfile 一致也不证明 tarball 未被替换（那是 C-22）。
+
+---
+
+### C-22 来源与完整性
+
+> **判定**：**advisory**（仅 `--scope security`）。v1 只读 manifest 里的来源/完整性字段是否存在；**不验签、不比对 digest、不联网**。永不 FAIL、永不进强制。
+
+**要求（祈使句）**：发布应带 `dist.integrity`、`dsh.attestation` 或 `dsh.signature` 字段，并用文档说明其含义；不得把"字段存在"写成"来源可信/已验签"。
+
+**判定方式**：L0（DSC-22）。读 `package.json#dist.integrity` 与 `dsh.attestation`/`dsh.signature`；不执行签名验证，不请求 registry。
+
+| 子项 | 检查 | 结果 |
+|---|---|---|
+| C-22.1 | `dist.integrity` 存在且非空 | 存在 → `integrity-only`（PASS + 说明） |
+| C-22.2 | `dsh.attestation` / `dsh.signature` 字段存在 | 存在 → `self-declared`（PASS + 说明） |
+| C-22.3 | attestation subject digest 与 tarball 比对、Ed25519 验签、`--registry-metadata` | v1 `not-run`；v2 才接 |
+| C-22.4 | 没有任何来源/完整性输入 | `NA`/`not-run`，不得写成 PASS |
+
+**三值期望**：
+
+| 值 | 条件 |
+|---|---|
+| PASS | C-22.1 或 C-22.2 命中，且 details 明确写 `integrity-only`/`self-declared`（advisory，不改变 verdict） |
+| WARN | **v1 不产生**（没有验签/比对，就没有"失败"证据） |
+| FAIL | **永不** |
+| NA | 没有任何来源/完整性字段 |
+
+**误报与抑制**：字段存在是自证，不是验证；`dist.integrity` 只说明发布者写了摘要，不说明 tarball 与 registry 一致。签名公钥自证、attestation 未验签都只能记 `self-declared`。无输入时 `not-run` 必须显式列出，不得静默当通过。
+
+**与 DSC 的对应**：`DSC-22`。C-3 判"来源是否可固定/可追溯"，C-22 判"来源/完整性字段是否出现"；两者都不判"可信"。
+
+**边界说明**：来源与完整性是流程证据，不是代码审计。签名有效只证明"某把钥匙签了这段摘要"；钥匙是否属于发布者、构建是否可复现、代码是否有恶意，都不在本项内。v1 的 PASS 含量很低，报告必须同时展示 `self-declared` 限定词。
+
+---
+
 ## 三、CLI 检查项与覆盖门
 
 ### 3.1 检查项目录
@@ -852,19 +1115,28 @@ export function apply(ctx: Context) {
 | `DSC-11` | C-11 | L0 | **否** | 自写 manifest schema + AST | 新字段；建议 T2 phase 1.5 补 |
 | `DSC-12` | C-12 | L0 | **否** | 自写 AST/文本扫描 | 新字段；建议 T2 phase 1.5 补 |
 | `DSC-13` | C-13 | L0 | **否** | 自写 manifest schema | 新字段；建议 T2 phase 1.5 补 |
+| `DSC-15` | C-15 | L0 | 否（security scope） | `package.json#scripts` + 定点读脚本文件 | 生命周期脚本；blocking |
+| `DSC-16` | C-16 | L0 | 否（security scope） | AST 闭包 + 子进程入口 | 动态执行；blocking |
+| `DSC-17` | C-17 | L0 | 否（security scope） | AST 实参回溯 + 敏感路径表 | 敏感文件；blocking |
+| `DSC-18` | C-18 | L0 | 否（security scope） | 调网点 AST + 披露差集 | 外联端点；advisory，永不 FAIL |
+| `DSC-19` | C-19 | L0 | 否（security scope） | `inventoryFiles()` + 行/块统计 | 混淆/二进制；advisory |
+| `DSC-20` | C-20 | L0 | 否（security scope） | AST + FLOW 运行时 hook（v2） | 提示词注入；advisory |
+| `DSC-21` | C-21 | L0 | 否（security scope） | 依赖名/scope + registry 元数据 | 供应链；security 强制项，发现封顶 WARN |
+| `DSC-22` | C-22 | L0 | 否（security scope） | 读 `dist.integrity`/`dsh.attestation`/`dsh.signature` 字段 | 来源/完整性；advisory，v1 不验签 |
 
 ### 3.2 MVP 覆盖缺口（必须写进 T2 报告）
 
 E 路的 MVP 13 项（L0-1/2/3 + L1-1/3/4/5 + L2-1/2/4 + L3-1/3/5）只覆盖 C-1、C-2、C-4、C-5、C-6、C-7、C-8、C-9 共 **8 条**；MVP 未实现 C-3、C-10、C-11、C-12、C-13（C-10 是 advisory；C-3 在 package profile 本就 NA，只在 listing profile 需要）。
 
-因此 T2 必须提供三种结论模式：
+因此 T2 必须提供五种结论模式：
 
 - `--scope mvp`：只对已实现的 13 个检查项出结论；报告 `level: null`、`subset: "MVP-13"`；exit 0/1；**不得**输出 "DS-C PASS"。
 - `--claim ds-c --profile package`（默认，作者本地）：要求 11 条强制（C-1、C-2、C-4～C-9、C-11～C-13）全部 `coverage: full`；C-3 为 `NA`（不是 not-run）；缺任何一条 → `status: incomplete`、exit 2。
 - `--claim ds-c --profile listing`（市场门禁）：要求 12 条强制（上述 11 条 + C-3）全部 `coverage: full`；缺任何一条 → `status: incomplete`、exit 2；**不得**发徽章。
 - `--claim ds-c --profile both`：等价于 listing（12 条），并要求 package 侧可执行项也跑过。
+- `--scope security`（独立，opt-in）：`checks[]` 变成 22 项，评估 C-15～C-22。其中 C-15/C-16/C-17 可 FAIL；C-21 是强制项（未跑 → `incomplete`），但发现只到 WARN；C-18/C-19/C-20/C-22 为 advisory。security 的结论写 `security.status`，**不并入** DS-C 的 11/12 条强制，也不得把 `security.status=pass` 写成 `DS-C PASS` 或"安全"。
 
-这是"禁止跳过即通过"的具体落点：NA 是**显式不适用**（C-3 在 package 模式），not-run 是**该跑没跑**；两者不能混。
+这是"禁止跳过即通过"的具体落点：NA 是**显式不适用**（C-3 在 package 模式），not-run 是**该跑没跑**；两者不能混。security scope 未启用时，8 项在 `security` 块里以 advisory 模式运行（FAIL 封顶 WARN），`security.scope=advisory`，不进 `checks[]`，不改变 DS-C 结论。
 
 ### 3.3 报告 schema（最小契约）
 
@@ -912,7 +1184,7 @@ E 路的 MVP 13 项（L0-1/2/3 + L1-1/3/4/5 + L2-1/2/4 + L3-1/3/5）只覆盖 C-
 
 ## 四、C 路 A1–A14 的覆盖映射
 
-`03` §三(a) 列了 14 条"可机械验证的安全基线"。本文件不新增条款编号，把它们合并进 C-1/C-2/C-3/C-11/C-12，映射如下：
+`03` §三(a) 列了 14 条"可机械验证的安全基线"。本节不新增条款编号，把它们合并进 C-1/C-2/C-3/C-11/C-12，映射如下：
 
 | C 路 | 内容 | 本文件落点 | 判定强度 |
 |---|---|---|---|
@@ -1144,6 +1416,8 @@ E 路的 MVP 13 项（L0-1/2/3 + L1-1/3/4/5 + L2-1/2/4 + L3-1/3/5）只覆盖 C-
 | X-12 | 重挂幂等只看 `registry.size` | `update()` 可被 veto，表现为"幂等"其实没重挂（`fiber.ts:783-819`） | C-8.2 必须断言 revision/epoch 推进 |
 
 **元规则**：X-1～X-12 永远不能成为 DS-C 的 FAIL 条件；它们只能出现在 DS-R 的 WARN/人工评审、DS-G 的实践说明、或检查器的 advisory 区。
+
+**C-15～C-22 与 X 规则的关系**：C-15～C-22 是 **security scope** 的独立条款，不是 DS-C 的 package/listing 强制项。security scope 的 FAIL 不能撤销 DS-C PASS，DS-C PASS 也不能拿来证明 security 通过；X-1～X-12 仍是"DS-C 不能 FAIL"的点。两套结论必须并列展示、各自带 scope 与证据锚。
 
 ---
 

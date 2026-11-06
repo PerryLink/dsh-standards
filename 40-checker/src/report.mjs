@@ -13,8 +13,13 @@ export const ENTRY_RUN = ['DSC-01', 'DSC-02', 'DSC-03', 'DSC-11', 'DSC-12', 'DSC
 export const ENTRY_BLOCKING = ['C-1.1', 'C-1.2', 'C-1.4', 'C-3.1', 'C-3.2', 'C-3.5']
 export const ENTRY_RUNTIME_BLOCKING = [...ENTRY_BLOCKING, 'C-2.2', 'C-2.3']
 
+/** The four security checks that block in `--scope security`; the rest are advisory. */
+export const SECURITY_MANDATORY = ['DSC-15', 'DSC-16', 'DSC-17', 'DSC-21']
+export const SECURITY_CHECKS = new Set(['DSC-15', 'DSC-16', 'DSC-17', 'DSC-18', 'DSC-19', 'DSC-20', 'DSC-21', 'DSC-22'])
+
 function mandatoryFor(scope, profile, staticOnly, entryClaim) {
   if (scope === 'mvp') return MVP_CHECKS
+  if (scope === 'security') return SECURITY_MANDATORY
   if (scope === 'entry') return ENTRY_RUN.filter(id => (entryClaim !== 'static' || id !== 'DSC-14') && (id !== 'DSC-03' || profile === 'listing' || profile === 'both'))
   if (staticOnly) return STATIC_MANDATORY
   return profile === 'listing' || profile === 'both' ? LISTING_MANDATORY : PACKAGE_MANDATORY
@@ -68,6 +73,11 @@ export function howToEnableFor(item) {
   if (id === 'DSC-14') {
     return 'pass --host <app-boot/lib/index.js> for bundle G0-G3, or --runtime <path> for a plugin; omit --no-exec and --entry-claim static'
   }
+  if (id === 'DSC-15') return 'fix package.json#scripts so install lifecycle commands are auditable; --scope security makes DSC-15 blocking'
+  if (['DSC-16', 'DSC-17', 'DSC-21'].includes(id)) return 'provide a readable entry/source tree and rerun; --scope security makes this check blocking'
+  if (id === 'DSC-19') return 'provide a readable package tree; binaries are recorded by sha256, never executed'
+  if (id === 'DSC-22') return 'supply registry metadata or an attestation/signature field; without input this check is not-run'
+  if (['DSC-18', 'DSC-20'].includes(id)) return 'this check is advisory; it never blocks and needs no extra input'
   if (['DSC-11', 'DSC-12', 'DSC-13'].includes(id)) {
     if (/manifest unavailable/.test(reason)) return 'fix package.json; these declaration checks cannot run without a manifest'
     return 'run the full profile without --no-exec; declaration checks need source files'
@@ -108,8 +118,58 @@ function allowedNa(check, scope, profile, kind) {
   return false
 }
 
-export function buildReport({ subject, anchor, checks, g4 = null, scope, profile, kind, staticOnly = false, entryRuntime = 'require', entryClaim = 'runtime', advice = true, declarations = null, runtimeChecks = null }) {
+function capSecurityCheck(item) {
+  if (item.result !== 'FAIL') return item
+  return {
+    ...item,
+    result: 'WARN',
+    reason: `capped WARN (non-security scope): ${item.reason ?? ''}`.trim(),
+    details: (item.details ?? []).map(detailRow => (
+      detailRow.result === 'FAIL'
+        ? { ...detailRow, result: 'WARN', reason: `capped WARN (non-security scope): ${detailRow.reason ?? ''}`.trim() }
+        : detailRow
+    )),
+  }
+}
+
+/**
+ * The additive `security` block. In `--scope security` the eight checks keep
+ * their real verdict (and four of them are mandatory); in every other scope a
+ * FAIL is capped to WARN so the default verdict cannot change.
+ */
+export function buildSecurityView(securityChecks, scope) {
+  const input = Array.isArray(securityChecks) ? securityChecks.filter(item => SECURITY_CHECKS.has(item.id)) : []
+  const checks = scope === 'security' ? input : input.map(capSecurityCheck)
+  // Only DSC-15/16/17 may block; DSC-21 is mandatory but its findings are
+  // capped at WARN, and DSC-18/19/20/22 are advisory by definition.
+  const blocking = checks
+    .filter(item => item.result === 'FAIL' && ['DSC-15', 'DSC-16', 'DSC-17'].includes(item.id))
+    .map(item => item.id)
+  const warn = checks.filter(item => item.result === 'WARN' && item.advisory !== true).map(item => item.id)
+  const advisory = checks.filter(item => item.result === 'WARN' && item.advisory === true).map(item => item.id)
+  const notRun = checks
+    .filter(item => item.result === 'NA' || item.result === 'ERROR' || item.coverage === 'not-run')
+    .map(item => item.id)
+  const mandatoryNotRun = SECURITY_MANDATORY.some(id => !checks.some(item => item.id === id && ['PASS', 'WARN', 'FAIL'].includes(item.result)))
+  let status
+  if (blocking.length > 0) status = 'fail'
+  else if (scope === 'security' && mandatoryNotRun) status = 'incomplete'
+  else if (warn.length > 0 || advisory.length > 0 || mandatoryNotRun) status = 'warn'
+  else status = 'pass'
+  return {
+    scope: scope === 'security' ? 'security' : 'advisory',
+    status,
+    checks,
+    blocking,
+    warn,
+    advisory,
+    notRun,
+  }
+}
+
+export function buildReport({ subject, anchor, checks, g4 = null, scope, profile, kind, staticOnly = false, entryRuntime = 'require', entryClaim = 'runtime', advice = true, declarations = null, runtimeChecks = null, securityChecks = null }) {
   const mandatory = mandatoryFor(scope, profile, staticOnly, entryClaim)
+  const security = buildSecurityView(securityChecks, scope)
   const adjustedChecks = scope === 'entry' ? checks.map(item => adjustEntryCheck(item, entryClaim)) : checks
   const runtimeIds = new Set(['DSC-04', 'DSC-05', 'DSC-06', 'DSC-07', 'DSC-08', 'DSC-09'])
   const effectiveChecks = staticOnly
@@ -161,7 +221,7 @@ export function buildReport({ subject, anchor, checks, g4 = null, scope, profile
     } else if (status === 'pass' || status === 'warn') {
       level = `DSH-ENTRY static${status === 'warn' ? ' (warnings)' : ''}`
     }
-  } else if (scope !== 'mvp' && (status === 'pass' || status === 'warn')) {
+  } else if (scope !== 'mvp' && scope !== 'security' && (status === 'pass' || status === 'warn')) {
     const suffix = status === 'warn' ? ', warnings' : ''
     level = staticOnly ? `DS-C static${status === 'warn' ? ' (warnings)' : ''}` : profile === 'listing' || profile === 'both' ? `DS-C (listing${suffix})` : `DS-C (package${suffix})`
   }
@@ -181,6 +241,7 @@ export function buildReport({ subject, anchor, checks, g4 = null, scope, profile
   const hygieneBucket = effectiveChecks.filter(item => item.result === 'WARN').map(item => bucketRow(item, {
     declaration: DECLARATION_CHECKS.has(item.id),
     advisory: item.advisory === true,
+    ...(SECURITY_CHECKS.has(item.id) ? { security: true } : {}),
   }))
   const notCheckedBucket = effectiveChecks
     .filter(item => item.result === 'NA' || item.result === 'ERROR')
@@ -240,6 +301,7 @@ export function buildReport({ subject, anchor, checks, g4 = null, scope, profile
       entryBlocking,
     },
     buckets,
+    security,
     notChecked,
     metrics,
     conclusion: {
@@ -369,6 +431,10 @@ export function formatText(report) {
   const passed = (report.checks ?? []).filter(item => item.result === 'PASS')
   lines.push(`passed (${passed.length}): ${passed.map(item => item.id).join(', ') || 'none'}`)
   lines.push(`coverage: total=${coverage.total ?? report.checks.length} checked=${coverage.checked ?? coverage.pass + coverage.warn + coverage.fail} pass=${coverage.pass} warn=${coverage.warn} fail=${coverage.fail} na=${coverage.na} notRun=${coverage.notRun} partial=${coverage.partial ?? 0} error=${coverage.error} advisory=${coverage.advisory}`)
+  if (report.security) {
+    const security = report.security
+    lines.push(`security: scope=${security.scope} status=${security.status} blocking=[${(security.blocking ?? []).join(', ')}] warn=[${(security.warn ?? []).join(', ')}] advisory=[${(security.advisory ?? []).join(', ')}] notRun=[${(security.notRun ?? []).join(', ')}]`)
+  }
   if (coverage.entryBlocking) {
     const blocking = coverage.entryBlocking
     lines.push(`entryBlocking: checked=${blocking.checked?.length ?? '?'}/${blocking.required} failed=[${(blocking.failed ?? []).join(', ')}] notChecked=[${(blocking.notChecked ?? []).join(', ')}] pass=${blocking.pass}`)

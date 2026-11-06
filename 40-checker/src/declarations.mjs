@@ -86,7 +86,7 @@ const C10_SUBPROCESS_METHODS = new Set(['execSync', 'execFileSync', 'spawnSync',
 
 const PARSE_CACHE = new WeakMap()
 
-function parseSource(source) {
+export function parseSource(source) {
   const cached = PARSE_CACHE.get(source)
   if (cached) return cached
   const record = { ast: null, error: null }
@@ -107,21 +107,21 @@ function parseSource(source) {
   return record
 }
 
-function normalizeRelative(relative) {
+export function normalizeRelative(relative) {
   return String(relative ?? '').replace(/\\/g, '/').replace(/^\.\//, '')
 }
 
 // Declaration files have no runtime behavior; parsing them for import-time
 // side effects or execution strings only creates noise.
-function isDeclarationFile(relative) {
+export function isDeclarationFile(relative) {
   return /\.d\.[cm]?ts$/i.test(String(relative ?? ''))
 }
 
-function identifierName(node) {
+export function identifierName(node) {
   return node?.type === 'Identifier' ? node.name : null
 }
 
-function memberPropertyName(node) {
+export function memberPropertyName(node) {
   if (!node || node.type !== 'MemberExpression') return null
   if (!node.computed && node.property?.type === 'Identifier') return node.property.name
   if (node.property?.type === 'Literal' && typeof node.property.value === 'string') return node.property.value
@@ -141,7 +141,7 @@ function calledFunctionName(call) {
   return null
 }
 
-function walkAst(root, visit) {
+export function walkAst(root, visit) {
   const ancestors = []
   const walkNode = (node) => {
     if (!node || typeof node.type !== 'string') return
@@ -163,7 +163,7 @@ function walkAst(root, visit) {
 
 // Module scope means "runs while the module is evaluated". Function bodies and
 // class method bodies are skipped; top-level if/try/loop bodies are not.
-function walkModuleScope(ast, visit) {
+export function walkModuleScope(ast, visit) {
   const ancestors = []
   const walkNode = (node) => {
     if (!node || typeof node.type !== 'string') return
@@ -295,7 +295,7 @@ function classifyLiteral(node, ancestors) {
   return 'unknown'
 }
 
-function literalStringValue(node) {
+export function literalStringValue(node) {
   if (node.type === 'Literal' && typeof node.value === 'string') return node.value
   if (node.type === 'TemplateElement' && node.value) {
     if (typeof node.value.cooked === 'string') return node.value.cooked
@@ -341,7 +341,7 @@ function literalCandidates(base) {
   return candidates
 }
 
-function resolveLocalSpecifier(fromRelative, specifier, byRelative) {
+export function resolveLocalSpecifier(fromRelative, specifier, byRelative) {
   const spec = String(specifier).replace(/\\/g, '/')
   if (!(spec.startsWith('./') || spec.startsWith('../') || spec === '.' || spec === '..')) return { kind: 'package' }
   const base = path.posix.normalize(path.posix.join(path.posix.dirname(normalizeRelative(fromRelative)), spec))
@@ -352,7 +352,7 @@ function resolveLocalSpecifier(fromRelative, specifier, byRelative) {
   return { kind: 'unresolved' }
 }
 
-function collectModuleEdges(ast) {
+export function collectModuleEdges(ast) {
   const edges = []
   walkAst(ast, (node) => {
     if (node.type === 'ImportDeclaration' || node.type === 'ExportNamedDeclaration' || node.type === 'ExportAllDeclaration') {

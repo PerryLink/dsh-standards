@@ -1,3 +1,17 @@
+## 1.6.0 — 2026-11-07
+
+### Added
+
+- 安全层 DSC-15…22：生命周期脚本、动态执行、敏感文件、外联端点、混淆/二进制、提示词注入线索、供应链、来源/完整性。
+- `--scope security`：22 项检查，DSC-15/16/17/21 为强制；默认 14 项判定不变，security 块内 FAIL 封顶 WARN。
+- 威胁模型与宿主边界（`34` §十）：同进程全权限、capabilities 不被宿主读取、sandbox 仅子进程文件写、approval 仅 tool ask、`!!js` 可执行、client 可调 Remote。
+- `SECURITY.md`（漏洞报告）、`spec/dsc-clauses.json` 22 父/113 条、`spec/remediation.json` C-15…22、coverage 口径 22。
+
+### Verified
+
+- `npm test` 269/269；恶意 fixture（curl|sh、eval、凭据读取、typosquat）在 security scope 下 FAIL；10 个真实包默认 entry 10/10 exit 0。
+- 静态安全 PASS 不代表无恶意；检查器不能证明安全。
+
 ## 1.5.0 — 2026-11-07
 
 ### Added

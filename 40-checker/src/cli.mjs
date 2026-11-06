@@ -4,6 +4,7 @@ import path from 'node:path'
 import { fileURLToPath } from 'node:url'
 import { runManifestChecks, DEFAULT_RUNTIME_VERSION } from './manifest.mjs'
 import { checkCapabilities, checkCredentials, checkImportTimeAdvisory, checkLabels } from './declarations.mjs'
+import { runSecurityChecks } from './security.mjs'
 import { runRuntimeChecks } from './runtime.mjs'
 import { runStaticBundleChecks } from './bundle-static.mjs'
 import { spawn, spawnSync } from 'node:child_process'
@@ -32,7 +33,8 @@ Usage:
 
 Options:
   --format text|json|sarif   output format (default: text)
-  --scope mvp|ds-c|entry     mvp = 8 MVP ids; ds-c = full claim (default); entry = compatibility gate
+  --scope mvp|ds-c|entry|security  mvp = 8 MVP ids; ds-c = full claim (default); entry = compatibility gate;
+                             security = DSC-15/16/17/21 are blocking, DSC-18/19/20/22 advisory
   --profile package|listing|both  evaluation profile (default: package; listing if --market-index is set)
   --runtime [path|auto]      built @deepseek-ai/cordis lib/index.js (or its package dir); bare or
                              'auto' resolves from the installed dsh; enables real L1-L3
@@ -161,10 +163,10 @@ function parseArgs(argv) {
     }
   }
   if (!['text', 'json', 'sarif'].includes(options.format)) throw new Error(`unsupported --format: ${options.format}`)
-  if (!['mvp', 'ds-c', 'entry'].includes(options.scope)) throw new Error(`unsupported --scope: ${options.scope}`)
+  if (!['mvp', 'ds-c', 'entry', 'security'].includes(options.scope)) throw new Error(`unsupported --scope: ${options.scope}`)
   if (!['require', 'server-entry'].includes(options.entryRuntime)) throw new Error('--entry-runtime must be require or server-entry')
   if (!['runtime', 'static'].includes(options.entryClaim)) throw new Error('--entry-claim must be runtime or static')
-  if (options.staticOnly) { options.scope = 'ds-c'; options.profile = 'listing' }
+  if (options.staticOnly) { if (options.scope !== 'security') options.scope = 'ds-c'; options.profile = 'listing' }
   if (!options.profile) options.profile = options.marketIndex ? 'listing' : 'package'
   if (!['package', 'listing', 'both'].includes(options.profile)) throw new Error(`unsupported --profile: ${options.profile}`)
   if (options.staticOnly && options.treatAsPlugin) throw new Error('--static-only and --treat-as-plugin are mutually exclusive')
@@ -602,6 +604,7 @@ export async function main(argv = process.argv.slice(2)) {
   ]
   const declarationAdjusted = declarationChecks.map(item => (item.result === 'WARN' && ['DSC-11', 'DSC-13'].includes(item.id) ? { ...item, advisory: true } : item))
   const advisoryChecks = [checkImportTimeAdvisory(sources, entry?.relative, scan)]
+  const securityChecks = runSecurityChecks({ dir, manifest, sources, entry, kind })
 
   if (options.scope === 'entry' && options.entryRuntime === 'server-entry' && kind !== 'plugin') options.treatAsPlugin = true
   let runtimeKind = kind
@@ -721,6 +724,7 @@ export async function main(argv = process.argv.slice(2)) {
     runCheck,
     advisoryChecks[0],
     ...declarationAdjusted,
+    ...(options.scope === 'security' ? securityChecks : []),
   ]
 
   if (g4?.result === 'FAIL') {
@@ -756,6 +760,7 @@ export async function main(argv = process.argv.slice(2)) {
     advice: options.advice,
     declarations: declarationsOf(manifest),
     runtimeChecks: runtimeSummary,
+    securityChecks,
   })
   // An explicitly requested runtime/host run that could not produce a result
   // is not a clean static pass: the caller asked for execution, so say the run
