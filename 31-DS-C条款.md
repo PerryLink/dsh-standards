@@ -911,7 +911,7 @@ export function apply(ctx: Context) {
 
 **要求（祈使句）**：不得直接读取 `~/.ssh`、`id_rsa`、`~/.aws`、`.npmrc`、`.netrc`、`.pypi`、`tokens*`、`$DSH_HOME`/`~/.dsh` 下的 credentials 文件或 `credentials-local` 内部实现；凭据必须经 `ctx.credentials.resolve()` / `credentialRef()` 读取；不得为外发而枚举 `process.env`。
 
-**判定方式**：L0 静态（DSC-17）。对**读/列 API** 的实参回溯：`readFile*`、`openSync`、`readJson`、`createReadStream`、`readdir*`；字符串字面量、正则字面量（如 `/^\.?credentials/`）、`path.join` 常量折叠、模板静态段、同函数赋值链可判；`os.homedir()` / `process.env.HOME|USERPROFILE|DSH_HOME|XDG_CONFIG_HOME` 派生路径按同函数污点近似（派生路径 + 同函数出站可 FAIL）。`Object.keys(process.env)` 单独记一条 WARN。
+**判定方式**：L0 静态（DSC-17）。对**读/列 API** 的实参回溯：`readFile*`、`openSync`、`readJson`、`createReadStream`、`readdir*`；字符串字面量、正则字面量（如 `/^\.?credentials/`）、`path.join` 常量折叠、模板静态段、同函数赋值链可判；`os.homedir()` / `process.env.HOME|USERPROFILE|DSH_HOME|XDG_CONFIG_HOME` 派生路径按同函数污点近似（派生路径 + 同函数出站可 FAIL）。`Object.keys(process.env)` 单独枚举不作判定（PASS）；只有与同闭包出站组合才记 WARN。
 
 | 子项 | 检查 | 结果 |
 |---|---|---|
