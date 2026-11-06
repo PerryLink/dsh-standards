@@ -146,7 +146,12 @@ test('advice.schema.json declares dsh-advice/1 with 13 required fields', () => {
 
 test('every advice entry produced by the checker matches the published schema', () => {
   const schema = JSON.parse(fs.readFileSync(SCHEMA, 'utf8'))
-  const report = JSON.parse(runCheck([GOOD, ...ARGS, '--json']).stdout)
+  // Build a package that is guaranteed to produce advice (no license, no engines.dsh)
+  // instead of relying on a shared fixture whose cleanliness can drift.
+  const dir = fs.mkdtempSync(path.join(os.tmpdir(), 'advice-schema-'))
+  fs.writeFileSync(path.join(dir, 'package.json'), JSON.stringify({ name: 'advice-fixture', version: '1.0.0', main: 'index.mjs' }))
+  fs.writeFileSync(path.join(dir, 'index.mjs'), 'export const answer = 42\n')
+  const report = JSON.parse(runCheck([dir, ...ARGS, '--json']).stdout)
   assert.ok(report.advice.length > 0)
   const allowed = new Set(Object.keys(schema.items.properties))
   for (const item of report.advice) {
