@@ -120,6 +120,12 @@ test('DSC-15: a referenced install.js is inspected; fetch+eval FAILs', () => {
   assert.ok(danger.details.some(item => item.item === 'C-15.1' && item.result === 'FAIL'))
 })
 
+test('DSC-15: a downloaded payload required from an absolute path FAILs', () => {
+  const remote = securityOfFixture('sec15-install-remote-literal').get('DSC-15')
+  assert.equal(remote.result, 'FAIL')
+  assert.match(remote.reason, /downloads remote content and dynamically loads it/)
+})
+
 test('DSC-15: an ordinary console.log install.js stays WARN', () => {
   const safe = securityOfFixture('sec15-install-safe').get('DSC-15')
   assert.equal(safe.result, 'WARN')

@@ -1,3 +1,7 @@
+## 1.6.3 — 2026-11-07
+
+- DSC-15: an install script that downloads code and then loads a literal path outside the package (`require('/tmp/...')`, URL, `../`) now FAILs; the variable form was already covered.
+
 ## 1.6.2 — 2026-11-07
 
 ### Fixed

@@ -383,7 +383,7 @@ const SCRIPT_NETWORK = /\b(?:fetch|axios\.(?:get|post)|https?\.(?:get|request))\
 const SCRIPT_EXECUTE = /\beval\b|\bnew\s+Function\b|\b(?:exec|execSync|spawn|spawnSync|execFile|execFileSync)\s*\(|\bvm\.(?:runIn\w+|compileFunction)/
 // require(<variable>) / import(<variable>): loading code that is not a static
 // literal. Only dangerous when the same script also downloads or pipes code.
-const SCRIPT_DYNAMIC_LOAD = /\brequire\s*\(\s*(?!['"`])[A-Za-z_$]|\bimport\s*\(\s*(?!['"`])[A-Za-z_$]/
+const SCRIPT_DYNAMIC_LOAD = /\brequire\s*\(\s*(?!['"`])[A-Za-z_$]|\bimport\s*\(\s*(?!['"`])[A-Za-z_$]|\b(?:require|import)\s*\(\s*['"`](?:\/|\.\.\/|https?:\/\/)/
 const SCRIPT_CHILD_DYNAMIC = [
   /\b(?:exec|execSync|spawn|spawnSync|execFile|execFileSync)\s*\(\s*`[^`]*\$\{/,
   /\b(?:exec|execSync|spawn|spawnSync|execFile|execFileSync)\s*\(\s*[A-Za-z_$][\w$]*\s*[,)]/,
