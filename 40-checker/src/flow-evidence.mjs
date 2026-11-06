@@ -25,7 +25,9 @@
  */
 import crypto from 'node:crypto'
 import fs from 'node:fs'
+import os from 'node:os'
 import path from 'node:path'
+import { spawnSync } from 'node:child_process'
 
 export const FLOW_IDS = ['J1', 'J2', 'J3', 'J4', 'J5', 'J6', 'J7', 'J8']
 export const FLOW_EVIDENCE_SCHEMA = 'dsh-flow-evidence/2'
@@ -142,6 +144,103 @@ export function treeSha256(dir, { exclude = [] } = {}) {
   walk(root, '')
   rows.sort()
   return { hash: sha256Value(rows.join('\n')), files: rows.length, bytes }
+}
+
+const NPM = process.platform === 'win32' ? 'npm.cmd' : 'npm'
+
+function subjectFields(subject) {
+  if (!isPlainObject(subject)) return null
+  return {
+    name: subject.name ?? null,
+    version: subject.version ?? null,
+    integrity: subject.integrity ?? null,
+    tarballSha256: subject.tarballSha256 ?? null,
+    treeSha256: subject.treeSha256 ?? null,
+    commit: subject.commit ?? null,
+  }
+}
+
+/**
+ * Recompute the subject binding from a package directory: package.json
+ * name/version, the deterministic tree hash, and the npm-pack tarball hash +
+ * integrity. npm packs the same tree byte-identically, so this is the same
+ * binding `dsh-flow-collect` recorded.
+ */
+export function recomputeSubject(dir, { exclude = [], timeoutMs = 120_000 } = {}) {
+  const root = path.resolve(dir)
+  const manifest = JSON.parse(fs.readFileSync(path.join(root, 'package.json'), 'utf8'))
+  const tree = treeSha256(root, { exclude })
+  const destination = fs.mkdtempSync(path.join(os.tmpdir(), 'dsh-subject-'))
+  try {
+    const run = spawnSync(NPM, ['pack', '--ignore-scripts', '--json', '--pack-destination', destination], {
+      cwd: root, encoding: 'utf8', timeout: timeoutMs, maxBuffer: 16 * 1024 * 1024,
+    })
+    if (run.error) throw new Error(`npm pack failed to start: ${run.error.message}`)
+    if (run.status !== 0) throw new Error(`npm pack failed (exit ${run.status}): ${String(run.stderr ?? '').replace(/\s+/g, ' ').slice(0, 300)}`)
+    let parsed
+    try { parsed = JSON.parse(run.stdout) } catch { throw new Error('npm pack did not print JSON') }
+    const info = Array.isArray(parsed) ? parsed[0] : parsed
+    if (!info?.filename) throw new Error('npm pack did not report a tarball filename')
+    return {
+      name: typeof manifest.name === 'string' ? manifest.name : null,
+      version: typeof manifest.version === 'string' ? manifest.version : null,
+      treeSha256: tree.hash,
+      tarballSha256: sha256File(path.join(destination, info.filename)),
+      integrity: typeof info.integrity === 'string' ? info.integrity : null,
+    }
+  } finally {
+    fs.rmSync(destination, { recursive: true, force: true })
+  }
+}
+
+/**
+ * Bind a flow-evidence document to a package directory. Any mismatch in
+ * name/version/treeSha256/tarballSha256 (or a declared integrity) is a hard
+ * failure: the audit must not accept evidence for a different subject.
+ */
+export function bindEvidenceSubject(document, dir, options = {}) {
+  const declared = isPlainObject(document?.subject) ? document.subject : null
+  const base = { dir: path.resolve(dir), declared: subjectFields(declared), recomputed: null, mismatches: [], errors: [] }
+  if (!declared) return { ...base, ok: false, errors: ['subject is missing'] }
+  let recomputed
+  try {
+    recomputed = recomputeSubject(dir, {
+      exclude: Array.isArray(declared.treeExclude) ? declared.treeExclude : [],
+      timeoutMs: options.timeoutMs,
+    })
+  } catch (error) {
+    return { ...base, ok: false, errors: [error.message] }
+  }
+  const mismatches = []
+  for (const key of ['name', 'version', 'treeSha256', 'tarballSha256']) {
+    if (declared[key] !== recomputed[key]) {
+      mismatches.push(`${key}: declared ${declared[key] ?? 'null'} != recomputed ${recomputed[key] ?? 'null'}`)
+    }
+  }
+  if (typeof declared.integrity === 'string' && recomputed.integrity !== null && declared.integrity !== recomputed.integrity) {
+    mismatches.push('integrity: declared value != recomputed value')
+  }
+  return { ...base, ok: mismatches.length === 0, recomputed, mismatches }
+}
+
+/**
+ * Plain CI attribution for display. These fields are read from the runner
+ * environment and are self-declared: CI attribution is not proof.
+ */
+export function ciAttribution(env = process.env) {
+  const read = key => (typeof env?.[key] === 'string' ? env[key].trim() : '')
+  const runId = read('GITHUB_RUN_ID')
+  const repository = read('GITHUB_REPOSITORY')
+  const commit = read('GITHUB_SHA')
+  if (!runId && !repository && !commit) return null
+  const server = (read('GITHUB_SERVER_URL') || 'https://github.com').replace(/\/+$/, '')
+  return {
+    provider: 'github-actions',
+    runId: runId || null,
+    repository: repository || null,
+    commit: commit || null,
+    runUrl: runId && repository ? `${server}/${repository}/actions/runs/${runId}` : null,
+  }
 }
 
 export function isIsoTimestamp(value) {
@@ -279,8 +378,14 @@ function validateV2(document) {
     if ('kind' in document.producer && document.producer.kind !== null && !['local', 'ci', 'sandbox', 'sandbox-degraded'].includes(document.producer.kind)) {
       errors.push('producer.kind must be local, ci, sandbox, or sandbox-degraded')
     }
-    for (const key of ['runner', 'actor', 'runUrl']) {
+    for (const key of ['runner', 'actor', 'runUrl', 'provider', 'runId', 'repository', 'commit']) {
       if (key in document.producer && document.producer[key] !== null) requireString(document.producer[key], `producer.${key}`)
+    }
+    if (typeof document.producer.commit === 'string' && !COMMIT_RE.test(document.producer.commit)) {
+      errors.push('producer.commit must be a 40-hex commit')
+    }
+    if (typeof document.producer.runUrl === 'string' && !/^https:\/\//.test(document.producer.runUrl)) {
+      errors.push('producer.runUrl must be an https URL')
     }
   }
 

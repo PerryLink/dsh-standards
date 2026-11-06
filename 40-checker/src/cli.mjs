@@ -12,19 +12,28 @@ import { buildReport, writeReport } from './report.mjs'
 const VERSION = '0.1.0'
 const DEFAULT_COMMIT = 'ce7073d51254c26cd63b22a60835b8f948deb447'
 const DEFAULT_CORDIS = '4.0.6-alpha.1'
+const HOST_RUNTIME_TIMEOUT_MS = 5000
+
+function binName() {
+  const brand = process.env.DSH_CHECKER_BRAND
+  if (typeof brand === 'string' && brand.trim() !== '') return brand.trim().split(/\s+/)[0]
+  return 'dsh-plugin-verify'
+}
 
 function usage() {
+  const bin = binName()
   return `${process.env.DSH_CHECKER_BRAND || 'dsh-plugin-verify ' + VERSION} — DS-C conformance checker (MVP)
 
 Usage:
-  dsh-plugin-verify <package-dir> [options]
+  ${bin} check [dir] [--json] [--html <file>]  author-facing report (Markdown by default)
+  ${bin} <package-dir> [options]                raw conformance report
 
 Options:
   --format text|json|sarif   output format (default: text)
   --scope mvp|ds-c|entry     mvp = 8 MVP ids; ds-c = full claim (default); entry = compatibility gate
   --profile package|listing|both  evaluation profile (default: package; listing if --market-index is set)
   --runtime <path>           path to a built @deepseek-ai/cordis lib/index.js; enables L1-L3
-  --runtime-version <v>      dsh runtime version used for C-2 (default: ${DEFAULT_RUNTIME_VERSION})
+  --runtime-version <v>      dsh runtime version used for C-2 (default: host via \`dsh --version\`, else ${DEFAULT_RUNTIME_VERSION})
   --cordis-version <v>       cordis version recorded in the anchor (default: ${DEFAULT_CORDIS})
   --commit <sha>             harness commit recorded in the anchor (default: ${DEFAULT_COMMIT.slice(0, 12)})
   --install-spec <spec>      recommended install spec for C-3 (listing/install check)
@@ -61,7 +70,7 @@ function parseArgs(argv) {
     scope: 'ds-c',
     profile: null,
     runtime: null,
-    runtimeVersion: DEFAULT_RUNTIME_VERSION,
+    runtimeVersion: null,
     cordisVersion: DEFAULT_CORDIS,
     commit: DEFAULT_COMMIT,
     installSpec: null,
@@ -223,14 +232,66 @@ async function entryRunCheck(kind, runtimeChecks, options, dir) {
   return { ...base, result: 'ERROR', coverage: 'not-run', reason: c4?.reason || 'no runtime evidence' }
 }
 
-function anchorOf(options, runtime) {
+/**
+ * Read the runtime version the host actually runs. The anchor used to be a
+ * hard-coded `0.2.2-alpha.2`, which manufactured dozens of C-2.2 failures on a
+ * host that had already moved on. Detection is best-effort: when `dsh` is not
+ * usable the anchor falls back to the checked-in constant and says so.
+ */
+export function detectHostRuntime({ bin = process.env.DSH_BIN || (process.platform === 'win32' ? 'dsh.cmd' : 'dsh'), timeoutMs = HOST_RUNTIME_TIMEOUT_MS } = {}) {
+  const run = spawnSync(bin, ['--version'], { encoding: 'utf8', timeout: timeoutMs })
+  if (run.error || run.status !== 0) return { version: null, bin, error: run.error?.message ?? `exit ${run.status}` }
+  const text = `${run.stdout ?? ''}\n${run.stderr ?? ''}`
+  const match = /(\d+\.\d+\.\d+(?:-[0-9A-Za-z.-]+)?(?:\+[0-9A-Za-z.-]+)?)/.exec(text)
+  if (!match) return { version: null, bin, error: 'no semver in `dsh --version` output' }
+  return { version: match[1], bin, error: null }
+}
+
+/**
+ * Resolve what `anchor.dsh` means:
+ *   cli       the caller passed --runtime-version; suspect when it differs from the host
+ *   host      no flag: the host version is the anchor, so it cannot be suspect
+ *   fallback  dsh unavailable: keep the constant, flagged as not host-derived
+ */
+export function resolveRuntimeAnchor(requestedVersion = null, hostVersion = null) {
+  if (typeof requestedVersion === 'string' && requestedVersion.trim() !== '') {
+    const requested = requestedVersion.trim()
+    return {
+      dsh: requested,
+      runtimeSource: 'cli',
+      hostVersion: hostVersion ?? null,
+      suspect: typeof hostVersion === 'string' && hostVersion !== '' && hostVersion !== requested,
+    }
+  }
+  if (typeof hostVersion === 'string' && hostVersion !== '') {
+    return { dsh: hostVersion, runtimeSource: 'host', hostVersion, suspect: false }
+  }
+  return { dsh: DEFAULT_RUNTIME_VERSION, runtimeSource: 'fallback', hostVersion: null, suspect: false }
+}
+
+/** The five optional declaration surfaces, counted but never scored. */
+export function declarationsOf(manifest) {
+  const dsh = manifest?.dsh ?? {}
+  const present = []
+  if (Array.isArray(dsh.capabilities) && dsh.capabilities.length > 0) present.push('capabilities')
+  if (Array.isArray(dsh.labels) && dsh.labels.length > 0) present.push('labels')
+  if (dsh.commitments && typeof dsh.commitments === 'object' && !Array.isArray(dsh.commitments)) present.push('commitments')
+  if (dsh.disclosure && typeof dsh.disclosure === 'object' && !Array.isArray(dsh.disclosure)) present.push('disclosure')
+  if (typeof manifest?.engines?.dsh === 'string' && manifest.engines.dsh.trim() !== '') present.push('engines.dsh')
+  return { total: 5, present }
+}
+
+function anchorOf(options, runtimeInfo, runtimePath) {
   return {
     repo: 'deepseek-ai/deepseek-harness',
     commit: options.commit,
     scanner: `dsh-plugin-verify@${VERSION}`,
-    dsh: options.runtimeVersion,
+    dsh: runtimeInfo.dsh,
     cordis: options.cordisVersion,
-    runtime: runtime ? path.resolve(runtime) : null,
+    runtime: runtimePath ? path.resolve(runtimePath) : null,
+    runtimeSource: runtimeInfo.runtimeSource,
+    hostVersion: runtimeInfo.hostVersion,
+    suspect: runtimeInfo.suspect,
   }
 }
 
@@ -261,8 +322,11 @@ export async function main(argv = process.argv.slice(2)) {
     return 3
   }
 
+  const host = detectHostRuntime()
+  const runtimeInfo = resolveRuntimeAnchor(options.runtimeVersion, host.version)
+
   const { manifest, kind, kindInferred, entry, patch, g4, checks: manifestChecks } = runManifestChecks(dir, {
-    runtimeVersion: options.runtimeVersion,
+    runtimeVersion: runtimeInfo.dsh,
     installSpec: options.installSpec,
     marketIndex: options.marketIndex,
     pluginName: options.pluginName,
@@ -341,7 +405,7 @@ export async function main(argv = process.argv.slice(2)) {
   }
   const report = buildReport({
     subject,
-    anchor: anchorOf(options, options.runtime),
+    anchor: anchorOf(options, runtimeInfo, options.runtime),
     checks,
     g4,
     scope: options.scope,
@@ -351,6 +415,7 @@ export async function main(argv = process.argv.slice(2)) {
     entryRuntime: options.entryRuntime,
     entryClaim: options.entryClaim,
     advice: options.advice,
+    declarations: declarationsOf(manifest),
   })
   const output = writeReport(report, options.format)
   if (options.out) {

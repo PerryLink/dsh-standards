@@ -1,0 +1,51 @@
+{
+  "schema": "dsh-market-sidecar/1",
+  "generatedAt": "2026-11-06T00:00:00.000Z",
+  "index": {
+    "url": "https://awesome-dsh-plugin.com/index.json",
+    "format": 1
+  },
+  "checker": {
+    "name": "dsh-standards",
+    "version": "1.2.2",
+    "sha": "cc378b2654b5ec01917b0bd9c9f031651246121d"
+  },
+  "notClaimed": [
+    "official",
+    "certification",
+    "security-audit",
+    "endorsement",
+    "ordering",
+    "comparison",
+    "warranty"
+  ],
+  "entries": {
+    "dsh-security-pack@3.0.1": {
+      "subject": {
+        "name": "dsh-security-pack",
+        "version": "3.0.1",
+        "tarballSha256": "9b79a3872212b208f3ce198aa9203335d409033c7e795fc4e154cbf036e97895"
+      },
+      "levels": {
+        "entry": {
+          "state": "recognized",
+          "claim": "static"
+        },
+        "flow": {
+          "state": "not-run"
+        },
+        "boost": {
+          "state": "not-measured"
+        }
+      },
+      "evidence": {},
+      "validity": {
+        "checkedAt": "2026-11-06",
+        "expiresAt": "2027-02-04",
+        "policy": "90d"
+      },
+      "lifecycle": "active",
+      "selfAssessed": true
+    }
+  }
+}

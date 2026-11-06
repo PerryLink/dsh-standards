@@ -7,14 +7,10 @@ import { dirname, join } from 'node:path'
 import { fileURLToPath } from 'node:url'
 
 const here = dirname(fileURLToPath(import.meta.url))
-const testDir = join(here, '..', 'test')
-if (!existsSync(testDir)) {
-  console.log('checker tests are not shipped in the npm package; nothing to run')
-  process.exit(0)
-}
-const files = readdirSync(testDir).filter((f) => f.endsWith('.test.mjs')).map((f) => join(testDir, f))
+const dirs = [join(here, '..', 'test'), join(here, '..', '..', 'test')]
+const files = dirs.filter((dir) => existsSync(dir)).flatMap((dir) => readdirSync(dir).filter((f) => f.endsWith('.test.mjs')).map((f) => join(dir, f)))
 if (files.length === 0) {
-  console.log('no test files found; nothing to run')
+  console.log('checker tests are not shipped in the npm package; nothing to run')
   process.exit(0)
 }
 const r = spawnSync(process.execPath, ['--test', ...files], { stdio: 'inherit' })

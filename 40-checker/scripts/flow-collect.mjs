@@ -36,7 +36,7 @@ import path from 'node:path'
 import { spawnSync } from 'node:child_process'
 import { fileURLToPath } from 'node:url'
 import {
-  FLOW_IDS, FLOW_EVIDENCE_SCHEMA, clauseAnchor, finalizeEvidence, journeyAggregate,
+  FLOW_IDS, FLOW_EVIDENCE_SCHEMA, ciAttribution, clauseAnchor, finalizeEvidence, journeyAggregate,
   sha256File, sha256Value, treeSha256, validateFlowEvidence,
 } from '../src/flow-evidence.mjs'
 import { sanitizedEnv } from '../src/sandbox-env.mjs'
@@ -77,6 +77,7 @@ Options:
   --timeout <ms>        per-command budget (default: 120000)
   --static              skip the runtime probe (J1/J2/J4/J6 become static/blocked)
   --ci                  mark producer.kind=ci, claims.claimLevel=ci-attested
+                        (CI attribution is also read from GITHUB_* and stays self-declared)
   --sandbox             run the runtime probe under unshare/prlimit/process-group
                         timeout with an allowlisted env; producer.kind=sandbox only
                         when every isolation item is effective (otherwise
@@ -452,6 +453,10 @@ async function main() {
         ? `sandboxed collector DEGRADED (${sandboxPlan.degraded.join(', ')}): allowlisted env, temporary HOME/DSH_HOME, process-group SIGKILL timeout; every missing isolation item is recorded`
         : 'local-collector: read-only copy, allowlisted child env, no allowBuilds, no exemption'
     const sandbox = sandboxPlan ? { ...sandboxPlan, executed: sandboxExecuted, execution: sandboxExecution } : null
+    // CI attribution is display-only and self-declared. It is recorded from the
+    // runner environment even without --ci; it never upgrades the claim level.
+    const ci = ciAttribution()
+    const ciFields = ci ? Object.fromEntries(Object.entries(ci).filter(([, value]) => value !== null)) : {}
     const document = finalizeEvidence({
       schema: FLOW_EVIDENCE_SCHEMA,
       generatedAt,
@@ -460,6 +465,7 @@ async function main() {
         at: generatedAt,
         kind: producerKind,
         runner: sandboxPlan ? 'flow-collect/2-sandbox' : 'flow-collect/1',
+        ...ciFields,
       },
       ...(sandbox ? { sandbox } : {}),
       subject,

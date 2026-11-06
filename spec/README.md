@@ -16,6 +16,7 @@ Machine-readable:
 - [reference-suite.json](reference-suite.json) — versioned samples, anchors, change rules.
 - [remediation.json](remediation.json) — 68-key advice table for the additive `advice[]` report field (docs anchors + severity hints).
 - [schemas/evidence.schema.json](schemas/evidence.schema.json) — `dsh-levels/1` record.
+- [schemas/advice.schema.json](schemas/advice.schema.json) — `dsh-advice/1` entry array: the additive `advice[]` field of a `dsh-conformance/1` report (13 required fields; `why`/`fix`/`docsUrl` may be null; `evidence` ≤ 10; `gate`/`severity` ∈ {FAIL,WARN}).
 - [flow-evidence.schema.json](flow-evidence.schema.json) — `dsh-flow-evidence/2` FLOW chain (J1–J8 checks, subject/host binding, `evidenceHash`). v1 and bare `{Jx:{status}}` rows are deprecated and never count as a pass.
 - [schemas/attestation.schema.json](schemas/attestation.schema.json) — `dsh-attestation/1` quality record.
 - [schemas/report.schema.json](schemas/report.schema.json) — `dsh-report/1` inspection report (no grade).
@@ -26,4 +27,5 @@ Rules:
 
 - Levels depend on `common` only; do not import each other.
 - A level is not a certification, badge, grade, or score.
+- CI attribution (`producer.runUrl`/`repository`/`commit`) is read from the runner environment and is self-declared: **CI 归属 ≠ 证明**. It never upgrades `claims.claimLevel`, and `level-audit` reports it only as `attestation: ci | self-declared`.
 - `dsh-standard` is an alias; `dsh-standards` is canonical.

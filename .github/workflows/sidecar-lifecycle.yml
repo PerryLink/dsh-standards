@@ -1,0 +1,93 @@
+name: sidecar-lifecycle
+
+# Daily expiry/withdrawal refresh for publish/sidecar.json.
+#
+# The sidecar is an index cache, not a signed record: this job only moves
+# lifecycle between active -> stale (today > validity.expiresAt) and
+# active -> withdrawn (publish/withdrawals.json, append-only, human edited).
+# It never re-runs checks, never upgrades a withdrawal back to active, and
+# commits only publish/sidecar.json.
+
+on:
+  schedule:
+    - cron: '17 3 * * *'
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+concurrency:
+  group: sidecar-lifecycle
+  cancel-in-progress: false
+
+jobs:
+  refresh:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Set up Node
+        uses: actions/setup-node@v4
+        with:
+          node-version: '24'
+
+      - name: Recompute lifecycle from the fixed clock
+        id: refresh
+        shell: bash
+        run: |
+          set -euo pipefail
+          if [ ! -f publish/sidecar.json ]; then
+            echo "publish/sidecar.json does not exist yet; nothing to refresh"
+            echo "present=false" >> "$GITHUB_OUTPUT"
+            exit 0
+          fi
+          echo "present=true" >> "$GITHUB_OUTPUT"
+          node 40-checker/scripts/build-sidecar.mjs \
+            --prev publish/sidecar.json \
+            --withdrawals publish/withdrawals.json \
+            --out publish/sidecar.json \
+            --today "$(date -u +%F)"
+
+      - name: Validate the sidecar surface
+        if: steps.refresh.outputs.present == 'true'
+        shell: bash
+        run: |
+          set -euo pipefail
+          node -e '
+            const fs = require("node:fs");
+            const s = JSON.parse(fs.readFileSync("publish/sidecar.json", "utf8"));
+            if (s.schema !== "dsh-market-sidecar/1") throw new Error("wrong sidecar schema");
+            if (s.entries && Object.keys(s.entries).length === 0) throw new Error("sidecar has no entries");
+            const banned = new Set(["advice", "issuer", "recordHash", "verifyUrl"]);
+            const walk = (v) => {
+              if (!v || typeof v !== "object") return;
+              for (const [k, child] of Object.entries(v)) {
+                if (banned.has(k)) throw new Error("forbidden sidecar key: " + k);
+                walk(child);
+              }
+            };
+            walk(s);
+            console.log("sidecar ok:", Object.keys(s.entries || {}).length, "entries");
+          '
+
+      - name: Commit only publish/sidecar.json
+        if: steps.refresh.outputs.present == 'true'
+        shell: bash
+        run: |
+          set -euo pipefail
+          if git diff --quiet -- publish/sidecar.json && [ -z "$(git status --porcelain -- publish/sidecar.json)" ]; then
+            echo "no lifecycle change"
+            exit 0
+          fi
+          git config user.name "dsh-standards sidecar bot"
+          git config user.email "dsh-standards-sidecar@users.noreply.github.com"
+          git add -- publish/sidecar.json
+          staged="$(git diff --cached --name-only)"
+          if [ "$staged" != "publish/sidecar.json" ]; then
+            echo "refusing to commit unexpected paths: $staged" >&2
+            exit 1
+          fi
+          git commit -m "chore(sidecar): refresh lifecycle $(date -u +%F)"
+          git push

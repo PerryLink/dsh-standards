@@ -31,6 +31,46 @@ function adjustEntryCheck(item, entryClaim) {
   return { ...item, result: 'WARN', reason: 'C-2.1 version declaration missing/invalid; entry treats it as WARN (C-2.2/C-2.3 remain blocking)' }
 }
 
+/** Declaration-class checks: a WARN here is hygiene, not a loadability defect. */
+export const DECLARATION_CHECKS = new Set(['DSC-11', 'DSC-12', 'DSC-13'])
+const DETAIL_RANK = { FAIL: 5, ERROR: 4, WARN: 3, PASS: 2, NA: 1 }
+
+function bucketRow(item, extra = {}) {
+  return {
+    id: item.id,
+    clause: item.clause ?? null,
+    result: item.result,
+    coverage: item.coverage ?? null,
+    reason: item.reason ?? '',
+    ...extra,
+  }
+}
+
+/**
+ * `entryBlocking` is only sound when every prerequisite was actually evaluated.
+ * C-1.x always produce details; C-3.1/3.2/3.5 only produce them when an install
+ * spec or market index was supplied. Missing details must therefore make
+ * `pass` false instead of silently claiming the gate held.
+ */
+export function summarizeBlocking(checks, blocking) {
+  const seen = new Map()
+  for (const item of checks) {
+    for (const detail of item.details ?? []) {
+      if (!blocking.includes(detail.item)) continue
+      const rank = DETAIL_RANK[detail.result] ?? 0
+      if (!seen.has(detail.item) || rank > (DETAIL_RANK[seen.get(detail.item)] ?? 0)) seen.set(detail.item, detail.result)
+    }
+  }
+  const checked = blocking.filter(id => seen.has(id))
+  // C-2.3 (workspace: range) has no detail when C-2.2 was evaluated against a
+  // normal range; evaluating C-2.2 rules the workspace form out, so count it.
+  if (seen.has('C-2.2') && blocking.includes('C-2.3') && !checked.includes('C-2.3')) checked.push('C-2.3')
+  checked.sort((a, b) => blocking.indexOf(a) - blocking.indexOf(b))
+  const failed = blocking.filter(id => seen.get(id) === 'FAIL')
+  const notChecked = blocking.filter(id => !checked.includes(id))
+  return { required: blocking.length, checked, notChecked, failed, pass: failed.length === 0 && notChecked.length === 0 }
+}
+
 function allowedNa(check, scope, profile, kind) {
   if (check.result !== 'NA') return false
   if (check.id === 'DSC-03' && scope !== 'mvp' && profile === 'package') return true
@@ -39,7 +79,7 @@ function allowedNa(check, scope, profile, kind) {
   return false
 }
 
-export function buildReport({ subject, anchor, checks, g4 = null, scope, profile, kind, staticOnly = false, entryRuntime = 'require', entryClaim = 'runtime', advice = true }) {
+export function buildReport({ subject, anchor, checks, g4 = null, scope, profile, kind, staticOnly = false, entryRuntime = 'require', entryClaim = 'runtime', advice = true, declarations = null }) {
   const mandatory = mandatoryFor(scope, profile, staticOnly, entryClaim)
   const adjustedChecks = scope === 'entry' ? checks.map(item => adjustEntryCheck(item, entryClaim)) : checks
   const runtimeIds = new Set(['DSC-04', 'DSC-05', 'DSC-06', 'DSC-07', 'DSC-08', 'DSC-09'])
@@ -58,6 +98,17 @@ export function buildReport({ subject, anchor, checks, g4 = null, scope, profile
   const notRunIds = [...new Set([...missing, ...errored.map(item => item.id), ...notRun.map(item => item.id)])]
   const warnings = selected.filter(item => item.result === 'WARN')
   const pass = selected.filter(item => item.result === 'PASS')
+
+  // Coverage counts every check the report carries (14 in a full run), not just
+  // the mandatory subset. A report that only counts its mandatory five hides
+  // the runtime checks it never ran; that is the bug this block fixes.
+  const evaluatedAll = effectiveChecks.filter(item => ['PASS', 'WARN', 'FAIL'].includes(item.result))
+  const naAll = effectiveChecks.filter(item => item.result === 'NA')
+  const errorAll = effectiveChecks.filter(item => item.result === 'ERROR')
+  const notRunAll = effectiveChecks.filter(item => item.result !== 'NA' && (item.coverage === 'not-run' || item.coverage === 'partial'))
+  const notRunAllIds = [...new Set([...notRunAll.map(item => item.id), ...errorAll.map(item => item.id), ...missing])]
+  const entryBlockingIds = scope === 'entry' ? (entryClaim === 'static' ? ENTRY_BLOCKING : ENTRY_RUNTIME_BLOCKING) : null
+  const entryBlocking = entryBlockingIds ? summarizeBlocking(effectiveChecks, entryBlockingIds) : null
 
   let status
   let exitCode
@@ -87,6 +138,31 @@ export function buildReport({ subject, anchor, checks, g4 = null, scope, profile
   if (warnings.length > 0) reasonParts.push(`WARN: ${warnings.map(item => item.id).join(', ')}`)
   if (advisoryWarnings.length > 0) reasonParts.push(`advisory: ${advisoryWarnings.map(item => item.id).join(', ')}`)
 
+  // Findings by reader-relevant bucket. A check appears in exactly one bucket:
+  // FAIL -> blocking, WARN -> hygiene, NA/ERROR/not-run -> notChecked.
+  const blockingBucket = effectiveChecks.filter(item => item.result === 'FAIL').map(item => bucketRow(item))
+  const hygieneBucket = effectiveChecks.filter(item => item.result === 'WARN').map(item => bucketRow(item, {
+    declaration: DECLARATION_CHECKS.has(item.id),
+    advisory: item.advisory === true,
+  }))
+  const notCheckedBucket = effectiveChecks
+    .filter(item => item.result === 'NA' || item.result === 'ERROR')
+    .map(item => bucketRow(item))
+  for (const id of missing) {
+    notCheckedBucket.push({ id, clause: null, result: 'NOT-RUN', coverage: 'not-run', reason: 'mandatory check missing' })
+  }
+  const buckets = { blocking: blockingBucket, hygiene: hygieneBucket, notChecked: notCheckedBucket }
+  const declaredFields = Array.isArray(declarations?.present) ? declarations.present.length : 0
+  const canMarkSuspect = anchor?.suspect === true
+
+  const metrics = {
+    checked: evaluatedAll.length,
+    total: effectiveChecks.length,
+    declaredFields,
+  }
+  const prereq = entryBlocking ? ` (prereq ${entryBlocking.checked.length}/${entryBlocking.required})` : ''
+  const headline = `${scope}/${profile} · runtime ${anchor?.dsh ?? 'unknown'}${anchor?.runtimeSource ? ` ${anchor.runtimeSource}` : ''}${canMarkSuspect ? ' SUSPECT' : ''} · blocking ${buckets.blocking.length}${prereq} · hygiene ${buckets.hygiene.length} · not checked ${buckets.notChecked.length}/${effectiveChecks.length}`
+
   const report = {
     schema: 'dsh-conformance/1',
     standard: { id: 'DS-C', version: '1.0.0' },
@@ -95,21 +171,22 @@ export function buildReport({ subject, anchor, checks, g4 = null, scope, profile
     g4,
     checks: effectiveChecks,
     coverage: {
+      total: effectiveChecks.length,
       mandatory: mandatory.length,
-      pass: pass.length,
-      warn: warnings.length,
+      checked: evaluatedAll.length,
+      pass: evaluatedAll.filter(item => item.result === 'PASS').length,
+      warn: evaluatedAll.filter(item => item.result === 'WARN').length,
       advisory: advisoryWarnings.length,
-      fail: failed.length,
-      na: selected.filter(item => item.result === 'NA').length,
-      notRun: notRunIds.length,
-      error: errored.length,
-      entryBlocking: scope === 'entry' ? (() => {
-        const blocking = entryClaim === 'static' ? ENTRY_BLOCKING : ENTRY_RUNTIME_BLOCKING
-        const failedItems = effectiveChecks.flatMap(item => (item.details ?? []).filter(detail => detail.result === 'FAIL' && blocking.includes(detail.item)).map(detail => detail.item))
-        return { required: blocking.length, failed: failedItems, pass: failedItems.length === 0 }
-      })() : null,
+      fail: evaluatedAll.filter(item => item.result === 'FAIL').length,
+      na: naAll.length,
+      notRun: notRunAllIds.length,
+      error: errorAll.length,
+      entryBlocking,
     },
+    buckets,
+    metrics,
     conclusion: {
+      headline,
       level,
       status,
       exitCode,
@@ -132,25 +209,49 @@ export function buildReport({ subject, anchor, checks, g4 = null, scope, profile
 
 const ICON = { PASS: 'PASS', WARN: 'WARN', FAIL: 'FAIL', NA: 'NA  ', ERROR: 'ERR ' }
 
-export function formatText(report) {
-  const lines = []
-  const { subject, anchor, conclusion, coverage } = report
-  lines.push(`DS-C check — ${subject.name ?? '<unknown>'}@${subject.version ?? '?'} (${subject.kind}${subject.kindInferred ? ', inferred' : ''})`)
-  lines.push(`anchor: repo=${anchor.repo} commit=${anchor.commit.slice(0, 12)} dsh=${anchor.dsh} cordis=${anchor.cordis}`)
-  lines.push(`scope=${conclusion.scope} profile=${conclusion.profile} status=${conclusion.status} exit=${conclusion.exitCode}${conclusion.subset ? ` subset=${conclusion.subset}` : ''}${conclusion.staticOnly ? ' static-only' : ''}`)
-  if (conclusion.level) lines.push(`level: ${conclusion.level}`)
-  lines.push('')
-  lines.push('id      result  clause  layer   reason')
-  for (const item of report.checks) {
-    const reason = (item.reason || '').replace(/\s+/g, ' ').slice(0, 120)
-    lines.push(`${item.id.padEnd(7)} ${ICON[item.result] ?? item.result}  ${item.clause.padEnd(6)} ${item.layer.padEnd(6)} ${reason}`)
+function renderBucket(lines, title, rows, byId) {
+  lines.push(`${title} (${rows.length}):`)
+  if (rows.length === 0) {
+    lines.push('  none')
+    return
+  }
+  for (const row of rows) {
+    const tags = [row.declaration ? 'declaration' : null, row.advisory ? 'advisory' : null].filter(Boolean)
+    const reason = String(row.reason ?? '').replace(/\s+/g, ' ').slice(0, 150)
+    lines.push(`  ${(ICON[row.result] ?? row.result).padEnd(4)} ${String(row.id).padEnd(7)} ${String(row.clause ?? '-').padEnd(6)} ${String(row.coverage ?? '-').padEnd(8)} ${reason}${tags.length > 0 ? ` [${tags.join(',')}]` : ''}`)
+    const item = byId.get(row.id)
+    if (!item || (row.result !== 'FAIL' && row.result !== 'WARN')) continue
     for (const detail of item.details ?? []) {
       if (detail.result === 'PASS') continue
-      lines.push(`        - ${detail.item}: ${detail.result} ${String(detail.reason).slice(0, 140)}`)
+      lines.push(`          - ${detail.item}: ${detail.result} ${String(detail.reason ?? '').replace(/\s+/g, ' ').slice(0, 140)}`)
     }
   }
+}
+
+export function formatText(report) {
+  const lines = []
+  const { subject, anchor = {}, conclusion, coverage } = report
+  const byId = new Map((report.checks ?? []).map(item => [item.id, item]))
+  lines.push(`DS-C check — ${subject.name ?? '<unknown>'}@${subject.version ?? '?'} (${subject.kind}${subject.kindInferred ? ', inferred' : ''})`)
+  lines.push(`anchor: repo=${anchor.repo ?? '?'} commit=${String(anchor.commit ?? '').slice(0, 12)} dsh=${anchor.dsh ?? '?'} cordis=${anchor.cordis ?? '?'}${anchor.runtimeSource ? ` source=${anchor.runtimeSource}` : ''}${anchor.suspect ? ' suspect=true' : ''}`)
+  lines.push(`scope=${conclusion.scope} profile=${conclusion.profile} status=${conclusion.status} exit=${conclusion.exitCode}${conclusion.subset ? ` subset=${conclusion.subset}` : ''}${conclusion.staticOnly ? ' static-only' : ''}`)
+  if (conclusion.level) lines.push(`level: ${conclusion.level}`)
+  if (conclusion.headline) lines.push(`headline: ${conclusion.headline}`)
   lines.push('')
-  lines.push(`coverage: mandatory=${coverage.mandatory} pass=${coverage.pass} warn=${coverage.warn} fail=${coverage.fail} na=${coverage.na} notRun=${coverage.notRun}`)
+  renderBucket(lines, 'Blocking (FAIL)', report.buckets?.blocking ?? [], byId)
+  lines.push('')
+  renderBucket(lines, 'Hygiene (WARN)', report.buckets?.hygiene ?? [], byId)
+  lines.push('')
+  renderBucket(lines, 'Not checked (NA / not-run / ERROR)', report.buckets?.notChecked ?? [], byId)
+  lines.push('')
+  const passed = (report.checks ?? []).filter(item => item.result === 'PASS')
+  lines.push(`passed (${passed.length}): ${passed.map(item => item.id).join(', ') || 'none'}`)
+  lines.push(`coverage: total=${coverage.total ?? report.checks.length} checked=${coverage.checked ?? coverage.pass + coverage.warn + coverage.fail} pass=${coverage.pass} warn=${coverage.warn} fail=${coverage.fail} na=${coverage.na} notRun=${coverage.notRun} error=${coverage.error} advisory=${coverage.advisory}`)
+  if (coverage.entryBlocking) {
+    const blocking = coverage.entryBlocking
+    lines.push(`entryBlocking: checked=${blocking.checked?.length ?? '?'}/${blocking.required} failed=[${(blocking.failed ?? []).join(', ')}] notChecked=[${(blocking.notChecked ?? []).join(', ')}] pass=${blocking.pass}`)
+  }
+  lines.push(`metrics: checked=${report.metrics?.checked ?? '?'}/${report.metrics?.total ?? '?'} declaredFields=${report.metrics?.declaredFields ?? 0}/5`)
   if (conclusion.reason) lines.push(`reason: ${conclusion.reason}`)
   if (conclusion.status === 'incomplete') lines.push('NOT A DS-C PASS: at least one mandatory check did not run (see notRun).')
   if (Array.isArray(report.advice) && report.advice.length > 0) {

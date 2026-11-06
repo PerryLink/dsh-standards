@@ -1,0 +1,92 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://github.com/PerryLink/dsh-standards/spec/schemas/advice.schema.json",
+  "title": "DSH advice entry array (dsh-advice/1)",
+  "description": "The additive `advice[]` field of a dsh-conformance/1 report. One entry per (check, key) finding; advice never changes the verdict. 13 fields are required; `ruleMissing` is an optional diagnostic emitted when spec/remediation.json has no rule for a key. `version` is the producing package version, not this schema version.",
+  "type": "array",
+  "items": {
+    "type": "object",
+    "additionalProperties": false,
+    "required": [
+      "key",
+      "gate",
+      "severity",
+      "title",
+      "why",
+      "fix",
+      "docsUrl",
+      "source",
+      "version",
+      "evidence",
+      "reason",
+      "occurrences",
+      "advisory"
+    ],
+    "properties": {
+      "key": {
+        "type": "string",
+        "minLength": 1,
+        "description": "Clause or gate key the advice is attached to (for example C-2.2)."
+      },
+      "gate": {
+        "enum": ["FAIL", "WARN"],
+        "description": "Result of the owning check after report adjustments."
+      },
+      "severity": {
+        "enum": ["FAIL", "WARN"],
+        "description": "Rendered severity; follows `gate` in dsh-advice/1."
+      },
+      "title": {
+        "type": "string",
+        "minLength": 1,
+        "description": "Short human title; falls back to the key when the rule table has no title."
+      },
+      "why": {
+        "type": ["string", "null"],
+        "description": "Why the finding matters; null when the rule table has no explanation."
+      },
+      "fix": {
+        "type": ["string", "null"],
+        "description": "Concrete remediation; null when the rule table has no fix."
+      },
+      "docsUrl": {
+        "type": ["string", "null"],
+        "format": "uri",
+        "description": "Release-pinned documentation URL; null when the rule has no docs anchor."
+      },
+      "source": {
+        "type": "string",
+        "minLength": 1,
+        "description": "Check id that produced the finding (DSC-xx)."
+      },
+      "version": {
+        "type": "string",
+        "minLength": 1,
+        "description": "Version of the producing package (dsh-standards)."
+      },
+      "evidence": {
+        "type": "array",
+        "maxItems": 10,
+        "items": { "type": "string" },
+        "description": "Up to 10 deduplicated evidence references."
+      },
+      "reason": {
+        "type": "string",
+        "description": "Diagnostic reason(s); may be empty. Not used for the verdict."
+      },
+      "occurrences": {
+        "type": "integer",
+        "minimum": 1,
+        "description": "How many duplicate details were merged into this entry."
+      },
+      "advisory": {
+        "type": "boolean",
+        "description": "True when the owning check is advisory and never moves the verdict."
+      },
+      "ruleMissing": {
+        "type": "boolean",
+        "description": "Optional diagnostic: spec/remediation.json has no rule for `key`."
+      }
+    }
+  }
+}

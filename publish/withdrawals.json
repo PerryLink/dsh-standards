@@ -1,0 +1,5 @@
+{
+  "schema": "dsh-market-withdrawals/1",
+  "comment": "人工 append-only：只追加，不删除、不改写历史。字段 name/version/date/reason；version 省略表示该包全部版本。由 .github/workflows/sidecar-lifecycle.yml 读取，withdrawn 状态不会被自动改回 active。",
+  "withdrawals": []
+}

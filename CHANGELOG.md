@@ -1,3 +1,24 @@
+## 1.3.0 — 2026-11-06
+
+### Added
+
+- `check [dir]` 子命令：默认 cwd、Markdown 报告（一句结论、≤3 条优先修复、分桶全表、advice、免责声明），`--json` 与 `--html`（单文件、内联 CSS、零依赖）。
+- `spec/schemas/advice.schema.json`（`dsh-advice/1`），advice 逐条过 schema。
+- 证据主体绑定：`--flow-evidence --dir` 校验 name/version/treeSha256/tarball 哈希，不一致即 `invalid`。
+- CI 归属：collector 写 `producer.runUrl/repository/commit`，audit 标 `attestation: self-declared|ci`（不升级 claimLevel）。
+- sidecar 生成（`publish/sidecar.json`，`dsh-market-sidecar/1`）、每日过期/撤回 workflow、离线包（~580 KB）。
+- `SUPPORTED.md`（host × node × checker 矩阵 + 证据锚）与 `CHANGELOG-RULES.md`（规则级变更与影响面）。
+
+### Fixed
+
+- coverage 按全部 14 项统计，`na/notRun/error` 不再为 0；未查 C-3.1/3.2/3.5 时 `entryBlocking.pass=false`，并输出 `checked/notChecked`。
+- 默认 runtime 锚改为宿主实际版本（`anchor.runtimeSource=host`），与 `--runtime-version` 不一致时 `anchor.suspect=true`；不再固定 `0.2.2-alpha.2`。
+- 报告分三桶：`blocking`/`hygiene`（DSC-11/12/13 声明类）/`notChecked`，text 分组渲染，JSON 加 `buckets/metrics/headline`。
+
+### Verified
+
+- `npm test` 193/193（含 root `test/`）。
+
 ## 1.2.2 — 2026-11-06
 
 - FLOW 沙箱：`flow collect --sandbox` 在 `unshare -Urn` + `prlimit` 下运行，记录 `sandbox{}`；env 白名单硬断言 token 不在子进程；进程组超时击杀；`producer.kind=sandbox` 仅当隔离项全部生效，否则 `sandbox-degraded` 且 audit 永不 runtime。测试 152 → 159。

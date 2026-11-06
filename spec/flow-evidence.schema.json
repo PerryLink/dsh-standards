@@ -29,7 +29,7 @@
     },
     "producer": {
       "type": "object",
-      "description": "Who collected the evidence. `kind: sandbox` is the producer-side equivalent of `claims.claimLevel: sandbox-attested` and is one of the two ways a document may be reported as FLOW runtime.",
+      "description": "Who collected the evidence. `kind: sandbox` is the producer-side equivalent of `claims.claimLevel: sandbox-attested` and is one of the two ways a document may be reported as FLOW runtime. `provider`/`runId`/`repository`/`commit`/`runUrl` are copied from the runner environment (GITHUB_*) and are self-declared: CI attribution is not proof that the commands ran.",
       "additionalProperties": false,
       "required": ["command", "at"],
       "properties": {
@@ -48,7 +48,11 @@
         },
         "runner": { "type": "string" },
         "actor": { "type": "string" },
-        "runUrl": { "type": "string" }
+        "runUrl": { "type": "string", "description": "CI run URL. Self-declared, display-only." },
+        "provider": { "type": "string", "description": "CI provider id (for example github-actions). Self-declared." },
+        "runId": { "type": "string", "description": "CI run id (GITHUB_RUN_ID). Self-declared." },
+        "repository": { "type": "string", "description": "CI repository (GITHUB_REPOSITORY). Self-declared." },
+        "commit": { "type": "string", "pattern": "^[0-9a-f]{40}$", "description": "CI commit (GITHUB_SHA). Self-declared." }
       }
     },
     "subject": {

@@ -19,6 +19,17 @@ node bin/dsh-plugin-verify.mjs /path/to/plugin --format json --out report.json
 node bin/dsh-plugin-verify.mjs /path/to/plugin --format sarif --out report.sarif
 ```
 
+### 作者入口：`dsh-standards check [dir]`
+
+```bash
+dsh-standards check                 # 默认 cwd，输出 Markdown
+dsh-standards check ./my-plugin --scope entry --entry-claim static --no-exec
+dsh-standards check ./my-plugin --json            # 原始 dsh-conformance/1
+dsh-standards check ./my-plugin --html out.html   # 单文件、内联 CSS、零外部资源、全转义
+```
+
+Markdown = 一句结论（`conclusion.headline`）+ ≤3 条优先修复 + `buckets` 三栏全表 + advice + 免责声明/「没查什么」。exit code 与底层检查器一致（0/1/2/3），不在这里改写。`--json` 与 `--html` 互斥；`--format`/`--out` 不转发（由 `check` 自己决定输出）。其余 flag 原样转发（`--scope`、`--runtime-version`、`--market-index` 等）。advice 的公开 schema 是 `spec/schemas/advice.schema.json`（`dsh-advice/1`，13 个必填字段，`why`/`fix`/`docsUrl` 可 null，`evidence` ≤ 10，`gate`/`severity` ∈ {FAIL,WARN}）。
+
 `buildReport()` 与 `--format json` 默认带**加性** `advice[]`（来自 `spec/remediation.json` 的 68 条规则；FAIL/WARN detail 优先，无 detail 的运行时 FAIL 用 `check.clause` 兜底）。每条 advice 的 `gate` 是该 check 的最终结果（PASS/WARN/FAIL），`severity` 跟随 `gate`：被降级为 WARN 的 check 即使 detail 仍是 FAIL，也只给 WARN，detail 原因保留在 `reason`。`--no-advice` 可关闭；它不改变任何 check 的结果或 exit code。
 
 ## 2. 检查项
@@ -142,6 +153,8 @@ node bin/dsh-flow-collect.mjs --package ./my-plugin --sandbox --out flow-evidenc
 - `--sandbox` 在临时 HOME/DSH_HOME 下跑 `dsh plugin add` + boot：先试 `unshare -n`，不行再试 `unshare -Urn`；用 `prlimit` 设 `nproc`/`as` 并从 `/proc/self/limits` 回读实际生效项；超时 SIGKILL 整个进程组（Windows `taskkill /T /F`）。硬断言 `GH_TOKEN`/`NPM_TOKEN`/`GITHUB_TOKEN` 不在子进程 env，发现即中止。
 - 只有**所有**隔离项都生效才写 `producer.kind=sandbox` / `claims.claimLevel=sandbox-attested`；任何一项缺失（`unshare-missing`、`prlimit-missing`、`env-token-present`、`home-not-isolated`）写 `sandbox-degraded` + `sandbox.degraded[]`，仍是 self-attested，`level-audit` 永不判 runtime。`--sandbox-no-network` / `--sandbox-no-limits` 用于强制验证降级路径。
 - 前置缺失（无 dsh、无 `--previous`、宿主兼容门禁拒绝）记 `blocked` + reason，出口码 0；真失败出口码 1，并打印五要素提示（子检查 / 命令 / exitCode / stderr 末 20 行 / 日志绝对路径 + 条款锚）。
+- `level-audit --flow-evidence ... --dir <pkg>` 会把证据主体绑定到目录：`package.json` 的 name/version、重算的 `treeSha256`、`npm pack --ignore-scripts` 的 tarball sha256/integrity 必须与 `subject` 一致，否则 FLOW 直接 `invalid`，结果里输出 `subject.{declared,recomputed,mismatches}`。省略 `--dir` 时不做重绑定（旧行为）。
+- **CI 归属不是证明**：runner 上存在 `GITHUB_RUN_ID`/`GITHUB_REPOSITORY`/`GITHUB_SHA` 时，collector 把它们写进 `producer.runUrl/repository/commit`，`level-audit` 输出 `attestation: ci | self-declared`。这些字段来自环境变量、是自我声明，既不升级 `claims.claimLevel`，也不证明命令真的在 CI 里跑过。
 - 本地证据默认 `self-attested`：结构自洽 + 绑定此包 + 未过期，**不证明真跑过**。即使 `--sandbox` 通过，它也只是 containment（无 seccomp/cgroup/OCI 镜像/签名），不是认证或安全审计。`level-audit` 只有见到 `claims.claimLevel=sandbox-attested` 或 `producer.kind=sandbox` 才判 `runtime`；self/ci/degraded 证据保留 `passed` 计数但记 `not-run`。
 
 ## 4. 运行 L1–L3
@@ -151,7 +164,7 @@ node bin/dsh-flow-collect.mjs --package ./my-plugin --sandbox --out flow-evidenc
 ```bash
 node bin/dsh-plugin-verify.mjs ./my-plugin \
   --runtime /path/to/deepseek-harness/vendor/cordis/lib/index.js \
-  --runtime-version 0.2.2-alpha.2 \
+  --runtime-version 0.2.1-rc.5 \   # 省略时自动取 `dsh --version`（宿主实际版本）
   --cordis-version 4.0.6-alpha.1
 ```
 
@@ -178,6 +191,10 @@ node bin/dsh-plugin-verify.mjs ./my-plugin \
 | 3 | 用法错误 |
 
 **结论门**：`--scope ds-c` 只有在 profile 对应的强制项全部 `coverage: full`（允许显式 NA）时才给 `level`；否则 `status: incomplete`、exit 2。WARN 仍给 `level`，但写 `DS-C (profile, warnings)`，不冒充干净通过。
+
+**覆盖度与分桶（加性）**：`coverage` 统计报告携带的**全部**检查（完整跑是 14 项）——`pass/warn/fail/na/notRun/error` 都按 `checks[]` 实算，`total` 是总数；`coverage.notRun` 含 ERROR/未跑与缺失的强制项，`na` 再单列。`metrics = {checked, total, declaredFields}` 中的 `declaredFields` 是 5 个可选声明面（capabilities/labels/commitments/disclosure/engines.dsh）中实际声明的个数，只作上下文、不进结论。`buckets.blocking`（FAIL）、`buckets.hygiene`（WARN，`DSC-11/12/13` 标 `declaration`）、`buckets.notChecked`（NA/not-run/ERROR）是 text 的渲染顺序。`entryBlocking` 增加 `checked`/`notChecked`：`pass` 仅在 6 个阻断前提（C-1.1/1.2/1.4、C-3.1/3.2/3.5；runtime claim 再加 C-2.2/2.3）**都**产出 detail 且无 FAIL 时为 true——没给 `--install-spec`/`--market-index` 时 C-3.x 未查，`pass` 必为 false。
+
+**锚**：`anchor.dsh` 默认取宿主 `dsh --version`（`anchor.runtimeSource=host`）；显式 `--runtime-version` 时 `runtimeSource=cli`，与宿主不一致则 `anchor.suspect=true`；找不到 dsh 才回退常量并标 `fallback`。
 
 ## 6. 已知限制
 

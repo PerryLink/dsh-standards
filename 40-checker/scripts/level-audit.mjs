@@ -31,7 +31,7 @@ import fs from 'node:fs'
 import path from 'node:path'
 import { spawnSync } from 'node:child_process'
 import { fileURLToPath } from 'node:url'
-import { FLOW_IDS, FLOW_EVIDENCE_SCHEMA, validateFlowEvidence } from '../src/flow-evidence.mjs'
+import { FLOW_IDS, FLOW_EVIDENCE_SCHEMA, bindEvidenceSubject, validateFlowEvidence } from '../src/flow-evidence.mjs'
 
 const HERE = path.dirname(fileURLToPath(import.meta.url))
 const STD = path.resolve(HERE, '..', '..')
@@ -52,6 +52,10 @@ Options:
   --flow-evidence <file>   dsh-flow-evidence/2 JSON from dsh-flow-collect.mjs (J1-J8 checks
                             with command/exitCode/times/stdout sha256/assertions). v1 and bare
                             {Jx:{status}} files are reported deprecated and never count as pass.
+  --dir <dir>              bind the flow evidence to this package directory: name/version,
+                            recomputed treeSha256 and npm-pack tarball hash must match the
+                            evidence subject, otherwise FLOW becomes invalid. If the positional
+                            directory is omitted, --dir is used for the ENTRY check too.
   --boost-evidence <file>  JSON: { "LEV-3": { "status": "measured|not-measured|failed", "evidenceCard": { ... } }, ... }
                             measured requires a valid evidence card; a status-only row is downgraded to not-measured
   --timeout <ms>           checker timeout, default 150000
@@ -65,7 +69,7 @@ are reported as not-run / not-measured.`)
 
 function parseArgs(argv) {
   const options = {
-    dir: null, host: null, base: null, bare: null, runtime: true,
+    dir: null, bindDir: null, host: null, base: null, bare: null, runtime: true,
     flowEvidence: null, boostEvidence: null, timeout: 150_000,
     format: 'text', out: null,
   }
@@ -82,6 +86,7 @@ function parseArgs(argv) {
     else if (arg === '--bare') options.bare = next()
     else if (arg === '--no-runtime') options.runtime = false
     else if (arg === '--flow-evidence') options.flowEvidence = next()
+    else if (arg === '--dir') options.bindDir = next()
     else if (arg === '--boost-evidence') options.boostEvidence = next()
     else if (arg === '--timeout') options.timeout = Number(next())
     else if (arg === '--format') options.format = next()
@@ -91,11 +96,17 @@ function parseArgs(argv) {
     else if (options.dir === null) options.dir = arg
     else throw new Error(`unexpected argument: ${arg}`)
   }
-  if (!options.dir) throw new Error('a plugin directory is required')
+  if (options.bindDir !== null && options.dir !== null && path.resolve(options.bindDir) !== path.resolve(options.dir)) {
+    throw new Error('the positional directory and --dir point at different packages')
+  }
+  if (!options.dir) options.dir = options.bindDir
+  if (!options.dir) throw new Error('a plugin directory is required (positional or --dir)')
   if (!['text', 'json'].includes(options.format)) throw new Error('--format must be text or json')
   if (!Number.isFinite(options.timeout) || options.timeout < 1000) throw new Error('--timeout must be >= 1000')
   options.dir = path.resolve(options.dir)
+  if (options.bindDir !== null) options.bindDir = path.resolve(options.bindDir)
   if (!fs.existsSync(path.join(options.dir, 'package.json'))) throw new Error(`not a package directory: ${options.dir}`)
+  if (options.bindDir !== null && !fs.existsSync(path.join(options.bindDir, 'package.json'))) throw new Error(`not a package directory: ${options.bindDir}`)
   return options
 }
 
@@ -158,12 +169,21 @@ function classifyEntry(report, invoked) {
   }
 }
 
-function classifyFlow(evidence) {
+function attestationOf(evidence) {
+  const producer = evidence && typeof evidence.producer === 'object' ? evidence.producer : null
+  if (producer?.kind === 'ci') return 'ci'
+  if (typeof producer?.runUrl === 'string' && producer.runUrl !== '') return 'ci'
+  return 'self-declared'
+}
+
+function classifyFlow(evidence, binding = null) {
   const ids = FLOW_IDS
   const emptyJourneys = () => Object.fromEntries(ids.map(id => [id, { status: 'not-run', declared: null, checks: 0, passes: false }]))
   if (!evidence) {
     return {
       state: 'not-run',
+      attestation: 'self-declared',
+      subject: binding,
       schema: null,
       claimLevel: null,
       producerKind: null,
@@ -185,6 +205,8 @@ function classifyFlow(evidence) {
     return row?.status ?? null
   }
   const base = {
+    attestation: attestationOf(evidence),
+    subject: binding,
     schema: verdict.schema,
     claimLevel: verdict.claimLevel ?? null,
     producerKind: verdict.producerKind ?? null,
@@ -205,12 +227,19 @@ function classifyFlow(evidence) {
       journeys: Object.fromEntries(ids.map(id => [id, { status: 'deprecated', declared: declaredOf(id), checks: 0, passes: false }])),
     }
   }
-  if (!verdict.valid) {
+  const bindingErrors = binding && !binding.ok
+    ? [...(binding.errors ?? []), ...(binding.mismatches ?? [])].map(message => `subject binding: ${message}`)
+    : []
+  if (!verdict.valid || bindingErrors.length > 0) {
+    const errors = [...verdict.errors, ...bindingErrors]
     return {
       ...base,
       state: 'invalid',
       invalid: true,
-      reason: `${FLOW_EVIDENCE_SCHEMA} failed structural validation: ${verdict.errors.slice(0, 5).join('; ')}${verdict.errors.length > 5 ? ` (+${verdict.errors.length - 5} more)` : ''}`,
+      errors,
+      reason: bindingErrors.length > 0
+        ? `evidence subject does not match the inspected package: ${[...(binding.errors ?? []), ...(binding.mismatches ?? [])].join('; ')}`
+        : `${FLOW_EVIDENCE_SCHEMA} failed structural validation: ${verdict.errors.slice(0, 5).join('; ')}${verdict.errors.length > 5 ? ` (+${verdict.errors.length - 5} more)` : ''}`,
       evidenceHash: {
         declared: verdict.declaredHash,
         computed: verdict.computedHash,
@@ -391,6 +420,7 @@ function render(result) {
     `DSH level audit — ${result.target.dir}`,
     `  ENTRY : ${result.levels.entry.state.padEnd(12)} (${result.levels.entry.checkerLevel ?? 'no level'})`,
     `  FLOW  : ${result.levels.flow.state.padEnd(12)} ${result.levels.flow.reason}`,
+    `  attest: ${result.levels.flow.attestation}${result.levels.flow.subject ? ` (subject ${result.levels.flow.subject.ok ? 'bound' : 'MISMATCH'})` : ''}`,
     `  BOOST : ${result.levels.boost.state.padEnd(12)} ${result.levels.boost.reason}`,
   ]
   if (result.nextActions.length > 0) {
@@ -409,7 +439,13 @@ function main() {
 
   const checker = runChecker(options)
   const entry = classifyEntry(checker.report, checker.invoked)
-  const flow = classifyFlow(flowEvidence)
+  // Subject binding is opt-in via --dir: it re-reads the package and re-packs
+  // it, so an evidence file can no longer vouch for a different version/hash.
+  let binding = null
+  if (flowEvidence && options.bindDir) {
+    binding = bindEvidenceSubject(flowEvidence, options.bindDir, { timeoutMs: options.timeout })
+  }
+  const flow = classifyFlow(flowEvidence, binding)
   const boost = classifyBoost(boostEvidence)
 
   const result = {
@@ -418,6 +454,8 @@ function main() {
     target: { dir: options.dir },
     levelsSpec: { schema: levels.schema, version: levels.version, status: levels.status },
     levels: { entry, flow, boost },
+    attestation: flow.attestation,
+    subject: binding,
     nextActions: nextActions(entry, flow, boost),
     notClaimed: ['official standard', 'certification', 'security audit', 'ranking', 'production baseline'],
     checker: {
