@@ -23,7 +23,7 @@
 
 ```sh
 npm i -g dsh-standards                                        # 全局：dsh-standards + dsh-levels
-npx dsh-standards <plugin-dir> --scope entry --entry-claim static   # 或不装，直接用 npx
+npx dsh-standards check <plugin-dir>                          # 安全默认：静态检查，不执行插件代码
 ```
 
 </div>
@@ -44,9 +44,9 @@ DSH 插件的采用深度分三层，每层一个问题、一套证据状态，*
 
 仓里就三样东西：`40-checker/`（DS-C 一致性检查器与全部证据脚本）、`bin/`（两个公开入口 `dsh-standards` 与 `dsh-levels`），以及 `spec/` 与 `31`–`35` 号规范正文。工具只读目标包，不改被检对象；结论只认证据，`not-run`、`NA`、`static` 都不会被写成 PASS。
 
-npm 上的旧占位 `dsh-standards@0.0.3` 只是名字预留，这条 1.x 线取代了它（当前 `1.1.2`）；两个 bin 分别叫 `dsh-standards` 与 `dsh-levels`。
+npm 上的旧占位 `dsh-standards@0.0.3` 只是名字预留，这条 1.x 线取代了它（当前 `1.3.0`）；两个 bin 分别叫 `dsh-standards` 与 `dsh-levels`。
 
-固定锚点（写在 `spec/levels.json` 与报告里）：`repo=deepseek-ai/deepseek-harness`、`commit=ce7073d51254`、`dsh=0.2.2-alpha.2`、`cordis=4.0.6-alpha.1`。换运行时版本要显式传参，报告会记下你量的是哪一版。
+锚点不是硬编码的通行证：`repo` / `commit` / `cordis` 记在报告里，`dsh` 由 `--host-version`、`DSH_HOST_VERSION` 或显式 `--allow-host-probe` 解析；都没有时报告写「host 版本未知」，并标 `source=default, suspect=true`。换一次版本就是另一把尺子，旧报告不能直接当新版本的证据。
 
 ### 当前硬数据
 
@@ -55,7 +55,7 @@ npm 上的旧占位 `dsh-standards@0.0.3` 只是名字预留，这条 1.x 线取
 - 18 包 base-only runtime：**18/18 有原始 JSON；10/18 G3 verified，8 partial，0 error**；host gate 后 **8 clean + 2 reject + 8 partial**；
 - client runtime：**15/15 `client-module-loaded`**（真实 Chromium）；web-app **4/4 loaded**；
 - 不可用：**0 plugin code FAIL；2 host-gate reject（telemetry/verification）**；
-- 检查器自测：**128/128 tests**（本地 `node --test 40-checker/test/*.test.mjs`；含治理、DCO、评价记录、声明、验真、链、漂移测试）；
+- 检查器自测：**`npm test` 全绿**（本地 Node 24；含安全默认、host 三态、治理、DCO、评价记录、声明、验真、链、漂移测试）；
 - J1：**6 PASS + 1 WARN**；LEV-3：volatile **0/20** vs control **20/20** remount；LEV-6：稳定 prefix **100%** vs 易变 **0%**；LEV-7：**8.24×**（合成，非生产基线）。
 
 这些数字是自评与仓内证据链的输出，不是第三方复核结论——报告里的 `notClaimed` 字段会把「官方标准、认证、安全审计、排名、生产基线」逐条列出来。
@@ -72,6 +72,7 @@ npm 上的旧占位 `dsh-standards@0.0.3` 只是名字预留，这条 1.x 线取
 - [33-DSH-BOOST 加速实践](33-DSH-BOOST加速实践.md) — 8 条 LEV
 - [34-三层分级模型（GB/GB-T/GB-Z 类比）](34-三层分级模型-GB-GBT-GBZ类比.md) — 为什么是三层、怎么读
 - [35-三层开发建议与验收清单](35-三层开发建议与验收清单.md) — 作者最短路径 / 评审清单
+- [docs/coverage.md](docs/coverage.md) — 14 项检查：默认查什么、不查什么、怎么开启
 - [36-插件全生命周期与工具链](36-插件全生命周期与工具链.md) — 从脚手架到退役
 - [37-PerryLink 插件生态三层对照](37-PerryLink插件生态-三层对照与升级清单.md) — 我的仓怎么升级
 - [38-三层标准 RFC](38-RFC-三层标准-待商议问题.md) — 内测群商议的 8 个问题
@@ -116,6 +117,9 @@ npx -p dsh-standards dsh-levels --help
 **2. 跑一次检查**（目标是一个含 `package.json` 的包目录）：
 
 ```sh
+# 作者入口（推荐）：默认 --entry-claim static --no-exec，不执行插件代码
+dsh-standards check ./my-plugin
+
 # 入门兼容性：静态识别，不声明运行时证据
 dsh-standards ./my-plugin --scope entry --entry-claim static
 
@@ -126,6 +130,8 @@ dsh-standards ./my-plugin --format sarif --out report.sarif
 # 三层自检：ENTRY 自动跑；FLOW / BOOST 没证据文件就如实记 not-run / not-measured
 dsh-levels ./my-plugin --format json --out audit.json
 ```
+
+`check` 是面向作者的安全入口：**默认 `--entry-claim static --no-exec`，不执行插件代码**；Markdown 报告顶部会写明「本次未执行插件代码」。要跑 L1–L3，必须显式给 `--runtime <cordis lib/index.js>`（bundle 用 `--host`）或 `--entry-claim runtime`，否则运行时项一律记 `not-run`，绝不写成 PASS。它也不会无条件执行 PATH 里的 `dsh`：anchor 依次取 `--host-version`、`$DSH_HOST_VERSION`，再次才是显式 `--allow-host-probe`；三者都没有时报告写「host 版本未知」，并标 `source=default, suspect=true`。
 
 **3. 看结论**——先看 exit code，再看 `status`：
 
@@ -191,19 +197,21 @@ coverage: mandatory=5 pass=5 warn=0 fail=0 na=0 notRun=0
 
 ## 配置
 
-没有配置文件——全部可调项就是命令行参数。两个命令各一套：`dsh-standards <package-dir>` 转发给 DS-C 检查器（`--help` 打印完整用法），`dsh-levels <package-dir>` 转发给三层审计。
+没有配置文件——全部可调项就是命令行参数。三个入口各一套：`dsh-standards check <package-dir>` 是作者安全入口（默认静态、不执行插件代码），`dsh-standards <package-dir>` 是向后兼容的裸检查器（不附加安全默认，`--help` 打印完整用法），`dsh-levels <package-dir>` 转发给三层审计。下表默认值指 `check`；裸检查器的 `--entry-claim` / `--no-exec` 默认仍是 `runtime` / `false`。
 
-最常用的 8 个：
+最常用的 10 个：
 
 | 参数 | 默认值 | 含义 |
 |---|---|---|
 | `<package-dir>` | `.` | 目标包目录，必须含 `package.json`；tarball 不在支持范围 |
 | `--scope` | `ds-c` | `mvp` = 8 个 MVP ID；`ds-c` = 全量声明；`entry` = 兼容性门 |
 | `--format` | `text` | `text` / `json` / `sarif`（SARIF 2.1.0） |
-| `--entry-claim` | `runtime` | `runtime` 需 DSC-14 运行时证据；`static` 只声明结构识别 |
-| `--host` | — | app-boot 的 `lib/index.js`；bundle 的 G0–G3 冒烟必需 |
+| `--entry-claim` | `static`（`check`；裸检查器 `runtime`） | `runtime` 需 DSC-14 运行时证据；`static` 只声明结构识别 |
+| `--host` | — | app-boot 的 `lib/index.js`；bundle 的 G0–G3 冒烟必需，也视为执行 opt-in |
 | `--profile` | `package` | `package` / `listing` / `both`；给了 `--market-index` 时默认 `listing` |
-| `--no-exec` | `false` | 跳过 L1–L3，记 `not-run`（绝不记 PASS） |
+| `--no-exec` | `true`（`check`；裸检查器 `false`） | 跳过 L1–L3，记 `not-run`（绝不记 PASS） |
+| `--host-version` | `$DSH_HOST_VERSION` | `check` 专用的宿主 dsh 版本；不执行任何 `dsh` |
+| `--allow-host-probe` | `false` | 显式允许 `check` 解析 `dsh` 的 JS 入口并 `node ... --version` 探测 |
 | `--out` | — | 报告写入文件；不给就打 stdout |
 
 <details>
@@ -215,19 +223,21 @@ coverage: mandatory=5 pass=5 warn=0 fail=0 na=0 notRun=0
 | `--scope` | `ds-c` | 检查范围：`mvp` / `ds-c` / `entry` |
 | `--profile` | `package` | 评估 profile：`package` / `listing` / `both` |
 | `--runtime` | — | 指向构建好的 `@deepseek-ai/cordis` `lib/index.js`，开启 L1–L3 |
-| `--runtime-version` | `0.2.2-alpha.2` | 写进 anchor 的 dsh 运行时版本，供 C-2 判定 |
+| `--runtime-version` | 宿主版本（`check`）；否则内置常量 | 写进 anchor 的 dsh 运行时版本，供 C-2 判定；报告用 `anchor.runtimeSource` 说明来源 |
 | `--cordis-version` | `4.0.6-alpha.1` | 写进 anchor 的 cordis 版本 |
 | `--commit` | `ce7073d51254` | 写进 anchor 的 harness commit |
 | `--install-spec` | — | 给 C-3 用的推荐安装 spec |
 | `--market-index` | — | 格式 1 的市场索引 JSON，开启 listing 模式 |
 | `--plugin-name` | — | 市场索引里的插件名 |
 | `--timeout` | `10000` | L1–L3 超时毫秒（100–120000） |
-| `--no-exec` | `false` | 完全跳过 L1–L3，记 `not-run` / `NA` |
+| `--no-exec` | `false`（裸检查器；`check` 默认 `true`） | 完全跳过 L1–L3，记 `not-run` / `NA` |
 | `--static-only` | `false` | M1 模式：只留 C-1/C-2/C-3/C-11/C-12/C-13，C-4–C-9 直接出界 |
 | `--treat-as-plugin` | `false` | 对 bundle 的 server 入口跑 L1–L3 |
 | `--entry-runtime` | `require` | entry 门要完整 G0–G3，还是接受 `server-entry` 代理 |
-| `--entry-claim` | `runtime` | entry 门要运行时证据（DSC-14），还是只做静态识别 |
-| `--host` | — | app-boot `lib/index.js`，开启 bundle 的 G0–G3 冒烟 |
+| `--entry-claim` | `runtime`（裸检查器；`check` 默认 `static`） | entry 门要运行时证据（DSC-14），还是只做静态识别 |
+| `--host` | — | app-boot `lib/index.js`，开启 bundle 的 G0–G3 冒烟（`check` 中视为执行 opt-in） |
+| `--host-version` | `$DSH_HOST_VERSION` | `check` 专用：直接声明宿主版本，不执行 `dsh` |
+| `--allow-host-probe` | `false` | `check` 专用：显式允许探测宿主版本 |
 | `--base` | — | bundle 冒烟用的 base `cordis.patch.yml` |
 | `--web` | — | bundle 冒烟用的 web-app `cordis.patch.yml` |
 | `--bare` | — | host farm 的 bare-module 基线目录 |
@@ -297,7 +307,8 @@ coverage: mandatory=5 pass=5 warn=0 fail=0 na=0 notRun=0
 - **不声称官方推荐或采纳；不声称认证 / 认可 / 安全审计。**
 - **MVP 覆盖缺口**：`--scope mvp` 只落 8 个 ID，`DSC-03/10/11/12/13` 不在其中；它的结论是 `subset: "MVP-13"`、`level: null`，不得当 DS-C 徽章用。
 - **只吃包目录**：目标必须是含 `package.json` 的目录；tarball 支持不在 MVP 里。
-- **运行时结论有前置条件**：没有 `--runtime` 或 `--host` 时 L1–L3 只能记 `not-run`；`--entry-claim static` 永远给不出运行时结论。
+- **运行时结论有前置条件**：没有 `--runtime` 或 `--host` 时 L1–L3 只能记 `not-run`；`--entry-claim static` 永远给不出运行时结论。`check` 默认就是不执行（`--no-exec`），这是刻意的安全默认，不是缺陷。
+- **host 版本可能未知**：`check` 不无条件执行 PATH 里的 `dsh`；没有 `--host-version` / `DSH_HOST_VERSION` / `--allow-host-probe` 时，anchor 写默认常量并标 `source=default, suspect=true`，报告顶部写「host 版本未知」。
 - **结论带版本锚点**：`commit` / `dsh` / `cordis` 变了就是另一把尺子，旧报告不能直接当新版本的证据。
 - **BOOST 数据不是生产基线**：LEV 的 8/8 measured 来自 loader / context / provider-capture / synthetic timer 的合成环境，LEV-7 的 8.24× 同理。
 - **文本改动必须说明**：复制或修改本仓文本时，必须在显著位置给出 Change Notice（来源 commit、改了哪个章节、改了什么、为什么、日期），见 [`MODIFICATION-POLICY.md`](MODIFICATION-POLICY.md)；标志与 badge 不随许可证授权，规则见 `governance/mark-policy.md`。
@@ -308,9 +319,10 @@ coverage: mandatory=5 pass=5 warn=0 fail=0 na=0 notRun=0
 git clone https://github.com/PerryLink/dsh-standards.git
 cd dsh-standards
 
-node --test 40-checker/test/*.test.mjs                      # 128/128
+node --test 40-checker/test/*.test.mjs                      # 全绿（含安全默认与 host 三态）
+node bin/dsh-standards.mjs check 40-checker/fixtures/good   # 安全默认：静态、不执行
 node bin/dsh-standards.mjs 40-checker/fixtures/good \
-  --scope entry --entry-claim static --format text          # 本仓 fixture 冒烟
+  --scope entry --entry-claim static --format text          # 裸检查器 fixture 冒烟
 node bin/dsh-levels.mjs 40-checker/fixtures/good --format json
 
 # 从源码直连检查器：结构识别 / 声明运行（bundle 需要 host）

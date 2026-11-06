@@ -28,6 +28,28 @@ function inside(root, target) {
   return relative === '' || (!relative.startsWith('..') && !path.isAbsolute(relative))
 }
 
+/**
+ * Every local file target declared by `exports` (including conditional
+ * objects), labelled with the subpath that declares it. Wildcard patterns and
+ * non-relative targets cannot be checked statically and are skipped.
+ */
+function exportTargets(exportsValue) {
+  const targets = []
+  const visit = (node, label) => {
+    if (typeof node === 'string') { targets.push({ label, target: node }); return }
+    if (Array.isArray(node)) { for (const item of node) visit(item, label); return }
+    if (isObject(node)) { for (const item of Object.values(node)) visit(item, label) }
+  }
+  if (typeof exportsValue === 'string') {
+    visit(exportsValue, 'exports["."]')
+  } else if (isObject(exportsValue)) {
+    for (const [subpath, node] of Object.entries(exportsValue)) {
+      visit(node, subpath === '.' ? 'exports["."]' : `exports["${subpath}"]`)
+    }
+  }
+  return targets
+}
+
 export function resolveEntry(dir, manifest) {
   const candidates = []
   const exportTarget = rootExportTarget(manifest)
@@ -85,9 +107,10 @@ function checkExportShape(entry, kind) {
 
 function analyzePatch(dir, manifest) {
   const raw = manifest?.dsh?.bundle?.patch
-  if (raw === undefined) return { present: false, files: [], problems: [], enabledPluginManagerTools: false }
+  if (raw === undefined) return { present: false, files: [], problems: [], rows: [], enabledPluginManagerTools: false }
   const files = []
   const problems = []
+  const rows = []
   let enabledPluginManagerTools = false
   for (const entry of asArray(raw)) {
     if (typeof entry !== 'string' || entry.trim() === '') {
@@ -111,21 +134,27 @@ function analyzePatch(dir, manifest) {
     let text = ''
     try { text = readText(absolute) } catch { problems.push(`patch file is unreadable: ${entry}`); continue }
     const lines = text.split('\n')
+    let lastId = null
     for (let index = 0; index < lines.length; index += 1) {
       const line = lines[index]
+      const idMatch = /^\s*-?\s*id:\s*['"]?([^'"\s#]+)['"]?/.exec(line)
+      if (idMatch) lastId = idMatch[1]
       const match = /^\s*name:\s*['"]?([^'"\s#]+)['"]?/.exec(line)
       if (!match) continue
       const name = match[1]
       if (path.isAbsolute(name) || name.startsWith('~') || name.includes('$') || name.split(/[\\/]/).includes('..')) {
         problems.push(`patch row name escapes the package: ${name}`)
       }
+      const window = lines.slice(Math.max(0, index - 3), index + 6).join('\n')
+      const disabledLine = /disabled:\s*([^\n#]+)/.exec(window)
+      const disabled = disabledLine !== null && /^true\b/.test(disabledLine[1].trim())
+      rows.push({ name, id: lastId, disabled, conditional: disabledLine !== null && !disabled })
       if (name === '@deepseek-ai/dsh-plugin-manager/tools') {
-        const window = lines.slice(index, index + 4).join('\n')
         if (!/disabled:\s*true/.test(window)) enabledPluginManagerTools = true
       }
     }
   }
-  return { present: true, files, problems, enabledPluginManagerTools }
+  return { present: true, files, problems, rows, enabledPluginManagerTools }
 }
 
 function supplyChain(dir, manifest) {
@@ -180,7 +209,7 @@ export function runManifestChecks(dir, options = {}) {
   const kindInfo = inferKind(manifest, entry.exists)
   const kind = kindInfo.kind
   const patch = analyzePatch(dir, manifest)
-  const g4 = checkClientShape(manifest)
+  const g4 = checkClientShape(manifest, dir)
 
   const manifestDetails = []
   const name = manifest.name
@@ -196,10 +225,13 @@ export function runManifestChecks(dir, options = {}) {
   }
   if (entry.escape) {
     manifestDetails.push(detail('C-1.2', 'FAIL', `entry escapes the package: ${entry.target}`, ['package.json#exports']))
-  } else if (entry.declaredMissing && entry.buildHint) {
-    manifestDetails.push(detail('C-1.2', 'WARN', `exports["."] target missing; build hint exists (${entry.sourceEntry ?? 'build script'})`, ['package.json#exports']))
   } else if (entry.declaredMissing) {
-    manifestDetails.push(detail('C-1.2', 'FAIL', `exports["."] points to a missing file: ${entry.target}`, ['package.json#exports']))
+    // A declared entry that is absent is a packaging defect. A build hint only
+    // explains it; it does not make the package loadable from the tarball.
+    const hint = entry.buildHint
+      ? ` (build hint: ${entry.sourceEntry ?? 'build script'}; publish the built file)`
+      : ''
+    manifestDetails.push(detail('C-1.2', 'FAIL', `exports["."] points to a missing file: ${entry.target}${hint}`, ['package.json#exports']))
   } else if (entry.exists) {
     manifestDetails.push(detail('C-1.2', 'PASS', `entry resolves via ${entry.source}: ${entry.relative}`, [entry.relative]))
   } else if (entry.buildHint) {
@@ -216,6 +248,37 @@ export function runManifestChecks(dir, options = {}) {
   } else {
     manifestDetails.push(detail('C-1.2', 'FAIL', 'no resolvable runtime entry', ['package.json#exports', 'package.json#main']))
   }
+
+  // Declared `exports` subpaths and `main` must point at files that ship with
+  // the package. This is a pure file-existence check: it works for bundles
+  // (which may have no root entry) and for client subpaths that the host
+  // resolves through the package root.
+  const checkedTargets = new Map()
+  const missingTargetDetails = []
+  const noteTarget = (label, target, source, { allowBare = false } = {}) => {
+    if (typeof target !== 'string' || target.trim() === '') return
+    if (!allowBare && !target.startsWith('./')) return
+    if (target.includes('*')) return
+    const key = `${label}|${target}`
+    if (checkedTargets.has(key)) return
+    checkedTargets.set(key, true)
+    const absolute = path.resolve(dir, target)
+    if (!inside(dir, absolute)) {
+      missingTargetDetails.push(detail('C-1.2', 'FAIL', `${label} target escapes the package: ${target}`, [source]))
+      return
+    }
+    if (!isFile(absolute)) {
+      missingTargetDetails.push(detail('C-1.2', 'FAIL', `${label} points to a missing file: ${target}`, [source]))
+    }
+  }
+  for (const item of exportTargets(manifest.exports)) {
+    if (item.label === 'exports["."]') continue // resolveEntry() already judged the root export
+    noteTarget(item.label, item.target, 'package.json#exports')
+  }
+  if (typeof manifest.main === 'string' && manifest.main.trim() !== '') {
+    noteTarget('main', manifest.main, 'package.json#main', { allowBare: true })
+  }
+  manifestDetails.push(...missingTargetDetails.slice(0, 8))
   const shape = checkExportShape(entry, kind)
   manifestDetails.push(detail('C-1.3', shape.result, shape.reason, shape.evidence))
   if (!patch.present) {
@@ -255,7 +318,7 @@ export function runManifestChecks(dir, options = {}) {
     } else if (!validRange(dshEngine)) {
       compatDetails.push(detail('C-2.1', 'FAIL', `engines.dsh is not a SemVer range: ${dshEngine}`, ['package.json#engines.dsh']))
     } else if (!satisfies(runtimeVersion, dshEngine)) {
-      compatDetails.push(detail('C-2.2', 'FAIL', `engines.dsh ${dshEngine} does not satisfy runtime ${runtimeVersion}`, ['package.json#engines.dsh']))
+      compatDetails.push(detail('C-2.2', 'FAIL', `engines.dsh ${dshEngine} is valid but does not satisfy runtime ${runtimeVersion}`, ['package.json#engines.dsh']))
     } else {
       compatDetails.push(detail('C-2.1', 'PASS', `engines.dsh=${dshEngine}`))
       compatDetails.push(detail('C-2.2', 'PASS', `runtime ${runtimeVersion} satisfies ${dshEngine}`))
@@ -267,23 +330,33 @@ export function runManifestChecks(dir, options = {}) {
       }
     }
   } else if (dshPeers.length > 0) {
-    let failed = false
+    let invalid = false
+    let unsatisfied = false
     for (const [peer, rangeValue] of dshPeers) {
       if (typeof rangeValue !== 'string') {
         compatDetails.push(detail('C-2.1', 'FAIL', `peer ${peer} must be a string range`, [`package.json#peerDependencies.${peer}`]))
-        failed = true
+        invalid = true
         continue
       }
       const effective = /^workspace:(?:\^|~|\*)$/.test(rangeValue) ? runtimeVersion : rangeValue
       if (!validRange(effective)) {
         compatDetails.push(detail('C-2.1', 'FAIL', `peer ${peer} is not a SemVer range: ${rangeValue}`, [`package.json#peerDependencies.${peer}`]))
-        failed = true
+        invalid = true
       } else if (!satisfies(runtimeVersion, effective)) {
-        compatDetails.push(detail('C-2.2', 'FAIL', `peer ${peer} ${rangeValue} does not satisfy runtime ${runtimeVersion}`, [`package.json#peerDependencies.${peer}`]))
-        failed = true
+        // A syntactically valid range that does not cover this runtime is a
+        // compatibility finding (C-2.2), never an invalid declaration (C-2.1).
+        compatDetails.push(detail('C-2.2', 'FAIL', `peer ${peer} range ${rangeValue} is valid but does not satisfy runtime ${runtimeVersion}`, [`package.json#peerDependencies.${peer}`]))
+        unsatisfied = true
       }
     }
-    compatDetails.push(detail('C-2.1', failed ? 'FAIL' : 'WARN', failed ? 'one or more dsh peers are unsatisfied' : 'no engines.dsh; dsh peer range is the weaker alternate declaration'))
+    if (!invalid) {
+      compatDetails.push(detail('C-2.1', 'PASS', 'dsh peer range(s) are valid SemVer; no engines.dsh declared'))
+    }
+    if (invalid) {
+      compatDetails.push(detail('C-2.1', 'FAIL', 'one or more dsh peer ranges are invalid'))
+    } else if (!unsatisfied) {
+      compatDetails.push(detail('C-2.2', 'PASS', `runtime ${runtimeVersion} satisfies the dsh peer range(s)`))
+    }
   } else {
     compatDetails.push(detail('C-2.1', 'FAIL', 'neither engines.dsh nor a @deepseek-ai/dsh* peer range is declared', ['package.json#engines', 'package.json#peerDependencies']))
   }

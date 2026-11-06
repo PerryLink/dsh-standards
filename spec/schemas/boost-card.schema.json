@@ -1,0 +1,107 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://github.com/PerryLink/dsh-standards/spec/schemas/boost-card.schema.json",
+  "title": "DSH BOOST evidence card (dsh-boost-card/1)",
+  "description": "One evidence card per practice, per plugin. These are exactly the thirteen fields `40-checker/scripts/level-audit.mjs` requires (BOOST_CARD_FIELDS); a missing or malformed field downgrades the practice to not-measured. `expiresAt` must not precede `generatedAt`, and a past `expiresAt` makes the card stale; both rules need the run date, so they live in level-audit rather than in this schema. `recordHash` is sha256 over the card JSON without that field; the validator checks the shape, a reviewer recomputes it. The card may sit under `evidenceCard` or as an object under `evidence` in the LEV evidence file.",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "subject",
+    "host",
+    "method",
+    "scope",
+    "command",
+    "result",
+    "negativeControl",
+    "generatedAt",
+    "expiresAt",
+    "recordHash",
+    "claimLevel",
+    "issuer",
+    "selfAssessed"
+  ],
+  "properties": {
+    "subject": {
+      "type": "string",
+      "minLength": 1,
+      "description": "What was measured, as name@version. Not the repository name."
+    },
+    "host": {
+      "type": "string",
+      "minLength": 1,
+      "description": "DSH / Cordis / Node versions and the platform, for example \"dsh 0.2.2-alpha.3 / cordis 4.0.6-alpha.2 / node 24.9 / linux-x64\"."
+    },
+    "method": {
+      "type": "string",
+      "minLength": 1,
+      "description": "How it was measured, including the run count or comparator and any caveat such as single-run."
+    },
+    "scope": {
+      "type": "string",
+      "minLength": 1,
+      "description": "Which LEV practice and which part of the plugin, for example \"LEV-6 stable prefix / assembly\"."
+    },
+    "command": {
+      "type": "string",
+      "minLength": 1,
+      "description": "The exact command that produced the result."
+    },
+    "result": {
+      "type": "string",
+      "minLength": 1,
+      "description": "Numbers, before -> after. No adjectives."
+    },
+    "negativeControl": {
+      "type": "string",
+      "minLength": 1,
+      "description": "The same measurement with the practice disabled or the plugin off; without it a number is not evidence."
+    },
+    "generatedAt": {
+      "type": "string",
+      "format": "date",
+      "pattern": "^[0-9]{4}-[0-9]{2}-[0-9]{2}$",
+      "description": "The day the measurement was run (YYYY-MM-DD)."
+    },
+    "expiresAt": {
+      "type": "string",
+      "format": "date",
+      "pattern": "^[0-9]{4}-[0-9]{2}-[0-9]{2}$",
+      "description": "When the measurement stops being current (YYYY-MM-DD), not before generatedAt. 180 days is a reasonable cap."
+    },
+    "recordHash": {
+      "type": "string",
+      "pattern": "^sha256:[0-9a-f]{64}$",
+      "description": "sha256 over the canonical card JSON without this field."
+    },
+    "claimLevel": {
+      "enum": ["self-reported", "self-assessed", "host-reviewed", "independent", "reference"],
+      "description": "Be honest; anything stronger than self-reported is not self-declared."
+    },
+    "issuer": {
+      "type": "string",
+      "minLength": 1,
+      "description": "Who ran it: author, an org, or a CI job."
+    },
+    "selfAssessed": {
+      "type": "boolean",
+      "description": "True only when the author ran and judged the measurement."
+    }
+  },
+  "examples": [
+    {
+      "subject": "@acme/dsh-hello@0.1.0",
+      "host": "dsh 0.2.2-alpha.3 / cordis 4.0.6-alpha.2 / node 24.9 / linux-x64",
+      "method": "single run: startup, reload, and tokens per turn; nonce arm as negative control",
+      "scope": "LEV-6 stable prefix / assembly - hello example tool and prompt declarations",
+      "command": "node bench/hello.mjs",
+      "result": "startup 180 -> 150 ms (-17%); reload 900 -> 600 ms (-33%); tokens 1200 -> 900/turn (-25%); loc 420 -> 380",
+      "negativeControl": "same bench with the nonce arm: prefix reuse 0%, first divergence at system byte 0",
+      "generatedAt": "2026-11-06",
+      "expiresAt": "2027-05-06",
+      "recordHash": "sha256:0000000000000000000000000000000000000000000000000000000000000000",
+      "claimLevel": "self-assessed",
+      "issuer": "author",
+      "selfAssessed": true
+    }
+  ]
+}

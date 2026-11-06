@@ -4,9 +4,10 @@ import { fileURLToPath } from 'node:url'
 import { runManifestChecks, DEFAULT_RUNTIME_VERSION } from './manifest.mjs'
 import { checkCapabilities, checkCredentials, checkImportTimeAdvisory, checkLabels } from './declarations.mjs'
 import { runRuntimeChecks } from './runtime.mjs'
+import { runStaticBundleChecks } from './bundle-static.mjs'
 import { spawn, spawnSync } from 'node:child_process'
 import { sanitizedEnv } from './sandbox-env.mjs'
-import { readSources } from './util.mjs'
+import { readSourcesWithStats } from './util.mjs'
 import { buildReport, writeReport } from './report.mjs'
 
 const VERSION = '0.1.0'
@@ -40,6 +41,8 @@ Options:
   --market-index <file>      format-1 market index JSON for C-3 listing mode
   --plugin-name <name>       plugin name inside the market index
   --timeout <ms>             L1-L3 timeout (default: 10000)
+  --max-files <n>            source scan file budget (default: 400)
+  --max-bytes <n>            source scan byte budget (default: 2000000)
   --no-exec                  skip L1-L3 entirely (reported as not-run/NA, never PASS)
   --static-only              M1 mode: listing profile, only C-1/C-2/C-3/C-11/C-12/C-13; C-4..C-9 are out of scope
   --treat-as-plugin          run L1-L3 on a bundle's server entry (lib/index.js, index.js, lib/public-entry.js, src/index.ts)
@@ -77,6 +80,8 @@ function parseArgs(argv) {
     marketIndex: null,
     pluginName: null,
     timeoutMs: 10_000,
+    maxFiles: 400,
+    maxBytes: 2_000_000,
     noExec: false,
     staticOnly: false,
     treatAsPlugin: false,
@@ -120,6 +125,8 @@ function parseArgs(argv) {
       case '--market-index': options.marketIndex = value(); break
       case '--plugin-name': options.pluginName = value(); break
       case '--timeout': options.timeoutMs = Number(value()); break
+      case '--max-files': options.maxFiles = Number(value()); break
+      case '--max-bytes': options.maxBytes = Number(value()); break
       case '--out': options.out = value(); break
       case '--no-exec': options.noExec = true; break
       case '--static-only': options.staticOnly = true; break
@@ -144,6 +151,8 @@ function parseArgs(argv) {
   if (!['package', 'listing', 'both'].includes(options.profile)) throw new Error(`unsupported --profile: ${options.profile}`)
   if (options.staticOnly && options.treatAsPlugin) throw new Error('--static-only and --treat-as-plugin are mutually exclusive')
   if (!Number.isFinite(options.timeoutMs) || options.timeoutMs < 100 || options.timeoutMs > 120_000) throw new Error('--timeout must be between 100 and 120000 ms')
+  if (!Number.isInteger(options.maxFiles) || options.maxFiles < 1 || options.maxFiles > 200_000) throw new Error('--max-files must be an integer between 1 and 200000')
+  if (!Number.isInteger(options.maxBytes) || options.maxBytes < 1000 || options.maxBytes > 2_000_000_000) throw new Error('--max-bytes must be an integer between 1000 and 2000000000')
   if (options.target === null) options.target = '.'
   return options
 }
@@ -333,7 +342,12 @@ export async function main(argv = process.argv.slice(2)) {
   })
 
   let sources = []
-  try { sources = readSources(dir) } catch { sources = [] }
+  let scan = null
+  try {
+    const read = readSourcesWithStats(dir, { maxFiles: options.maxFiles, maxBytes: options.maxBytes })
+    sources = read.sources
+    scan = read.scan
+  } catch { sources = [] }
   const declarationChecks = manifest ? [
     checkCapabilities(manifest, sources, patch),
     checkCredentials(manifest, sources),
@@ -344,7 +358,7 @@ export async function main(argv = process.argv.slice(2)) {
     { id: 'DSC-13', clause: 'C-13', layer: 'L0', result: 'ERROR', coverage: 'not-run', reason: 'manifest unavailable', details: [], evidence: [], method: 'M', advisory: false },
   ]
   const declarationAdjusted = declarationChecks.map(item => (item.result === 'WARN' && ['DSC-11', 'DSC-13'].includes(item.id) ? { ...item, advisory: true } : item))
-  const advisoryChecks = [checkImportTimeAdvisory(sources, entry?.relative)]
+  const advisoryChecks = [checkImportTimeAdvisory(sources, entry?.relative, scan)]
 
   if (options.scope === 'entry' && options.entryRuntime === 'server-entry' && kind !== 'plugin') options.treatAsPlugin = true
   let runtimeKind = kind
@@ -373,6 +387,16 @@ export async function main(argv = process.argv.slice(2)) {
       dir, manifest, kind: runtimeKind, entry: runtimeEntry,
       runtimePath: options.runtime, timeoutMs: options.timeoutMs,
     })
+  }
+
+  // A bundle/client has no plugin entry for L1-L3. Instead of leaving all six
+  // runtime checks NA, cover their statically decidable part explicitly and
+  // mark the coverage partial (the report says what still needs --host/--runtime).
+  const runtimeUsable = runtimeChecks.some(item => ['PASS', 'WARN', 'FAIL'].includes(item.result))
+  if (manifest && ['bundle', 'client'].includes(kind) && !runtimeUsable) {
+    const staticChecks = runStaticBundleChecks({ manifest, kind, entry, patch, sources, g4, scan, dir })
+    const staticById = new Map(staticChecks.map(item => [item.id, item]))
+    runtimeChecks = runtimeChecks.map(item => staticById.get(item.id) ?? item)
   }
 
   const runCheck = await entryRunCheck(kind, runtimeChecks, options, dir)

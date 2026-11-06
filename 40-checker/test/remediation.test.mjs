@@ -188,7 +188,7 @@ test('runtime FAIL without details falls back to check.clause', () => {
   assert.equal(c4.severity, 'FAIL')
   assert.equal(c4.version, packageJson.version)
   assert.deepEqual(c4.evidence, ['index.mjs:1'])
-  assert.equal(c4.docsUrl, `${DOCS_BASE}docs/levels.md#entry`)
+  assert.equal(c4.docsUrl, `${DOCS_BASE}docs/entry.md#runtime-surface`)
   assert.equal(c14.key, 'C-14')
   assert.equal(c14.docsUrl, `${DOCS_BASE}docs/entry.md#the-two-claims`)
 })
@@ -285,6 +285,104 @@ test('every rule docs anchor exists in the local guide repository', t => {
   }
 })
 
+test('docs anchors are keyed to the matching guide section', () => {
+  const expected = {
+    'C-1.5': 'docs/entry.md#package-shape',
+    'C-2.1': 'docs/entry.md#package-shape',
+    'C-2.2': 'docs/entry.md#package-shape',
+    'C-2.4': 'docs/entry.md#package-shape',
+    'C-3.4': 'docs/entry.md#package-shape',
+    'C-11.1': 'docs/entry.md#capability-triggers',
+    'C-11.2': 'docs/entry.md#capability-triggers',
+    'C-13.1': 'docs/entry.md#labels-and-mirror',
+    'C-13.2': 'docs/entry.md#labels-and-mirror',
+  }
+  for (const [key, docs] of Object.entries(expected)) {
+    assert.equal(RULES[key].docs, docs, `${key} must point at its own section`)
+  }
+  const generic = new Set([
+    'docs/entry.md#author-checklist',
+    'docs/entry.md#declaration-fields',
+    'docs/entry.md#what-it-covers',
+  ])
+  for (const [key, rule] of Object.entries(RULES)) {
+    assert.ok(!generic.has(rule.docs), `${key} still points at a generic checklist: ${rule.docs}`)
+  }
+  const anchors = new Set(Object.values(RULES).map(rule => rule.docs))
+  assert.ok(anchors.size >= 8, `expected anchors spread over sections, got ${anchors.size}`)
+})
+
+test('advice evidence adds a package.json line locator when the field exists', () => {
+  const dir = path.join(fixturesDir, 'bad')
+  const report = staticReportFor(dir)
+  const manifest = fs.readFileSync(path.join(dir, 'package.json'), 'utf8')
+  const labelsLine = manifest.slice(0, manifest.indexOf('"labels"')).split('\n').length
+  const c131 = report.advice.find(item => item.key === 'C-13.1')
+  assert.ok(c131, 'bad fixture must produce C-13.1')
+  assert.ok(c131.evidence.includes('package.json#dsh.labels'), JSON.stringify(c131.evidence))
+  assert.ok(c131.evidence.includes(`package.json:${labelsLine}`), JSON.stringify(c131.evidence))
+  // A missing field cannot be located; its symbolic reference stays verbatim.
+  const c15 = report.advice.find(item => item.key === 'C-1.5')
+  assert.deepEqual(c15.evidence, ['package.json#license'])
+})
+
+test('C-11.4 and C-12.4 merge into one entry when the evidence is identical', () => {
+  const report = staticReportFor(path.join(fixturesDir, 'c12-grant'))
+  const keys = report.advice.map(item => item.key)
+  assert.ok(keys.includes('C-11.4'), keys.join(','))
+  assert.ok(!keys.includes('C-12.4'), 'the duplicate C-12.4 entry must be collapsed')
+  const merged = report.advice.find(item => item.key === 'C-11.4')
+  assert.equal(merged.occurrences, 2)
+  assert.equal(merged.source, 'DSC-11')
+  assert.match(merged.reason, /C-12\.4/)
+  assert.match(merged.reason, /merged into C-11\.4/)
+})
+
+test('C-12.4 stays separate when C-11.4 did not fire', () => {
+  const report = staticReportFor(path.join(fixturesDir, 'c12-command-arg'))
+  const keys = report.advice.map(item => item.key)
+  assert.ok(keys.includes('C-12.4'), keys.join(','))
+  assert.ok(!keys.includes('C-11.4'), 'only --add-dir is present, so C-11.4 must not appear')
+})
+
+test('duplicate C-11.1 and C-13.1 details merge by check and key', () => {
+  const checks = [
+    {
+      id: 'DSC-11', clause: 'C-11', layer: 'L0', result: 'FAIL', coverage: 'full', reason: '',
+      details: [
+        { item: 'C-11.1', result: 'FAIL', reason: 'unknown capability id: a', evidence: ['package.json#dsh.capabilities'] },
+        { item: 'C-11.1', result: 'FAIL', reason: 'unknown capability id: b', evidence: ['package.json#dsh.capabilities'] },
+      ],
+      evidence: [], advisory: false,
+    },
+    {
+      id: 'DSC-13', clause: 'C-13', layer: 'L0', result: 'FAIL', coverage: 'full', reason: '',
+      details: [
+        { item: 'C-13.1', result: 'FAIL', reason: 'unknown label: x', evidence: ['package.json#dsh.labels'] },
+        { item: 'C-13.1', result: 'FAIL', reason: 'unknown label: y', evidence: ['package.json#dsh.labels'] },
+      ],
+      evidence: [], advisory: false,
+    },
+  ]
+  const report = buildReport({
+    subject: { mode: 'package', profile: 'package', kind: 'plugin', kindInferred: false, name: 'x', version: '1.0.0', path: here },
+    anchor: { repo: 'x', commit: '0'.repeat(40), scanner: 'x', dsh: '0.2.2-alpha.2', cordis: '4.0.6-alpha.1', runtime: null },
+    checks,
+    scope: 'ds-c',
+    profile: 'package',
+    kind: 'plugin',
+  })
+  const c111 = report.advice.filter(item => item.key === 'C-11.1')
+  assert.equal(c111.length, 1)
+  assert.equal(c111[0].occurrences, 2)
+  assert.match(c111[0].reason, /unknown capability id: a/)
+  assert.match(c111[0].reason, /unknown capability id: b/)
+  const c131 = report.advice.filter(item => item.key === 'C-13.1')
+  assert.equal(c131.length, 1)
+  assert.equal(c131[0].occurrences, 2)
+  assert.equal(c131[0].source, 'DSC-13')
+})
+
 test('joinAdvice is pure and leaves the report untouched', () => {
   const checks = [{
     id: 'DSC-04', clause: 'C-4', layer: 'L1', result: 'FAIL', coverage: 'full',
@@ -302,4 +400,11 @@ test('joinAdvice is pure and leaves the report untouched', () => {
   // A flat rule map (no version metadata) still gets the package version.
   const bare = joinAdvice(report, RULES, DOCS_BASE)
   assert.equal(bare[0].version, packageJson.version)
+
+  // Reading package.json for line locators must not mutate the report either.
+  const withSubject = staticReportFor(path.join(fixturesDir, 'bad'))
+  const subjectSnapshot = JSON.stringify(withSubject)
+  const located = joinAdvice(withSubject, RULES, DOCS_BASE)
+  assert.equal(JSON.stringify(withSubject), subjectSnapshot)
+  assert.ok(located.some(item => item.evidence.some(value => value.startsWith('package.json:'))))
 })

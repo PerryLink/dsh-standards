@@ -1,6 +1,7 @@
 import path from 'node:path'
 import remediationSpec from '../../spec/remediation.json' with { type: 'json' }
 import { DOCS_BASE, joinAdvice } from './remediation.mjs'
+import { parseVersion } from './semver.mjs'
 
 export const PACKAGE_MANDATORY = [
   'DSC-01', 'DSC-02', 'DSC-04', 'DSC-05', 'DSC-06', 'DSC-07', 'DSC-08', 'DSC-09', 'DSC-11', 'DSC-12', 'DSC-13',
@@ -44,6 +45,34 @@ function bucketRow(item, extra = {}) {
     reason: item.reason ?? '',
     ...extra,
   }
+}
+
+/**
+ * Explicit "how to make this check runnable" text for every row that is not
+ * fully checked. NA/ERROR findings must explain themselves; they are not
+ * silently empty.
+ */
+export function howToEnableFor(item) {
+  const id = item?.id
+  const reason = String(item?.reason ?? '')
+  if (id === 'DSC-03') return 'pass --install-spec <spec>, or --market-index <file> --plugin-name <name>'
+  if (['DSC-04', 'DSC-05', 'DSC-06', 'DSC-07', 'DSC-08', 'DSC-09'].includes(id)) {
+    if (item?.coverage === 'partial') return 'omit --no-exec; pass --treat-as-plugin --runtime <path> for L1-L3, and --host <dir> for bundle G0-G3'
+    return 'pass --runtime <path> (plugin L1-L3) or --host <dir> (bundle G0-G3); do not use --no-exec'
+  }
+  if (id === 'DSC-10') {
+    if (/truncated at \d+ files/.test(reason)) return 'raise the source scan budget with --max-files <n> / --max-bytes <n>; the entry may be outside the current scan'
+    if (/entry module/.test(reason)) return 'fix package.json exports/main so the entry is inside the package, or adjust --max-files/--max-bytes'
+    return 'provide a readable entry and sources; re-run with a larger --max-files/--max-bytes if the scan is bounded'
+  }
+  if (id === 'DSC-14') {
+    return 'pass --host <app-boot/lib/index.js> for bundle G0-G3, or --runtime <path> for a plugin; omit --no-exec and --entry-claim static'
+  }
+  if (['DSC-11', 'DSC-12', 'DSC-13'].includes(id)) {
+    if (/manifest unavailable/.test(reason)) return 'fix package.json; these declaration checks cannot run without a manifest'
+    return 'run the full profile without --no-exec; declaration checks need source files'
+  }
+  return 'run the full 14-check profile (see --help) so this check can produce a result'
 }
 
 /**
@@ -132,9 +161,12 @@ export function buildReport({ subject, anchor, checks, g4 = null, scope, profile
     level = staticOnly ? `DS-C static${status === 'warn' ? ' (warnings)' : ''}` : profile === 'listing' || profile === 'both' ? `DS-C (listing${suffix})` : `DS-C (package${suffix})`
   }
 
+  const partialIds = selected.filter(item => item.coverage === 'partial').map(item => item.id)
+  const fullyNotRun = notRunIds.filter(id => !partialIds.includes(id))
   const reasonParts = []
   if (failed.length > 0) reasonParts.push(`FAIL: ${failed.map(item => item.id).join(', ')}`)
-  if (notRunIds.length > 0) reasonParts.push(`not run: ${notRunIds.join(', ')}`)
+  if (fullyNotRun.length > 0) reasonParts.push(`not run: ${fullyNotRun.join(', ')}`)
+  if (partialIds.length > 0) reasonParts.push(`partial: ${partialIds.join(', ')}`)
   if (warnings.length > 0) reasonParts.push(`WARN: ${warnings.map(item => item.id).join(', ')}`)
   if (advisoryWarnings.length > 0) reasonParts.push(`advisory: ${advisoryWarnings.map(item => item.id).join(', ')}`)
 
@@ -147,11 +179,29 @@ export function buildReport({ subject, anchor, checks, g4 = null, scope, profile
   }))
   const notCheckedBucket = effectiveChecks
     .filter(item => item.result === 'NA' || item.result === 'ERROR')
-    .map(item => bucketRow(item))
+    .map(item => bucketRow(item, { howToEnable: howToEnableFor(item) }))
   for (const id of missing) {
-    notCheckedBucket.push({ id, clause: null, result: 'NOT-RUN', coverage: 'not-run', reason: 'mandatory check missing' })
+    notCheckedBucket.push({ id, clause: null, result: 'NOT-RUN', coverage: 'not-run', reason: 'mandatory check missing', howToEnable: howToEnableFor({ id, reason: 'mandatory check missing' }) })
   }
-  const buckets = { blocking: blockingBucket, hygiene: hygieneBucket, notChecked: notCheckedBucket }
+  // A coverage view, not a verdict view: a partial check may also be blocking
+  // or hygiene. It is listed here so "what was only statically covered" is
+  // machine-readable instead of disappearing into a NA count. NA/ERROR rows
+  // already live in notChecked; do not duplicate them.
+  const partialBucket = effectiveChecks
+    .filter(item => item.coverage === 'partial' && item.result !== 'NA' && item.result !== 'ERROR')
+    .map(item => bucketRow(item, { howToEnable: howToEnableFor(item) }))
+  const partialCount = effectiveChecks.filter(item => item.coverage === 'partial').length
+  const buckets = { blocking: blockingBucket, hygiene: hygieneBucket, partial: partialBucket, notChecked: notCheckedBucket }
+  const notChecked = [...notCheckedBucket, ...partialBucket]
+    .map(row => ({
+      id: row.id,
+      clause: row.clause,
+      result: row.result,
+      coverage: row.coverage,
+      reason: row.reason || 'not checked',
+      howToEnable: row.howToEnable ?? howToEnableFor(row),
+    }))
+    .filter((row, index, list) => list.findIndex(item => item.id === row.id) === index)
   const declaredFields = Array.isArray(declarations?.present) ? declarations.present.length : 0
   const canMarkSuspect = anchor?.suspect === true
 
@@ -161,7 +211,7 @@ export function buildReport({ subject, anchor, checks, g4 = null, scope, profile
     declaredFields,
   }
   const prereq = entryBlocking ? ` (prereq ${entryBlocking.checked.length}/${entryBlocking.required})` : ''
-  const headline = `${scope}/${profile} · runtime ${anchor?.dsh ?? 'unknown'}${anchor?.runtimeSource ? ` ${anchor.runtimeSource}` : ''}${canMarkSuspect ? ' SUSPECT' : ''} · blocking ${buckets.blocking.length}${prereq} · hygiene ${buckets.hygiene.length} · not checked ${buckets.notChecked.length}/${effectiveChecks.length}`
+  const headline = `${scope}/${profile} · runtime ${anchor?.dsh ?? 'unknown'}${anchor?.runtimeSource ? ` ${anchor.runtimeSource}` : ''}${canMarkSuspect ? ' SUSPECT' : ''} · blocking ${buckets.blocking.length}${prereq} · hygiene ${buckets.hygiene.length} · partial ${partialCount} · not checked ${buckets.notChecked.length}/${effectiveChecks.length}`
 
   const report = {
     schema: 'dsh-conformance/1',
@@ -180,10 +230,12 @@ export function buildReport({ subject, anchor, checks, g4 = null, scope, profile
       fail: evaluatedAll.filter(item => item.result === 'FAIL').length,
       na: naAll.length,
       notRun: notRunAllIds.length,
+      partial: partialCount,
       error: errorAll.length,
       entryBlocking,
     },
     buckets,
+    notChecked,
     metrics,
     conclusion: {
       headline,
@@ -202,9 +254,30 @@ export function buildReport({ subject, anchor, checks, g4 = null, scope, profile
   // Additive only: `advice` is a sibling of `checks`, never part of a check,
   // and the verdict is computed above without reading it.
   if (advice !== false) {
-    report.advice = joinAdvice(report, remediationSpec, DOCS_BASE)
+    report.advice = retargetCompatibilityAdvice(joinAdvice(report, remediationSpec, DOCS_BASE), anchor)
   }
   return report
+}
+
+/**
+ * C-2.2 advice is a compatibility finding: the declared range is valid but does
+ * not cover the runtime the report was run against. The static spec example
+ * (`>=0.2.2-0`) can itself be outside an older host, so append the exact floor
+ * that would include this anchor. This keeps advice from contradicting the
+ * FAIL it is attached to.
+ */
+function retargetCompatibilityAdvice(advice, anchor) {
+  const version = parseVersion(anchor?.dsh)
+  if (!version) return advice
+  const floor = `${version.major}.${version.minor}.${version.patch}-0`
+  const upper = `${version.major}.${version.minor + 1}.0`
+  const hint = `当前锚是 ${anchor.dsh}：要兼容它，engines.dsh/peer 下限不得高于 ${floor}（例如 >=${floor} <${upper}），并用 --runtime-version ${anchor.dsh} 复跑。`
+  for (const item of advice) {
+    if (item.key !== 'C-2.2') continue
+    item.fix = item.fix ? `${item.fix} ${hint}` : hint
+    item.reason = item.reason ? `${item.reason} | ${hint}` : hint
+  }
+  return advice
 }
 
 const ICON = { PASS: 'PASS', WARN: 'WARN', FAIL: 'FAIL', NA: 'NA  ', ERROR: 'ERR ' }
@@ -219,6 +292,7 @@ function renderBucket(lines, title, rows, byId) {
     const tags = [row.declaration ? 'declaration' : null, row.advisory ? 'advisory' : null].filter(Boolean)
     const reason = String(row.reason ?? '').replace(/\s+/g, ' ').slice(0, 150)
     lines.push(`  ${(ICON[row.result] ?? row.result).padEnd(4)} ${String(row.id).padEnd(7)} ${String(row.clause ?? '-').padEnd(6)} ${String(row.coverage ?? '-').padEnd(8)} ${reason}${tags.length > 0 ? ` [${tags.join(',')}]` : ''}`)
+    if (row.howToEnable) lines.push(`          enable: ${String(row.howToEnable).replace(/\s+/g, ' ').slice(0, 180)}`)
     const item = byId.get(row.id)
     if (!item || (row.result !== 'FAIL' && row.result !== 'WARN')) continue
     for (const detail of item.details ?? []) {
@@ -242,11 +316,13 @@ export function formatText(report) {
   lines.push('')
   renderBucket(lines, 'Hygiene (WARN)', report.buckets?.hygiene ?? [], byId)
   lines.push('')
+  renderBucket(lines, 'Partly checked (static subset)', report.buckets?.partial ?? [], byId)
+  lines.push('')
   renderBucket(lines, 'Not checked (NA / not-run / ERROR)', report.buckets?.notChecked ?? [], byId)
   lines.push('')
   const passed = (report.checks ?? []).filter(item => item.result === 'PASS')
   lines.push(`passed (${passed.length}): ${passed.map(item => item.id).join(', ') || 'none'}`)
-  lines.push(`coverage: total=${coverage.total ?? report.checks.length} checked=${coverage.checked ?? coverage.pass + coverage.warn + coverage.fail} pass=${coverage.pass} warn=${coverage.warn} fail=${coverage.fail} na=${coverage.na} notRun=${coverage.notRun} error=${coverage.error} advisory=${coverage.advisory}`)
+  lines.push(`coverage: total=${coverage.total ?? report.checks.length} checked=${coverage.checked ?? coverage.pass + coverage.warn + coverage.fail} pass=${coverage.pass} warn=${coverage.warn} fail=${coverage.fail} na=${coverage.na} notRun=${coverage.notRun} partial=${coverage.partial ?? 0} error=${coverage.error} advisory=${coverage.advisory}`)
   if (coverage.entryBlocking) {
     const blocking = coverage.entryBlocking
     lines.push(`entryBlocking: checked=${blocking.checked?.length ?? '?'}/${blocking.required} failed=[${(blocking.failed ?? []).join(', ')}] notChecked=[${(blocking.notChecked ?? []).join(', ')}] pass=${blocking.pass}`)

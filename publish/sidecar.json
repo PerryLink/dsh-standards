@@ -8,7 +8,7 @@
   "checker": {
     "name": "dsh-standards",
     "version": "1.3.0",
-    "sha": "7e74297b97c40e14ff4a15181712088c58a50aa4"
+    "sha": "e6372412b586bfa4989086b1dce51ded5cc83c30"
   },
   "notClaimed": [
     "official",
@@ -20,11 +20,19 @@
     "warranty"
   ],
   "entries": {
-    "dsh-security-pack@3.0.1": {
+    "@howmp/dsh-pentest@0.1.0-rc.37": {
       "subject": {
-        "name": "dsh-security-pack",
-        "version": "3.0.1",
-        "tarballSha256": "9b79a3872212b208f3ce198aa9203335d409033c7e795fc4e154cbf036e97895"
+        "name": "@howmp/dsh-pentest",
+        "version": "0.1.0-rc.37",
+        "tarballSha256": "3c4b4132df98319c995c86a253305a845d4f31c70e069249bc9f3ec4b92ca49a"
+      },
+      "title": "DSH 渗透测试模式：以探索链路记录目标、线索、资产与漏洞，并在 Web 中可视化展示。",
+      "repo": "https://github.com/howmp/dsh-pentest",
+      "license": "MIT",
+      "scope": {
+        "dsh": "0.2.1-rc.5",
+        "cordis": "^4.0.1",
+        "platform": "web"
       },
       "levels": {
         "entry": {
@@ -38,7 +46,2372 @@
           "state": "not-measured"
         }
       },
-      "evidence": {},
+      "checks": [
+        {
+          "id": "DSC-01",
+          "result": "PASS",
+          "coverage": "full"
+        },
+        {
+          "id": "DSC-02",
+          "result": "WARN",
+          "coverage": "full"
+        },
+        {
+          "id": "DSC-03",
+          "result": "NA",
+          "coverage": "not-run"
+        },
+        {
+          "id": "DSC-04",
+          "result": "NA",
+          "coverage": "not-run"
+        },
+        {
+          "id": "DSC-05",
+          "result": "NA",
+          "coverage": "not-run"
+        },
+        {
+          "id": "DSC-06",
+          "result": "NA",
+          "coverage": "not-run"
+        },
+        {
+          "id": "DSC-07",
+          "result": "NA",
+          "coverage": "not-run"
+        },
+        {
+          "id": "DSC-08",
+          "result": "NA",
+          "coverage": "not-run"
+        },
+        {
+          "id": "DSC-09",
+          "result": "NA",
+          "coverage": "not-run"
+        },
+        {
+          "id": "DSC-14",
+          "result": "NA",
+          "coverage": "not-run"
+        },
+        {
+          "id": "DSC-10",
+          "result": "PASS",
+          "coverage": "full"
+        },
+        {
+          "id": "DSC-11",
+          "result": "WARN",
+          "coverage": "full"
+        },
+        {
+          "id": "DSC-12",
+          "result": "PASS",
+          "coverage": "full"
+        },
+        {
+          "id": "DSC-13",
+          "result": "WARN",
+          "coverage": "full"
+        }
+      ],
+      "evidence": {
+        "sha256": "7e2b878a9e92b3b781423dff6ab1788a753b011e156a3b3d36925f644bf4a208",
+        "reportSha256": "7e2b878a9e92b3b781423dff6ab1788a753b011e156a3b3d36925f644bf4a208"
+      },
+      "checkedBy": {
+        "checker": "dsh-standards@1.3.0 (dsh-plugin-verify@0.1.0)",
+        "command": "dsh-levels <package-dir> --no-runtime --format json"
+      },
+      "notChecked": [
+        "ENTRY:runtime (claim=static; not exercised)",
+        "ENTRY:DSC-03, DSC-04, DSC-05, DSC-06, DSC-07, DSC-08, DSC-09, DSC-14 (coverage=not-run)",
+        "FLOW:J1-J8 (not-run; 0/8 journeys pass)",
+        "BOOST:LEV-3..LEV-4 (not-measured)"
+      ],
+      "validity": {
+        "checkedAt": "2026-11-06",
+        "expiresAt": "2027-02-04",
+        "policy": "90d"
+      },
+      "lifecycle": "active",
+      "selfAssessed": true
+    },
+    "@xmanrui/dsh-im@5.10.0": {
+      "subject": {
+        "name": "@xmanrui/dsh-im",
+        "version": "5.10.0",
+        "tarballSha256": "e9518676cf57e4af88fc5a2bf4cc2d838073c579ddc0c6fd256e72ba88339f25"
+      },
+      "title": "把微信、飞书、企微、钉钉、QQ、Telegram、WhatsApp、Slack、Discord、Matrix接入DSH。 Connect Telegram, WhatsApp, Slack, Discord, Matrix, WeChat, Feishu, WeCom, DingTalk, and QQ to DSH.",
+      "repo": "https://github.com/xmanrui/dsh-im",
+      "license": "MIT",
+      "scope": {
+        "dsh": "0.2.1-rc.5",
+        "cordis": "4.0.6-alpha.1",
+        "platform": "web"
+      },
+      "levels": {
+        "entry": {
+          "state": "recognized",
+          "claim": "static"
+        },
+        "flow": {
+          "state": "not-run"
+        },
+        "boost": {
+          "state": "not-measured"
+        }
+      },
+      "checks": [
+        {
+          "id": "DSC-01",
+          "result": "PASS",
+          "coverage": "full"
+        },
+        {
+          "id": "DSC-02",
+          "result": "WARN",
+          "coverage": "full"
+        },
+        {
+          "id": "DSC-03",
+          "result": "NA",
+          "coverage": "not-run"
+        },
+        {
+          "id": "DSC-04",
+          "result": "NA",
+          "coverage": "not-run"
+        },
+        {
+          "id": "DSC-05",
+          "result": "NA",
+          "coverage": "not-run"
+        },
+        {
+          "id": "DSC-06",
+          "result": "NA",
+          "coverage": "not-run"
+        },
+        {
+          "id": "DSC-07",
+          "result": "NA",
+          "coverage": "not-run"
+        },
+        {
+          "id": "DSC-08",
+          "result": "NA",
+          "coverage": "not-run"
+        },
+        {
+          "id": "DSC-09",
+          "result": "NA",
+          "coverage": "not-run"
+        },
+        {
+          "id": "DSC-14",
+          "result": "NA",
+          "coverage": "not-run"
+        },
+        {
+          "id": "DSC-10",
+          "result": "NA",
+          "coverage": "partial"
+        },
+        {
+          "id": "DSC-11",
+          "result": "WARN",
+          "coverage": "full"
+        },
+        {
+          "id": "DSC-12",
+          "result": "PASS",
+          "coverage": "full"
+        },
+        {
+          "id": "DSC-13",
+          "result": "WARN",
+          "coverage": "full"
+        }
+      ],
+      "evidence": {
+        "sha256": "01dfcf050db813f290deee04cd3ac49fd25860048ea6045d135cae8e10330303",
+        "reportSha256": "01dfcf050db813f290deee04cd3ac49fd25860048ea6045d135cae8e10330303"
+      },
+      "checkedBy": {
+        "checker": "dsh-standards@1.3.0 (dsh-plugin-verify@0.1.0)",
+        "command": "dsh-levels <package-dir> --no-runtime --format json"
+      },
+      "notChecked": [
+        "ENTRY:runtime (claim=static; not exercised)",
+        "ENTRY:DSC-03, DSC-04, DSC-05, DSC-06, DSC-07, DSC-08, DSC-09, DSC-14 (coverage=not-run)",
+        "FLOW:J1-J8 (not-run; 0/8 journeys pass)",
+        "BOOST:LEV-3..LEV-4 (not-measured)"
+      ],
+      "validity": {
+        "checkedAt": "2026-11-06",
+        "expiresAt": "2027-02-04",
+        "policy": "90d"
+      },
+      "lifecycle": "active",
+      "selfAssessed": true
+    },
+    "@yolk_vat-y/dsh-project-memory@0.6.11": {
+      "subject": {
+        "name": "@yolk_vat-y/dsh-project-memory",
+        "version": "0.6.11",
+        "tarballSha256": "3aafa62f1c54ae2ee18416d3c96f6f0b4cbfe228c8f29c5df4bf5e084b70d85b"
+      },
+      "title": "Persistent project memory for dsh agents: index docs (PDF/Markdown/text) and code symbols into a searchable per-workspace store, recall them with cited sources, and keep experience entries (problems -> solutions) searchable on demand.",
+      "repo": "https://github.com/00080000/dsh-project-memory",
+      "license": "MIT",
+      "scope": {
+        "dsh": ">=0.0.1-rc.1 <0.1.0 || >=0.1.0-rc.1 <0.3.0-0",
+        "cordis": "^4.0.1",
+        "platform": "web"
+      },
+      "levels": {
+        "entry": {
+          "state": "recognized",
+          "claim": "static"
+        },
+        "flow": {
+          "state": "not-run"
+        },
+        "boost": {
+          "state": "not-measured"
+        }
+      },
+      "checks": [
+        {
+          "id": "DSC-01",
+          "result": "PASS",
+          "coverage": "full"
+        },
+        {
+          "id": "DSC-02",
+          "result": "WARN",
+          "coverage": "full"
+        },
+        {
+          "id": "DSC-03",
+          "result": "NA",
+          "coverage": "not-run"
+        },
+        {
+          "id": "DSC-04",
+          "result": "NA",
+          "coverage": "not-run"
+        },
+        {
+          "id": "DSC-05",
+          "result": "NA",
+          "coverage": "not-run"
+        },
+        {
+          "id": "DSC-06",
+          "result": "NA",
+          "coverage": "not-run"
+        },
+        {
+          "id": "DSC-07",
+          "result": "NA",
+          "coverage": "not-run"
+        },
+        {
+          "id": "DSC-08",
+          "result": "NA",
+          "coverage": "not-run"
+        },
+        {
+          "id": "DSC-09",
+          "result": "NA",
+          "coverage": "not-run"
+        },
+        {
+          "id": "DSC-14",
+          "result": "NA",
+          "coverage": "not-run"
+        },
+        {
+          "id": "DSC-10",
+          "result": "PASS",
+          "coverage": "full"
+        },
+        {
+          "id": "DSC-11",
+          "result": "WARN",
+          "coverage": "full"
+        },
+        {
+          "id": "DSC-12",
+          "result": "PASS",
+          "coverage": "full"
+        },
+        {
+          "id": "DSC-13",
+          "result": "WARN",
+          "coverage": "full"
+        }
+      ],
+      "evidence": {
+        "sha256": "6742c40385e4a2982e9e40a3e699428398dc2b984f8448c5e85ac1bbafe303a8",
+        "reportSha256": "6742c40385e4a2982e9e40a3e699428398dc2b984f8448c5e85ac1bbafe303a8"
+      },
+      "checkedBy": {
+        "checker": "dsh-standards@1.3.0 (dsh-plugin-verify@0.1.0)",
+        "command": "dsh-levels <package-dir> --no-runtime --format json"
+      },
+      "notChecked": [
+        "ENTRY:runtime (claim=static; not exercised)",
+        "ENTRY:DSC-03, DSC-04, DSC-05, DSC-06, DSC-07, DSC-08, DSC-09, DSC-14 (coverage=not-run)",
+        "FLOW:J1-J8 (not-run; 0/8 journeys pass)",
+        "BOOST:LEV-3..LEV-4 (not-measured)"
+      ],
+      "validity": {
+        "checkedAt": "2026-11-06",
+        "expiresAt": "2027-02-04",
+        "policy": "90d"
+      },
+      "lifecycle": "active",
+      "selfAssessed": true
+    },
+    "@zzerx/dsh-plugin-daily-log@0.4.3": {
+      "subject": {
+        "name": "@zzerx/dsh-plugin-daily-log",
+        "version": "0.4.3",
+        "tarballSha256": "6bc37341016f7894ae1a9f516a9ca89fa715e91ee80dcb712553df969ccc7dc1"
+      },
+      "title": "每日工作日志：聚合 Git 提交与本地 agent 对话（deepseek/claude/codex），按自定义模板生成日报/周报/月报；agent 工具按需注入，默认只挂一个 daily_log 派发器。",
+      "repo": "https://github.com/0x7A7A6572/dsh-forge-studio",
+      "license": "MIT",
+      "scope": {
+        "dsh": "0.2.1-rc.5",
+        "cordis": "^4.0.4",
+        "platform": "web"
+      },
+      "levels": {
+        "entry": {
+          "state": "recognized",
+          "claim": "static"
+        },
+        "flow": {
+          "state": "not-run"
+        },
+        "boost": {
+          "state": "not-measured"
+        }
+      },
+      "checks": [
+        {
+          "id": "DSC-01",
+          "result": "PASS",
+          "coverage": "full"
+        },
+        {
+          "id": "DSC-02",
+          "result": "WARN",
+          "coverage": "full"
+        },
+        {
+          "id": "DSC-03",
+          "result": "NA",
+          "coverage": "not-run"
+        },
+        {
+          "id": "DSC-04",
+          "result": "NA",
+          "coverage": "not-run"
+        },
+        {
+          "id": "DSC-05",
+          "result": "NA",
+          "coverage": "not-run"
+        },
+        {
+          "id": "DSC-06",
+          "result": "NA",
+          "coverage": "not-run"
+        },
+        {
+          "id": "DSC-07",
+          "result": "NA",
+          "coverage": "not-run"
+        },
+        {
+          "id": "DSC-08",
+          "result": "NA",
+          "coverage": "not-run"
+        },
+        {
+          "id": "DSC-09",
+          "result": "NA",
+          "coverage": "not-run"
+        },
+        {
+          "id": "DSC-14",
+          "result": "NA",
+          "coverage": "not-run"
+        },
+        {
+          "id": "DSC-10",
+          "result": "PASS",
+          "coverage": "full"
+        },
+        {
+          "id": "DSC-11",
+          "result": "WARN",
+          "coverage": "full"
+        },
+        {
+          "id": "DSC-12",
+          "result": "PASS",
+          "coverage": "full"
+        },
+        {
+          "id": "DSC-13",
+          "result": "WARN",
+          "coverage": "full"
+        }
+      ],
+      "evidence": {
+        "sha256": "6633a04e06dee91836987b282d89aad13e1f972d588ef1b1dffa854fb1972c23",
+        "reportSha256": "6633a04e06dee91836987b282d89aad13e1f972d588ef1b1dffa854fb1972c23"
+      },
+      "checkedBy": {
+        "checker": "dsh-standards@1.3.0 (dsh-plugin-verify@0.1.0)",
+        "command": "dsh-levels <package-dir> --no-runtime --format json"
+      },
+      "notChecked": [
+        "ENTRY:runtime (claim=static; not exercised)",
+        "ENTRY:DSC-03, DSC-04, DSC-05, DSC-06, DSC-07, DSC-08, DSC-09, DSC-14 (coverage=not-run)",
+        "FLOW:J1-J8 (not-run; 0/8 journeys pass)",
+        "BOOST:LEV-3..LEV-4 (not-measured)"
+      ],
+      "validity": {
+        "checkedAt": "2026-11-06",
+        "expiresAt": "2027-02-04",
+        "policy": "90d"
+      },
+      "lifecycle": "active",
+      "selfAssessed": true
+    },
+    "dsh-ci-diet@0.5.2": {
+      "subject": {
+        "name": "dsh-ci-diet",
+        "version": "0.5.2",
+        "tarballSha256": "32cf0a337366a4fe1f8a4238ebd73935aa9e9b63004af264e49f7e800bb9cee5"
+      },
+      "title": "Find wasted GitHub Actions runner time and propose small, reviewable local patches.",
+      "repo": "https://github.com/0disoft/dsh-ci-diet",
+      "license": "MIT",
+      "scope": {
+        "dsh": ">=0.2.1-rc.2 <0.3.0-0 || >=0.2.2-rc.1 <0.3.0-0",
+        "cordis": "^4.0.5",
+        "platform": "web"
+      },
+      "levels": {
+        "entry": {
+          "state": "recognized",
+          "claim": "static"
+        },
+        "flow": {
+          "state": "not-run"
+        },
+        "boost": {
+          "state": "not-measured"
+        }
+      },
+      "checks": [
+        {
+          "id": "DSC-01",
+          "result": "PASS",
+          "coverage": "full"
+        },
+        {
+          "id": "DSC-02",
+          "result": "PASS",
+          "coverage": "full"
+        },
+        {
+          "id": "DSC-03",
+          "result": "NA",
+          "coverage": "not-run"
+        },
+        {
+          "id": "DSC-04",
+          "result": "NA",
+          "coverage": "not-run"
+        },
+        {
+          "id": "DSC-05",
+          "result": "NA",
+          "coverage": "not-run"
+        },
+        {
+          "id": "DSC-06",
+          "result": "NA",
+          "coverage": "not-run"
+        },
+        {
+          "id": "DSC-07",
+          "result": "NA",
+          "coverage": "not-run"
+        },
+        {
+          "id": "DSC-08",
+          "result": "NA",
+          "coverage": "not-run"
+        },
+        {
+          "id": "DSC-09",
+          "result": "NA",
+          "coverage": "not-run"
+        },
+        {
+          "id": "DSC-14",
+          "result": "NA",
+          "coverage": "not-run"
+        },
+        {
+          "id": "DSC-10",
+          "result": "PASS",
+          "coverage": "full"
+        },
+        {
+          "id": "DSC-11",
+          "result": "WARN",
+          "coverage": "full"
+        },
+        {
+          "id": "DSC-12",
+          "result": "PASS",
+          "coverage": "full"
+        },
+        {
+          "id": "DSC-13",
+          "result": "WARN",
+          "coverage": "full"
+        }
+      ],
+      "evidence": {
+        "sha256": "634b322c3043580b209dc03c970085b4584224ee0fb4a111569d6f32b8471b2b",
+        "reportSha256": "634b322c3043580b209dc03c970085b4584224ee0fb4a111569d6f32b8471b2b"
+      },
+      "checkedBy": {
+        "checker": "dsh-standards@1.3.0 (dsh-plugin-verify@0.1.0)",
+        "command": "dsh-levels <package-dir> --no-runtime --format json"
+      },
+      "notChecked": [
+        "ENTRY:runtime (claim=static; not exercised)",
+        "ENTRY:DSC-03, DSC-04, DSC-05, DSC-06, DSC-07, DSC-08, DSC-09, DSC-14 (coverage=not-run)",
+        "FLOW:J1-J8 (not-run; 0/8 journeys pass)",
+        "BOOST:LEV-3..LEV-4 (not-measured)"
+      ],
+      "validity": {
+        "checkedAt": "2026-11-06",
+        "expiresAt": "2027-02-04",
+        "policy": "90d"
+      },
+      "lifecycle": "active",
+      "selfAssessed": true
+    },
+    "dsh-cost-meter@1.9.58": {
+      "subject": {
+        "name": "dsh-cost-meter",
+        "version": "1.9.58",
+        "tarballSha256": "6be43361f2851a0f0a1f6a4865cc802a7b3880e213b6619f6b84101484201e0e"
+      },
+      "title": "DeepSeek Harness 会话费用统计插件:本会话成本、当日费用、历史记录与官方价格同步,支持多厂商多模型价格计费(内置 170+ 模型 ID 价格目录与自动匹配)、主流 Coding Plan 订阅额度查询与显示(16 家,含 WorkBuddy 官方积分、OpenDesign 工作区查询、含小米 MiMo Token Plan 控制台 Cookie 查询、SCNet Token Plan 本地 Credits 计量与火山方舟 Volcano Ark Coding Plan AK/SK 签名查询)、自定义 Provider 余额查询(可配任意 HTTP 端点)与余额进度条、峰谷计价时段显示与切换前弹窗/系统通知提醒(位置/提前量/类型可配),界面中英双语。Session cost tracking plugin for DeepSeek Harness: per-conversation cost, daily totals, history and official price sync, with multi-vendor model pricing (built-in 170+ model-ID catalog with auto-matching), Coding Plan quota queries & display for 16 vendors (incl. WorkBuddy official credits, OpenDesign workspace queries, Xiaomi MiMo Token Plan via console cookie, local credits metering for the SCNet Token Plan and Volcano Ark Coding Plan via AK/SK signature), plan/API dual-track billing with per-1% & full-window Token Plan usage estimates, custom provider balance lookup (configurable HTTP endpoint) and balance progress bar, plus peak/off-peak pricing display with pre-switch popup & system-notification alerts (position / lead time / type configurable), in a bilingual (Chinese/English) UI.",
+      "repo": "https://github.com/Han-1413141/dsh-cost-meter",
+      "license": "MIT",
+      "scope": {
+        "dsh": ">=0.2.0-rc.1 <0.3.0-0",
+        "cordis": "4.0.6-alpha.1",
+        "platform": "web"
+      },
+      "levels": {
+        "entry": {
+          "state": "recognized",
+          "claim": "static"
+        },
+        "flow": {
+          "state": "not-run"
+        },
+        "boost": {
+          "state": "not-measured"
+        }
+      },
+      "checks": [
+        {
+          "id": "DSC-01",
+          "result": "PASS",
+          "coverage": "full"
+        },
+        {
+          "id": "DSC-02",
+          "result": "PASS",
+          "coverage": "full"
+        },
+        {
+          "id": "DSC-03",
+          "result": "NA",
+          "coverage": "not-run"
+        },
+        {
+          "id": "DSC-04",
+          "result": "NA",
+          "coverage": "not-run"
+        },
+        {
+          "id": "DSC-05",
+          "result": "NA",
+          "coverage": "not-run"
+        },
+        {
+          "id": "DSC-06",
+          "result": "NA",
+          "coverage": "not-run"
+        },
+        {
+          "id": "DSC-07",
+          "result": "NA",
+          "coverage": "not-run"
+        },
+        {
+          "id": "DSC-08",
+          "result": "NA",
+          "coverage": "not-run"
+        },
+        {
+          "id": "DSC-09",
+          "result": "NA",
+          "coverage": "not-run"
+        },
+        {
+          "id": "DSC-14",
+          "result": "NA",
+          "coverage": "not-run"
+        },
+        {
+          "id": "DSC-10",
+          "result": "WARN",
+          "coverage": "partial"
+        },
+        {
+          "id": "DSC-11",
+          "result": "WARN",
+          "coverage": "full"
+        },
+        {
+          "id": "DSC-12",
+          "result": "PASS",
+          "coverage": "full"
+        },
+        {
+          "id": "DSC-13",
+          "result": "WARN",
+          "coverage": "full"
+        }
+      ],
+      "evidence": {
+        "sha256": "4320e6227eac66128148597d4f9e1dd3bc19289908864712a0c7122216b52f5a",
+        "reportSha256": "4320e6227eac66128148597d4f9e1dd3bc19289908864712a0c7122216b52f5a"
+      },
+      "checkedBy": {
+        "checker": "dsh-standards@1.3.0 (dsh-plugin-verify@0.1.0)",
+        "command": "dsh-levels <package-dir> --no-runtime --format json"
+      },
+      "notChecked": [
+        "ENTRY:runtime (claim=static; not exercised)",
+        "ENTRY:DSC-03, DSC-04, DSC-05, DSC-06, DSC-07, DSC-08, DSC-09, DSC-14 (coverage=not-run)",
+        "FLOW:J1-J8 (not-run; 0/8 journeys pass)",
+        "BOOST:LEV-3..LEV-4 (not-measured)"
+      ],
+      "validity": {
+        "checkedAt": "2026-11-06",
+        "expiresAt": "2027-02-04",
+        "policy": "90d"
+      },
+      "lifecycle": "active",
+      "selfAssessed": true
+    },
+    "dsh-free-search@0.9.33": {
+      "subject": {
+        "name": "dsh-free-search",
+        "version": "0.9.33",
+        "tarballSha256": "109371d9c44057ce53e9288117af6d1d3fcc8c4450b8f5bd3dbdeea8b957c238"
+      },
+      "title": "Free web search for DeepSeek Harness: 27 engines (Bing/DuckDuckGo/AnySearch/SearXNG/Exa/Tavily/Keenable/Firecrawl/Parallel/You.com keyless; Zhihu global/site via MCP and Perplexity/SerpBase/DeepSeek (official + native tools/search)/Baidu/Kimi/Aliyun/Doubao with key; OpenAI/Gemini/Claude model built-in search, explicit-only) + auto smart routing + global engine enable/disable & fallback priority + editable zh/en language pools + multi mode (parallel full language-pool merge) + multi_search cross-source tool + failure-aware fallback (quota/auth cooldown, transient retry, fallbackOn) + time filtering + platform search + domain blocklist (blockedDomains) + web_fetch, with web settings UI.",
+      "repo": "https://github.com/DDDMUC/dsh-free-search",
+      "license": "MIT",
+      "scope": {
+        "dsh": ">=0.1.7-rc.1",
+        "cordis": "^4.0.1",
+        "platform": "web"
+      },
+      "levels": {
+        "entry": {
+          "state": "recognized",
+          "claim": "static"
+        },
+        "flow": {
+          "state": "not-run"
+        },
+        "boost": {
+          "state": "not-measured"
+        }
+      },
+      "checks": [
+        {
+          "id": "DSC-01",
+          "result": "PASS",
+          "coverage": "full"
+        },
+        {
+          "id": "DSC-02",
+          "result": "WARN",
+          "coverage": "full"
+        },
+        {
+          "id": "DSC-03",
+          "result": "NA",
+          "coverage": "not-run"
+        },
+        {
+          "id": "DSC-04",
+          "result": "NA",
+          "coverage": "not-run"
+        },
+        {
+          "id": "DSC-05",
+          "result": "NA",
+          "coverage": "not-run"
+        },
+        {
+          "id": "DSC-06",
+          "result": "NA",
+          "coverage": "not-run"
+        },
+        {
+          "id": "DSC-07",
+          "result": "NA",
+          "coverage": "not-run"
+        },
+        {
+          "id": "DSC-08",
+          "result": "NA",
+          "coverage": "not-run"
+        },
+        {
+          "id": "DSC-09",
+          "result": "NA",
+          "coverage": "not-run"
+        },
+        {
+          "id": "DSC-14",
+          "result": "NA",
+          "coverage": "not-run"
+        },
+        {
+          "id": "DSC-10",
+          "result": "WARN",
+          "coverage": "full"
+        },
+        {
+          "id": "DSC-11",
+          "result": "WARN",
+          "coverage": "full"
+        },
+        {
+          "id": "DSC-12",
+          "result": "PASS",
+          "coverage": "full"
+        },
+        {
+          "id": "DSC-13",
+          "result": "WARN",
+          "coverage": "full"
+        }
+      ],
+      "evidence": {
+        "sha256": "54cdd314a2a9354348446f150aa878753149c0b5942ae1a5d9c1f94f19e94853",
+        "reportSha256": "54cdd314a2a9354348446f150aa878753149c0b5942ae1a5d9c1f94f19e94853"
+      },
+      "checkedBy": {
+        "checker": "dsh-standards@1.3.0 (dsh-plugin-verify@0.1.0)",
+        "command": "dsh-levels <package-dir> --no-runtime --format json"
+      },
+      "notChecked": [
+        "ENTRY:runtime (claim=static; not exercised)",
+        "ENTRY:DSC-03, DSC-04, DSC-05, DSC-06, DSC-07, DSC-08, DSC-09, DSC-14 (coverage=not-run)",
+        "FLOW:J1-J8 (not-run; 0/8 journeys pass)",
+        "BOOST:LEV-3..LEV-4 (not-measured)"
+      ],
+      "validity": {
+        "checkedAt": "2026-11-06",
+        "expiresAt": "2027-02-04",
+        "policy": "90d"
+      },
+      "lifecycle": "active",
+      "selfAssessed": true
+    },
+    "dsh-genui@0.3.3": {
+      "subject": {
+        "name": "dsh-genui",
+        "version": "0.3.3",
+        "tarballSha256": "9115feb4653aa8c683ef233823764b0c4ee946002d596bd8b3231276fde53c11"
+      },
+      "title": "GenUI for DeepSeek Harness: interactive charts, forms, calculators, dashboards, and mini apps rendered inline in assistant replies, with actions that flow back to the model.",
+      "repo": "https://github.com/lhuans/dsh-genui",
+      "license": "MIT",
+      "scope": {
+        "dsh": "0.2.1-rc.5",
+        "cordis": "^4.0.1",
+        "platform": "web"
+      },
+      "levels": {
+        "entry": {
+          "state": "recognized",
+          "claim": "static"
+        },
+        "flow": {
+          "state": "not-run"
+        },
+        "boost": {
+          "state": "not-measured"
+        }
+      },
+      "checks": [
+        {
+          "id": "DSC-01",
+          "result": "PASS",
+          "coverage": "full"
+        },
+        {
+          "id": "DSC-02",
+          "result": "PASS",
+          "coverage": "full"
+        },
+        {
+          "id": "DSC-03",
+          "result": "NA",
+          "coverage": "not-run"
+        },
+        {
+          "id": "DSC-04",
+          "result": "NA",
+          "coverage": "not-run"
+        },
+        {
+          "id": "DSC-05",
+          "result": "NA",
+          "coverage": "not-run"
+        },
+        {
+          "id": "DSC-06",
+          "result": "NA",
+          "coverage": "not-run"
+        },
+        {
+          "id": "DSC-07",
+          "result": "NA",
+          "coverage": "not-run"
+        },
+        {
+          "id": "DSC-08",
+          "result": "NA",
+          "coverage": "not-run"
+        },
+        {
+          "id": "DSC-09",
+          "result": "NA",
+          "coverage": "not-run"
+        },
+        {
+          "id": "DSC-14",
+          "result": "NA",
+          "coverage": "not-run"
+        },
+        {
+          "id": "DSC-10",
+          "result": "PASS",
+          "coverage": "full"
+        },
+        {
+          "id": "DSC-11",
+          "result": "WARN",
+          "coverage": "full"
+        },
+        {
+          "id": "DSC-12",
+          "result": "PASS",
+          "coverage": "full"
+        },
+        {
+          "id": "DSC-13",
+          "result": "WARN",
+          "coverage": "full"
+        }
+      ],
+      "evidence": {
+        "sha256": "82c7575db6b882b923630f4df0d48af479ebb98384ad41b1f5b4a78350dd537a",
+        "reportSha256": "82c7575db6b882b923630f4df0d48af479ebb98384ad41b1f5b4a78350dd537a"
+      },
+      "checkedBy": {
+        "checker": "dsh-standards@1.3.0 (dsh-plugin-verify@0.1.0)",
+        "command": "dsh-levels <package-dir> --no-runtime --format json"
+      },
+      "notChecked": [
+        "ENTRY:runtime (claim=static; not exercised)",
+        "ENTRY:DSC-03, DSC-04, DSC-05, DSC-06, DSC-07, DSC-08, DSC-09, DSC-14 (coverage=not-run)",
+        "FLOW:J1-J8 (not-run; 0/8 journeys pass)",
+        "BOOST:LEV-3..LEV-4 (not-measured)"
+      ],
+      "validity": {
+        "checkedAt": "2026-11-06",
+        "expiresAt": "2027-02-04",
+        "policy": "90d"
+      },
+      "lifecycle": "active",
+      "selfAssessed": true
+    },
+    "dsh-mnemon@0.5.41": {
+      "subject": {
+        "name": "dsh-mnemon",
+        "version": "0.5.41",
+        "tarballSha256": "d1c25e6ed61462580ef2f407fd895ad7a4c36d455643e282eb64b11e57042f66"
+      },
+      "title": "Composable, view-based context for DeepSeek Harness. Pluggable sources and strategies, with layered memory and self-evolving skills out of the box.",
+      "repo": "https://github.com/omdsh-dev/dsh-mnemon",
+      "license": "MIT",
+      "scope": {
+        "dsh": ">=0.2.0-rc.2 <0.2.1-0 || >=0.2.1-rc.1 <0.3.0-0",
+        "cordis": "^4.0.4",
+        "platform": "web"
+      },
+      "levels": {
+        "entry": {
+          "state": "recognized",
+          "claim": "static"
+        },
+        "flow": {
+          "state": "not-run"
+        },
+        "boost": {
+          "state": "not-measured"
+        }
+      },
+      "checks": [
+        {
+          "id": "DSC-01",
+          "result": "PASS",
+          "coverage": "full"
+        },
+        {
+          "id": "DSC-02",
+          "result": "PASS",
+          "coverage": "full"
+        },
+        {
+          "id": "DSC-03",
+          "result": "NA",
+          "coverage": "not-run"
+        },
+        {
+          "id": "DSC-04",
+          "result": "NA",
+          "coverage": "not-run"
+        },
+        {
+          "id": "DSC-05",
+          "result": "NA",
+          "coverage": "not-run"
+        },
+        {
+          "id": "DSC-06",
+          "result": "NA",
+          "coverage": "not-run"
+        },
+        {
+          "id": "DSC-07",
+          "result": "NA",
+          "coverage": "not-run"
+        },
+        {
+          "id": "DSC-08",
+          "result": "NA",
+          "coverage": "not-run"
+        },
+        {
+          "id": "DSC-09",
+          "result": "NA",
+          "coverage": "not-run"
+        },
+        {
+          "id": "DSC-14",
+          "result": "NA",
+          "coverage": "not-run"
+        },
+        {
+          "id": "DSC-10",
+          "result": "PASS",
+          "coverage": "partial"
+        },
+        {
+          "id": "DSC-11",
+          "result": "WARN",
+          "coverage": "full"
+        },
+        {
+          "id": "DSC-12",
+          "result": "PASS",
+          "coverage": "full"
+        },
+        {
+          "id": "DSC-13",
+          "result": "WARN",
+          "coverage": "full"
+        }
+      ],
+      "evidence": {
+        "sha256": "dc874b9f924bf9c64fd16e1b166273e42cde46232e1a336579fc1bb19035fe33",
+        "reportSha256": "dc874b9f924bf9c64fd16e1b166273e42cde46232e1a336579fc1bb19035fe33"
+      },
+      "checkedBy": {
+        "checker": "dsh-standards@1.3.0 (dsh-plugin-verify@0.1.0)",
+        "command": "dsh-levels <package-dir> --no-runtime --format json"
+      },
+      "notChecked": [
+        "ENTRY:runtime (claim=static; not exercised)",
+        "ENTRY:DSC-03, DSC-04, DSC-05, DSC-06, DSC-07, DSC-08, DSC-09, DSC-14 (coverage=not-run)",
+        "FLOW:J1-J8 (not-run; 0/8 journeys pass)",
+        "BOOST:LEV-3..LEV-4 (not-measured)"
+      ],
+      "validity": {
+        "checkedAt": "2026-11-06",
+        "expiresAt": "2027-02-04",
+        "policy": "90d"
+      },
+      "lifecycle": "active",
+      "selfAssessed": true
+    },
+    "dsh-our-free-model@2.0.0": {
+      "subject": {
+        "name": "dsh-our-free-model",
+        "version": "2.0.0",
+        "tarballSha256": "58c7f18c4e967b35b8db61d907d452e5d2f13fd7719319365b4140fcaf9c999e"
+      },
+      "title": "Our Free Model — 在 dsh 里装上这个插件即可，无需登录、注册或填 API Key，就能使用包括 DeepSeek V4.1 Flash、Kimi K3 在内的前沿模型，桌面端另有 EAC 协付渠道；2.0 起接入 CodeArts、CodeBuddy、WorkBuddy、LobsterAI、Qoder、TRAE、Cline、Loomy、Raccoon、MiniMax、ZCode、Gemini 十三个账号渠道（原有匿名免费通道保留）（登录、账号池、积分领取、本地 OpenAI 网关与局域网转发、数据看板与运行日志），六页毛玻璃界面统一呈现。",
+      "repo": null,
+      "license": "MIT",
+      "scope": {
+        "dsh": "0.2.1-rc.5",
+        "cordis": "^4.0.2",
+        "platform": "web"
+      },
+      "levels": {
+        "entry": {
+          "state": "recognized",
+          "claim": "static"
+        },
+        "flow": {
+          "state": "not-run"
+        },
+        "boost": {
+          "state": "not-measured"
+        }
+      },
+      "checks": [
+        {
+          "id": "DSC-01",
+          "result": "PASS",
+          "coverage": "full"
+        },
+        {
+          "id": "DSC-02",
+          "result": "WARN",
+          "coverage": "full"
+        },
+        {
+          "id": "DSC-03",
+          "result": "NA",
+          "coverage": "not-run"
+        },
+        {
+          "id": "DSC-04",
+          "result": "NA",
+          "coverage": "not-run"
+        },
+        {
+          "id": "DSC-05",
+          "result": "NA",
+          "coverage": "not-run"
+        },
+        {
+          "id": "DSC-06",
+          "result": "NA",
+          "coverage": "not-run"
+        },
+        {
+          "id": "DSC-07",
+          "result": "NA",
+          "coverage": "not-run"
+        },
+        {
+          "id": "DSC-08",
+          "result": "NA",
+          "coverage": "not-run"
+        },
+        {
+          "id": "DSC-09",
+          "result": "NA",
+          "coverage": "not-run"
+        },
+        {
+          "id": "DSC-14",
+          "result": "NA",
+          "coverage": "not-run"
+        },
+        {
+          "id": "DSC-10",
+          "result": "PASS",
+          "coverage": "full"
+        },
+        {
+          "id": "DSC-11",
+          "result": "WARN",
+          "coverage": "full"
+        },
+        {
+          "id": "DSC-12",
+          "result": "PASS",
+          "coverage": "full"
+        },
+        {
+          "id": "DSC-13",
+          "result": "WARN",
+          "coverage": "full"
+        }
+      ],
+      "evidence": {
+        "sha256": "bfaa5f2c5c6a175f1e8dbdda88150e79d600ad7caec1e3aaf27092b5ee22fdee",
+        "reportSha256": "bfaa5f2c5c6a175f1e8dbdda88150e79d600ad7caec1e3aaf27092b5ee22fdee"
+      },
+      "checkedBy": {
+        "checker": "dsh-standards@1.3.0 (dsh-plugin-verify@0.1.0)",
+        "command": "dsh-levels <package-dir> --no-runtime --format json"
+      },
+      "notChecked": [
+        "ENTRY:runtime (claim=static; not exercised)",
+        "ENTRY:DSC-03, DSC-04, DSC-05, DSC-06, DSC-07, DSC-08, DSC-09, DSC-14 (coverage=not-run)",
+        "FLOW:J1-J8 (not-run; 0/8 journeys pass)",
+        "BOOST:LEV-3..LEV-4 (not-measured)"
+      ],
+      "validity": {
+        "checkedAt": "2026-11-06",
+        "expiresAt": "2027-02-04",
+        "policy": "90d"
+      },
+      "lifecycle": "active",
+      "selfAssessed": true
+    },
+    "dsh-plugin-health@3.0.5": {
+      "subject": {
+        "name": "dsh-plugin-health",
+        "version": "3.0.5",
+        "tarballSha256": "8df83650fc0dc17f1c58b30f215125ddfb77cb4810c8e282774f94d00f72f376"
+      },
+      "title": "Diagnoses DSH plugin installation, compatibility and observed loading problems. Offers repair previews, trusted-plugin startup trials, reversible version exemptions, recovery tools, AI briefs and official format-1 market indexes. Does not detect or contain malware.",
+      "repo": "https://github.com/EasonMWS/dsh-plugin-health",
+      "license": "MIT",
+      "scope": {
+        "dsh": ">=0.2.0-rc.0 <0.3.0-0",
+        "cordis": "4.0.6-alpha.1",
+        "platform": "web"
+      },
+      "levels": {
+        "entry": {
+          "state": "recognized",
+          "claim": "static"
+        },
+        "flow": {
+          "state": "not-run"
+        },
+        "boost": {
+          "state": "not-measured"
+        }
+      },
+      "checks": [
+        {
+          "id": "DSC-01",
+          "result": "PASS",
+          "coverage": "full"
+        },
+        {
+          "id": "DSC-02",
+          "result": "PASS",
+          "coverage": "full"
+        },
+        {
+          "id": "DSC-03",
+          "result": "NA",
+          "coverage": "not-run"
+        },
+        {
+          "id": "DSC-04",
+          "result": "NA",
+          "coverage": "not-run"
+        },
+        {
+          "id": "DSC-05",
+          "result": "NA",
+          "coverage": "not-run"
+        },
+        {
+          "id": "DSC-06",
+          "result": "NA",
+          "coverage": "not-run"
+        },
+        {
+          "id": "DSC-07",
+          "result": "NA",
+          "coverage": "not-run"
+        },
+        {
+          "id": "DSC-08",
+          "result": "NA",
+          "coverage": "not-run"
+        },
+        {
+          "id": "DSC-09",
+          "result": "NA",
+          "coverage": "not-run"
+        },
+        {
+          "id": "DSC-14",
+          "result": "NA",
+          "coverage": "not-run"
+        },
+        {
+          "id": "DSC-10",
+          "result": "PASS",
+          "coverage": "full"
+        },
+        {
+          "id": "DSC-11",
+          "result": "WARN",
+          "coverage": "full"
+        },
+        {
+          "id": "DSC-12",
+          "result": "PASS",
+          "coverage": "full"
+        },
+        {
+          "id": "DSC-13",
+          "result": "WARN",
+          "coverage": "full"
+        }
+      ],
+      "evidence": {
+        "sha256": "d26a07a49f2495f7e4c9228fa98650e2dc7d3a3f72ab530a497045bbc4eab672",
+        "reportSha256": "d26a07a49f2495f7e4c9228fa98650e2dc7d3a3f72ab530a497045bbc4eab672"
+      },
+      "checkedBy": {
+        "checker": "dsh-standards@1.3.0 (dsh-plugin-verify@0.1.0)",
+        "command": "dsh-levels <package-dir> --no-runtime --format json"
+      },
+      "notChecked": [
+        "ENTRY:runtime (claim=static; not exercised)",
+        "ENTRY:DSC-03, DSC-04, DSC-05, DSC-06, DSC-07, DSC-08, DSC-09, DSC-14 (coverage=not-run)",
+        "FLOW:J1-J8 (not-run; 0/8 journeys pass)",
+        "BOOST:LEV-3..LEV-4 (not-measured)"
+      ],
+      "validity": {
+        "checkedAt": "2026-11-06",
+        "expiresAt": "2027-02-04",
+        "policy": "90d"
+      },
+      "lifecycle": "active",
+      "selfAssessed": true
+    },
+    "dsh-pocket@2.12.0": {
+      "subject": {
+        "name": "dsh-pocket",
+        "version": "2.12.0",
+        "tarballSha256": "aa75689af6a2ded126248e0704ab5000224d2bb755734aa0a2d1aecb41b796d0"
+      },
+      "title": "把 DeepSeek Harness 装进你的口袋：一个包、一个设置页，手机扫码即同步访问电脑上的 DSH（局域网 + 公网，实时同屏）。",
+      "repo": "https://github.com/shaobeichen/dsh-pocket",
+      "license": "GPL-2.0",
+      "scope": {
+        "dsh": "0.2.1-rc.5",
+        "cordis": "^4.0.1",
+        "platform": "web"
+      },
+      "levels": {
+        "entry": {
+          "state": "recognized",
+          "claim": "static"
+        },
+        "flow": {
+          "state": "not-run"
+        },
+        "boost": {
+          "state": "not-measured"
+        }
+      },
+      "checks": [
+        {
+          "id": "DSC-01",
+          "result": "PASS",
+          "coverage": "full"
+        },
+        {
+          "id": "DSC-02",
+          "result": "WARN",
+          "coverage": "full"
+        },
+        {
+          "id": "DSC-03",
+          "result": "NA",
+          "coverage": "not-run"
+        },
+        {
+          "id": "DSC-04",
+          "result": "NA",
+          "coverage": "not-run"
+        },
+        {
+          "id": "DSC-05",
+          "result": "NA",
+          "coverage": "not-run"
+        },
+        {
+          "id": "DSC-06",
+          "result": "NA",
+          "coverage": "not-run"
+        },
+        {
+          "id": "DSC-07",
+          "result": "NA",
+          "coverage": "not-run"
+        },
+        {
+          "id": "DSC-08",
+          "result": "NA",
+          "coverage": "not-run"
+        },
+        {
+          "id": "DSC-09",
+          "result": "NA",
+          "coverage": "not-run"
+        },
+        {
+          "id": "DSC-14",
+          "result": "NA",
+          "coverage": "not-run"
+        },
+        {
+          "id": "DSC-10",
+          "result": "PASS",
+          "coverage": "full"
+        },
+        {
+          "id": "DSC-11",
+          "result": "WARN",
+          "coverage": "full"
+        },
+        {
+          "id": "DSC-12",
+          "result": "PASS",
+          "coverage": "full"
+        },
+        {
+          "id": "DSC-13",
+          "result": "WARN",
+          "coverage": "full"
+        }
+      ],
+      "evidence": {
+        "sha256": "5b22366146965e73719e0e6b6e0bea71def0e34f5beaf45df2eb10efb1ce5a63",
+        "reportSha256": "5b22366146965e73719e0e6b6e0bea71def0e34f5beaf45df2eb10efb1ce5a63"
+      },
+      "checkedBy": {
+        "checker": "dsh-standards@1.3.0 (dsh-plugin-verify@0.1.0)",
+        "command": "dsh-levels <package-dir> --no-runtime --format json"
+      },
+      "notChecked": [
+        "ENTRY:runtime (claim=static; not exercised)",
+        "ENTRY:DSC-03, DSC-04, DSC-05, DSC-06, DSC-07, DSC-08, DSC-09, DSC-14 (coverage=not-run)",
+        "FLOW:J1-J8 (not-run; 0/8 journeys pass)",
+        "BOOST:LEV-3..LEV-4 (not-measured)"
+      ],
+      "validity": {
+        "checkedAt": "2026-11-06",
+        "expiresAt": "2027-02-04",
+        "policy": "90d"
+      },
+      "lifecycle": "active",
+      "selfAssessed": true
+    },
+    "dsh-remote@0.8.73": {
+      "subject": {
+        "name": "dsh-remote",
+        "version": "0.8.73",
+        "tarballSha256": "d7bef04cc6f926cd5d14e6f6517f23589c347e66d93975e291d16b57133574f5"
+      },
+      "title": "Remote-work assistant for DeepSeek Harness: connect SSH (password/key/agent/keyboard-interactive, multi-hop ProxyJump), list hosts from ~/.ssh/config, pick a remote workspace, operate on it with 21 rw_* tools, conflict-aware mirror sync, an embedded PTY terminal, remote DSH web UI attach, port forwarding, host grouping, remote sandbox fencing, audit log, keychain passwords.",
+      "repo": "https://github.com/flymysql/dsh-remote",
+      "license": "MIT",
+      "scope": {
+        "dsh": ">=0.1.0-rc.6 <0.3.0",
+        "cordis": "^4.0.5",
+        "platform": "web"
+      },
+      "levels": {
+        "entry": {
+          "state": "recognized",
+          "claim": "static"
+        },
+        "flow": {
+          "state": "not-run"
+        },
+        "boost": {
+          "state": "not-measured"
+        }
+      },
+      "checks": [
+        {
+          "id": "DSC-01",
+          "result": "PASS",
+          "coverage": "full"
+        },
+        {
+          "id": "DSC-02",
+          "result": "WARN",
+          "coverage": "full"
+        },
+        {
+          "id": "DSC-03",
+          "result": "NA",
+          "coverage": "not-run"
+        },
+        {
+          "id": "DSC-04",
+          "result": "NA",
+          "coverage": "not-run"
+        },
+        {
+          "id": "DSC-05",
+          "result": "NA",
+          "coverage": "not-run"
+        },
+        {
+          "id": "DSC-06",
+          "result": "NA",
+          "coverage": "not-run"
+        },
+        {
+          "id": "DSC-07",
+          "result": "NA",
+          "coverage": "not-run"
+        },
+        {
+          "id": "DSC-08",
+          "result": "NA",
+          "coverage": "not-run"
+        },
+        {
+          "id": "DSC-09",
+          "result": "NA",
+          "coverage": "not-run"
+        },
+        {
+          "id": "DSC-14",
+          "result": "NA",
+          "coverage": "not-run"
+        },
+        {
+          "id": "DSC-10",
+          "result": "PASS",
+          "coverage": "full"
+        },
+        {
+          "id": "DSC-11",
+          "result": "WARN",
+          "coverage": "full"
+        },
+        {
+          "id": "DSC-12",
+          "result": "WARN",
+          "coverage": "full"
+        },
+        {
+          "id": "DSC-13",
+          "result": "WARN",
+          "coverage": "full"
+        }
+      ],
+      "evidence": {
+        "sha256": "adc3d6ce0c4c70bb8db0eeab5d181da5199f29aa729f47d947a3a3f773e8b6cd",
+        "reportSha256": "adc3d6ce0c4c70bb8db0eeab5d181da5199f29aa729f47d947a3a3f773e8b6cd"
+      },
+      "checkedBy": {
+        "checker": "dsh-standards@1.3.0 (dsh-plugin-verify@0.1.0)",
+        "command": "dsh-levels <package-dir> --no-runtime --format json"
+      },
+      "notChecked": [
+        "ENTRY:runtime (claim=static; not exercised)",
+        "ENTRY:DSC-03, DSC-04, DSC-05, DSC-06, DSC-07, DSC-08, DSC-09, DSC-14 (coverage=not-run)",
+        "FLOW:J1-J8 (not-run; 0/8 journeys pass)",
+        "BOOST:LEV-3..LEV-4 (not-measured)"
+      ],
+      "validity": {
+        "checkedAt": "2026-11-06",
+        "expiresAt": "2027-02-04",
+        "policy": "90d"
+      },
+      "lifecycle": "active",
+      "selfAssessed": true
+    },
+    "dsh-status-rotator@0.38.0": {
+      "subject": {
+        "name": "dsh-status-rotator",
+        "version": "0.38.0",
+        "tarballSha256": "83e4388bdfdf6b583a4efb03064bdd00b823c4feb8dc3358a2dde2f6907c75c1"
+      },
+      "title": "Turn the DSH Web status line into a 1483-phrase meme machine: phase-aware phrases, typewriter, rainbow gradient, danmaku and 14 theme packs, all editable from the settings page.",
+      "repo": "https://github.com/01Virex/dsh-status-rotator",
+      "license": "MIT",
+      "scope": {
+        "dsh": "0.2.1-rc.5",
+        "cordis": "*",
+        "platform": "web"
+      },
+      "levels": {
+        "entry": {
+          "state": "recognized",
+          "claim": "static"
+        },
+        "flow": {
+          "state": "not-run"
+        },
+        "boost": {
+          "state": "not-measured"
+        }
+      },
+      "checks": [
+        {
+          "id": "DSC-01",
+          "result": "PASS",
+          "coverage": "full"
+        },
+        {
+          "id": "DSC-02",
+          "result": "WARN",
+          "coverage": "full"
+        },
+        {
+          "id": "DSC-03",
+          "result": "NA",
+          "coverage": "not-run"
+        },
+        {
+          "id": "DSC-04",
+          "result": "NA",
+          "coverage": "not-run"
+        },
+        {
+          "id": "DSC-05",
+          "result": "NA",
+          "coverage": "not-run"
+        },
+        {
+          "id": "DSC-06",
+          "result": "NA",
+          "coverage": "not-run"
+        },
+        {
+          "id": "DSC-07",
+          "result": "NA",
+          "coverage": "not-run"
+        },
+        {
+          "id": "DSC-08",
+          "result": "NA",
+          "coverage": "not-run"
+        },
+        {
+          "id": "DSC-09",
+          "result": "NA",
+          "coverage": "not-run"
+        },
+        {
+          "id": "DSC-14",
+          "result": "NA",
+          "coverage": "not-run"
+        },
+        {
+          "id": "DSC-10",
+          "result": "PASS",
+          "coverage": "full"
+        },
+        {
+          "id": "DSC-11",
+          "result": "WARN",
+          "coverage": "full"
+        },
+        {
+          "id": "DSC-12",
+          "result": "PASS",
+          "coverage": "full"
+        },
+        {
+          "id": "DSC-13",
+          "result": "WARN",
+          "coverage": "full"
+        }
+      ],
+      "evidence": {
+        "sha256": "eaff4b5a68afb3ae3bdcb09ca577078b1a5cd02ab7b556ea1633cec0cadec7d8",
+        "reportSha256": "eaff4b5a68afb3ae3bdcb09ca577078b1a5cd02ab7b556ea1633cec0cadec7d8"
+      },
+      "checkedBy": {
+        "checker": "dsh-standards@1.3.0 (dsh-plugin-verify@0.1.0)",
+        "command": "dsh-levels <package-dir> --no-runtime --format json"
+      },
+      "notChecked": [
+        "ENTRY:runtime (claim=static; not exercised)",
+        "ENTRY:DSC-03, DSC-04, DSC-05, DSC-06, DSC-07, DSC-08, DSC-09, DSC-14 (coverage=not-run)",
+        "FLOW:J1-J8 (not-run; 0/8 journeys pass)",
+        "BOOST:LEV-3..LEV-4 (not-measured)"
+      ],
+      "validity": {
+        "checkedAt": "2026-11-06",
+        "expiresAt": "2027-02-04",
+        "policy": "90d"
+      },
+      "lifecycle": "active",
+      "selfAssessed": true
+    },
+    "dsh-telemetry-redactor@0.1.0": {
+      "subject": {
+        "name": "dsh-telemetry-redactor",
+        "version": "0.1.0",
+        "tarballSha256": "d23f428e84a352d40eed9f6382ec8e48cc523e6aa771e3602afdf690f0769355"
+      },
+      "title": "Export-copy redaction for DeepSeek Harness session telemetry",
+      "repo": "https://github.com/030611/dsh-telemetry-redactor",
+      "license": "MIT",
+      "scope": {
+        "dsh": "0.2.1-rc.5",
+        "cordis": "^4.0.1",
+        "platform": null
+      },
+      "levels": {
+        "entry": {
+          "state": "recognized",
+          "claim": "static"
+        },
+        "flow": {
+          "state": "not-run"
+        },
+        "boost": {
+          "state": "not-measured"
+        }
+      },
+      "checks": [
+        {
+          "id": "DSC-01",
+          "result": "PASS",
+          "coverage": "full"
+        },
+        {
+          "id": "DSC-02",
+          "result": "WARN",
+          "coverage": "full"
+        },
+        {
+          "id": "DSC-03",
+          "result": "NA",
+          "coverage": "not-run"
+        },
+        {
+          "id": "DSC-04",
+          "result": "NA",
+          "coverage": "not-run"
+        },
+        {
+          "id": "DSC-05",
+          "result": "NA",
+          "coverage": "not-run"
+        },
+        {
+          "id": "DSC-06",
+          "result": "NA",
+          "coverage": "not-run"
+        },
+        {
+          "id": "DSC-07",
+          "result": "NA",
+          "coverage": "not-run"
+        },
+        {
+          "id": "DSC-08",
+          "result": "NA",
+          "coverage": "not-run"
+        },
+        {
+          "id": "DSC-09",
+          "result": "NA",
+          "coverage": "not-run"
+        },
+        {
+          "id": "DSC-14",
+          "result": "NA",
+          "coverage": "not-run"
+        },
+        {
+          "id": "DSC-10",
+          "result": "PASS",
+          "coverage": "full"
+        },
+        {
+          "id": "DSC-11",
+          "result": "WARN",
+          "coverage": "full"
+        },
+        {
+          "id": "DSC-12",
+          "result": "PASS",
+          "coverage": "full"
+        },
+        {
+          "id": "DSC-13",
+          "result": "WARN",
+          "coverage": "full"
+        }
+      ],
+      "evidence": {
+        "sha256": "54bcdcb3ace47a7e7f13f7dc4579ba82da1029f2eb009c29189d7f7d6e927a7b",
+        "reportSha256": "54bcdcb3ace47a7e7f13f7dc4579ba82da1029f2eb009c29189d7f7d6e927a7b"
+      },
+      "checkedBy": {
+        "checker": "dsh-standards@1.3.0 (dsh-plugin-verify@0.1.0)",
+        "command": "dsh-levels <package-dir> --no-runtime --format json"
+      },
+      "notChecked": [
+        "ENTRY:runtime (claim=static; not exercised)",
+        "ENTRY:DSC-03, DSC-04, DSC-05, DSC-06, DSC-07, DSC-08, DSC-09, DSC-14 (coverage=not-run)",
+        "FLOW:J1-J8 (not-run; 0/8 journeys pass)",
+        "BOOST:LEV-3..LEV-4 (not-measured)"
+      ],
+      "validity": {
+        "checkedAt": "2026-11-06",
+        "expiresAt": "2027-02-04",
+        "policy": "90d"
+      },
+      "lifecycle": "active",
+      "selfAssessed": true
+    },
+    "dsh-trust-check@0.2.5": {
+      "subject": {
+        "name": "dsh-trust-check",
+        "version": "0.2.5",
+        "tarballSha256": "05653d4e09189e2df42b135bb7e04cd27f5ed8afd776ef49dd7125d586d04464"
+      },
+      "title": "Static capability disclosure for DeepSeek Harness plugins: capabilities, injected prompts, install scripts, and provenance, each with file:line evidence. Facts, not a safety verdict.",
+      "repo": "https://github.com/liuwenji007/dsh-trust-check",
+      "license": "MIT",
+      "scope": {
+        "dsh": ">=0.1.0-rc.8",
+        "cordis": ">=4.0.0-rc.7",
+        "platform": "web"
+      },
+      "levels": {
+        "entry": {
+          "state": "recognized",
+          "claim": "static"
+        },
+        "flow": {
+          "state": "not-run"
+        },
+        "boost": {
+          "state": "not-measured"
+        }
+      },
+      "checks": [
+        {
+          "id": "DSC-01",
+          "result": "PASS",
+          "coverage": "full"
+        },
+        {
+          "id": "DSC-02",
+          "result": "PASS",
+          "coverage": "full"
+        },
+        {
+          "id": "DSC-03",
+          "result": "NA",
+          "coverage": "not-run"
+        },
+        {
+          "id": "DSC-04",
+          "result": "NA",
+          "coverage": "not-run"
+        },
+        {
+          "id": "DSC-05",
+          "result": "NA",
+          "coverage": "not-run"
+        },
+        {
+          "id": "DSC-06",
+          "result": "NA",
+          "coverage": "not-run"
+        },
+        {
+          "id": "DSC-07",
+          "result": "NA",
+          "coverage": "not-run"
+        },
+        {
+          "id": "DSC-08",
+          "result": "NA",
+          "coverage": "not-run"
+        },
+        {
+          "id": "DSC-09",
+          "result": "NA",
+          "coverage": "not-run"
+        },
+        {
+          "id": "DSC-14",
+          "result": "NA",
+          "coverage": "not-run"
+        },
+        {
+          "id": "DSC-10",
+          "result": "PASS",
+          "coverage": "full"
+        },
+        {
+          "id": "DSC-11",
+          "result": "WARN",
+          "coverage": "full"
+        },
+        {
+          "id": "DSC-12",
+          "result": "PASS",
+          "coverage": "full"
+        },
+        {
+          "id": "DSC-13",
+          "result": "WARN",
+          "coverage": "full"
+        }
+      ],
+      "evidence": {
+        "sha256": "89a491388fb8f35c33cc864a93063059969be07934e23ab35d381810642b93b3",
+        "reportSha256": "89a491388fb8f35c33cc864a93063059969be07934e23ab35d381810642b93b3"
+      },
+      "checkedBy": {
+        "checker": "dsh-standards@1.3.0 (dsh-plugin-verify@0.1.0)",
+        "command": "dsh-levels <package-dir> --no-runtime --format json"
+      },
+      "notChecked": [
+        "ENTRY:runtime (claim=static; not exercised)",
+        "ENTRY:DSC-03, DSC-04, DSC-05, DSC-06, DSC-07, DSC-08, DSC-09, DSC-14 (coverage=not-run)",
+        "FLOW:J1-J8 (not-run; 0/8 journeys pass)",
+        "BOOST:LEV-3..LEV-4 (not-measured)"
+      ],
+      "validity": {
+        "checkedAt": "2026-11-06",
+        "expiresAt": "2027-02-04",
+        "policy": "90d"
+      },
+      "lifecycle": "active",
+      "selfAssessed": true
+    },
+    "dsh-ui-auth@0.7.1": {
+      "subject": {
+        "name": "dsh-ui-auth",
+        "version": "0.7.1",
+        "tarballSha256": "3204c3e1723371450341588a1c0f8ec86a8431896df52ee6cdbd521a801bb692"
+      },
+      "title": "DSH Web UI 认证网关：登录保护全部 HTTP/WS 接口；用户管理、邀请码注册、TOTP 两步验证与通行密钥（Passkey/WebAuthn）登录。",
+      "repo": "https://github.com/0QwQ0/dsh-ui-auth",
+      "license": "MIT",
+      "scope": {
+        "dsh": "0.2.1-rc.5",
+        "cordis": "^4.0.1",
+        "platform": "web"
+      },
+      "levels": {
+        "entry": {
+          "state": "recognized",
+          "claim": "static"
+        },
+        "flow": {
+          "state": "not-run"
+        },
+        "boost": {
+          "state": "not-measured"
+        }
+      },
+      "checks": [
+        {
+          "id": "DSC-01",
+          "result": "PASS",
+          "coverage": "full"
+        },
+        {
+          "id": "DSC-02",
+          "result": "WARN",
+          "coverage": "full"
+        },
+        {
+          "id": "DSC-03",
+          "result": "NA",
+          "coverage": "not-run"
+        },
+        {
+          "id": "DSC-04",
+          "result": "NA",
+          "coverage": "not-run"
+        },
+        {
+          "id": "DSC-05",
+          "result": "NA",
+          "coverage": "not-run"
+        },
+        {
+          "id": "DSC-06",
+          "result": "NA",
+          "coverage": "not-run"
+        },
+        {
+          "id": "DSC-07",
+          "result": "NA",
+          "coverage": "not-run"
+        },
+        {
+          "id": "DSC-08",
+          "result": "NA",
+          "coverage": "not-run"
+        },
+        {
+          "id": "DSC-09",
+          "result": "NA",
+          "coverage": "not-run"
+        },
+        {
+          "id": "DSC-14",
+          "result": "NA",
+          "coverage": "not-run"
+        },
+        {
+          "id": "DSC-10",
+          "result": "PASS",
+          "coverage": "full"
+        },
+        {
+          "id": "DSC-11",
+          "result": "WARN",
+          "coverage": "full"
+        },
+        {
+          "id": "DSC-12",
+          "result": "WARN",
+          "coverage": "full"
+        },
+        {
+          "id": "DSC-13",
+          "result": "WARN",
+          "coverage": "full"
+        }
+      ],
+      "evidence": {
+        "sha256": "4f2b51e539047f2549ebb5fb65c117445903f8d41d3c53f08df8728c865915f7",
+        "reportSha256": "4f2b51e539047f2549ebb5fb65c117445903f8d41d3c53f08df8728c865915f7"
+      },
+      "checkedBy": {
+        "checker": "dsh-standards@1.3.0 (dsh-plugin-verify@0.1.0)",
+        "command": "dsh-levels <package-dir> --no-runtime --format json"
+      },
+      "notChecked": [
+        "ENTRY:runtime (claim=static; not exercised)",
+        "ENTRY:DSC-03, DSC-04, DSC-05, DSC-06, DSC-07, DSC-08, DSC-09, DSC-14 (coverage=not-run)",
+        "FLOW:J1-J8 (not-run; 0/8 journeys pass)",
+        "BOOST:LEV-3..LEV-4 (not-measured)"
+      ],
+      "validity": {
+        "checkedAt": "2026-11-06",
+        "expiresAt": "2027-02-04",
+        "policy": "90d"
+      },
+      "lifecycle": "active",
+      "selfAssessed": true
+    },
+    "dsh-verification-receipt@0.1.0": {
+      "subject": {
+        "name": "dsh-verification-receipt",
+        "version": "0.1.0",
+        "tarballSha256": "8179996503491b2e8cc757eeaf779e92995c7d3bace732f76e56c6d0812a1a0d"
+      },
+      "title": "Privacy-minimal heuristic per-turn execution summaries for DeepSeek Harness",
+      "repo": "https://github.com/030611/dsh-verification-receipt",
+      "license": "MIT",
+      "scope": {
+        "dsh": "0.2.1-rc.5",
+        "cordis": "^4.0.1",
+        "platform": null
+      },
+      "levels": {
+        "entry": {
+          "state": "recognized",
+          "claim": "static"
+        },
+        "flow": {
+          "state": "not-run"
+        },
+        "boost": {
+          "state": "not-measured"
+        }
+      },
+      "checks": [
+        {
+          "id": "DSC-01",
+          "result": "PASS",
+          "coverage": "full"
+        },
+        {
+          "id": "DSC-02",
+          "result": "WARN",
+          "coverage": "full"
+        },
+        {
+          "id": "DSC-03",
+          "result": "NA",
+          "coverage": "not-run"
+        },
+        {
+          "id": "DSC-04",
+          "result": "NA",
+          "coverage": "not-run"
+        },
+        {
+          "id": "DSC-05",
+          "result": "NA",
+          "coverage": "not-run"
+        },
+        {
+          "id": "DSC-06",
+          "result": "NA",
+          "coverage": "not-run"
+        },
+        {
+          "id": "DSC-07",
+          "result": "NA",
+          "coverage": "not-run"
+        },
+        {
+          "id": "DSC-08",
+          "result": "NA",
+          "coverage": "not-run"
+        },
+        {
+          "id": "DSC-09",
+          "result": "NA",
+          "coverage": "not-run"
+        },
+        {
+          "id": "DSC-14",
+          "result": "NA",
+          "coverage": "not-run"
+        },
+        {
+          "id": "DSC-10",
+          "result": "PASS",
+          "coverage": "full"
+        },
+        {
+          "id": "DSC-11",
+          "result": "WARN",
+          "coverage": "full"
+        },
+        {
+          "id": "DSC-12",
+          "result": "PASS",
+          "coverage": "full"
+        },
+        {
+          "id": "DSC-13",
+          "result": "WARN",
+          "coverage": "full"
+        }
+      ],
+      "evidence": {
+        "sha256": "8ac7e7d3a46581b289785ee66f5cc3347e79d925e45e42ef39bb0fd47ebc0601",
+        "reportSha256": "8ac7e7d3a46581b289785ee66f5cc3347e79d925e45e42ef39bb0fd47ebc0601"
+      },
+      "checkedBy": {
+        "checker": "dsh-standards@1.3.0 (dsh-plugin-verify@0.1.0)",
+        "command": "dsh-levels <package-dir> --no-runtime --format json"
+      },
+      "notChecked": [
+        "ENTRY:runtime (claim=static; not exercised)",
+        "ENTRY:DSC-03, DSC-04, DSC-05, DSC-06, DSC-07, DSC-08, DSC-09, DSC-14 (coverage=not-run)",
+        "FLOW:J1-J8 (not-run; 0/8 journeys pass)",
+        "BOOST:LEV-3..LEV-4 (not-measured)"
+      ],
+      "validity": {
+        "checkedAt": "2026-11-06",
+        "expiresAt": "2027-02-04",
+        "policy": "90d"
+      },
+      "lifecycle": "active",
+      "selfAssessed": true
+    },
+    "dsh-vision-router@3.1.3": {
+      "subject": {
+        "name": "dsh-vision-router",
+        "version": "3.1.3",
+        "tarballSha256": "66a7e0a8fa1d56a835633d9b1c8e12be65d0fd7ff2553b7216a0a485bf5b8be0"
+      },
+      "title": "Eyes for text-only DeepSeek Harness agents: built-in free vision chain + pixel-level tools. Remote vision providers, including the default free fallback, receive image content unless strict local-only use is configured.",
+      "repo": "https://github.com/ysr666/dsh-vision-router",
+      "license": "MIT",
+      "scope": {
+        "dsh": ">=0.1.5-rc.1 <0.2.0-0 || >=0.2.0-rc.2 <0.3.0-0",
+        "cordis": "4.0.6-alpha.1",
+        "platform": "web"
+      },
+      "levels": {
+        "entry": {
+          "state": "recognized",
+          "claim": "static"
+        },
+        "flow": {
+          "state": "not-run"
+        },
+        "boost": {
+          "state": "not-measured"
+        }
+      },
+      "checks": [
+        {
+          "id": "DSC-01",
+          "result": "PASS",
+          "coverage": "full"
+        },
+        {
+          "id": "DSC-02",
+          "result": "PASS",
+          "coverage": "full"
+        },
+        {
+          "id": "DSC-03",
+          "result": "NA",
+          "coverage": "not-run"
+        },
+        {
+          "id": "DSC-04",
+          "result": "NA",
+          "coverage": "not-run"
+        },
+        {
+          "id": "DSC-05",
+          "result": "NA",
+          "coverage": "not-run"
+        },
+        {
+          "id": "DSC-06",
+          "result": "NA",
+          "coverage": "not-run"
+        },
+        {
+          "id": "DSC-07",
+          "result": "NA",
+          "coverage": "not-run"
+        },
+        {
+          "id": "DSC-08",
+          "result": "NA",
+          "coverage": "not-run"
+        },
+        {
+          "id": "DSC-09",
+          "result": "NA",
+          "coverage": "not-run"
+        },
+        {
+          "id": "DSC-14",
+          "result": "NA",
+          "coverage": "not-run"
+        },
+        {
+          "id": "DSC-10",
+          "result": "PASS",
+          "coverage": "full"
+        },
+        {
+          "id": "DSC-11",
+          "result": "WARN",
+          "coverage": "full"
+        },
+        {
+          "id": "DSC-12",
+          "result": "PASS",
+          "coverage": "full"
+        },
+        {
+          "id": "DSC-13",
+          "result": "WARN",
+          "coverage": "full"
+        }
+      ],
+      "evidence": {
+        "sha256": "1fed4ff6f7f1d9656924796711ec4ade9d4bb93a5c81841a40984cbf3a24de30",
+        "reportSha256": "1fed4ff6f7f1d9656924796711ec4ade9d4bb93a5c81841a40984cbf3a24de30"
+      },
+      "checkedBy": {
+        "checker": "dsh-standards@1.3.0 (dsh-plugin-verify@0.1.0)",
+        "command": "dsh-levels <package-dir> --no-runtime --format json"
+      },
+      "notChecked": [
+        "ENTRY:runtime (claim=static; not exercised)",
+        "ENTRY:DSC-03, DSC-04, DSC-05, DSC-06, DSC-07, DSC-08, DSC-09, DSC-14 (coverage=not-run)",
+        "FLOW:J1-J8 (not-run; 0/8 journeys pass)",
+        "BOOST:LEV-3..LEV-4 (not-measured)"
+      ],
+      "validity": {
+        "checkedAt": "2026-11-06",
+        "expiresAt": "2027-02-04",
+        "policy": "90d"
+      },
+      "lifecycle": "active",
+      "selfAssessed": true
+    },
+    "dsh-windows-mcp@0.2.3": {
+      "subject": {
+        "name": "dsh-windows-mcp",
+        "version": "0.2.3",
+        "tarballSha256": "414f466a253063fc4c174736ecc87d229425a265ead3441b35eb27cd03a7cb6d"
+      },
+      "title": "Windows desktop automation for DeepSeek Harness — plugs CursorTouch/Windows-MCP (screenshot, UI automation, input, clipboard, processes, registry) into DSH through the official MCP client bridge.",
+      "repo": "https://github.com/helloHub1212/dsh-windows-mcp",
+      "license": "MIT",
+      "scope": {
+        "dsh": "0.2.1-rc.5",
+        "cordis": "4.0.6-alpha.1",
+        "platform": "web"
+      },
+      "levels": {
+        "entry": {
+          "state": "recognized",
+          "claim": "static"
+        },
+        "flow": {
+          "state": "not-run"
+        },
+        "boost": {
+          "state": "not-measured"
+        }
+      },
+      "checks": [
+        {
+          "id": "DSC-01",
+          "result": "PASS",
+          "coverage": "full"
+        },
+        {
+          "id": "DSC-02",
+          "result": "WARN",
+          "coverage": "full"
+        },
+        {
+          "id": "DSC-03",
+          "result": "NA",
+          "coverage": "not-run"
+        },
+        {
+          "id": "DSC-04",
+          "result": "NA",
+          "coverage": "not-run"
+        },
+        {
+          "id": "DSC-05",
+          "result": "NA",
+          "coverage": "not-run"
+        },
+        {
+          "id": "DSC-06",
+          "result": "NA",
+          "coverage": "not-run"
+        },
+        {
+          "id": "DSC-07",
+          "result": "NA",
+          "coverage": "not-run"
+        },
+        {
+          "id": "DSC-08",
+          "result": "NA",
+          "coverage": "not-run"
+        },
+        {
+          "id": "DSC-09",
+          "result": "NA",
+          "coverage": "not-run"
+        },
+        {
+          "id": "DSC-14",
+          "result": "NA",
+          "coverage": "not-run"
+        },
+        {
+          "id": "DSC-10",
+          "result": "PASS",
+          "coverage": "full"
+        },
+        {
+          "id": "DSC-11",
+          "result": "WARN",
+          "coverage": "full"
+        },
+        {
+          "id": "DSC-12",
+          "result": "PASS",
+          "coverage": "full"
+        },
+        {
+          "id": "DSC-13",
+          "result": "WARN",
+          "coverage": "full"
+        }
+      ],
+      "evidence": {
+        "sha256": "1977bfae91bb54e9bf55918b8f3211e8fc38e7fc94341887a3044abe3f01f422",
+        "reportSha256": "1977bfae91bb54e9bf55918b8f3211e8fc38e7fc94341887a3044abe3f01f422"
+      },
+      "checkedBy": {
+        "checker": "dsh-standards@1.3.0 (dsh-plugin-verify@0.1.0)",
+        "command": "dsh-levels <package-dir> --no-runtime --format json"
+      },
+      "notChecked": [
+        "ENTRY:runtime (claim=static; not exercised)",
+        "ENTRY:DSC-03, DSC-04, DSC-05, DSC-06, DSC-07, DSC-08, DSC-09, DSC-14 (coverage=not-run)",
+        "FLOW:J1-J8 (not-run; 0/8 journeys pass)",
+        "BOOST:LEV-3..LEV-4 (not-measured)"
+      ],
       "validity": {
         "checkedAt": "2026-11-06",
         "expiresAt": "2027-02-04",

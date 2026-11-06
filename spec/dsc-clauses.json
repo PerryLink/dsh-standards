@@ -1,0 +1,766 @@
+{
+  "schema": "dsh-dsc-clauses/1",
+  "standard": {
+    "id": "DS-C",
+    "version": "1.0.0"
+  },
+  "generatedAt": "2026-11-06",
+  "source": [
+    "31-DS-C条款.md",
+    "31-DSH-ENTRY入门规范.md",
+    "40-checker/src/cli.mjs",
+    "40-checker/src/permissions.mjs"
+  ],
+  "note": "Stable list of DS-C parent clauses C-1..C-14 and every C-x.y sub-clause. `mandatory` means a violation can produce FAIL in an applicable profile; `advisory` means the checker reports it as advisory (check.advisory=true) and it never moves the verdict. C-3 is mandatory in listing only; C-14 is mandatory in entry scope only. Docs anchors point at the clause section that owns the sub-clause. The repository has no clauses.js; this list is derived from the 31-DS-C条款.md §2 tables plus the checker sources that emit DSC-01..DSC-14 (cli.mjs, permissions.mjs).",
+  "counts": {
+    "clauses": 14,
+    "subclauses": 60,
+    "entries": 74,
+    "dscChecks": 14
+  },
+  "clauses": [
+    {
+      "dsc": "DSC-01",
+      "clause": "C-1",
+      "title": "清单与入口可解析",
+      "layer": "L0",
+      "mandatory": true,
+      "advisory": false,
+      "docs": "31-DS-C条款.md#c-1-清单与入口可解析",
+      "parent": null
+    },
+    {
+      "dsc": "DSC-02",
+      "clause": "C-2",
+      "title": "版本约束声明且兼容",
+      "layer": "L0",
+      "mandatory": true,
+      "advisory": false,
+      "docs": "31-DS-C条款.md#c-2-版本约束声明且兼容",
+      "parent": null
+    },
+    {
+      "dsc": "DSC-03",
+      "clause": "C-3",
+      "title": "安装来源可解析、可固定、可追溯",
+      "layer": "L0",
+      "mandatory": true,
+      "advisory": false,
+      "docs": "31-DS-C条款.md#c-3-安装来源可解析可固定可追溯",
+      "parent": null,
+      "note": "listing profile only; package profile reports NA"
+    },
+    {
+      "dsc": "DSC-04",
+      "clause": "C-4",
+      "title": "可装载并进入 ACTIVE",
+      "layer": "L1",
+      "mandatory": true,
+      "advisory": false,
+      "docs": "31-DS-C条款.md#c-4-可装载并进入-active",
+      "parent": null
+    },
+    {
+      "dsc": "DSC-05",
+      "clause": "C-5",
+      "title": "声明的 provide 必须真实注册",
+      "layer": "L1",
+      "mandatory": true,
+      "advisory": false,
+      "docs": "31-DS-C条款.md#c-5-声明的-provide-必须真实注册",
+      "parent": null
+    },
+    {
+      "dsc": "DSC-06",
+      "clause": "C-6",
+      "title": "注册型副作用必须由 fiber 承载",
+      "layer": "L1+L2",
+      "mandatory": true,
+      "advisory": false,
+      "docs": "31-DS-C条款.md#c-6-注册型副作用必须由-fiber-承载",
+      "parent": null
+    },
+    {
+      "dsc": "DSC-07",
+      "clause": "C-7",
+      "title": "卸载后可观测残留归零",
+      "layer": "L2",
+      "mandatory": true,
+      "advisory": false,
+      "docs": "31-DS-C条款.md#c-7-卸载后可观测残留归零",
+      "parent": null
+    },
+    {
+      "dsc": "DSC-08",
+      "clause": "C-8",
+      "title": "重挂幂等、冷重装可重复",
+      "layer": "L3",
+      "mandatory": true,
+      "advisory": false,
+      "docs": "31-DS-C条款.md#c-8-重挂幂等冷重装可重复",
+      "parent": null
+    },
+    {
+      "dsc": "DSC-09",
+      "clause": "C-9",
+      "title": "声明 vs 实测交叉校验",
+      "layer": "L1",
+      "mandatory": true,
+      "advisory": false,
+      "docs": "31-DS-C条款.md#c-9-声明-vs-实测交叉校验",
+      "parent": null
+    },
+    {
+      "dsc": "DSC-10",
+      "clause": "C-10",
+      "title": "无 import 期副作用（ADVISORY）",
+      "layer": "L0",
+      "mandatory": false,
+      "advisory": true,
+      "docs": "31-DS-C条款.md#c-10-无-import-期副作用advisory不进强制判定",
+      "parent": null,
+      "note": "advisory: reported, never FAIL"
+    },
+    {
+      "dsc": "DSC-11",
+      "clause": "C-11",
+      "title": "权限面声明（capabilities）",
+      "layer": "L0",
+      "mandatory": true,
+      "advisory": false,
+      "docs": "31-DS-C条款.md#c-11-权限面声明capabilities",
+      "parent": null
+    },
+    {
+      "dsc": "DSC-12",
+      "clause": "C-12",
+      "title": "凭据与全局 seam 的声明一致性",
+      "layer": "L0",
+      "mandatory": true,
+      "advisory": false,
+      "docs": "31-DS-C条款.md#c-12-凭据与全局-seam-的声明一致性",
+      "parent": null
+    },
+    {
+      "dsc": "DSC-13",
+      "clause": "C-13",
+      "title": "高风险类别强制标注",
+      "layer": "L0",
+      "mandatory": true,
+      "advisory": false,
+      "docs": "31-DS-C条款.md#c-13-高风险类别强制标注",
+      "parent": null
+    },
+    {
+      "dsc": "DSC-14",
+      "clause": "C-14",
+      "title": "运行证据：plugin L1 / bundle G0–G3",
+      "layer": "L1",
+      "mandatory": true,
+      "advisory": false,
+      "docs": "31-DSH-ENTRY入门规范.md#21-run-set",
+      "parent": null,
+      "note": "entry scope only (--scope entry); not part of the DS-C package/listing gate"
+    },
+    {
+      "dsc": "DSC-01",
+      "clause": "C-1.1",
+      "title": "package.json 可解析；name 与精确 SemVer version 合法",
+      "layer": "L0",
+      "mandatory": true,
+      "advisory": false,
+      "docs": "31-DS-C条款.md#c-1-清单与入口可解析",
+      "parent": "C-1"
+    },
+    {
+      "dsc": "DSC-01",
+      "clause": "C-1.2",
+      "title": "入口（exports[\".\"] 或 main）存在且在包内",
+      "layer": "L0",
+      "mandatory": true,
+      "advisory": false,
+      "docs": "31-DS-C条款.md#c-1-清单与入口可解析",
+      "parent": "C-1"
+    },
+    {
+      "dsc": "DSC-01",
+      "clause": "C-1.3",
+      "title": "导出形态是 Loader 接受的一种",
+      "layer": "L0",
+      "mandatory": true,
+      "advisory": false,
+      "docs": "31-DS-C条款.md#c-1-清单与入口可解析",
+      "parent": "C-1"
+    },
+    {
+      "dsc": "DSC-01",
+      "clause": "C-1.4",
+      "title": "dsh.bundle.patch 路径在包内且行名合法",
+      "layer": "L0",
+      "mandatory": true,
+      "advisory": false,
+      "docs": "31-DS-C条款.md#c-1-清单与入口可解析",
+      "parent": "C-1"
+    },
+    {
+      "dsc": "DSC-01",
+      "clause": "C-1.5",
+      "title": "license 声明（建议 SPDX）",
+      "layer": "L0",
+      "mandatory": false,
+      "advisory": false,
+      "docs": "31-DS-C条款.md#c-1-清单与入口可解析",
+      "parent": "C-1"
+    },
+    {
+      "dsc": "DSC-01",
+      "clause": "C-1.6",
+      "title": "private:true 的 registry 来源",
+      "layer": "L0",
+      "mandatory": false,
+      "advisory": false,
+      "docs": "31-DS-C条款.md#c-1-清单与入口可解析",
+      "parent": "C-1"
+    },
+    {
+      "dsc": "DSC-02",
+      "clause": "C-2.1",
+      "title": "声明 engines.dsh 或 @deepseek-ai/dsh* peer",
+      "layer": "L0",
+      "mandatory": true,
+      "advisory": false,
+      "docs": "31-DS-C条款.md#c-2-版本约束声明且兼容",
+      "parent": "C-2"
+    },
+    {
+      "dsc": "DSC-02",
+      "clause": "C-2.2",
+      "title": "声明范围满足当前 runtime",
+      "layer": "L0",
+      "mandatory": true,
+      "advisory": false,
+      "docs": "31-DS-C条款.md#c-2-版本约束声明且兼容",
+      "parent": "C-2"
+    },
+    {
+      "dsc": "DSC-02",
+      "clause": "C-2.3",
+      "title": "engines.dsh 不得为 workspace:",
+      "layer": "L0",
+      "mandatory": true,
+      "advisory": false,
+      "docs": "31-DS-C条款.md#c-2-版本约束声明且兼容",
+      "parent": "C-2"
+    },
+    {
+      "dsc": "DSC-02",
+      "clause": "C-2.4",
+      "title": "engines.dsh 与 dsh peers 结论冲突",
+      "layer": "L0",
+      "mandatory": false,
+      "advisory": false,
+      "docs": "31-DS-C条款.md#c-2-版本约束声明且兼容",
+      "parent": "C-2"
+    },
+    {
+      "dsc": "DSC-03",
+      "clause": "C-3.1",
+      "title": "install spec 可解析且声明 kind",
+      "layer": "L0",
+      "mandatory": true,
+      "advisory": false,
+      "docs": "31-DS-C条款.md#c-3-安装来源可解析可固定可追溯",
+      "parent": "C-3"
+    },
+    {
+      "dsc": "DSC-03",
+      "clause": "C-3.2",
+      "title": "registry 精确版本 / git 固定 commit",
+      "layer": "L0",
+      "mandatory": true,
+      "advisory": false,
+      "docs": "31-DS-C条款.md#c-3-安装来源可解析可固定可追溯",
+      "parent": "C-3"
+    },
+    {
+      "dsc": "DSC-03",
+      "clause": "C-3.3",
+      "title": "非 registry 依赖固定可追溯",
+      "layer": "L0",
+      "mandatory": true,
+      "advisory": false,
+      "docs": "31-DS-C条款.md#c-3-安装来源可解析可固定可追溯",
+      "parent": "C-3"
+    },
+    {
+      "dsc": "DSC-03",
+      "clause": "C-3.4",
+      "title": "安装期构建脚本可枚举",
+      "layer": "L0",
+      "mandatory": true,
+      "advisory": false,
+      "docs": "31-DS-C条款.md#c-3-安装来源可解析可固定可追溯",
+      "parent": "C-3"
+    },
+    {
+      "dsc": "DSC-03",
+      "clause": "C-3.5",
+      "title": "listing 条目通过 parseMarketIndex",
+      "layer": "L0",
+      "mandatory": true,
+      "advisory": false,
+      "docs": "31-DS-C条款.md#c-3-安装来源可解析可固定可追溯",
+      "parent": "C-3"
+    },
+    {
+      "dsc": "DSC-04",
+      "clause": "C-4.1",
+      "title": "在受控 Context 中装载入口",
+      "layer": "L1",
+      "mandatory": true,
+      "advisory": false,
+      "docs": "31-DS-C条款.md#c-4-可装载并进入-active",
+      "parent": "C-4"
+    },
+    {
+      "dsc": "DSC-04",
+      "clause": "C-4.2",
+      "title": "fiber 进入 ACTIVE 且 await 不抛",
+      "layer": "L1",
+      "mandatory": true,
+      "advisory": false,
+      "docs": "31-DS-C条款.md#c-4-可装载并进入-active",
+      "parent": "C-4"
+    },
+    {
+      "dsc": "DSC-04",
+      "clause": "C-4.3",
+      "title": "装载在 deadline 内稳定",
+      "layer": "L1",
+      "mandatory": true,
+      "advisory": false,
+      "docs": "31-DS-C条款.md#c-4-可装载并进入-active",
+      "parent": "C-4"
+    },
+    {
+      "dsc": "DSC-04",
+      "clause": "C-4.4",
+      "title": "夹具缺少 inject 服务时不得 PASS",
+      "layer": "L1",
+      "mandatory": false,
+      "advisory": false,
+      "docs": "31-DS-C条款.md#c-4-可装载并进入-active",
+      "parent": "C-4"
+    },
+    {
+      "dsc": "DSC-05",
+      "clause": "C-5.1",
+      "title": "收集 provide 声明",
+      "layer": "L1",
+      "mandatory": false,
+      "advisory": false,
+      "docs": "31-DS-C条款.md#c-5-声明的-provide-必须真实注册",
+      "parent": "C-5"
+    },
+    {
+      "dsc": "DSC-05",
+      "clause": "C-5.2",
+      "title": "provide 由本 fiber 真实注册",
+      "layer": "L1",
+      "mandatory": true,
+      "advisory": false,
+      "docs": "31-DS-C条款.md#c-5-声明的-provide-必须真实注册",
+      "parent": "C-5"
+    },
+    {
+      "dsc": "DSC-05",
+      "clause": "C-5.3",
+      "title": "注册走 ctx.provide / Service",
+      "layer": "L1",
+      "mandatory": true,
+      "advisory": false,
+      "docs": "31-DS-C条款.md#c-5-声明的-provide-必须真实注册",
+      "parent": "C-5"
+    },
+    {
+      "dsc": "DSC-06",
+      "clause": "C-6.1",
+      "title": "不写 Cordis 私有注册面",
+      "layer": "L1+L2",
+      "mandatory": true,
+      "advisory": false,
+      "docs": "31-DS-C条款.md#c-6-注册型副作用必须由-fiber-承载",
+      "parent": "C-6"
+    },
+    {
+      "dsc": "DSC-06",
+      "clause": "C-6.2",
+      "title": "注册副作用有 effect label",
+      "layer": "L1+L2",
+      "mandatory": true,
+      "advisory": false,
+      "docs": "31-DS-C条款.md#c-6-注册型副作用必须由-fiber-承载",
+      "parent": "C-6"
+    },
+    {
+      "dsc": "DSC-06",
+      "clause": "C-6.3",
+      "title": "资源分配器在 ctx.effect 外（advisory）",
+      "layer": "L1+L2",
+      "mandatory": false,
+      "advisory": true,
+      "docs": "31-DS-C条款.md#c-6-注册型副作用必须由-fiber-承载",
+      "parent": "C-6"
+    },
+    {
+      "dsc": "DSC-06",
+      "clause": "C-6.4",
+      "title": "卸载后 effect 归零（由 C-7 判）",
+      "layer": "L1+L2",
+      "mandatory": false,
+      "advisory": false,
+      "docs": "31-DS-C条款.md#c-6-注册型副作用必须由-fiber-承载",
+      "parent": "C-6"
+    },
+    {
+      "dsc": "DSC-07",
+      "clause": "C-7.1",
+      "title": "dispose 后 getEffects 为空",
+      "layer": "L2",
+      "mandatory": true,
+      "advisory": false,
+      "docs": "31-DS-C条款.md#c-7-卸载后可观测残留归零",
+      "parent": "C-7"
+    },
+    {
+      "dsc": "DSC-07",
+      "clause": "C-7.2",
+      "title": "reflect.store 回到基线",
+      "layer": "L2",
+      "mandatory": true,
+      "advisory": false,
+      "docs": "31-DS-C条款.md#c-7-卸载后可观测残留归零",
+      "parent": "C-7"
+    },
+    {
+      "dsc": "DSC-07",
+      "clause": "C-7.3",
+      "title": "registry / runtime.fibers 无残留",
+      "layer": "L2",
+      "mandatory": true,
+      "advisory": false,
+      "docs": "31-DS-C条款.md#c-7-卸载后可观测残留归零",
+      "parent": "C-7"
+    },
+    {
+      "dsc": "DSC-07",
+      "clause": "C-7.4",
+      "title": "事件监听回到基线",
+      "layer": "L2",
+      "mandatory": true,
+      "advisory": false,
+      "docs": "31-DS-C条款.md#c-7-卸载后可观测残留归零",
+      "parent": "C-7"
+    },
+    {
+      "dsc": "DSC-07",
+      "clause": "C-7.5",
+      "title": "dispose await 到 quiescence",
+      "layer": "L2",
+      "mandatory": true,
+      "advisory": false,
+      "docs": "31-DS-C条款.md#c-7-卸载后可观测残留归零",
+      "parent": "C-7"
+    },
+    {
+      "dsc": "DSC-08",
+      "clause": "C-8.1",
+      "title": "连续 restart 幂等",
+      "layer": "L3",
+      "mandatory": true,
+      "advisory": false,
+      "docs": "31-DS-C条款.md#c-8-重挂幂等冷重装可重复",
+      "parent": "C-8"
+    },
+    {
+      "dsc": "DSC-08",
+      "clause": "C-8.2",
+      "title": "重挂推进 revision/epoch",
+      "layer": "L3",
+      "mandatory": true,
+      "advisory": false,
+      "docs": "31-DS-C条款.md#c-8-重挂幂等冷重装可重复",
+      "parent": "C-8"
+    },
+    {
+      "dsc": "DSC-08",
+      "clause": "C-8.3",
+      "title": "registry.delete 后重装快照一致",
+      "layer": "L3",
+      "mandatory": true,
+      "advisory": false,
+      "docs": "31-DS-C条款.md#c-8-重挂幂等冷重装可重复",
+      "parent": "C-8"
+    },
+    {
+      "dsc": "DSC-08",
+      "clause": "C-8.4",
+      "title": "dispose 后重新装载再次 ACTIVE",
+      "layer": "L3",
+      "mandatory": true,
+      "advisory": false,
+      "docs": "31-DS-C条款.md#c-8-重挂幂等冷重装可重复",
+      "parent": "C-8"
+    },
+    {
+      "dsc": "DSC-09",
+      "clause": "C-9.1",
+      "title": "声明 provide ⊆ 实测",
+      "layer": "L1",
+      "mandatory": true,
+      "advisory": false,
+      "docs": "31-DS-C条款.md#c-9-声明-vs-实测交叉校验",
+      "parent": "C-9"
+    },
+    {
+      "dsc": "DSC-09",
+      "clause": "C-9.2",
+      "title": "实测公开服务 ⊆ 声明 provide",
+      "layer": "L1",
+      "mandatory": false,
+      "advisory": false,
+      "docs": "31-DS-C条款.md#c-9-声明-vs-实测交叉校验",
+      "parent": "C-9"
+    },
+    {
+      "dsc": "DSC-09",
+      "clause": "C-9.3",
+      "title": "声明 inject ⊆ 源码读取",
+      "layer": "L1",
+      "mandatory": false,
+      "advisory": false,
+      "docs": "31-DS-C条款.md#c-9-声明-vs-实测交叉校验",
+      "parent": "C-9"
+    },
+    {
+      "dsc": "DSC-09",
+      "clause": "C-9.4",
+      "title": "工具/事件声明交叉校验（可选）",
+      "layer": "L1",
+      "mandatory": false,
+      "advisory": false,
+      "docs": "31-DS-C条款.md#c-9-声明-vs-实测交叉校验",
+      "parent": "C-9"
+    },
+    {
+      "dsc": "DSC-10",
+      "clause": "C-10.1",
+      "title": "入口闭包无顶层 await",
+      "layer": "L0",
+      "mandatory": false,
+      "advisory": true,
+      "docs": "31-DS-C条款.md#c-10-无-import-期副作用advisory不进强制判定",
+      "parent": "C-10"
+    },
+    {
+      "dsc": "DSC-10",
+      "clause": "C-10.2",
+      "title": "入口闭包无顶层全局副作用",
+      "layer": "L0",
+      "mandatory": false,
+      "advisory": true,
+      "docs": "31-DS-C条款.md#c-10-无-import-期副作用advisory不进强制判定",
+      "parent": "C-10"
+    },
+    {
+      "dsc": "DSC-10",
+      "clause": "C-10.3",
+      "title": "入口本地相对 import 闭包展开",
+      "layer": "L0",
+      "mandatory": false,
+      "advisory": true,
+      "docs": "31-DS-C条款.md#c-10-无-import-期副作用advisory不进强制判定",
+      "parent": "C-10"
+    },
+    {
+      "dsc": "DSC-10",
+      "clause": "C-10.4",
+      "title": "入口闭包无顶层 fs 写/子进程",
+      "layer": "L0",
+      "mandatory": false,
+      "advisory": true,
+      "docs": "31-DS-C条款.md#c-10-无-import-期副作用advisory不进强制判定",
+      "parent": "C-10"
+    },
+    {
+      "dsc": "DSC-11",
+      "clause": "C-11.1",
+      "title": "dsh.capabilities 为闭集内字符串数组",
+      "layer": "L0",
+      "mandatory": true,
+      "advisory": false,
+      "docs": "31-DS-C条款.md#c-11-权限面声明capabilities",
+      "parent": "C-11"
+    },
+    {
+      "dsc": "DSC-11",
+      "clause": "C-11.2",
+      "title": "高信号触发必须申报能力",
+      "layer": "L0",
+      "mandatory": true,
+      "advisory": false,
+      "docs": "31-DS-C条款.md#c-11-权限面声明capabilities",
+      "parent": "C-11"
+    },
+    {
+      "dsc": "DSC-11",
+      "clause": "C-11.3",
+      "title": "不启用 plugin-manager/tools",
+      "layer": "L0",
+      "mandatory": true,
+      "advisory": false,
+      "docs": "31-DS-C条款.md#c-11-权限面声明capabilities",
+      "parent": "C-11"
+    },
+    {
+      "dsc": "DSC-11",
+      "clause": "C-11.4",
+      "title": "danger-full-access 字面量（WARN）",
+      "layer": "L0",
+      "mandatory": false,
+      "advisory": false,
+      "docs": "31-DS-C条款.md#c-11-权限面声明capabilities",
+      "parent": "C-11"
+    },
+    {
+      "dsc": "DSC-11",
+      "clause": "C-11.5",
+      "title": "声明了但无触发（过度声明）",
+      "layer": "L0",
+      "mandatory": false,
+      "advisory": false,
+      "docs": "31-DS-C条款.md#c-11-权限面声明capabilities",
+      "parent": "C-11"
+    },
+    {
+      "dsc": "DSC-12",
+      "clause": "C-12.1",
+      "title": "不绕过 ctx.credentials 读 backing file",
+      "layer": "L0",
+      "mandatory": true,
+      "advisory": false,
+      "docs": "31-DS-C条款.md#c-12-凭据与全局-seam-的声明一致性",
+      "parent": "C-12"
+    },
+    {
+      "dsc": "DSC-12",
+      "clause": "C-12.2",
+      "title": "listRecords() 需声明 credentials:list",
+      "layer": "L0",
+      "mandatory": true,
+      "advisory": false,
+      "docs": "31-DS-C条款.md#c-12-凭据与全局-seam-的声明一致性",
+      "parent": "C-12"
+    },
+    {
+      "dsc": "DSC-12",
+      "clause": "C-12.3",
+      "title": "全局 seam provider 注册需声明",
+      "layer": "L0",
+      "mandatory": false,
+      "advisory": false,
+      "docs": "31-DS-C条款.md#c-12-凭据与全局-seam-的声明一致性",
+      "parent": "C-12"
+    },
+    {
+      "dsc": "DSC-12",
+      "clause": "C-12.4",
+      "title": "danger-full-access / --add-dir 字面量",
+      "layer": "L0",
+      "mandatory": false,
+      "advisory": false,
+      "docs": "31-DS-C条款.md#c-12-凭据与全局-seam-的声明一致性",
+      "parent": "C-12"
+    },
+    {
+      "dsc": "DSC-12",
+      "clause": "C-12.5",
+      "title": "动态 import / 字符串拼接绕过（不可判）",
+      "layer": "L0",
+      "mandatory": false,
+      "advisory": false,
+      "docs": "31-DS-C条款.md#c-12-凭据与全局-seam-的声明一致性",
+      "parent": "C-12"
+    },
+    {
+      "dsc": "DSC-12",
+      "clause": "C-12.6",
+      "title": "dsh.commitments 形状（披露）",
+      "layer": "L0",
+      "mandatory": false,
+      "advisory": false,
+      "docs": "31-DS-C条款.md#c-12-凭据与全局-seam-的声明一致性",
+      "parent": "C-12"
+    },
+    {
+      "dsc": "DSC-12",
+      "clause": "C-12.7",
+      "title": "dsh.disclosure 形状（披露）",
+      "layer": "L0",
+      "mandatory": false,
+      "advisory": false,
+      "docs": "31-DS-C条款.md#c-12-凭据与全局-seam-的声明一致性",
+      "parent": "C-12"
+    },
+    {
+      "dsc": "DSC-13",
+      "clause": "C-13.1",
+      "title": "dsh.labels 为闭集内字符串数组",
+      "layer": "L0",
+      "mandatory": true,
+      "advisory": false,
+      "docs": "31-DS-C条款.md#c-13-高风险类别强制标注",
+      "parent": "C-13"
+    },
+    {
+      "dsc": "DSC-13",
+      "clause": "C-13.2",
+      "title": "高风险触发必须打对应标签",
+      "layer": "L0",
+      "mandatory": true,
+      "advisory": false,
+      "docs": "31-DS-C条款.md#c-13-高风险类别强制标注",
+      "parent": "C-13"
+    },
+    {
+      "dsc": "DSC-13",
+      "clause": "C-13.3",
+      "title": "dsh.upstream 合法 https 且非自指",
+      "layer": "L0",
+      "mandatory": true,
+      "advisory": false,
+      "docs": "31-DS-C条款.md#c-13-高风险类别强制标注",
+      "parent": "C-13"
+    },
+    {
+      "dsc": "DSC-13",
+      "clause": "C-13.4",
+      "title": "禁用 official/verified/certified/secure/audited",
+      "layer": "L0",
+      "mandatory": true,
+      "advisory": false,
+      "docs": "31-DS-C条款.md#c-13-高风险类别强制标注",
+      "parent": "C-13"
+    },
+    {
+      "dsc": "DSC-13",
+      "clause": "C-13.5",
+      "title": "red-team 标签需 usageScope",
+      "layer": "L0",
+      "mandatory": false,
+      "advisory": false,
+      "docs": "31-DS-C条款.md#c-13-高风险类别强制标注",
+      "parent": "C-13"
+    }
+  ]
+}

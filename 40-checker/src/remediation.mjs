@@ -1,12 +1,15 @@
 /**
  * Join a dsh-conformance/1 report with the remediation rule table.
  *
- * This module is deliberately pure: it never reads files, never writes, and
- * never changes the report it receives. `buildReport()` calls it at the end so
- * every report carries additive `advice[]` entries; the checker's verdict is
- * untouched.
+ * This module is additive: it never writes, and it never changes the report it
+ * receives. Its one file access is best-effort: it reads the subject's own
+ * `package.json` to turn symbolic `package.json#field` references into a
+ * `package.json:<line>` locator. When the subject, the file, or the field is
+ * absent the reference is left exactly as the check emitted it.
  */
 
+import fs from 'node:fs'
+import path from 'node:path'
 import packageJson from '../../package.json' with { type: 'json' }
 
 /** Release-pinned guide base. `docs` in the rule table is a relative path. */
@@ -14,6 +17,13 @@ export const DOCS_BASE = 'https://github.com/PerryLink/dsh-plugin-guide/blob/v0.
 
 const LIVE = new Set(['FAIL', 'WARN'])
 const SEVERITY_RANK = { FAIL: 2, WARN: 1 }
+
+/**
+ * Rule pairs that can report the same literal from two different checks. When
+ * their evidence arrays are identical they are one finding: one advice entry
+ * survives (the higher severity, then the first key) and `reason` names both.
+ */
+export const EQUIVALENT_RULES = [['C-11.4', 'C-12.4']]
 
 function tableOf(rules) {
   if (!rules || typeof rules !== 'object') return {}
@@ -48,6 +58,94 @@ function uniqueEvidence(...lists) {
   return out.slice(0, 10)
 }
 
+/** Read the subject's package.json once; null when it cannot be located. */
+function packageJsonText(subjectPath) {
+  if (typeof subjectPath !== 'string' || subjectPath === '') return null
+  const candidates = path.extname(subjectPath).toLowerCase() === '.json'
+    ? [subjectPath]
+    : [path.join(subjectPath, 'package.json')]
+  for (const candidate of candidates) {
+    try {
+      if (fs.statSync(candidate).isFile()) return fs.readFileSync(candidate, 'utf8')
+    } catch {
+      // Best effort only: a missing/unreadable file is not an advice error.
+    }
+  }
+  return null
+}
+
+/** 1-based line of `"<leaf>":` in the manifest text, or null. */
+function fieldLine(text, ref) {
+  if (typeof text !== 'string' || !ref.startsWith('package.json#')) return null
+  const leaf = ref.slice('package.json#'.length).split('.').filter(Boolean).pop()
+  if (!leaf) return null
+  const needle = JSON.stringify(leaf)
+  let index = text.indexOf(needle)
+  while (index !== -1) {
+    if (/^\s*:/.test(text.slice(index + needle.length))) {
+      return text.slice(0, index).split('\n').length
+    }
+    index = text.indexOf(needle, index + needle.length)
+  }
+  return null
+}
+
+/**
+ * Prefix each `package.json#field` reference with a concrete
+ * `package.json:<line>` alongside it. Nothing is dropped; unresolvable
+ * references are kept verbatim.
+ */
+function withLineLocators(evidence, text) {
+  if (!text) return evidence
+  const out = []
+  const seen = new Set()
+  for (const value of evidence) {
+    if (typeof value !== 'string' || value === '' || seen.has(value)) continue
+    seen.add(value)
+    out.push(value)
+    const line = fieldLine(text, value)
+    if (line === null) continue
+    const locator = `package.json:${line}`
+    if (!seen.has(locator)) {
+      seen.add(locator)
+      out.push(locator)
+    }
+  }
+  return out.slice(0, 10)
+}
+
+function sameEvidenceSet(left, right) {
+  if (!Array.isArray(left) || !Array.isArray(right)) return false
+  if (left.length === 0 || left.length !== right.length) return false
+  const a = [...left].sort()
+  const b = [...right].sort()
+  return a.every((value, index) => value === b[index])
+}
+
+/**
+ * Collapse the pairs in EQUIVALENT_RULES when both checks reported the same
+ * evidence. The surviving entry keeps its own key/docs/severity; `reason`
+ * records the merged key, and `occurrences` sums both findings.
+ */
+function mergeEquivalentAdvice(advice) {
+  const dropped = new Set()
+  for (const [leftKey, rightKey] of EQUIVALENT_RULES) {
+    const left = advice.find(item => item.key === leftKey && !dropped.has(item))
+    const right = advice.find(item => item.key === rightKey && !dropped.has(item))
+    if (!left || !right || !sameEvidenceSet(left.evidence, right.evidence)) continue
+    const keepLeft = (SEVERITY_RANK[left.gate] ?? 0) >= (SEVERITY_RANK[right.gate] ?? 0)
+    const keep = keepLeft ? left : right
+    const drop = keepLeft ? right : left
+    keep.occurrences += drop.occurrences
+    keep.evidence = uniqueEvidence(keep.evidence, drop.evidence)
+    const aliasReason = drop.reason && drop.reason !== keep.reason ? `: ${drop.reason}` : ''
+    const note = `identical evidence to ${drop.key} (${drop.source})${aliasReason}; merged into ${keep.key}`
+    keep.reason = keep.reason ? `${keep.reason} | ${note}` : note
+    dropped.add(drop)
+  }
+  return advice.filter(item => !dropped.has(item))
+}
+
 /**
  * Build additive advice from a report.
  *
@@ -59,7 +157,8 @@ function uniqueEvidence(...lists) {
  * detail's own reason stays in `reason` for diagnostics.
  *
  * Duplicate details are merged: evidence is unioned, occurrences counted, and
- * the specific reasons are joined for diagnostics.
+ * the specific reasons are joined for diagnostics. Duplicate findings that the
+ * same literal produces from two checks are merged by EQUIVALENT_RULES.
  *
  * @param {object} report dsh-conformance/1 report
  * @param {object} rules flat key→rule map (also accepts a { rules } or { items } wrapper)
@@ -69,6 +168,8 @@ function uniqueEvidence(...lists) {
 export function joinAdvice(report, rules, docsBase = DOCS_BASE) {
   const table = tableOf(rules)
   const version = versionOf(rules)
+  const subjectPath = typeof report?.subject?.path === 'string' ? report.subject.path : null
+  const manifestText = packageJsonText(subjectPath)
   const merged = new Map()
 
   const add = (check, key, gate, reason, evidence) => {
@@ -118,7 +219,7 @@ export function joinAdvice(report, rules, docsBase = DOCS_BASE) {
       docsUrl: docsUrlOf(rule, docsBase),
       source: entry.check.id,
       version,
-      evidence: entry.evidence,
+      evidence: withLineLocators(entry.evidence, manifestText),
       reason: entry.reasons.slice(0, 3).join(' | '),
       occurrences: entry.occurrences,
       advisory: entry.check.advisory === true,
@@ -133,5 +234,5 @@ export function joinAdvice(report, rules, docsBase = DOCS_BASE) {
     || a.key.localeCompare(b.key)
     || a.source.localeCompare(b.source)
   ))
-  return advice
+  return mergeEquivalentAdvice(advice)
 }

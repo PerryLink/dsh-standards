@@ -1,9 +1,9 @@
 # 33 · DSH-BOOST 加速实践（v2）
 
 > **版本**：v2.0.0-rc.1 ｜ **日期**：2026-10-31
-> **定位**：三套规范/实践的第三套；回答“有没有用 Cordis 原生能力，把开发和使用做到多快好省”。
+> **定位**：三套规范/实践的第三套；登记“有没有用 Cordis 原生能力把插件做得更可靠、更好维护”，性能收益另行测量。
 > **形态**：**实践库，不是插件等级**；登记的是做法+证据，不给插件贴“最高级”。
-> **对外状态**：内部草案；LEV-3（loader-level）、LEV-6（provider-capture）、LEV-7（合成 timer）已有可复现 measured；**都不是生产基准**，暂不作为对外规范。
+> **对外状态**：内部草案。**可靠性有 LEV-1（loader/context-level）证据；性能未证实**。LEV-3（loader-level）、LEV-6（provider-capture）、LEV-7（合成 timer）有可复现 measured，但都不是生产基准，暂不作为对外规范。
 > **依据**：`91-增效实践内核研究.md`（REPO `ce7073d` 源码）、`95-开发建议-加速.md`。
 > **版本警告**：旧 Linux checkout `22dde3` 是旧内核；`G-10 provide-last` 的旧结论只对旧内核成立，不能直接引用。
 > **三层模型**：`34`；作者清单：`35`；生命周期：`36`。
@@ -12,9 +12,11 @@
 
 ## 一、定位
 
-- `DSH-ENTRY` 保证“能装、能跑”；
-- `DSH-FLOW` 保证“好用”；
-- `DSH-BOOST` 保证“用 Cordis 做得更省”。
+- `DSH-ENTRY` 判定“能不能被识别、安装、启动”（有 G0–G3 / L1 证据才算 runtime）；
+- `DSH-FLOW` 判定“用户旅程能不能复现”（J1–J8 有记录）；
+- `DSH-BOOST` 登记“有没有用 Cordis 原生能力”，**可靠性有 LEV-1 证据；性能未证实**。
+
+**BOOST 与 FLOW 不可比**：FLOW 的结论是“J1–J8 旅程有没有记录、能不能复现”，BOOST 的结论是“某条实践在给定锚点上有没有证据卡”。两者量纲不同：FLOW 通过不能证明 BOOST 收益，BOOST 基准也不能替代 FLOW 验收；不存在“BOOST 比 FLOW 高/低”或“BOOST 省钱 X%”的可比结论。
 
 **不是第三个徽章**：一条 LEV 只说明“这个做法在给定锚点下有证据”，不代表插件整体“高级”。
 
@@ -22,7 +24,7 @@
 
 ## 二、八条 LEV
 
-| ID | 要求 | 证据指标 |
+| ID | 要求 | 证据要看什么 |
 |---|---|---|
 | LEV-1 可逆 | 定时器/连接/watcher/子进程进 `ctx.effect()` + label；无模块级持有 | restart N 次 `getEffects()` 回基线；reload 100 次泄漏 0 |
 | LEV-2 等待 | 必需 `inject`；等待 `ctx.inject()`；可选才 `ctx.get()`；禁轮询 | 缺服务 0 TypeError/PENDING 可枚举；恢复后 1 epoch ACTIVE |
@@ -33,7 +35,7 @@
 | LEV-7 并行/长活 | 独立调用并行有界；长活走 jobs；模型面有序；取消贯穿 | `T≈max(T_i)`；kill 后 100% 停止；step 阻塞 0 |
 | LEV-8 组合/证据卡 | bundle patch/preset 表达差异；每条实践附证据卡 | 新增层 1；单行启停不影响其他；`leaked 0`；证据卡可复跑 |
 
-**LEV-6 优先**：它是唯一能用 token 直接计价、且与 Cordis 强绑定的实践。
+**LEV-6 的边界**：稳定前缀只说明 provider-capture 里 promptOrder 可复用；该 capture 用合成端点，不能换算成 token 费用节省，也不构成计价依据。
 
 ### 2.1 2026-11-01 实测（八组）
 
@@ -41,7 +43,7 @@
 |---|---|---|---|
 | LEV-3 | **loader-level**：真实 Cordis `Context`+`Loader`+`Include`，合成 fixture | volatile 字段 0/20 remount、0/20 restart、effect dispose 0/20；control 普通字段 20/20 remount。两个宿主（0.2.1-rc.5 / 0.2.2-alpha.2）同向 | `40-checker/results/lev3/lev3.json` |
 | LEV-6 | **provider-capture**：真实 DSH 请求，合成 Anthropic Messages 端点，不是计费 | 稳定 prefix arm 的 promptOrder 复用 **100.00%**；易变 nonce arm **0.00%**，首个分歧在 system 第 0 字节 | `40-checker/results/lev6/lev6.json` + `capture.jsonl` |
-| LEV-7 | **synthetic timer**：64 tasks × 5 runs | median **8.24×**；不是生产基线 | `examples/boost/results/lev7.json` |
+| LEV-7 | **synthetic timer**：64 tasks × 5 runs | 合并耗时中位数比 **8.24×**（合成负载，不是生产基线，不外推） | `examples/boost/results/lev7.json` |
 | LEV-1/2/4/5/8 | **loader/context-level**：真实 Cordis loader + 合成 fixture | LEV-1 effect 5/5 回收、裸 timer 泄漏 +5；LEV-2 PENDING→ACTIVE；LEV-4 next/veto/emit/serial/bail/parallel 实测；LEV-5 两 realm 隔离 0 串扰；LEV-8 组合只改目标行 | `40-checker/results/boost/lev12458.json` |
 
 八条都带负向对照，能证伪；但都不能写成“生产环境省 X%”或“真实 cache 命中率”。
@@ -59,28 +61,22 @@
 
 ## 四、证据卡
 
-每条实践一张卡：
+每条实践一张卡。下面是**字段示例**：数值只示意结构，不是实测结果；真实卡片必须来自可复跑命令。
 
 ```yaml
-practice: LEV-6
-plugin: "@acme/dsh-hello@0.1.0"
-baseline:
-  loc: 420
-  startupMs: 180
-  reloadMs: 900
-  tokensPerTurn: 1200
-after:
-  loc: 380
-  startupMs: 150
-  reloadMs: 600
-  tokensPerTurn: 900
-environment:
-  dsh: 0.2.2-alpha.3
-  cordis: 4.0.6-alpha.2
-  node: 24.9
+subject: "@acme/dsh-hello@0.1.0"
+host: "dsh 0.2.2-alpha.3 / cordis 4.0.6-alpha.2 / node 24.9 / linux-x64"
+method: "字段示例：单机单次；安装后启动与一轮对话，对照 nonce arm；非生产基准"
+scope: "LEV-6 稳定前缀/装配 — hello 示例的工具与提示声明"
 command: "node bench/hello.mjs"
-result: "startup -17%, reload -33%, tokens -25%"
-caveats: "单机单次，非性能基线"
+result: "startupMs 180 → 150; reloadMs 900 → 600; tokensPerTurn 1200 → 900; loc 420 → 380"
+negativeControl: "同一基准换 nonce arm：prefix 复用 0%，首个分歧在 system 第 0 字节"
+generatedAt: "2026-11-06"
+expiresAt: "2027-05-06"
+recordHash: "sha256:355f4015eadd3610f64cb1caab35f576f374a8fb718a761cfebad419de85f644"
+claimLevel: "self-assessed"
+issuer: "author"
+selfAssessed: true
 ```
 
 **不能量化**：开发人时、维护成本、“少踩坑”、LOC 节省（合成示例不算证据）→ WARN/主观登记，不冒充 PASS。

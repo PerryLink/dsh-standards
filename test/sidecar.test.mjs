@@ -3,16 +3,20 @@ import assert from 'node:assert/strict'
 import fs from 'node:fs'
 import os from 'node:os'
 import path from 'node:path'
-import crypto from 'node:crypto'
 import { spawnSync } from 'node:child_process'
 import { fileURLToPath } from 'node:url'
+import {
+  CHECKER, CHECKER_SHA, COMMAND, EVIDENCE_SHA, NOT_CLAIMED, SCHEMA,
+  assertNoForbidden, assertNoKey, legacyEntry, readPublishSidecar, richEntry,
+  sha256, sidecarDocument, writeJson,
+} from './helpers/sidecar.mjs'
 
 const REPO = path.resolve(path.dirname(fileURLToPath(import.meta.url)), '..')
 const SIDECAR = path.join(REPO, '40-checker', 'scripts', 'build-sidecar.mjs')
 const KIT = path.join(REPO, '40-checker', 'scripts', 'build-offline-kit.mjs')
-const NOT_CLAIMED = ['official', 'certification', 'security-audit', 'endorsement', 'ordering', 'comparison', 'warranty']
-const CHECKER_SHA = 'a'.repeat(40)
-const EVIDENCE_SHA = 'b'.repeat(64)
+const TODAY = '2026-11-06'
+const EXPIRES = '2027-02-04'
+const PUBLISH_ENTRIES = 20
 
 function tempDir(t) {
   const directory = fs.mkdtempSync(path.join(os.tmpdir(), 'dsh-sidecar-test-'))
@@ -39,163 +43,360 @@ function json(result) {
   return JSON.parse(result.stdout)
 }
 
-function sha256(file) {
-  return crypto.createHash('sha256').update(fs.readFileSync(file)).digest('hex')
-}
-
-function writeJson(file, value) {
-  fs.mkdirSync(path.dirname(file), { recursive: true })
-  fs.writeFileSync(file, `${JSON.stringify(value, null, 2)}\n`)
-  return file
-}
-
-function assertNoForbidden(value, trail = 'sidecar') {
-  const banned = new Set(['advice', 'issuer', 'recordHash', 'verifyUrl'])
-  if (!value || typeof value !== 'object') return
-  for (const [key, child] of Object.entries(value)) {
-    assert.ok(!banned.has(key), `${trail}.${key} must not appear in the sidecar`)
-    assertNoForbidden(child, `${trail}.${key}`)
-  }
-}
-
-function sidecarDocument(entries, generatedAt = '2026-01-01T00:00:00.000Z') {
+function auditFixture({ name, version, dir, generatedAt = '2026-11-06T01:02:03.000Z' }) {
   return {
-    schema: 'dsh-market-sidecar/1',
-    generatedAt,
-    index: { url: 'https://example.test/index.json', format: 1 },
-    checker: { name: 'dsh-standards', version: '1.2.2', sha: CHECKER_SHA },
-    notClaimed: NOT_CLAIMED,
-    entries,
-  }
-}
-
-function sidecarEntry(name, version, expiresAt, lifecycle = 'active') {
-  return {
-    subject: { name, version, tarballSha256: 'c'.repeat(64) },
-    levels: { entry: { state: 'recognized', claim: 'static' }, flow: { state: 'not-run' }, boost: { state: 'not-measured' } },
-    evidence: {},
-    validity: { checkedAt: '2026-01-01', expiresAt, policy: '90d' },
-    lifecycle,
-    selfAssessed: true,
-  }
-}
-
-test('build-sidecar: fixed audit input produces the documented shape', (t) => {
-  const dir = tempDir(t)
-  const packageDir = path.join(dir, 'plugin')
-  writeJson(path.join(packageDir, 'package.json'), { name: '@acme/x', version: '1.2.3' })
-  const tarball = path.join(dir, 'acme-x-1.2.3.tgz')
-  fs.writeFileSync(tarball, 'fake package tarball\n')
-  const audit = writeJson(path.join(dir, 'audit.json'), {
     schema: 'dsh-level-audit/1',
-    generatedAt: '2026-11-06T01:02:03.000Z',
-    target: { dir: packageDir },
+    generatedAt,
+    target: { dir },
     levels: {
       entry: { state: 'recognized', claim: 'static' },
       flow: { state: 'not-run' },
       boost: { state: 'not-measured' },
     },
-  })
-  const out = path.join(dir, 'out', 'sidecar.json')
-  const summary = json(mustRun(SIDECAR, [
+    checker: {
+      invoked: 'static',
+      exit: 0,
+      schema: 'dsh-conformance/1',
+      anchor: {
+        repo: 'deepseek-ai/deepseek-harness',
+        commit: 'd'.repeat(40),
+        scanner: 'dsh-plugin-verify@0.1.0',
+        dsh: '0.2.1-rc.5',
+        cordis: '4.0.6-alpha.1',
+        runtime: null,
+      },
+      coverage: { mandatory: 5, pass: 2, warn: 1, fail: 0, na: 2, notRun: 2, error: 0 },
+    },
+  }
+}
+
+function reportFixture(name, version, checks) {
+  return {
+    schema: 'dsh-conformance/1',
+    subject: { mode: 'package', profile: 'package', name, version },
+    checks,
+  }
+}
+
+function buildArgs(dir, { name, version, packageDir, tarball, audit, report, out, extra = [] }) {
+  const args = [
     '--levels', audit,
+    '--package', packageDir,
     '--tarball', tarball,
     '--out', out,
-    '--today', '2026-11-06',
-    '--checker-version', '1.2.2',
+    '--today', TODAY,
+    '--checker-version', '1.3.0',
     '--checker-sha', CHECKER_SHA,
     '--index-url', 'https://example.test/index.json',
-    '--evidence-url', 'https://example.test/evidence/audit.json',
-    '--evidence-sha256', EVIDENCE_SHA,
+    ...extra,
+  ]
+  if (report) args.push('--report', report)
+  return args
+}
+
+test('build-sidecar: the additive entry shape is derived from audit, report and package.json', (t) => {
+  const dir = tempDir(t)
+  const packageDir = path.join(dir, 'plugin')
+  writeJson(path.join(packageDir, 'package.json'), {
+    name: '@acme/x',
+    version: '1.2.3',
+    description: 'Acme X plugin.\nSecond line must not be the title.',
+    repository: { type: 'git', url: 'git+ssh://git@github.com/acme/x.git' },
+    license: 'MIT',
+    dsh: {
+      engines: { dsh: '>=0.2.0-rc.1 <0.3.0-0' },
+      client: { platform: 'web' },
+    },
+    peerDependencies: { '@deepseek-ai/cordis': '^4.0.6-alpha.1' },
+  })
+  const tarball = path.join(dir, 'acme-x-1.2.3.tgz')
+  fs.writeFileSync(tarball, 'fake package tarball\n')
+  const audit = writeJson(path.join(dir, 'audit.json'), auditFixture({ name: '@acme/x', version: '1.2.3', dir: packageDir }))
+  const report = writeJson(path.join(dir, 'report.json'), reportFixture('@acme/x', '1.2.3', [
+    { id: 'DSC-01', result: 'PASS', coverage: 'full', details: [{ item: 'C-1.1', reason: 'secret detail' }] },
+    { id: 'DSC-02', result: 'WARN', coverage: 'full', reason: 'kept out of the sidecar' },
+    { id: 'DSC-03', result: 'NA', coverage: 'not-run' },
+    { id: 'DSC-04', result: 'NA', coverage: 'not-run' },
+    { id: 'DSC-05', result: 'NA', coverage: 'partial' },
   ]))
+  const out = path.join(dir, 'out', 'sidecar.json')
+  const summary = json(mustRun(SIDECAR, buildArgs(dir, {
+    name: '@acme/x', version: '1.2.3', packageDir, tarball, audit, report, out,
+    extra: [
+      '--evidence-url', 'https://example.test/report.json',
+      '--evidence-sha256', EVIDENCE_SHA,
+      '--checked-command', COMMAND,
+    ],
+  })))
 
   assert.equal(summary.written, true)
   assert.equal(summary.entries, 1)
   const document = JSON.parse(fs.readFileSync(out, 'utf8'))
   assert.deepEqual(document, {
-    schema: 'dsh-market-sidecar/1',
+    schema: SCHEMA,
     generatedAt: '2026-11-06T00:00:00.000Z',
     index: { url: 'https://example.test/index.json', format: 1 },
-    checker: { name: 'dsh-standards', version: '1.2.2', sha: CHECKER_SHA },
+    checker: { name: 'dsh-standards', version: '1.3.0', sha: CHECKER_SHA },
     notClaimed: NOT_CLAIMED,
     entries: {
       '@acme/x@1.2.3': {
         subject: { name: '@acme/x', version: '1.2.3', tarballSha256: sha256(tarball) },
-        levels: { entry: { state: 'recognized', claim: 'static' }, flow: { state: 'not-run' }, boost: { state: 'not-measured' } },
-        evidence: { url: 'https://example.test/evidence/audit.json', sha256: EVIDENCE_SHA },
-        validity: { checkedAt: '2026-11-06', expiresAt: '2027-02-04', policy: '90d' },
+        title: 'Acme X plugin.',
+        repo: 'https://github.com/acme/x',
+        license: 'MIT',
+        scope: { dsh: '>=0.2.0-rc.1 <0.3.0-0', cordis: '^4.0.6-alpha.1', platform: 'web' },
+        levels: {
+          entry: { state: 'recognized', claim: 'static' },
+          flow: { state: 'not-run' },
+          boost: { state: 'not-measured' },
+        },
+        checks: [
+          { id: 'DSC-01', result: 'PASS', coverage: 'full' },
+          { id: 'DSC-02', result: 'WARN', coverage: 'full' },
+          { id: 'DSC-03', result: 'NA', coverage: 'not-run' },
+          { id: 'DSC-04', result: 'NA', coverage: 'not-run' },
+          { id: 'DSC-05', result: 'NA', coverage: 'partial' },
+        ],
+        evidence: {
+          url: 'https://example.test/report.json',
+          sha256: EVIDENCE_SHA,
+          reportUrl: 'https://example.test/report.json',
+          reportSha256: EVIDENCE_SHA,
+        },
+        checkedBy: { checker: CHECKER, command: COMMAND },
+        notChecked: [
+          'ENTRY:runtime (claim=static; not exercised)',
+          'ENTRY:DSC-03, DSC-04 (coverage=not-run)',
+          'FLOW:J1-J8 (not-run; 0/8 journeys pass)',
+          'BOOST:LEV-3..LEV-4 (not-measured)',
+        ],
+        validity: { checkedAt: TODAY, expiresAt: EXPIRES, policy: '90d' },
         lifecycle: 'active',
         selfAssessed: true,
       },
     },
   })
   assertNoForbidden(document)
+  assertNoKey(document, 'details')
 })
 
-test('build-sidecar: today > expiresAt marks stale and a re-run is byte-identical', (t) => {
+test('build-sidecar: absent package metadata stays null instead of being invented', (t) => {
   const dir = tempDir(t)
-  const prev = writeJson(path.join(dir, 'sidecar.json'), sidecarDocument({
-    '@acme/old@1.0.0': sidecarEntry('@acme/old', '1.0.0', '2026-10-01'),
-    '@acme/fresh@1.0.0': sidecarEntry('@acme/fresh', '1.0.0', '2027-01-01'),
-  }))
+  const packageDir = path.join(dir, 'plugin')
+  writeJson(path.join(packageDir, 'package.json'), { name: '@acme/bare', version: '2.0.0' })
+  const tarball = path.join(dir, 'bare.tgz')
+  fs.writeFileSync(tarball, 'fake tarball\n')
+  const audit = writeJson(path.join(dir, 'audit.json'), auditFixture({ name: '@acme/bare', version: '2.0.0', dir: packageDir }))
+  const out = path.join(dir, 'out.json')
+  mustRun(SIDECAR, buildArgs(dir, { name: '@acme/bare', version: '2.0.0', packageDir, tarball, audit, out }))
+
+  const entry = JSON.parse(fs.readFileSync(out, 'utf8')).entries['@acme/bare@2.0.0']
+  assert.equal(entry.title, null)
+  assert.equal(entry.repo, null)
+  assert.equal(entry.license, null)
+  assert.deepEqual(entry.scope, { dsh: '0.2.1-rc.5', cordis: '4.0.6-alpha.1', platform: null })
+  assert.deepEqual(entry.checks, [])
+  assert.ok(entry.notChecked.includes('ENTRY:checks (no --report; checker results unavailable)'))
+  assert.ok(entry.notChecked.includes('ENTRY:runtime (claim=static; not exercised)'))
+  assert.equal(entry.checkedBy.checker, CHECKER)
+})
+
+test('build-sidecar: a report for a different subject is rejected, not merged', (t) => {
+  const dir = tempDir(t)
+  const packageDir = path.join(dir, 'plugin')
+  writeJson(path.join(packageDir, 'package.json'), { name: '@acme/x', version: '1.2.3', license: 'MIT' })
+  const tarball = path.join(dir, 'x.tgz')
+  fs.writeFileSync(tarball, 'fake tarball\n')
+  const audit = writeJson(path.join(dir, 'audit.json'), auditFixture({ name: '@acme/x', version: '1.2.3', dir: packageDir }))
+  const report = writeJson(path.join(dir, 'report.json'), reportFixture('@acme/other', '1.2.3', [
+    { id: 'DSC-01', result: 'PASS', coverage: 'full' },
+  ]))
+  const out = path.join(dir, 'out.json')
+  const result = run(SIDECAR, buildArgs(dir, { name: '@acme/x', version: '1.2.3', packageDir, tarball, audit, report, out }))
+  assert.equal(result.status, 3)
+  assert.match(result.stderr, /does not match/)
+  assert.equal(fs.existsSync(out), false)
+})
+
+test('build-sidecar: legacy entries survive a lifecycle refresh unchanged (additive)', (t) => {
+  const dir = tempDir(t)
+  const legacy = legacyEntry('@acme/legacy', '1.0.0', '2027-01-01')
+  const rich = richEntry('@acme/rich', '1.0.0', '2027-01-01')
+  const prev = writeJson(path.join(dir, 'sidecar.json'), sidecarDocument({ '@acme/legacy@1.0.0': legacy, '@acme/rich@1.0.0': rich }))
   const withdrawals = writeJson(path.join(dir, 'withdrawals.json'), { schema: 'dsh-market-withdrawals/1', withdrawals: [] })
   const out = path.join(dir, 'out.json')
+  mustRun(SIDECAR, ['--prev', prev, '--withdrawals', withdrawals, '--out', out, '--today', TODAY])
 
-  const first = json(mustRun(SIDECAR, ['--prev', prev, '--withdrawals', withdrawals, '--out', out, '--today', '2026-11-06']))
-  assert.equal(first.lifecycle.stale, 1)
-  assert.equal(first.lifecycle.active, 1)
   const document = JSON.parse(fs.readFileSync(out, 'utf8'))
-  assert.equal(document.entries['@acme/old@1.0.0'].lifecycle, 'stale')
-  assert.equal(document.entries['@acme/fresh@1.0.0'].lifecycle, 'active')
+  assert.deepEqual(document.entries['@acme/legacy@1.0.0'], legacy)
+  assert.equal(document.entries['@acme/rich@1.0.0'].title, rich.title)
+  assert.deepEqual(document.entries['@acme/rich@1.0.0'].checks, rich.checks)
+  assert.deepEqual(document.entries['@acme/rich@1.0.0'].checkedBy, rich.checkedBy)
+  assert.deepEqual(document.entries['@acme/rich@1.0.0'].notChecked, rich.notChecked)
   assert.equal(document.generatedAt, '2026-01-01T00:00:00.000Z')
-  assert.equal(document.entries['@acme/old@1.0.0'].validity.expiresAt, '2026-10-01')
 
   const before = fs.readFileSync(out, 'utf8')
-  const second = json(mustRun(SIDECAR, ['--prev', out, '--withdrawals', withdrawals, '--out', out, '--today', '2026-11-06']))
+  const second = json(mustRun(SIDECAR, ['--prev', out, '--withdrawals', withdrawals, '--out', out, '--today', TODAY]))
   assert.equal(second.written, false)
-  assert.equal(second.unchanged, true)
   assert.equal(fs.readFileSync(out, 'utf8'), before)
 })
 
-test('build-sidecar: expiry is strict (today == expiresAt stays active)', (t) => {
+test('build-sidecar: expiry/withdrawal win and keep the additive fields', (t) => {
   const dir = tempDir(t)
   const prev = writeJson(path.join(dir, 'sidecar.json'), sidecarDocument({
-    '@acme/edge@1.0.0': sidecarEntry('@acme/edge', '1.0.0', '2026-11-06'),
-  }))
-  const withdrawals = writeJson(path.join(dir, 'withdrawals.json'), { schema: 'dsh-market-withdrawals/1', withdrawals: [] })
-  const out = path.join(dir, 'out.json')
-  mustRun(SIDECAR, ['--prev', prev, '--withdrawals', withdrawals, '--out', out, '--today', '2026-11-06'])
-  assert.equal(JSON.parse(fs.readFileSync(out, 'utf8')).entries['@acme/edge@1.0.0'].lifecycle, 'active')
-})
-
-test('build-sidecar: withdrawals win, carry dates/reasons, and never revert to active', (t) => {
-  const dir = tempDir(t)
-  const prev = writeJson(path.join(dir, 'sidecar.json'), sidecarDocument({
-    '@acme/gone@1.0.0': sidecarEntry('@acme/gone', '1.0.0', '2027-01-01'),
-    '@acme/ok@1.0.0': sidecarEntry('@acme/ok', '1.0.0', '2027-01-01'),
+    '@acme/old@1.0.0': richEntry('@acme/old', '1.0.0', '2026-10-01'),
+    '@acme/gone@1.0.0': richEntry('@acme/gone', '1.0.0', '2027-01-01'),
+    '@acme/fresh@1.0.0': richEntry('@acme/fresh', '1.0.0', '2027-01-01'),
   }))
   const withdrawals = writeJson(path.join(dir, 'withdrawals.json'), {
     schema: 'dsh-market-withdrawals/1',
     withdrawals: [{ name: '@acme/gone', version: '1.0.0', date: '2026-11-01', reason: 'tarball removed upstream' }],
   })
   const out = path.join(dir, 'out.json')
-  const summary = json(mustRun(SIDECAR, ['--prev', prev, '--withdrawals', withdrawals, '--out', out, '--today', '2026-11-06']))
+  const summary = json(mustRun(SIDECAR, ['--prev', prev, '--withdrawals', withdrawals, '--out', out, '--today', TODAY]))
+  assert.equal(summary.lifecycle.stale, 1)
   assert.equal(summary.lifecycle.withdrawn, 1)
   assert.equal(summary.lifecycle.active, 1)
+
   const document = JSON.parse(fs.readFileSync(out, 'utf8'))
+  assert.equal(document.entries['@acme/old@1.0.0'].lifecycle, 'stale')
   assert.equal(document.entries['@acme/gone@1.0.0'].lifecycle, 'withdrawn')
   assert.deepEqual(document.entries['@acme/gone@1.0.0'].lifecycleDetail, {
     since: '2026-11-01',
     reason: 'tarball removed upstream',
   })
-  assert.equal(document.entries['@acme/ok@1.0.0'].lifecycle, 'active')
+  assert.equal(document.entries['@acme/fresh@1.0.0'].lifecycle, 'active')
+  for (const key of ['@acme/old@1.0.0', '@acme/gone@1.0.0', '@acme/fresh@1.0.0']) {
+    assert.equal(document.entries[key].title, `${document.entries[key].subject.name} title`)
+    assert.equal(document.entries[key].checks.length, 3)
+    assert.ok(document.entries[key].notChecked.length > 0)
+  }
 
-  // Append-only means the human list normally keeps the record. Even if it is
-  // rotated empty by mistake, a withdrawn entry must not silently go active.
+  // Append-only means a mistakenly rotated-empty list must not revive it.
   const empty = writeJson(path.join(dir, 'empty.json'), { schema: 'dsh-market-withdrawals/1', withdrawals: [] })
-  const second = json(mustRun(SIDECAR, ['--prev', out, '--withdrawals', empty, '--out', out, '--today', '2026-11-07']))
-  assert.equal(second.lifecycle.withdrawn, 1)
+  mustRun(SIDECAR, ['--prev', out, '--withdrawals', empty, '--out', out, '--today', '2026-11-07'])
   assert.equal(JSON.parse(fs.readFileSync(out, 'utf8')).entries['@acme/gone@1.0.0'].lifecycle, 'withdrawn')
+})
+
+test('build-sidecar: expiry is strict and duplicate builds are deduped byte for byte', (t) => {
+  const dir = tempDir(t)
+  const packageDir = path.join(dir, 'plugin')
+  writeJson(path.join(packageDir, 'package.json'), { name: '@acme/edge', version: '1.0.0', description: 'Edge plugin', license: 'Apache-2.0' })
+  const tarball = path.join(dir, 'edge.tgz')
+  fs.writeFileSync(tarball, 'fake tarball\n')
+  const audit = writeJson(path.join(dir, 'audit.json'), auditFixture({ name: '@acme/edge', version: '1.0.0', dir: packageDir }))
+  const report = writeJson(path.join(dir, 'report.json'), reportFixture('@acme/edge', '1.0.0', [
+    { id: 'DSC-01', result: 'PASS', coverage: 'full' },
+  ]))
+  const out = path.join(dir, 'out.json')
+
+  mustRun(SIDECAR, buildArgs(dir, { name: '@acme/edge', version: '1.0.0', packageDir, tarball, audit, report, out }))
+  assert.equal(JSON.parse(fs.readFileSync(out, 'utf8')).entries['@acme/edge@1.0.0'].validity.expiresAt, EXPIRES)
+  const before = fs.readFileSync(out, 'utf8')
+
+  const args = buildArgs(dir, { name: '@acme/edge', version: '1.0.0', packageDir, tarball, audit, report, out })
+  args.push('--prev', out)
+  const second = json(mustRun(SIDECAR, args))
+  assert.equal(second.entries, 1)
+  assert.equal(second.written, false)
+  assert.equal(fs.readFileSync(out, 'utf8'), before)
+
+  const edge = writeJson(path.join(dir, 'edge-sidecar.json'), sidecarDocument({
+    '@acme/edge@1.0.0': richEntry('@acme/edge', '1.0.0', TODAY),
+  }))
+  mustRun(SIDECAR, ['--prev', edge, '--withdrawals', writeJson(path.join(dir, 'w.json'), { withdrawals: [] }), '--out', path.join(dir, 'edge-out.json'), '--today', TODAY])
+  assert.equal(JSON.parse(fs.readFileSync(path.join(dir, 'edge-out.json'), 'utf8')).entries['@acme/edge@1.0.0'].lifecycle, 'active')
+})
+
+test('publish/sidecar.json: 20 real dsh packages carry every additive field and no claims', (t) => {
+  const sidecar = readPublishSidecar(REPO)
+  assert.equal(sidecar.schema, SCHEMA)
+  assert.deepEqual(sidecar.notClaimed, NOT_CLAIMED)
+  assert.equal(sidecar.checker.name, 'dsh-standards')
+  assert.equal(sidecar.checker.version, '1.3.0')
+  assert.ok(sidecar.checker.sha === null || /^[0-9a-f]{40}$/.test(sidecar.checker.sha))
+  assert.equal(sidecar.index.format, 1)
+  assert.equal(sidecar.generatedAt, '2026-11-06T00:00:00.000Z')
+  assertNoForbidden(sidecar)
+  assertNoKey(sidecar, 'details')
+
+  const keys = Object.keys(sidecar.entries)
+  assert.equal(keys.length, PUBLISH_ENTRIES)
+  assert.deepEqual(keys, [...keys].sort())
+
+  const names = new Set()
+  const shas = new Set()
+  let warns = 0
+  for (const key of keys) {
+    const entry = sidecar.entries[key]
+    assert.match(key, /^@?[^@/]+(?:\/[^@]+)?@\d/)
+    assert.equal(key, `${entry.subject.name}@${entry.subject.version}`)
+    names.add(entry.subject.name)
+    assert.match(entry.subject.version, /^\d+\.\d+\.\d+/)
+    assert.match(entry.subject.tarballSha256, /^[0-9a-f]{64}$/)
+    shas.add(entry.subject.tarballSha256)
+
+    const basename = entry.subject.name.split('/').pop()
+    assert.ok(basename === 'dsh-plugin' || basename.startsWith('dsh-'), `${key} should be a dsh plugin name`)
+    if (entry.title !== null) {
+      assert.equal(typeof entry.title, 'string')
+      assert.ok(entry.title.length > 0)
+      assert.ok(!entry.title.includes('\n'))
+    }
+    if (entry.repo !== null) {
+      assert.equal(new URL(entry.repo).protocol, 'https:')
+    }
+    if (entry.license !== null) assert.match(entry.license, /^[A-Za-z0-9.+-]+/)
+
+    assert.ok(entry.scope && typeof entry.scope === 'object')
+    for (const field of ['dsh', 'cordis', 'platform']) {
+      const value = entry.scope[field]
+      assert.ok(value === null || (typeof value === 'string' && value.length > 0), `${key} scope.${field}`)
+    }
+
+    assert.equal(entry.checks.length, 14)
+    const ids = new Set()
+    for (const check of entry.checks) {
+      assert.deepEqual(Object.keys(check).sort(), ['coverage', 'id', 'result'])
+      assert.ok(['PASS', 'WARN', 'FAIL', 'NA'].includes(check.result), `${key} ${check.id} result`)
+      assert.ok(['full', 'partial', 'not-run'].includes(check.coverage), `${key} ${check.id} coverage`)
+      ids.add(check.id)
+      if (check.result === 'WARN') warns += 1
+      // A WARN is never rewritten as PASS.
+      assert.notEqual(check.result, 'pass')
+    }
+    assert.equal(ids.size, entry.checks.length)
+
+    assert.equal(entry.levels.entry.state, 'recognized')
+    assert.equal(entry.levels.entry.claim, 'static')
+    assert.equal(entry.levels.flow.state, 'not-run')
+    assert.equal(entry.levels.boost.state, 'not-measured')
+
+    assert.match(entry.evidence.reportSha256, /^[0-9a-f]{64}$/)
+    assert.equal(entry.evidence.reportUrl, undefined)
+    assert.match(entry.checkedBy.checker, /^dsh-standards@1\.3\.0/)
+    assert.match(entry.checkedBy.command, /--no-runtime/)
+    assert.ok(Array.isArray(entry.notChecked))
+    assert.ok(entry.notChecked.some(item => item.startsWith('ENTRY:runtime')))
+    assert.ok(entry.notChecked.some(item => item.startsWith('FLOW:')))
+    assert.ok(entry.notChecked.some(item => item.startsWith('BOOST:')))
+
+    assert.equal(entry.validity.checkedAt, TODAY)
+    assert.equal(entry.validity.expiresAt, EXPIRES)
+    assert.equal(entry.validity.policy, '90d')
+    assert.equal(entry.lifecycle, 'active')
+    assert.equal(entry.selfAssessed, true)
+  }
+  assert.equal(names.size, PUBLISH_ENTRIES)
+  assert.equal(shas.size, PUBLISH_ENTRIES)
+  assert.ok(warns > 0, 'the sample should keep its WARN results visible')
+
+  const withdrawals = JSON.parse(fs.readFileSync(path.join(REPO, 'publish', 'withdrawals.json'), 'utf8'))
+  assert.equal(withdrawals.schema, 'dsh-market-withdrawals/1')
+  assert.ok(Array.isArray(withdrawals.withdrawals))
+
+  const size = fs.statSync(path.join(REPO, 'publish', 'sidecar.json')).size
+  assert.ok(size > 10_000 && size < 200_000, `sidecar size ${size} bytes is outside the expected range`)
 })
 
 test('build-offline-kit: content manifest, npm tarball and market-contract are inside one tgz', (t) => {

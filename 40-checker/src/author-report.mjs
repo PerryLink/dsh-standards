@@ -65,6 +65,7 @@ function adviceRows(report) {
 const BUCKETS = [
   { key: 'blocking', title: 'Blocking (FAIL)' },
   { key: 'hygiene', title: 'Hygiene (WARN)' },
+  { key: 'partial', title: 'Partly checked (static subset)' },
   { key: 'notChecked', title: 'Not checked (NA / not-run / ERROR)' },
 ]
 
@@ -142,13 +143,19 @@ export function renderMarkdown(report) {
   lines.push('')
 
   const notChecked = bucketRows(report, 'notChecked')
+  const partial = bucketRows(report, 'partial')
   lines.push('## What this report does not check')
   lines.push('')
-  if (notChecked.length === 0) {
+  if (notChecked.length === 0 && partial.length === 0) {
     lines.push('- No check was skipped in this run.')
   } else {
     for (const row of notChecked) {
       lines.push(`- ${text(row.id)}${row.clause ? ` (${text(row.clause)})` : ''}: ${text(row.reason) || 'not checked'}`)
+      if (row.howToEnable) lines.push(`  - enable: ${text(row.howToEnable)}`)
+    }
+    for (const row of partial) {
+      lines.push(`- ${text(row.id)}${row.clause ? ` (${text(row.clause)})` : ''}: partial coverage${row.reason ? ` — ${text(row.reason)}` : ''}`)
+      if (row.howToEnable) lines.push(`  - still needs: ${text(row.howToEnable)}`)
     }
   }
   lines.push(`- Runtime execution beyond the checks listed above is not observed by this report${anchor.suspect ? '; the anchor differs from the host and is flagged suspect' : ''}.`)
@@ -171,6 +178,7 @@ export function renderHtml(report) {
   const advice = adviceRows(report)
   const passed = passedIds(report)
   const notChecked = bucketRows(report, 'notChecked')
+  const partial = bucketRows(report, 'partial')
 
   const table = (key) => {
     const rows = bucketRows(report, key)
@@ -195,9 +203,12 @@ export function renderHtml(report) {
     ? '<p class="none">None.</p>'
     : `<ul>${advice.map(item => `<li><strong>${escapeHtml(text(item.severity))} ${escapeHtml(text(item.key))}</strong> (${escapeHtml(text(item.source))}${item.ruleMissing ? ' [ruleMissing]' : ''}): ${escapeHtml(text(item.fix ?? item.title ?? ''))}${item.docsUrl ? ` ${link(item.docsUrl)}` : ''}</li>`).join('\n')}</ul>`
 
-  const notCheckedList = notChecked.length === 0
+  const notCheckedList = notChecked.length === 0 && partial.length === 0
     ? '<li>No check was skipped in this run.</li>'
-    : notChecked.map(row => `<li><strong>${escapeHtml(text(row.id))}</strong>${row.clause ? ` (${escapeHtml(text(row.clause))})` : ''}: ${escapeHtml(text(row.reason) || 'not checked')}</li>`).join('\n')
+    : [
+        ...notChecked.map(row => `<li><strong>${escapeHtml(text(row.id))}</strong>${row.clause ? ` (${escapeHtml(text(row.clause))})` : ''}: ${escapeHtml(text(row.reason) || 'not checked')}${row.howToEnable ? ` <span class="muted">enable: ${escapeHtml(text(row.howToEnable))}</span>` : ''}</li>`),
+        ...partial.map(row => `<li><strong>${escapeHtml(text(row.id))}</strong>${row.clause ? ` (${escapeHtml(text(row.clause))})` : ''}: partial coverage${row.reason ? ` — ${escapeHtml(text(row.reason))}` : ''}${row.howToEnable ? ` <span class="muted">still needs: ${escapeHtml(text(row.howToEnable))}</span>` : ''}</li>`),
+      ].join('\n')
 
   return `<!doctype html>
 <html lang="en">

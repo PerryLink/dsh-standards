@@ -424,13 +424,28 @@ function collectSideEffectHits(ast, file, hits) {
   })
 }
 
-function analyseImportClosure(sources, entryRelative) {
+function analyseImportClosure(sources, entryRelative, scan = null) {
   const byRelative = new Map()
   for (const source of sources) byRelative.set(normalizeRelative(source.relative), source)
   const queue = []
   if (entryRelative) {
     const entry = normalizeRelative(entryRelative)
-    if (!byRelative.has(entry)) return { error: `entry module ${entryRelative} was not found among scanned sources` }
+    if (!byRelative.has(entry)) {
+      // A bounded scan can stop before the entry module. That is missing
+      // coverage, not proof that the package has no entry.
+      if (scan?.truncated) {
+        return {
+          entryOutsideScan: true,
+          truncated: scan,
+          visited: new Set(),
+          hits: [],
+          parseErrors: [],
+          coverage: [],
+          localEdges: [],
+        }
+      }
+      return { error: `entry module ${entryRelative} was not found among scanned sources` }
+    }
     queue.push(entry)
   } else {
     // Programmatic callers without an entry: keep the legacy "all sources" shape.
@@ -483,23 +498,30 @@ function hitEvidence(hits, limit = 3) {
   return hits.slice(0, limit).map(hit => `${hit.file}:${hit.line}`)
 }
 
+/** The exact bounded-scan statement the report must carry when it truncates. */
+export function scanTruncationReason(scan) {
+  if (!scan?.truncated) return ''
+  return `truncated at ${scan.maxFiles} files / ${scan.maxBytes} bytes; entry may be beyond the scan (scanned ${scan.files} files / ${scan.bytes} bytes)`
+}
+
 /** DSC-10: advisory only; never FAIL. */
-export function checkImportTimeAdvisory(sources, entryRelative = null) {
+export function checkImportTimeAdvisory(sources, entryRelative = null, scan = null) {
   if (sources.length === 0) {
+    const truncation = scanTruncationReason(scan)
     return check({
       id: 'DSC-10',
       clause: 'C-10',
       layer: 'L0',
       result: 'NA',
       advisory: true,
-      coverage: 'not-run',
-      reason: 'no source files scanned; C-10 not-run',
-      details: [],
+      coverage: truncation ? 'partial' : 'not-run',
+      reason: truncation ? `partial: ${truncation}; C-10 not-run` : 'no source files scanned; C-10 not-run',
+      details: truncation ? [detail('C-10.3', 'NA', `not-run: ${truncation}`, [])] : [],
       evidence: [],
     })
   }
 
-  const analysis = analyseImportClosure(sources, entryRelative)
+  const analysis = analyseImportClosure(sources, entryRelative, scan)
   if (analysis.error) {
     const evidence = normalizeRelative(entryRelative)
     return check({
@@ -515,11 +537,31 @@ export function checkImportTimeAdvisory(sources, entryRelative = null) {
     })
   }
 
+  if (analysis.entryOutsideScan) {
+    const truncation = scanTruncationReason(analysis.truncated)
+    const entry = normalizeRelative(entryRelative)
+    return check({
+      id: 'DSC-10',
+      clause: 'C-10',
+      layer: 'L0',
+      result: 'NA',
+      advisory: true,
+      coverage: 'partial',
+      reason: `partial: ${truncation}; C-10 not-run`,
+      details: [detail('C-10.3', 'NA', `not-run: ${truncation}; entry module ${entryRelative} is outside the scanned set`, [entry])],
+      evidence: [entry],
+    })
+  }
+
+  const truncation = scanTruncationReason(scan)
   const { visited, hits, parseErrors, coverage, localEdges } = analysis
   const details = hits.slice(0, 20).map(hit => detail(hit.clause, 'WARN', `${hit.pattern} at ${hit.file}:${hit.line}`, [`${hit.file}:${hit.line}`]))
   details.push(...coverage.slice(0, 10))
   if (localEdges.length > 0) {
     details.push(detail('C-10.3', 'PASS', `local relative import closure analysed (${visited.size} module(s))`, [...visited].slice(0, 5)))
+  }
+  if (truncation) {
+    details.push(detail('C-10.3', 'NA', `not-run: ${truncation}; the local import closure is incomplete`, []))
   }
   for (const error of parseErrors) {
     details.push(detail('C-10', 'ERROR', `not-run: AST parse failed in ${error.file}:${error.line} (${error.message})`, [`${error.file}:${error.line}`]))
@@ -538,6 +580,9 @@ export function checkImportTimeAdvisory(sources, entryRelative = null) {
     result = 'PASS'
     reason = ''
   }
+  if (truncation) {
+    reason = reason ? `${reason}; partial: ${truncation}` : `partial: ${truncation}`
+  }
 
   const evidence = hits.length > 0
     ? hitEvidence(hits)
@@ -551,7 +596,7 @@ export function checkImportTimeAdvisory(sources, entryRelative = null) {
     layer: 'L0',
     result,
     advisory: true,
-    coverage: result === 'ERROR' ? 'not-run' : 'full',
+    coverage: result === 'ERROR' ? 'not-run' : truncation ? 'partial' : 'full',
     reason,
     details,
     evidence,

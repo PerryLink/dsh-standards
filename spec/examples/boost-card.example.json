@@ -1,0 +1,15 @@
+{
+  "subject": "@acme/dsh-hello@0.1.0",
+  "host": "dsh 0.2.2-alpha.3 / cordis 4.0.6-alpha.2 / node 24.9 / linux-x64",
+  "method": "字段示例：单机单次；安装后启动与一轮对话，对照 nonce arm；非生产基准",
+  "scope": "LEV-6 稳定前缀/装配 — hello 示例的工具与提示声明",
+  "command": "node bench/hello.mjs",
+  "result": "startupMs 180 → 150; reloadMs 900 → 600; tokensPerTurn 1200 → 900; loc 420 → 380",
+  "negativeControl": "同一基准换 nonce arm：prefix 复用 0%，首个分歧在 system 第 0 字节",
+  "generatedAt": "2026-11-06",
+  "expiresAt": "2027-05-06",
+  "claimLevel": "self-assessed",
+  "issuer": "author",
+  "selfAssessed": true,
+  "recordHash": "sha256:355f4015eadd3610f64cb1caab35f576f374a8fb718a761cfebad419de85f644"
+}

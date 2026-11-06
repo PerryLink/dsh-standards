@@ -1,8 +1,10 @@
 /** Programmatic API for dsh-plugin-verify. */
 export { main, parseArgs, usage, VERSION, detectHostRuntime, resolveRuntimeAnchor, declarationsOf } from './cli.mjs'
 export { runManifestChecks, checkMarketEntry, DEFAULT_RUNTIME_VERSION, inferKind, resolveEntry } from './manifest.mjs'
-export { checkCapabilities, checkCredentials, checkLabels, checkImportTimeAdvisory, CAPABILITIES, LABELS } from './declarations.mjs'
+export { checkCapabilities, checkCredentials, checkLabels, checkImportTimeAdvisory, scanTruncationReason, CAPABILITIES, LABELS } from './declarations.mjs'
+export { readSources, readSourcesWithStats, listSourceFiles, scanSourceFiles } from './util.mjs'
 export { runRuntimeChecks } from './runtime.mjs'
+export { runStaticBundleChecks } from './bundle-static.mjs'
 export { buildReport, formatText, formatSarif, writeReport, summarizeBlocking, DECLARATION_CHECKS } from './report.mjs'
 export { joinAdvice, DOCS_BASE } from './remediation.mjs'
 export { satisfies, validRange, parseVersion, compareVersions } from './semver.mjs'

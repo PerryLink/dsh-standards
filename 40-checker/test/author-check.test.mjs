@@ -56,7 +56,7 @@ test('check: Markdown has a one-line conclusion, <=3 fixes, all buckets, advice 
   assert.equal(run.status, 0, run.stderr)
   const md = run.stdout
   assert.match(md, /^# DSH standards check — @dsh-fixtures\/good-plugin@1\.0\.0/m)
-  assert.match(md, /\*\*Conclusion:\*\* entry\/package · runtime .* · blocking 0 .*hygiene \d+ · not checked 8\/14/)
+  assert.match(md, /\*\*Conclusion:\*\* entry\/package · runtime .* · blocking 0 .*hygiene \d+ .*not checked 8\/14/)
   const fixes = md.split('## Priority fixes (up to 3)')[1].split('## Blocking')[0]
   const numbered = fixes.match(/^\d+\. /gm) ?? []
   assert.ok(numbered.length <= 3, `priority fixes: ${numbered.length}`)

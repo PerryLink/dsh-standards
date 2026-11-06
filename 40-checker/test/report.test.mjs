@@ -108,13 +108,14 @@ test('entryBlocking passes only when every prerequisite produced a detail row', 
   assert.deepEqual(report.coverage.entryBlocking.notChecked, [])
 })
 
-test('text renders the three buckets, headline and full coverage', () => {
+test('text renders the buckets, headline and full coverage', () => {
   const text = formatText(reportOf(fourteenChecks()))
   assert.match(text, /Blocking \(FAIL\) \(0\):/)
   assert.match(text, /Hygiene \(WARN\) \(3\):/)
+  assert.match(text, /Partly checked \(static subset\) \(0\):/)
   assert.match(text, /Not checked \(NA \/ not-run \/ ERROR\) \(8\):/)
   assert.match(text, /headline: entry\/package · runtime 0\.2\.1-rc\.5 host/)
-  assert.match(text, /coverage: total=14 checked=6 .*notRun=6 error=6/)
+  assert.match(text, /coverage: total=14 checked=6 .*notRun=6 .*error=6/)
   assert.match(text, /metrics: checked=6\/14 declaredFields=2\/5/)
   assert.match(text, /entryBlocking: checked=3\/6 .*pass=false/)
 })

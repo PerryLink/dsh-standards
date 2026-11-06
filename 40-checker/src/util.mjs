@@ -56,21 +56,31 @@ const BUILD_FILE = /(?:^|\/)(?:build|esbuild|vite|rollup|webpack)\.config\.[cm]?
 
 /**
  * Collect source files without following symlinks. Deterministic order, bounded.
+ * Returns the files plus scan metadata so callers can report truncation instead
+ * of pretending the bounded scan saw the whole package.
  * @param {string} root
  * @param {{maxFiles?: number, maxBytes?: number}} [options]
  */
-export function listSourceFiles(root, options = {}) {
+export function scanSourceFiles(root, options = {}) {
   const maxFiles = options.maxFiles ?? 400
   const maxBytes = options.maxBytes ?? 2_000_000
-  const files = []
+  const paths = []
   let bytes = 0
+  let truncated = false
+  let skippedForBytes = 0
   const walk = (directory) => {
-    if (files.length >= maxFiles || bytes >= maxBytes) return
+    if (paths.length >= maxFiles || bytes >= maxBytes) {
+      truncated = true
+      return
+    }
     let entries
     try { entries = fs.readdirSync(directory, { withFileTypes: true }) } catch { return }
     entries.sort((a, b) => a.name.localeCompare(b.name))
     for (const entry of entries) {
-      if (files.length >= maxFiles || bytes >= maxBytes) return
+      if (paths.length >= maxFiles || bytes >= maxBytes) {
+        truncated = true
+        return
+      }
       const absolute = path.join(directory, entry.name)
       if (entry.isDirectory()) {
         if (SKIP_DIRECTORIES.has(entry.name)) continue
@@ -84,22 +94,55 @@ export function listSourceFiles(root, options = {}) {
       if (BUILD_FILE.test(relative)) continue
       let size = 0
       try { size = fs.statSync(absolute).size } catch { continue }
-      if (bytes + size > maxBytes) continue
+      if (bytes + size > maxBytes) {
+        // A file that does not fit is skipped; later smaller files may still
+        // fit, but the scan as a whole is no longer exhaustive.
+        truncated = true
+        skippedForBytes += 1
+        continue
+      }
       bytes += size
-      files.push(absolute)
+      paths.push(absolute)
     }
   }
   walk(root)
-  return files
+  return {
+    paths,
+    stats: {
+      files: paths.length,
+      bytes,
+      maxFiles,
+      maxBytes,
+      truncated,
+      skippedForBytes,
+    },
+  }
+}
+
+export function listSourceFiles(root, options = {}) {
+  return scanSourceFiles(root, options).paths
 }
 
 /** Read all source files once, returning {file, relative, text} records. */
 export function readSources(root, options) {
-  return listSourceFiles(root, options).map(file => ({
+  return scanSourceFiles(root, options).paths.map(file => ({
     file,
     relative: posixRelative(root, file),
     text: readText(file),
   }))
+}
+
+/** Like readSources(), but also returns the bounded-scan metadata. */
+export function readSourcesWithStats(root, options) {
+  const { paths, stats } = scanSourceFiles(root, options)
+  return {
+    sources: paths.map(file => ({
+      file,
+      relative: posixRelative(root, file),
+      text: readText(file),
+    })),
+    scan: stats,
+  }
 }
 
 export function regexHits(sources, pattern) {

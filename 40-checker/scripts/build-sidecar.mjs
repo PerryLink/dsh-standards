@@ -10,13 +10,25 @@
  *   lifecycle read an existing sidecar (`--prev`) and only recompute
  *             `lifecycle` from `--today` and `publish/withdrawals.json`.
  *
+ * Entry fields are a superset of the original `dsh-market-sidecar/1` shape
+ * (subject/levels/evidence/validity/lifecycle/selfAssessed are unchanged):
+ *   title/repo/license   from the published package.json, null when absent
+ *   scope                {dsh, cordis, platform} from dsh.engines / npm engines
+ *                        / peerDependencies, falling back to the audit anchor
+ *   checks               checker results as {id,result,coverage} only; detailed
+ *                        reasons stay in the report, never in the sidecar
+ *   evidence             url/sha256 kept for compatibility; reportUrl/
+ *                        reportSha256 are the same values under the new names
+ *   checkedBy            {checker, command} that produced the audit
+ *   notChecked           short honest list of what the run did not exercise
+ *
  * Deliberately absent: advice (author view), issuer / recordHash / verifyUrl
- * (we are not an issuer). `--today` pins the clock so CI and tests are
- * reproducible.
+ * (we are not an issuer), score / rank (we do not grade). `--today` pins the
+ * clock so CI and tests are reproducible.
  *
  * Usage:
  *   node 40-checker/scripts/build-sidecar.mjs --levels audit.json \
- *     --name dsh-security-pack --version 3.0.1 --tarball dsh-security-pack-3.0.1.tgz \
+ *     --report report.json --tarball dsh-security-pack-3.0.1.tgz \
  *     --out publish/sidecar.json --today 2026-11-06
  *
  *   node 40-checker/scripts/build-sidecar.mjs --prev publish/sidecar.json \
@@ -36,8 +48,12 @@ const DATE = /^\d{4}-\d{2}-\d{2}$/
 const HEX40 = /^[0-9a-f]{40}$/
 const HEX64 = /^[0-9a-f]{64}$/
 const LIFECYCLE = new Set(['active', 'stale', 'under-review', 'withdrawn'])
-const FORBIDDEN = new Set(['advice', 'issuer', 'recordHash', 'verifyUrl'])
+const FORBIDDEN = new Set(['advice', 'issuer', 'recordHash', 'verifyUrl', 'score', 'rank'])
 const NOT_CLAIMED = ['official', 'certification', 'security-audit', 'endorsement', 'ordering', 'comparison', 'warranty']
+const CHECK_KEYS = new Set(['id', 'result', 'coverage'])
+const SCOPE_KEYS = new Set(['dsh', 'cordis', 'platform'])
+const CHECKED_BY_KEYS = new Set(['checker', 'command'])
+const REPO_GIT_SHORTHAND = /^github:([^/]+\/[^/]+?)(?:\.git)?$/
 
 function usage() {
   console.log(`build-sidecar — publish/sidecar.json (${SCHEMA})
@@ -58,9 +74,12 @@ Options:
   --package <dir>          package.json directory for name/version
   --tarball <file>         package tarball; sha256 is recorded in subject
   --tarball-sha256 <hex>   explicit tarball sha256 (checked against --tarball)
-  --evidence-url <url>     optional https evidence URL
-  --evidence-file <file>   hash this file into evidence.sha256
-  --evidence-sha256 <hex>  explicit evidence sha256
+  --report <file>          dsh-conformance/1 checker report; its checks are
+                           reduced to {id,result,coverage} (no details)
+  --checked-command <s>    command recorded in checkedBy.command
+  --evidence-url <url>     optional https evidence URL (url + reportUrl)
+  --evidence-file <file>   hash this file into evidence.sha256/reportSha256
+  --evidence-sha256 <hex>  explicit evidence sha256 (sha256 + reportSha256)
   --checker-version <v>    default dsh-standards package.json version
   --checker-sha <40hex>    default git HEAD when available
   --index-url <url>        default https://awesome-dsh-plugin.com/index.json
@@ -110,6 +129,7 @@ function parseArgs(argv) {
     today: null, todayProvided: false, ttlDays: 90,
     name: null, version: null, packageDir: null,
     tarball: null, tarballSha256: null,
+    report: null, checkedCommand: null,
     evidenceUrl: null, evidenceFile: null, evidenceSha256: null,
     checkerVersion: null, checkerSha: null,
     indexUrl: 'https://awesome-dsh-plugin.com/index.json',
@@ -134,6 +154,8 @@ function parseArgs(argv) {
     else if (arg === '--package') options.packageDir = next()
     else if (arg === '--tarball') options.tarball = next()
     else if (arg === '--tarball-sha256') options.tarballSha256 = next().toLowerCase()
+    else if (arg === '--report') options.report = next()
+    else if (arg === '--checked-command') options.checkedCommand = next()
     else if (arg === '--evidence-url') options.evidenceUrl = next()
     else if (arg === '--evidence-file') options.evidenceFile = next()
     else if (arg === '--evidence-sha256') options.evidenceSha256 = next().toLowerCase()
@@ -160,6 +182,123 @@ function readPackageMeta(directory) {
   } catch {
     return {}
   }
+}
+
+function firstLine(value) {
+  if (typeof value !== 'string') return null
+  const line = value.split(/\r?\n/)[0].trim()
+  return line === '' ? null : line
+}
+
+function httpsUrl(value) {
+  if (typeof value !== 'string' || value.trim() === '') return null
+  let url = value.trim()
+  const shorthand = url.match(REPO_GIT_SHORTHAND)
+  if (shorthand) url = `https://github.com/${shorthand[1]}`
+  if (url.startsWith('git+')) url = url.slice(4)
+  if (url.startsWith('ssh://git@')) url = `https://${url.slice('ssh://git@'.length)}`
+  if (url.startsWith('git@')) {
+    const match = url.match(/^git@([^:]+):(.+)$/)
+    if (match) url = `https://${match[1]}/${match[2]}`
+  }
+  if (url.startsWith('git://')) url = `https://${url.slice('git://'.length)}`
+  if (url.startsWith('http://')) url = `https://${url.slice('http://'.length)}`
+  if (!url.startsWith('https://')) return null
+  url = url.replace(/\.git$/i, '').replace(/\/+$/, '')
+  try {
+    const parsed = new URL(url)
+    if (parsed.protocol !== 'https:') return null
+  } catch {
+    return null
+  }
+  return url
+}
+
+function normalizeRepo(repository) {
+  if (typeof repository === 'string') return httpsUrl(repository)
+  if (!repository || typeof repository !== 'object') return null
+  return httpsUrl(repository.url)
+}
+
+function normalizeLicense(license) {
+  let value = license
+  if (value && typeof value === 'object') value = value.type
+  if (typeof value !== 'string') return null
+  const text = value.trim()
+  if (text === '' || /^SEE LICENSE/i.test(text) || text === 'UNLICENSED') return null
+  // Accept plain SPDX ids and simple AND/OR/WITH expressions; anything else is
+  // left null rather than guessed.
+  if (!/^[A-Za-z0-9.+-]+(?: \([^()]+\))?(?: (?:AND|OR|WITH) [A-Za-z0-9.+-]+(?: \([^()]+\))?)*$/.test(text)) return null
+  return text
+}
+
+function firstString(...values) {
+  for (const value of values) {
+    if (typeof value === 'string' && value.trim() !== '') return value.trim()
+  }
+  return null
+}
+
+function platformFromPackage(meta) {
+  const declared = firstString(meta?.dsh?.client?.platform, meta?.dsh?.platform, meta?.engines?.platform)
+  if (declared) return declared
+  const os = Array.isArray(meta?.os) ? meta.os.filter(item => typeof item === 'string' && item !== '') : []
+  const cpu = Array.isArray(meta?.cpu) ? meta.cpu.filter(item => typeof item === 'string' && item !== '') : []
+  if (os.length === 0 && cpu.length === 0) return null
+  return [os.join('/'), cpu.join('/')].filter(Boolean).join('-')
+}
+
+function inferScope(meta, audit) {
+  const anchor = audit?.checker?.anchor && typeof audit.checker.anchor === 'object' ? audit.checker.anchor : {}
+  const dshEngines = meta?.dsh?.engines && typeof meta.dsh.engines === 'object' ? meta.dsh.engines : {}
+  const engines = meta?.engines && typeof meta.engines === 'object' ? meta.engines : {}
+  const peer = meta?.peerDependencies && typeof meta.peerDependencies === 'object' ? meta.peerDependencies : {}
+  const deps = meta?.dependencies && typeof meta.dependencies === 'object' ? meta.dependencies : {}
+  return {
+    dsh: firstString(dshEngines.dsh, engines.dsh, anchor.dsh),
+    cordis: firstString(dshEngines.cordis, engines.cordis, peer['@deepseek-ai/cordis'], deps['@deepseek-ai/cordis'], anchor.cordis),
+    platform: platformFromPackage(meta),
+  }
+}
+
+function extractChecks(report, name, version) {
+  if (!report || !Array.isArray(report.checks)) return []
+  if (report.subject && typeof report.subject === 'object') {
+    const subjectName = firstString(report.subject.name)
+    const subjectVersion = firstString(report.subject.version)
+    if (subjectName !== null && name !== null && subjectName !== name) {
+      throw new Error(`--report subject.name ${subjectName} does not match ${name}`)
+    }
+    if (subjectVersion !== null && version !== null && subjectVersion !== version) {
+      throw new Error(`--report subject.version ${subjectVersion} does not match ${version}`)
+    }
+  }
+  return report.checks.map(check => {
+    if (!check || typeof check !== 'object') throw new Error('--report checks must be objects')
+    const id = firstString(check.id)
+    const result = firstString(check.result)
+    const coverage = firstString(check.coverage)
+    if (id === null || result === null || coverage === null) {
+      throw new Error('--report checks need id/result/coverage')
+    }
+    return { id, result, coverage }
+  })
+}
+
+function summarizeNotChecked(audit, checks, hasReport) {
+  const items = []
+  const entry = audit?.levels?.entry && typeof audit.levels.entry === 'object' ? audit.levels.entry : {}
+  if (entry.claim !== 'runtime') items.push(`ENTRY:runtime (claim=${firstString(entry.claim) ?? 'unknown'}; not exercised)`)
+  if (!hasReport) items.push('ENTRY:checks (no --report; checker results unavailable)')
+  const notRun = checks.filter(check => check.coverage === 'not-run').map(check => check.id)
+  if (notRun.length > 0) items.push(`ENTRY:${notRun.join(', ')} (coverage=not-run)`)
+  const flow = audit?.levels?.flow && typeof audit.levels.flow === 'object' ? audit.levels.flow : {}
+  if (flow.state !== 'runtime') {
+    items.push(`FLOW:J1-J8 (${firstString(flow.state) ?? 'not-run'}; ${Number.isInteger(flow.passed) ? flow.passed : 0}/8 journeys pass)`)
+  }
+  const boost = audit?.levels?.boost && typeof audit.levels.boost === 'object' ? audit.levels.boost : {}
+  if (boost.state !== 'measured') items.push(`BOOST:LEV-3..LEV-4 (${firstString(boost.state) ?? 'not-measured'})`)
+  return items
 }
 
 function pickLevel(row, keys, fallback) {
@@ -245,6 +384,9 @@ function entryFromAudit(audit, options, levelFile) {
   if (typeof name !== 'string' || name === '') throw new Error('cannot determine subject.name; pass --name or --package')
   if (typeof version !== 'string' || version === '') throw new Error('cannot determine subject.version; pass --version or --package')
 
+  const report = options.report ? readJson(path.resolve(options.report), '--report') : null
+  const checks = extractChecks(report, name, version)
+
   const auditLevels = audit.levels && typeof audit.levels === 'object' ? audit.levels : {}
   const levels = {
     entry: pickLevel(auditLevels.entry, ['state', 'claim'], 'not-run'),
@@ -286,16 +428,38 @@ function entryFromAudit(audit, options, levelFile) {
     let parsed
     try { parsed = new URL(options.evidenceUrl) } catch { throw new Error(`--evidence-url is not a URL: ${options.evidenceUrl}`) }
     if (parsed.protocol !== 'https:') throw new Error('--evidence-url must be https')
+    // url/sha256 are the original names; reportUrl/reportSha256 are the same
+    // values under the newer, explicit names. Both stay so old readers work.
     evidence.url = options.evidenceUrl
+    evidence.reportUrl = options.evidenceUrl
   }
-  if (evidenceSha256 !== null) evidence.sha256 = evidenceSha256
+  if (evidenceSha256 !== null) {
+    evidence.sha256 = evidenceSha256
+    evidence.reportSha256 = evidenceSha256
+  }
+
+  const scanner = firstString(audit.checker?.anchor?.scanner)
+  const checkerVersion = firstString(options.checkerVersion, readPackageMeta(ROOT).version) ?? 'unknown'
+  const checker = scanner === null
+    ? `dsh-standards@${checkerVersion}`
+    : `dsh-standards@${checkerVersion} (${scanner})`
+  const command = firstString(options.checkedCommand) ?? (levels.entry.claim === 'runtime'
+    ? 'dsh-levels <package-dir> --format json'
+    : 'dsh-levels <package-dir> --no-runtime --format json')
 
   return {
     key: `${name}@${version}`,
     entry: {
       subject: { name, version, tarballSha256 },
+      title: firstLine(meta.description),
+      repo: normalizeRepo(meta.repository),
+      license: normalizeLicense(meta.license),
+      scope: inferScope(meta, audit),
       levels,
+      checks,
       evidence,
+      checkedBy: { checker, command },
+      notChecked: summarizeNotChecked(audit, checks, report !== null),
       validity: { checkedAt, expiresAt, policy: `${options.ttlDays}d` },
       lifecycle: 'active',
       selfAssessed: options.selfAssessed,
@@ -399,6 +563,72 @@ function validateSidecar(sidecar) {
     }
     if (entry.evidence.sha256 !== undefined && !HEX64.test(String(entry.evidence.sha256))) {
       throw new Error(`${key}: evidence.sha256 must be 64 hex chars`)
+    }
+    if (entry.evidence.reportUrl !== undefined) {
+      let url
+      try { url = new URL(entry.evidence.reportUrl) } catch { throw new Error(`${key}: evidence.reportUrl is not a URL`) }
+      if (url.protocol !== 'https:') throw new Error(`${key}: evidence.reportUrl must be https`)
+    }
+    if (entry.evidence.reportSha256 !== undefined && !HEX64.test(String(entry.evidence.reportSha256))) {
+      throw new Error(`${key}: evidence.reportSha256 must be 64 hex chars`)
+    }
+    if (entry.title !== undefined && entry.title !== null && (typeof entry.title !== 'string' || entry.title === '')) {
+      throw new Error(`${key}: title must be a non-empty string or null`)
+    }
+    if (entry.repo !== undefined && entry.repo !== null) {
+      let url
+      try { url = new URL(entry.repo) } catch { throw new Error(`${key}: repo is not a URL`) }
+      if (url.protocol !== 'https:') throw new Error(`${key}: repo must be https or null`)
+    }
+    if (entry.license !== undefined && entry.license !== null && (typeof entry.license !== 'string' || entry.license === '')) {
+      throw new Error(`${key}: license must be a non-empty string or null`)
+    }
+    if (entry.scope !== undefined) {
+      if (!entry.scope || typeof entry.scope !== 'object' || Array.isArray(entry.scope)) throw new Error(`${key}: scope must be an object`)
+      for (const field of Object.keys(entry.scope)) {
+        if (!SCOPE_KEYS.has(field)) throw new Error(`${key}: scope.${field} is not part of the sidecar contract`)
+      }
+      for (const field of ['dsh', 'cordis', 'platform']) {
+        const value = entry.scope[field]
+        if (field === 'platform' && value === undefined) continue
+        if (value !== null && (typeof value !== 'string' || value === '')) {
+          throw new Error(`${key}: scope.${field} must be a non-empty string or null`)
+        }
+      }
+    }
+    if (entry.checks !== undefined) {
+      if (!Array.isArray(entry.checks)) throw new Error(`${key}: checks must be an array`)
+      const seen = new Set()
+      for (const check of entry.checks) {
+        if (!check || typeof check !== 'object' || Array.isArray(check)) throw new Error(`${key}: every check must be an object`)
+        for (const field of Object.keys(check)) {
+          if (!CHECK_KEYS.has(field)) throw new Error(`${key}: checks must not carry ${field}; only id/result/coverage`)
+        }
+        for (const field of ['id', 'result', 'coverage']) {
+          if (typeof check[field] !== 'string' || check[field] === '') throw new Error(`${key}: checks[].${field} is required`)
+        }
+        if (seen.has(check.id)) throw new Error(`${key}: duplicate check id ${check.id}`)
+        seen.add(check.id)
+      }
+    }
+    if (entry.checkedBy !== undefined) {
+      if (!entry.checkedBy || typeof entry.checkedBy !== 'object' || Array.isArray(entry.checkedBy)) {
+        throw new Error(`${key}: checkedBy must be an object`)
+      }
+      for (const field of Object.keys(entry.checkedBy)) {
+        if (!CHECKED_BY_KEYS.has(field)) throw new Error(`${key}: checkedBy.${field} is not part of the sidecar contract`)
+      }
+      for (const field of ['checker', 'command']) {
+        if (typeof entry.checkedBy[field] !== 'string' || entry.checkedBy[field] === '') {
+          throw new Error(`${key}: checkedBy.${field} is required`)
+        }
+      }
+    }
+    if (entry.notChecked !== undefined) {
+      if (!Array.isArray(entry.notChecked)) throw new Error(`${key}: notChecked must be an array`)
+      for (const item of entry.notChecked) {
+        if (typeof item !== 'string' || item === '') throw new Error(`${key}: notChecked entries must be non-empty strings`)
+      }
     }
   }
   walkKeys(sidecar, 'sidecar', (key, where) => {

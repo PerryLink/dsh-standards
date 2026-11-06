@@ -1,3 +1,26 @@
+## 1.4.0 — 2026-11-06
+
+### Added
+
+- 契约文件：`spec/schemas/conformance.schema.json`（dsh-conformance/1）、`spec/dsc-clauses.json`（14 父 + 60 子）、`spec/schemas/boost-card.schema.json` + 示例、`spec/examples/flow-evidence.example.json`、`spec/coverage-contract.md`。
+- `notChecked[]`：NA/ERROR/partial 项带 `reason` + `howToEnable`，报告能回答“为什么没查、怎么才能查”。
+- bundle/client 的 DSC-04–09 静态子集（PASS/WARN + partial），不再 8 项全 NA。
+- sidecar 加 `title/repo/license/scope/checks/checkedBy/notChecked`，种 20 条真实插件。
+- `check` 默认 `--entry-claim static --no-exec`，报告标注“未执行插件代码”；host 版本三态（显式/环境/受控探测），默认不执行 PATH 的 dsh。
+
+### Fixed
+
+- C-2 range 解析：支持 `>= 0.2.2-rc.1`、hyphen/x-range、`||`，prerelease 语义对齐 node-semver；合法范围不再误报 C-2.1，覆盖判断归 C-2.2。
+- DSC-01 检查全部 `exports` 子路径与 `main` 的真实文件存在性，坏入口 FAIL。
+- DSC-10 文件截断改为 `NA + coverage=partial` 并明示截断位置，不再假报 ERROR。
+- advice：54 条规则 docsUrl 改到具体小节；C-11.4/C-12.4 同证据合并；`package.json#field` 补 `file:line`。
+- 文档纠偏：删除 BOOST 的 -17%/-33%/-25%、「保证更省」、「token 直接计价」，明确「BOOST 与 FLOW 不可比、性能未证实」。
+- README/SUPPORTED 对齐 1.4.0，补 Windows 行与 14 项默认检查说明。
+
+### Verified
+
+- `npm test` 232/232。
+
 ## 1.3.0 — 2026-11-06
 
 ### Added

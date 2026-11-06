@@ -1,0 +1,848 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://github.com/PerryLink/dsh-standards/spec/schemas/conformance.schema.json",
+  "title": "DSH conformance report (dsh-conformance/1)",
+  "description": "The complete shape of the JSON printed by `dsh-standards check --json` / `dsh-plugin-verify --format json` in dsh-standards 1.3.0. `advice` is additive and may be omitted with --no-advice; every other top-level property is always present. Counts in `coverage` cover every check carried by the report, not only the mandatory subset. Verification (PASS/FAIL) is never derived from `advice`, `buckets` or `metrics`.",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "schema",
+    "standard",
+    "subject",
+    "anchor",
+    "g4",
+    "checks",
+    "coverage",
+    "buckets",
+    "metrics",
+    "conclusion"
+  ],
+  "properties": {
+    "schema": {
+      "const": "dsh-conformance/1"
+    },
+    "standard": {
+      "$ref": "#/$defs/standard"
+    },
+    "subject": {
+      "$ref": "#/$defs/subject"
+    },
+    "anchor": {
+      "$ref": "#/$defs/anchor"
+    },
+    "g4": {
+      "oneOf": [
+        {
+          "$ref": "#/$defs/g4"
+        },
+        {
+          "type": "null"
+        }
+      ],
+      "description": "Static G4 client shape. Present (possibly null) even when the package has no client."
+    },
+    "checks": {
+      "type": "array",
+      "minItems": 1,
+      "items": {
+        "$ref": "#/$defs/check"
+      }
+    },
+    "coverage": {
+      "$ref": "#/$defs/coverage"
+    },
+    "buckets": {
+      "$ref": "#/$defs/buckets"
+    },
+    "metrics": {
+      "$ref": "#/$defs/metrics"
+    },
+    "conclusion": {
+      "$ref": "#/$defs/conclusion"
+    },
+    "advice": {
+      "type": "array",
+      "description": "Additive remediation entries (dsh-advice/1). Omitted by --no-advice; never changes the verdict. The canonical per-entry schema is spec/schemas/advice.schema.json.",
+      "items": {
+        "$ref": "#/$defs/advice"
+      }
+    },
+    "notChecked": {
+      "type": "array",
+      "description": "Additive flattened view: buckets.notChecked plus partly-checked (coverage=partial) rows, de-duplicated by id, each with howToEnable. Omitted by builds that do not emit it; consumers that only know the 9-field coverage contract must ignore it.",
+      "items": {
+        "$ref": "#/$defs/bucketRow"
+      }
+    }
+  },
+  "$defs": {
+    "standard": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "id",
+        "version"
+      ],
+      "properties": {
+        "id": {
+          "type": "string",
+          "minLength": 1,
+          "description": "Standard family, for example DS-C."
+        },
+        "version": {
+          "type": "string",
+          "minLength": 1,
+          "description": "Version of the clause document the checks implement."
+        }
+      }
+    },
+    "subject": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "mode",
+        "profile",
+        "kind",
+        "kindInferred",
+        "kindEvaluated",
+        "name",
+        "version",
+        "path"
+      ],
+      "properties": {
+        "mode": {
+          "enum": [
+            "package",
+            "listing"
+          ]
+        },
+        "profile": {
+          "enum": [
+            "package",
+            "listing",
+            "both"
+          ]
+        },
+        "kind": {
+          "$ref": "#/$defs/kind"
+        },
+        "kindInferred": {
+          "type": "boolean"
+        },
+        "kindEvaluated": {
+          "$ref": "#/$defs/kind"
+        },
+        "name": {
+          "oneOf": [
+            {
+              "type": "string",
+              "minLength": 1
+            },
+            {
+              "type": "null"
+            }
+          ]
+        },
+        "version": {
+          "oneOf": [
+            {
+              "type": "string",
+              "minLength": 1
+            },
+            {
+              "type": "null"
+            }
+          ]
+        },
+        "path": {
+          "type": "string",
+          "minLength": 1
+        }
+      }
+    },
+    "kind": {
+      "enum": [
+        "plugin",
+        "bundle",
+        "client",
+        "preset",
+        "skill",
+        "theme",
+        "mcp-config",
+        "unknown"
+      ]
+    },
+    "anchor": {
+      "type": "object",
+      "description": "The five-part anchor plus scanner/runtime provenance. `runtimeSource` says where `dsh` came from: cli (--runtime-version), host detection, or the checked-in fallback constant. `suspect` is true only when a cli-supplied version differs from the detected host.",
+      "additionalProperties": false,
+      "required": [
+        "repo",
+        "commit",
+        "scanner",
+        "dsh",
+        "cordis",
+        "runtime",
+        "runtimeSource",
+        "hostVersion",
+        "suspect"
+      ],
+      "properties": {
+        "repo": {
+          "type": "string",
+          "minLength": 1
+        },
+        "commit": {
+          "type": "string",
+          "minLength": 1
+        },
+        "scanner": {
+          "type": "string",
+          "minLength": 1
+        },
+        "dsh": {
+          "oneOf": [
+            {
+              "type": "string",
+              "minLength": 1
+            },
+            {
+              "type": "null"
+            }
+          ]
+        },
+        "cordis": {
+          "oneOf": [
+            {
+              "type": "string",
+              "minLength": 1
+            },
+            {
+              "type": "null"
+            }
+          ]
+        },
+        "runtime": {
+          "oneOf": [
+            {
+              "type": "string",
+              "minLength": 1
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "description": "Absolute path to a --runtime Cordis build, or null when L1-L3 did not run."
+        },
+        "runtimeSource": {
+          "enum": [
+            "cli",
+            "host",
+            "fallback"
+          ]
+        },
+        "hostVersion": {
+          "oneOf": [
+            {
+              "type": "string",
+              "minLength": 1
+            },
+            {
+              "type": "null"
+            }
+          ]
+        },
+        "suspect": {
+          "type": "boolean"
+        }
+      }
+    },
+    "g4": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "hasClient",
+        "ok",
+        "result",
+        "reason"
+      ],
+      "properties": {
+        "hasClient": {
+          "type": "boolean"
+        },
+        "ok": {
+          "type": "boolean"
+        },
+        "result": {
+          "enum": [
+            "PASS",
+            "FAIL",
+            "NA"
+          ]
+        },
+        "reason": {
+          "type": "string"
+        }
+      }
+    },
+    "check": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "id",
+        "clause",
+        "layer",
+        "result",
+        "coverage",
+        "reason",
+        "evidence",
+        "details",
+        "method",
+        "advisory"
+      ],
+      "properties": {
+        "id": {
+          "type": "string",
+          "pattern": "^DSC-[0-9]{2}$"
+        },
+        "clause": {
+          "type": "string",
+          "pattern": "^C-[0-9]+(?:\\.[0-9]+)?$"
+        },
+        "layer": {
+          "enum": [
+            "L0",
+            "L1",
+            "L1+L2",
+            "L2",
+            "L3"
+          ]
+        },
+        "result": {
+          "$ref": "#/$defs/result"
+        },
+        "coverage": {
+          "$ref": "#/$defs/checkCoverage"
+        },
+        "reason": {
+          "type": "string"
+        },
+        "evidence": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        },
+        "details": {
+          "type": "array",
+          "items": {
+            "$ref": "#/$defs/detail"
+          }
+        },
+        "method": {
+          "enum": [
+            "M",
+            "M+H",
+            "H"
+          ],
+          "description": "M = machine, M+H = machine plus human, H = human."
+        },
+        "advisory": {
+          "type": "boolean",
+          "description": "True when the check is reported but never moves the verdict."
+        }
+      }
+    },
+    "detail": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "item",
+        "result",
+        "reason"
+      ],
+      "properties": {
+        "item": {
+          "type": "string",
+          "minLength": 1,
+          "description": "Sub-clause (C-1.2) or host gate (G0-G4)."
+        },
+        "result": {
+          "$ref": "#/$defs/result"
+        },
+        "reason": {
+          "type": "string"
+        },
+        "evidence": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          },
+          "description": "Optional evidence references; the detail() helper emits [], but a few manually built details (for example the G4 detail) omit the key in 1.3.0."
+        }
+      }
+    },
+    "result": {
+      "enum": [
+        "PASS",
+        "WARN",
+        "FAIL",
+        "NA",
+        "ERROR"
+      ]
+    },
+    "checkCoverage": {
+      "enum": [
+        "full",
+        "partial",
+        "not-run"
+      ],
+      "description": "Per-check coverage. `partial` means only part of the sub-checks ran; it is counted in coverage.notRun, never as a pass."
+    },
+    "coverage": {
+      "type": "object",
+      "description": "Counts over every check the report carries. Check-level `full|partial|not-run` is a different axis: see spec/coverage-contract.md for the mapping. Invariants: total == checks.length; pass + warn + fail == checked; error <= notRun; checked + na + notRun == total when no mandatory check is missing.",
+      "additionalProperties": false,
+      "required": [
+        "total",
+        "mandatory",
+        "checked",
+        "pass",
+        "warn",
+        "advisory",
+        "fail",
+        "na",
+        "notRun",
+        "error",
+        "entryBlocking"
+      ],
+      "properties": {
+        "total": {
+          "type": "integer",
+          "minimum": 0,
+          "description": "Number of checks in checks[]."
+        },
+        "mandatory": {
+          "type": "integer",
+          "minimum": 0,
+          "description": "Number of mandatory check ids for the selected scope/profile."
+        },
+        "checked": {
+          "type": "integer",
+          "minimum": 0,
+          "description": "Checks with result PASS, WARN or FAIL."
+        },
+        "pass": {
+          "type": "integer",
+          "minimum": 0
+        },
+        "warn": {
+          "type": "integer",
+          "minimum": 0
+        },
+        "advisory": {
+          "type": "integer",
+          "minimum": 0,
+          "description": "Advisory checks that produced WARN. Subset of warn; never moves the verdict."
+        },
+        "fail": {
+          "type": "integer",
+          "minimum": 0
+        },
+        "na": {
+          "type": "integer",
+          "minimum": 0,
+          "description": "Checks explicitly NA (not applicable), not a pass."
+        },
+        "notRun": {
+          "type": "integer",
+          "minimum": 0,
+          "description": "Checks with coverage not-run/partial, ERROR checks, and missing mandatory ids. Includes error."
+        },
+        "error": {
+          "type": "integer",
+          "minimum": 0,
+          "description": "Checks whose result is ERROR (checker failure or not executed)."
+        },
+        "entryBlocking": {
+          "oneOf": [
+            {
+              "$ref": "#/$defs/entryBlocking"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "description": "Entry-scope prerequisite summary; null for ds-c/mvp."
+        },
+        "partial": {
+          "type": "integer",
+          "minimum": 0,
+          "description": "Additive diagnostic: checks whose per-check coverage is partial. They remain in checked when their result is PASS/WARN/FAIL and in notRun; this count makes the overlap explicit."
+        }
+      }
+    },
+    "entryBlocking": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "required",
+        "checked",
+        "notChecked",
+        "failed",
+        "pass"
+      ],
+      "properties": {
+        "required": {
+          "type": "integer",
+          "minimum": 0
+        },
+        "checked": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        },
+        "notChecked": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        },
+        "failed": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        },
+        "pass": {
+          "type": "boolean",
+          "description": "True only when every prerequisite emitted a detail and none failed."
+        }
+      }
+    },
+    "buckets": {
+      "type": "object",
+      "description": "Reader-facing split. A check appears in exactly one bucket: FAIL -> blocking, WARN -> hygiene, NA/ERROR/not-run -> notChecked.",
+      "additionalProperties": false,
+      "required": [
+        "blocking",
+        "hygiene",
+        "notChecked"
+      ],
+      "properties": {
+        "blocking": {
+          "type": "array",
+          "items": {
+            "$ref": "#/$defs/bucketRow"
+          }
+        },
+        "hygiene": {
+          "type": "array",
+          "items": {
+            "$ref": "#/$defs/bucketRow"
+          }
+        },
+        "notChecked": {
+          "type": "array",
+          "items": {
+            "$ref": "#/$defs/bucketRow"
+          }
+        },
+        "partial": {
+          "type": "array",
+          "description": "Additive: checks with coverage=partial, even when they also appear in blocking or hygiene.",
+          "items": {
+            "$ref": "#/$defs/bucketRow"
+          }
+        }
+      }
+    },
+    "bucketRow": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "id",
+        "clause",
+        "result",
+        "coverage",
+        "reason"
+      ],
+      "properties": {
+        "id": {
+          "type": "string",
+          "minLength": 1
+        },
+        "clause": {
+          "oneOf": [
+            {
+              "type": "string",
+              "pattern": "^C-[0-9]+(?:\\.[0-9]+)?$"
+            },
+            {
+              "type": "null"
+            }
+          ]
+        },
+        "result": {
+          "enum": [
+            "PASS",
+            "WARN",
+            "FAIL",
+            "NA",
+            "ERROR",
+            "NOT-RUN"
+          ]
+        },
+        "coverage": {
+          "$ref": "#/$defs/checkCoverage"
+        },
+        "reason": {
+          "type": "string"
+        },
+        "declaration": {
+          "type": "boolean",
+          "description": "Hygiene only: DSC-11/12/13 declaration-class check."
+        },
+        "advisory": {
+          "type": "boolean",
+          "description": "Hygiene only: check.advisory is true."
+        },
+        "howToEnable": {
+          "type": "string",
+          "description": "Additive: command/flag that would let this row run, for NA/ERROR/partial rows."
+        }
+      }
+    },
+    "metrics": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "checked",
+        "total",
+        "declaredFields"
+      ],
+      "properties": {
+        "checked": {
+          "type": "integer",
+          "minimum": 0
+        },
+        "total": {
+          "type": "integer",
+          "minimum": 0
+        },
+        "declaredFields": {
+          "type": "integer",
+          "minimum": 0,
+          "maximum": 5,
+          "description": "How many of capabilities/labels/commitments/disclosure/engines.dsh are declared. Context only."
+        }
+      }
+    },
+    "conclusion": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "headline",
+        "level",
+        "status",
+        "exitCode",
+        "profile",
+        "scope",
+        "subset",
+        "staticOnly",
+        "entryRuntime",
+        "entryClaim",
+        "reason"
+      ],
+      "properties": {
+        "headline": {
+          "type": "string"
+        },
+        "level": {
+          "oneOf": [
+            {
+              "type": "string",
+              "minLength": 1
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "description": "DS-C / DSH-ENTRY display label; null when the scope cannot claim one."
+        },
+        "status": {
+          "enum": [
+            "pass",
+            "warn",
+            "incomplete",
+            "fail"
+          ]
+        },
+        "exitCode": {
+          "enum": [
+            0,
+            1,
+            2
+          ]
+        },
+        "profile": {
+          "enum": [
+            "package",
+            "listing",
+            "both"
+          ]
+        },
+        "scope": {
+          "enum": [
+            "ds-c",
+            "entry",
+            "mvp"
+          ]
+        },
+        "subset": {
+          "oneOf": [
+            {
+              "const": "MVP-13"
+            },
+            {
+              "type": "null"
+            }
+          ]
+        },
+        "staticOnly": {
+          "type": "boolean"
+        },
+        "entryRuntime": {
+          "oneOf": [
+            {
+              "enum": [
+                "require",
+                "server-entry"
+              ]
+            },
+            {
+              "type": "null"
+            }
+          ]
+        },
+        "entryClaim": {
+          "oneOf": [
+            {
+              "enum": [
+                "runtime",
+                "static"
+              ]
+            },
+            {
+              "type": "null"
+            }
+          ]
+        },
+        "reason": {
+          "type": "string"
+        }
+      }
+    },
+    "advice": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "key",
+        "gate",
+        "severity",
+        "title",
+        "why",
+        "fix",
+        "docsUrl",
+        "source",
+        "version",
+        "evidence",
+        "reason",
+        "occurrences",
+        "advisory"
+      ],
+      "properties": {
+        "key": {
+          "type": "string",
+          "minLength": 1
+        },
+        "gate": {
+          "enum": [
+            "FAIL",
+            "WARN"
+          ]
+        },
+        "severity": {
+          "enum": [
+            "FAIL",
+            "WARN"
+          ]
+        },
+        "title": {
+          "type": "string",
+          "minLength": 1
+        },
+        "why": {
+          "oneOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ]
+        },
+        "fix": {
+          "oneOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ]
+        },
+        "docsUrl": {
+          "oneOf": [
+            {
+              "type": "string",
+              "format": "uri"
+            },
+            {
+              "type": "null"
+            }
+          ]
+        },
+        "source": {
+          "type": "string",
+          "minLength": 1
+        },
+        "version": {
+          "type": "string",
+          "minLength": 1
+        },
+        "evidence": {
+          "type": "array",
+          "maxItems": 10,
+          "items": {
+            "type": "string"
+          }
+        },
+        "reason": {
+          "type": "string"
+        },
+        "occurrences": {
+          "type": "integer",
+          "minimum": 1
+        },
+        "advisory": {
+          "type": "boolean"
+        },
+        "ruleMissing": {
+          "type": "boolean"
+        }
+      }
+    }
+  }
+}
