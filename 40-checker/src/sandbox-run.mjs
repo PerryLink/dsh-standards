@@ -12,19 +12,35 @@
  *   network  `unshare -n` when permitted, falling back to
  *            `unshare -Urn` (user+network namespace); if neither works the run
  *            continues degraded and records `unshare-missing`;
- *   limits   `prlimit --nproc --as` when util-linux prlimit is available; the
- *            probe reads `/proc/self/limits` so only limits that actually took
- *            effect are recorded;
+ *   limits   `prlimit --nproc --as --nofile --fsize` when util-linux prlimit
+ *            is available; the probe reads `/proc/self/limits` so only limits
+ *            that actually took effect are recorded;
+ *   privileges `setpriv --no-new-privs --bounding-set=-all` inside the user
+ *            namespace when available (the bounding-set drop needs CAP_SETPCAP,
+ *            which an unprivileged user only has inside `unshare -Ur`); when
+ *            the full command fails the probe records the partial or missing
+ *            state instead of claiming it applied;
+ *   read-only probe  `unshare -Urm` + `mount --bind -o ro` (and a tmpfs
+ *            read-only mount) in a throwaway mount namespace; the report
+ *            records the observed exit status/stderr. A failed probe is a
+ *            degraded reason, never a silent pass. When the probe succeeds,
+ *            `sandboxArgv` wraps the spawned command so the child's working
+ *            directory (the inspected package copy) is bind-mounted read-only
+ *            and `cd`-ed into before exec;
  *   timeout  the child is spawned as its own process-group leader and the
  *            whole group receives SIGKILL, so `dsh` grandchildren die too
  *            (Windows: `taskkill /T /F`).
  *
  * This is containment, not a security boundary: no seccomp, no cgroup memory/
- * pids accounting, no OCI image. Evidence is only allowed to call itself
- * `sandbox` when every item above is effective; any missing item switches the
- * producer to `sandbox-degraded`, which `level-audit` never reports as runtime.
+ * pids accounting, no OCI image. Even with every hardening item effective the
+ * host root filesystem stays readable. Evidence is only allowed to call itself
+ * `sandbox` when every required item above is effective; any missing item
+ * switches the producer to `sandbox-degraded`, which `level-audit` never reports
+ * as runtime.
  */
 import fs from 'node:fs'
+import os from 'node:os'
+import path from 'node:path'
 import { spawn, spawnSync } from 'node:child_process'
 import { isSecretEnvName, sanitizedEnv } from './sandbox-env.mjs'
 
@@ -36,7 +52,16 @@ export const SANDBOX_DEGRADED = Object.freeze({
   home: 'home-not-isolated',
   treeKill: 'process-tree-kill-unavailable',
   execution: 'sandbox-execution-failed',
+  setpriv: 'setpriv-missing',
+  setprivBounding: 'setpriv-bounding-set-missing',
+  rlimitExtra: 'rlimit-extra-missing',
+  mountNamespace: 'mount-namespace-missing',
+  roBind: 'ro-bind-missing',
 })
+
+/** Extra rlimits requested on top of the historical nproc/as pair. */
+export const DEFAULT_NOFILE = 4096
+export const DEFAULT_FSIZE = 1024 ** 3
 
 /** Names that must never reach a child that may import plugin code. */
 export const CREDENTIAL_ENV_NAMES = Object.freeze(['GH_TOKEN', 'NPM_TOKEN', 'GITHUB_TOKEN'])
@@ -146,49 +171,34 @@ function readLimitsProbe() {
   return [
     "const t = require('fs').readFileSync('/proc/self/limits', 'utf8')",
     "const pick = (label) => { const m = new RegExp('^' + label + '\\\\s+(\\\\d+)', 'm').exec(t); return m ? Number(m[1]) : null }",
-    "console.log(JSON.stringify({ nproc: pick('Max processes'), as: pick('Max address space') }))",
+    "console.log(JSON.stringify({ nproc: pick('Max processes'), as: pick('Max address space'), nofile: pick('Max open files'), fsize: pick('Max file size') }))",
   ].join(';')
 }
 
-/**
- * Apply and verify `prlimit --nproc --as`. The probe prints the child's own
- * `/proc/self/limits`, so `applied` lists effects, not intentions.
- */
-export function probeLimits({
-  platform = process.platform,
-  prlimit = 'prlimit',
-  nproc = null,
-  asBytes = 4 * 1024 ** 3,
-  node = process.execPath,
-  timeoutMs = 15_000,
-} = {}) {
-  if (platform === 'win32') {
-    return { available: false, degraded: SANDBOX_DEGRADED.prlimit, reason: 'prlimit is a util-linux tool; win32 has no equivalent here', applied: [] }
-  }
-  const requestedNproc = Number.isFinite(nproc) && nproc > 0 ? Math.trunc(nproc) : defaultNproc()
-  const requestedAs = Number.isFinite(asBytes) && asBytes > 0 ? Math.trunc(asBytes) : 4 * 1024 ** 3
-  const command = [prlimit, `--nproc=${requestedNproc}`, `--as=${requestedAs}`, '--', node, '-e', readLimitsProbe()]
+function parseLimitsOutput(result) {
+  try {
+    const line = String(result.stdout ?? '').trim().split(/\r?\n/).filter(Boolean).pop()
+    return line ? JSON.parse(line) : null
+  } catch { return null }
+}
+
+function limitAttempt({ prlimit, args, requested, node, timeoutMs }) {
+  const command = [prlimit, ...args, '--', node, '-e', readLimitsProbe()]
   const result = spawnSync(prlimit, command.slice(1), {
     encoding: 'utf8', timeout: timeoutMs, env: sanitizedEnv(),
   })
   const exitCode = Number.isInteger(result.status) ? result.status : null
-  let observed = null
-  try {
-    const line = String(result.stdout ?? '').trim().split(/\r?\n/).filter(Boolean).pop()
-    observed = line ? JSON.parse(line) : null
-  } catch { observed = null }
+  const observed = parseLimitsOutput(result)
   const applied = []
-  if (observed?.nproc === requestedNproc) applied.push('nproc')
-  if (observed?.as === requestedAs) applied.push('as')
-  const available = !result.error && exitCode === 0 && applied.length === 2
+  for (const [key, value] of Object.entries(requested)) {
+    if (observed?.[key] === value) applied.push(key)
+  }
   return {
-    available,
-    ...(available ? {} : { degraded: SANDBOX_DEGRADED.prlimit }),
-    bin: prlimit,
-    nproc: requestedNproc,
-    asBytes: requestedAs,
-    applied,
+    command,
+    result,
+    exitCode,
     observed,
+    applied,
     probe: {
       command,
       exitCode,
@@ -196,7 +206,261 @@ export function probeLimits({
       error: probeFailure(result.error),
       stderr: String(result.stderr ?? '').trim().slice(0, 300) || null,
     },
+  }
+}
+
+/**
+ * Apply and verify `prlimit --nproc --as --nofile --fsize`. The probe prints
+ * the child's own `/proc/self/limits`, so `applied` lists effects, not
+ * intentions. If the four-limit invocation fails (for example an older
+ * prlimit without `--fsize`), the historical nproc/as pair is retried and the
+ * extra limits are recorded as missing rather than dropping every limit.
+ */
+export function probeLimits({
+  platform = process.platform,
+  prlimit = 'prlimit',
+  nproc = null,
+  asBytes = 4 * 1024 ** 3,
+  nofile = DEFAULT_NOFILE,
+  fsize = DEFAULT_FSIZE,
+  node = process.execPath,
+  timeoutMs = 15_000,
+} = {}) {
+  if (platform === 'win32') {
+    return {
+      available: false, degraded: SANDBOX_DEGRADED.prlimit, reason: 'prlimit is a util-linux tool; win32 has no equivalent here',
+      applied: [], extraApplied: [], nofile: null, fsize: null, attempts: [],
+    }
+  }
+  const requestedNproc = Number.isFinite(nproc) && nproc > 0 ? Math.trunc(nproc) : defaultNproc()
+  const requestedAs = Number.isFinite(asBytes) && asBytes > 0 ? Math.trunc(asBytes) : 4 * 1024 ** 3
+  const requestedNofile = Number.isFinite(nofile) && nofile > 0 ? Math.trunc(nofile) : DEFAULT_NOFILE
+  const requestedFsize = Number.isFinite(fsize) && fsize > 0 ? Math.trunc(fsize) : DEFAULT_FSIZE
+  const requested = { nproc: requestedNproc, as: requestedAs, nofile: requestedNofile, fsize: requestedFsize }
+  const attempts = []
+  let effective = limitAttempt({
+    prlimit,
+    args: [`--nproc=${requestedNproc}`, `--as=${requestedAs}`, `--nofile=${requestedNofile}`, `--fsize=${requestedFsize}`],
+    requested,
+    node,
+    timeoutMs,
+  })
+  attempts.push(effective.probe)
+  const baseApplied = effective.applied.includes('nproc') && effective.applied.includes('as')
+  if (!baseApplied || effective.exitCode !== 0 || effective.result.error) {
+    effective = limitAttempt({
+      prlimit,
+      args: [`--nproc=${requestedNproc}`, `--as=${requestedAs}`],
+      requested,
+      node,
+      timeoutMs,
+    })
+    attempts.push(effective.probe)
+  }
+  const applied = effective.applied
+  const available = !effective.result.error && effective.exitCode === 0
+    && applied.includes('nproc') && applied.includes('as')
+  const extraApplied = ['nofile', 'fsize'].filter(key => applied.includes(key))
+  return {
+    available,
+    ...(available ? {} : { degraded: SANDBOX_DEGRADED.prlimit }),
+    ...(available && extraApplied.length < 2 ? { extraDegraded: SANDBOX_DEGRADED.rlimitExtra } : {}),
+    bin: prlimit,
+    nproc: requestedNproc,
+    asBytes: requestedAs,
+    nofile: requestedNofile,
+    fsize: requestedFsize,
+    applied,
+    extraApplied,
+    observed: effective.observed,
+    attempts,
+    probe: effective.probe,
     ...(available ? {} : { reason: 'prlimit did not apply and verify nproc+as' }),
+  }
+}
+
+/**
+ * Probe `setpriv --no-new-privs --bounding-set=-all`. Dropping the bounding
+ * set needs CAP_SETPCAP, so the full command is evaluated inside the same
+ * unprivileged user/network namespace prefix used for the run (`unshare -Urn`);
+ * outside it, an unprivileged process can only apply `--no-new-privs`.
+ */
+export function probeSetpriv({
+  platform = process.platform,
+  setpriv = 'setpriv',
+  prefix = [],
+  timeoutMs = 5_000,
+} = {}) {
+  if (platform === 'win32') {
+    return {
+      available: false, status: 'unavailable', applied: [], degraded: SANDBOX_DEGRADED.setpriv,
+      reason: 'setpriv is a util-linux tool; win32 has no equivalent here', attempts: [],
+    }
+  }
+  const attempts = []
+  const run = (args) => {
+    const command = [...prefix, setpriv, ...args, 'true']
+    const result = spawnSync(command[0], command.slice(1), {
+      encoding: 'utf8', stdio: ['ignore', 'ignore', 'pipe'], timeout: timeoutMs, env: sanitizedEnv(),
+    })
+    const exitCode = Number.isInteger(result.status) ? result.status : null
+    const attempt = {
+      command,
+      exitCode,
+      signal: result.signal ?? null,
+      error: probeFailure(result.error),
+      stderr: String(result.stderr ?? '').trim().slice(0, 300) || null,
+    }
+    attempts.push(attempt)
+    return { ...attempt, ok: !result.error && exitCode === 0 }
+  }
+  const fullArgs = ['--no-new-privs', '--bounding-set=-all']
+  const full = run(fullArgs)
+  if (full.ok) {
+    return {
+      available: true, status: 'applied', bin: setpriv, command: [setpriv, ...fullArgs],
+      applied: ['no-new-privs', 'bounding-set'], prefix: [...prefix], attempts, probe: full,
+    }
+  }
+  const partialArgs = ['--no-new-privs']
+  const partial = run(partialArgs)
+  if (partial.ok) {
+    return {
+      available: false, status: 'partial', bin: setpriv, command: [setpriv, ...partialArgs],
+      applied: ['no-new-privs'], degraded: SANDBOX_DEGRADED.setprivBounding,
+      reason: `setpriv --bounding-set=-all failed (${full.stderr ?? `exit ${full.exitCode ?? 'unknown'}`}); only --no-new-privs applied`,
+      prefix: [...prefix], attempts, probe: full,
+    }
+  }
+  return {
+    available: false, status: 'unavailable', bin: setpriv, command: null, applied: [],
+    degraded: SANDBOX_DEGRADED.setpriv,
+    reason: `setpriv did not apply no-new-privs (${partial.stderr ?? `exit ${partial.exitCode ?? 'unknown'}`})`,
+    prefix: [...prefix], attempts,
+  }
+}
+
+/** Probe whether an unprivileged user+mount namespace can be created. */
+export function probeMountNamespace({
+  platform = process.platform,
+  unshare = 'unshare',
+  timeoutMs = 5_000,
+} = {}) {
+  if (platform === 'win32') {
+    return {
+      available: false, degraded: SANDBOX_DEGRADED.mountNamespace,
+      reason: 'unshare is not available on win32', attempts: [],
+    }
+  }
+  const args = ['-Urm', 'true']
+  const result = spawnSync(unshare, args, {
+    encoding: 'utf8', stdio: ['ignore', 'ignore', 'pipe'], timeout: timeoutMs, env: sanitizedEnv(),
+  })
+  const exitCode = Number.isInteger(result.status) ? result.status : null
+  const available = !result.error && exitCode === 0
+  const probe = {
+    command: [unshare, ...args],
+    exitCode,
+    signal: result.signal ?? null,
+    error: probeFailure(result.error),
+    stderr: String(result.stderr ?? '').trim().slice(0, 300) || null,
+  }
+  return available
+    ? { available: true, mechanism: 'unshare -Urm (user+mount namespace)', bin: unshare, args: ['-Urm'], probe }
+    : {
+      available: false, degraded: SANDBOX_DEGRADED.mountNamespace,
+      reason: `unshare -Urm failed: ${probe.stderr ?? probe.error ?? `exit ${exitCode}`}`, attempts: [probe],
+    }
+}
+
+function runMountProbe({ unshare, script, args, timeoutMs }) {
+  const command = [unshare, '-Urm', 'sh', '-c', script, 'sh', ...args]
+  const result = spawnSync(unshare, command.slice(1), {
+    encoding: 'utf8', stdio: ['ignore', 'ignore', 'pipe'], timeout: timeoutMs, env: sanitizedEnv(),
+  })
+  const exitCode = Number.isInteger(result.status) ? result.status : null
+  return {
+    command,
+    ok: !result.error && exitCode === 0,
+    exitCode,
+    signal: result.signal ?? null,
+    error: probeFailure(result.error),
+    stderr: String(result.stderr ?? '').trim().slice(0, 300) || null,
+  }
+}
+
+/**
+ * Attempt a throwaway read-only bind mount and a read-only tmpfs mount in a
+ * private mount namespace. Nothing here runs against the inspected tree: a
+ * temp source/target pair is used, so a failure can only degrade the report.
+ * `mount --bind -o ro` is followed by `mount -o remount,bind,ro` because some
+ * kernels accept the first call without actually making the bind read-only;
+ * then a write is attempted and must fail.
+ */
+export function probeReadOnlyBind({
+  platform = process.platform,
+  unshare = 'unshare',
+  timeoutMs = 10_000,
+} = {}) {
+  if (platform === 'win32') {
+    return {
+      available: false, status: 'unavailable', degraded: SANDBOX_DEGRADED.roBind,
+      reason: 'mount namespaces need unshare (Linux); win32 has no equivalent', bind: null, tmpfs: null,
+    }
+  }
+  const mountNamespace = probeMountNamespace({ platform, unshare, timeoutMs: 5_000 })
+  if (!mountNamespace.available) {
+    return {
+      available: false, status: 'unavailable',
+      degraded: mountNamespace.degraded ?? SANDBOX_DEGRADED.mountNamespace,
+      reason: mountNamespace.reason, mountNamespace, bind: null, tmpfs: null,
+    }
+  }
+  const dir = fs.mkdtempSync(path.join(os.tmpdir(), 'dsh-ro-bind-'))
+  try {
+    const source = path.join(dir, 'source')
+    const target = path.join(dir, 'target')
+    const tmpfs = path.join(dir, 'tmpfs')
+    fs.mkdirSync(source)
+    fs.mkdirSync(target)
+    fs.mkdirSync(tmpfs)
+    fs.writeFileSync(path.join(source, 'keep.txt'), 'read-only probe\n')
+    const bindScript = [
+      'if ! mount --bind -o ro "$1" "$2"; then exit 31; fi',
+      'if ! mount -o remount,bind,ro "$2" 2>/dev/null; then exit 32; fi',
+      'if printf x > "$2/.dsh-probe" 2>/dev/null; then exit 33; fi',
+      'exit 0',
+    ].join('\n')
+    const tmpfsScript = [
+      'if ! mount -t tmpfs -o ro tmpfs "$1"; then exit 41; fi',
+      'if printf x > "$1/.dsh-probe" 2>/dev/null; then exit 42; fi',
+      'exit 0',
+    ].join('\n')
+    const bind = runMountProbe({ unshare, script: bindScript, args: [source, target], timeoutMs })
+    const tmpfsProbe = runMountProbe({ unshare, script: tmpfsScript, args: [tmpfs], timeoutMs })
+    const available = bind.ok
+    const reason = available
+      ? 'mount --bind -o ro+remount,bind,ro is effective and rejected a write'
+      : `mount --bind -o ro probe failed (${bind.stderr ?? bind.error ?? `exit ${bind.exitCode}`})`
+    return {
+      available,
+      status: available ? 'applied' : 'degraded',
+      ...(available ? {} : { degraded: SANDBOX_DEGRADED.roBind }),
+      mechanism: available ? 'unshare -Urm + mount --bind -o ro + remount,bind,ro' : null,
+      reason,
+      mountNamespace,
+      bind,
+      tmpfs: {
+        attempted: true,
+        available: tmpfsProbe.ok,
+        reason: tmpfsProbe.ok
+          ? 'mount -t tmpfs -o ro rejected a write'
+          : `mount -t tmpfs -o ro probe failed (${tmpfsProbe.stderr ?? tmpfsProbe.error ?? `exit ${tmpfsProbe.exitCode}`})`,
+        probe: tmpfsProbe,
+      },
+    }
+  } finally {
+    fs.rmSync(dir, { recursive: true, force: true })
   }
 }
 
@@ -224,6 +488,8 @@ export function buildSandboxPlan({
   prlimit = 'prlimit',
   nproc = null,
   asBytes = 4 * 1024 ** 3,
+  nofile = DEFAULT_NOFILE,
+  fsize = DEFAULT_FSIZE,
   homeIsolated = true,
   force = {},
 } = {}) {
@@ -238,14 +504,73 @@ export function buildSandboxPlan({
   if (!network.isolated) degraded.push(network.degraded ?? SANDBOX_DEGRADED.unshare)
 
   const limits = force.limits
-    ? { available: false, degraded: SANDBOX_DEGRADED.prlimit, reason: 'rlimits disabled by caller', applied: [] }
-    : probeLimits({ platform, prlimit, nproc, asBytes })
+    ? { available: false, degraded: SANDBOX_DEGRADED.prlimit, reason: 'rlimits disabled by caller', applied: [], extraApplied: [], nofile: null, fsize: null }
+    : probeLimits({ platform, prlimit, nproc, asBytes, nofile, fsize })
   if (!limits.available) degraded.push(limits.degraded ?? SANDBOX_DEGRADED.prlimit)
 
   const processTreeKill = processTreeKillCapability(platform)
   if (!processTreeKill.available) degraded.push(processTreeKill.degraded ?? SANDBOX_DEGRADED.treeKill)
 
-  const unique = [...new Set(degraded)]
+  // Hardening probes are part of a real collection. When the caller forces
+  // network/limit isolation off, the run is already degraded by definition;
+  // skip the extra probes and say so instead of inventing a second verdict.
+  const hardening = []
+  const hardeningDegraded = []
+  if (force.network || force.limits) {
+    for (const item of ['setpriv', 'rlimits-extra', 'read-only-bind']) {
+      hardening.push({ item, status: 'skipped', reason: 'core isolation disabled by caller; hardening not evaluated' })
+    }
+  } else {
+    const prefix = network.isolated ? [network.bin, ...network.args] : []
+    const setpriv = probeSetpriv({ platform, prefix })
+    if (setpriv.status !== 'applied') hardeningDegraded.push(setpriv.degraded ?? SANDBOX_DEGRADED.setpriv)
+    hardening.push({
+      item: 'setpriv',
+      status: setpriv.status,
+      command: setpriv.command,
+      applied: [...setpriv.applied],
+      ...(setpriv.probe ? { probe: setpriv.probe } : {}),
+      ...(setpriv.reason ? { reason: setpriv.reason } : {}),
+    })
+
+    if (limits.available) {
+      const extra = Array.isArray(limits.extraApplied) ? limits.extraApplied : []
+      if (extra.length < 2) hardeningDegraded.push(SANDBOX_DEGRADED.rlimitExtra)
+      hardening.push({
+        item: 'rlimits-extra',
+        status: extra.length === 2 ? 'applied' : 'degraded',
+        applied: extra,
+        requested: { nofile: limits.nofile, fsize: limits.fsize },
+        ...(extra.length === 2 ? {} : { reason: `nofile/fsize not applied (${extra.join(', ') || 'none'})` }),
+      })
+    } else {
+      hardening.push({ item: 'rlimits-extra', status: 'unavailable', reason: 'prlimit did not apply nproc/as' })
+    }
+
+    // A successful probe enables the `sandboxArgv` mount wrapper (the child
+    // cwd is the package copy). A failed probe is always recorded as a
+    // degraded reason; it is never reported as an applied read-only root.
+    const readOnlyBind = probeReadOnlyBind({ platform, unshare })
+    if (!readOnlyBind.available) hardeningDegraded.push(readOnlyBind.degraded ?? SANDBOX_DEGRADED.roBind)
+    hardening.push({
+      item: 'read-only-bind',
+      status: readOnlyBind.available ? 'applied' : 'degraded',
+      available: readOnlyBind.available,
+      // `sandboxArgv` wraps the spawned command with this mount when enabled;
+      // the recorded execution command shows the actual wrapper.
+      enabled: readOnlyBind.available && platform !== 'win32',
+      applied: readOnlyBind.available && platform !== 'win32',
+      ...(readOnlyBind.mechanism ? { mechanism: readOnlyBind.mechanism } : {}),
+      reason: readOnlyBind.reason,
+      mountNamespace: readOnlyBind.mountNamespace
+        ? { available: readOnlyBind.mountNamespace.available, mechanism: readOnlyBind.mountNamespace.mechanism ?? null }
+        : null,
+      bind: readOnlyBind.bind,
+      tmpfs: readOnlyBind.tmpfs,
+    })
+  }
+
+  const unique = [...new Set([...degraded, ...hardeningDegraded])]
   return {
     schema: SANDBOX_REPORT_SCHEMA,
     mode: unique.length === 0 ? 'sandbox' : 'sandbox-degraded',
@@ -260,19 +585,65 @@ export function buildSandboxPlan({
     network,
     limits,
     processTreeKill,
+    hardening,
+    hardeningDegraded: [...new Set(hardeningDegraded)],
     degraded: unique,
-    note: 'containment only: no seccomp, no cgroup memory/pids accounting, no OCI image; read access is not restricted',
+    note: 'containment only: no seccomp, no cgroup memory/pids accounting, no OCI image; read access is not restricted; hardening items are probes, not a security certification',
   }
 }
 
-/** Wrap `command args...` in the effective prlimit + unshare prefixes. */
+/**
+ * The mount wrapper runs inside a private mount namespace and binds the
+ * child's working directory (the read-only package copy) onto itself, remounts
+ * it read-only, then execs the real command. `pwd -P` is used instead of $PWD
+ * so a stale environment variable cannot point the mount at the wrong tree.
+ * Exit 31/32 means the mount did not take effect; the wrapper fails closed.
+ */
+const READ_ONLY_WRAPPER = [
+  'target=$(pwd -P) || exit 1',
+  'if ! mount --bind -o ro "$target" "$target"; then exit 31; fi',
+  'if ! mount -o remount,bind,ro "$target" 2>/dev/null; then exit 32; fi',
+  // The process cwd still points at the covered mount underneath; cd into the
+  // read-only mount or relative writes bypass it.
+  'cd "$target" || exit 33',
+  'exec "$@"',
+].join('\n')
+
+function unshareArgsFor(plan, mountNamespace) {
+  const args = plan?.network?.isolated && Array.isArray(plan.network.args) ? [...plan.network.args] : []
+  if (!mountNamespace) return args
+  // `mount` needs a private mount namespace, and an unprivileged mount needs a
+  // user namespace as well. Never assume the network probe already created
+  // them: add each flag only when absent.
+  const joined = args.join(' ')
+  if (!joined.includes('U')) args.push('-U')
+  if (!joined.includes('r')) args.push('-r')
+  if (!joined.includes('m')) args.push('-m')
+  return args
+}
+
+/** Wrap `command args...` in the effective unshare + setpriv + prlimit prefixes. */
 export function sandboxArgv(plan, command, args = []) {
   let argv = [command, ...args]
   if (plan?.limits?.available) {
-    argv = [plan.limits.bin, `--nproc=${plan.limits.nproc}`, `--as=${plan.limits.asBytes}`, '--', ...argv]
+    const applied = Array.isArray(plan.limits.applied) ? plan.limits.applied : ['nproc', 'as']
+    const limitArgs = [`--nproc=${plan.limits.nproc}`, `--as=${plan.limits.asBytes}`]
+    if (applied.includes('nofile') && Number.isFinite(plan.limits.nofile)) limitArgs.push(`--nofile=${plan.limits.nofile}`)
+    if (applied.includes('fsize') && Number.isFinite(plan.limits.fsize)) limitArgs.push(`--fsize=${plan.limits.fsize}`)
+    argv = [plan.limits.bin, ...limitArgs, '--', ...argv]
   }
-  if (plan?.network?.isolated) {
-    argv = [plan.network.bin, ...plan.network.args, ...argv]
+  const setpriv = Array.isArray(plan?.hardening)
+    ? plan.hardening.find(item => item.item === 'setpriv' && Array.isArray(item.command) && item.command.length > 0)
+    : null
+  if (setpriv) argv = [...setpriv.command, '--', ...argv]
+  const readOnlyBind = Array.isArray(plan?.hardening)
+    ? plan.hardening.find(item => item.item === 'read-only-bind' && item.enabled === true)
+    : null
+  const mountNamespace = Boolean(readOnlyBind)
+  if (mountNamespace) argv = ['sh', '-c', READ_ONLY_WRAPPER, 'sh', ...argv]
+  if (plan?.network?.isolated || mountNamespace) {
+    const bin = plan?.network?.bin ?? 'unshare'
+    argv = [bin, ...unshareArgsFor(plan, mountNamespace), ...argv]
   }
   return argv
 }

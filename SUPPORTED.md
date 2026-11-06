@@ -4,7 +4,7 @@
 > 唯一允许的输入：① `40-checker/results/**/*.json` 的 `anchor.*` / `generatedAt` / `subject` / `coverage`；② `.github/workflows/*.yml` 的 matrix 与钉住的宿主版本；③ `gh api repos/PerryLink/dsh-standards/actions/runs` 的 run 元数据。三者对不上的格子不许填。
 > **TODO: generate** —— 生成器尚未实现（gap-audit `G6` → `P1-3`）。`BEGIN GENERATED` 与 `END GENERATED` 之间是 **2026-11-06 的手工种子**：每一格都能用 §2 的锚复算，没有一格来自记忆、印象或「应该没问题」。生成器落地后，手改此段即视为伪造证据，CI 用生成结果逐字比对。
 
-**今天 0 格是 `runtime`。** 这不是漏填：241 条带 `anchor.dsh=0.2.2-alpha.2` 的结果里，`anchor.scanner` 有 239 条是 `dsh-plugin-verify@0.1.0`（另 2 条为空），而 1.0.0 于 2026-11-03 才发布——**没有任何一条 runtime 结果能记到 1.1.x / 1.2.x / 1.3.0 名下**。本表要暴露的正是这件事：PASS 目前不可移植。
+**今天 0 格是 `runtime`。** 这不是漏填：241 条带 `anchor.dsh=0.2.2-alpha.2` 的结果里，`anchor.scanner` 有 239 条是 `dsh-plugin-verify@0.1.0`（另 2 条为空），而 1.0.0 于 2026-11-03 才发布——**没有任何一条 runtime 结果能记到 1.1.x / 1.2.x / 1.3.0 / 1.4.1 名下**。本表要暴露的正是这件事：PASS 目前不可移植。
 
 ## 0 值域（只允许这五个值）
 
@@ -20,23 +20,42 @@
 
 ## 1 矩阵
 
-平台以 **Linux** 为主（`ubuntu-latest` / WSL2 Ubuntu 24.04）；2026-11-06 新增 **Windows 11 + Node 22** 行（A10）。Node 两列是**宿主引擎线**：`22.19`、`24.9` 是下限，实际量到 `v22.23.4`（Windows 作业日志，CI `setup-node: 22`）与 `v24.22.1`（本地 / entry18 运行环境）——精确小版本未逐版跑。
+平台以 **Linux** 为主（`ubuntu-latest` / WSL2 Ubuntu 24.04）；2026-11-06 新增 **Windows 11 + Node 22** 行（A10）；2026-11-07 新增 **checker 1.4.1 列**与 **Windows 11 + Node `v24.22.1`** 行（A11，纯静态 check，非 runtime）。Node 两列是**宿主引擎线**：`22.19`、`24.9` 是下限，实际量到 `v22.23.4`（Windows 作业日志，CI `setup-node: 22`）与 `v24.22.1`（本地 / entry18 运行环境）——精确小版本未逐版跑。
 
 <!-- BEGIN GENERATED:supported -->
-| platform | host | Node | checker 1.1.x | checker 1.2.1 | checker 1.2.2 | checker 1.3.0 |
-|---|---|---|---|---|---|---|
-| Linux | `0.2.1-rc.5` | 22.19 | `not-run`<br>A4 | `not-run`<br>A4 | `not-run`<br>A4 | `not-run`<br>A4 |
-| Linux | `0.2.1-rc.5` | 24.9 | `not-run`<br>A5 | `not-run`<br>A5 | `not-run`<br>A5 | `partial`<br>N1 |
-| Linux | `0.2.2-alpha.2` | 22.19 | `NA`<br>A9 | `NA`<br>A9 | `NA`<br>A9 | `NA`<br>A9 |
-| Linux | `0.2.2-alpha.2` | 24.9 | `partial`<br>A1·A2 | `partial`<br>A1·A8 | `partial`<br>A1·A8 | `partial`<br>A1·A8 |
-| Linux | `0.2.2-rc.1` | 22.19 | `NA`<br>A9 | `NA`<br>A9 | `NA`<br>A9 | `NA`<br>A9 |
-| Linux | `0.2.2-rc.1` | 24.9 | `not-run`<br>A7 | `not-run`<br>A7 | `not-run`<br>A7 | `not-run`<br>A7 |
-| Windows 11 | `0.2.1-rc.5` | 22.19 | `partial`<br>A10 | `not-run`<br>A10 | `not-run`<br>A10 | `not-run`<br>A10 |
+| platform | host | Node | checker 1.1.x | checker 1.2.1 | checker 1.2.2 | checker 1.3.0 | checker 1.4.1 |
+|---|---|---|---|---|---|---|---|
+| Linux | `0.2.1-rc.5` | 22.19 | `not-run`<br>A4 | `not-run`<br>A4 | `not-run`<br>A4 | `not-run`<br>A4 | `not-run` |
+| Linux | `0.2.1-rc.5` | 24.9 | `not-run`<br>A5 | `not-run`<br>A5 | `not-run`<br>A5 | `partial`<br>N1 | `not-run` |
+| Linux | `0.2.2-alpha.2` | 22.19 | `NA`<br>A9 | `NA`<br>A9 | `NA`<br>A9 | `NA`<br>A9 | `NA`<br>A9 |
+| Linux | `0.2.2-alpha.2` | 24.9 | `partial`<br>A1·A2 | `partial`<br>A1·A8 | `partial`<br>A1·A8 | `partial`<br>A1·A8 | `not-run` |
+| Linux | `0.2.2-rc.1` | 22.19 | `NA`<br>A9 | `NA`<br>A9 | `NA`<br>A9 | `NA`<br>A9 | `NA`<br>A9 |
+| Linux | `0.2.2-rc.1` | 24.9 | `not-run`<br>A7 | `not-run`<br>A7 | `not-run`<br>A7 | `not-run`<br>A7 | `not-run`<br>A7 |
+| Windows 11 | `0.2.1-rc.5` | 22.19 | `partial`<br>A10 | `not-run`<br>A10 | `not-run`<br>A10 | `not-run`<br>A10 | `not-run` |
+| Windows 11 | `0.2.1-rc.5` | 24.9 | `not-run` | `not-run` | `not-run` | `not-run` | `partial`<br>A11 |
 <!-- END GENERATED:supported -->
 
 **1.3.0 列怎么读**：只有本机 Linux + Node `v24.22.1` 的 `npm test` 自测（N1）与静态检查，**没有** 1.3.0 的宿主 boot 结果，所以 1.3.0 列无 `runtime`。`partial` 只表示「自测 / 静态轴有证据」。1.3.0 未在 Node 22 或 Windows 上跑过 → `not-run`。
 
-**Windows 行怎么读**：1.1.x 的 Windows + Node 22 自测绿（A4）→ `partial`；1.2.x 自测红、1.3.0 尚未在 Windows 跑 → `not-run`。Windows 没有 `unshare -Urn` / `prlimit` → **sandbox degraded**，任何 Windows 格都不出 `runtime`。**WSL2 Ubuntu 24.04 的 Linux 沙箱可用**（W1：`unshare` / `prlimit` 均通过），但「平台可用」不等于某个 host × Node × checker 组合已跑。
+**1.4.1 列怎么读**：只有 Windows 11 + Node `v24.22.1` 上三包（`dsh-fast`、`dsh-plugin-radar`、`@perrylink/dsh-domain-pilot`）的**静态 `check`** 实测（A11）→ 该格 `partial`；Linux 各格 `not-run`（1.4.1 无宿主 boot；F4b 的静态合并用的是 1.4.0，不能记到 1.4.1 名下）。全列无 `runtime`。
+
+**Windows 行怎么读**（2026-11-07 实测，A11）：1.1.x 的 Windows + Node 22 自测绿（A4）→ `partial`；1.2.x 自测红、1.3.0 未在 Windows 跑 → `not-run`。1.4.1 行用 **Windows node `v24.22.1`** 实跑三包（`check` 默认 / `--no-exec` / `--json` / `--allow-host-probe`）：结果与同机 WSL2 Ubuntu 24.04 同包**逐字一致**（路径归一后 JSON 全等；`checked=12/14`；FAIL 0/1/0；默认锚 `0.2.2-alpha.2`、source=default/suspect=true；probe 得 host `0.2.1-rc.5`、source=host/hostVersionSource=probe），故 Windows/24.9 的 1.4.1 格记 `partial`——**纯静态，不是 runtime**。Windows 没有 `unshare -Urn` / `prlimit` → `sandbox-degraded`；`flow collect --sandbox` 更早一步卡在 `npm pack`（Node 不能无 shell spawn `npm.cmd`，exit 127），故 Windows 的 runtime 路径仍 `not-run`。`check --format json` 是用法错误（exit 3，JSON 用 `--json`）；裸 `dsh-standards <dir> --format json` 的 `dsh --version` 探测在 Windows 上失败（同样因 `.cmd` spawn）→ anchor 退 `fallback`。**WSL2 的 Linux 沙箱可用**（W1：`unshare` / `prlimit` 均通过），但「平台可用」不等于某个 host × Node × checker 组合已跑。
+
+实测命令（`NODE`/`CHK` 用 Windows 形式；三包把最后一个参数换掉即可）：
+
+```bash
+NODE='/mnt/c/Program Files/nodejs/node.exe'
+CHK='D:\_wintmp_g2\chk-head\bin\dsh-standards.mjs'   # HEAD 31900e1 的 git archive 副本
+"$NODE" "$CHK" check 'D:\Projects\dsh\plugins\dsh-fast'                            # 默认 static + no-exec
+"$NODE" "$CHK" check 'D:\Projects\dsh\plugins\dsh-fast' --no-exec
+"$NODE" "$CHK" check 'D:\Projects\dsh\plugins\dsh-fast' --json                     # 默认锚 alpha.2/default/suspect
+"$NODE" "$CHK" check 'D:\Projects\dsh\plugins\dsh-fast' --allow-host-probe --json  # host 0.2.1-rc.5/probe
+"$NODE" "$CHK" check 'D:\Projects\dsh\plugins\dsh-fast' --format json              # exit 3：改用 --json
+"$NODE" "$CHK" 'D:\Projects\dsh\plugins\dsh-fast' --format json                    # 裸检查器：Windows → fallback
+"$NODE" 'D:\_wintmp_g2\chk-head\40-checker\bin\dsh-flow-collect.mjs' \
+  --package 'D:\_wintmp_g2\radar\package' --sandbox --out 'D:\_wintmp_g2\flow.json' # exit 3 / npm pack 127
+```
+
 
 ### 1.1 逐行依据
 
@@ -50,6 +69,7 @@
 | `0.2.2-rc.1` / 24.9 | 宿主源码是 `dsh-root 0.2.2-rc.1`（A7），但没有可 boot 的 rc.1 安装包；398 条结果里 `anchor.dsh=0.2.2-rc.1` 为 **0 条** | 全部 | 先修默认锚（§5），装 rc.1 后跑一次 ENTRY + FLOW |
 | 1.3.0 / Linux / 24.9 | 本机 `npm test` 自测全绿（N1）；`check` 的默认静态与 host 三态已有测试 | 1.3.0 的宿主 boot | 用 1.3.0 在 alpha.2 或 rc.1 上跑一次 ENTRY，结果锚必须写 `scanner=1.3.0` |
 | 1.3.0 / Windows / 22.19 | 无（1.3.0 未在 Windows 跑；1.2.2 自测红，A10） | 自测 + 宿主 boot | 先在 Windows 跑 `npm test`；绿之前不谈宿主 boot |
+| 1.4.1 / Windows / 24.9 | 三包静态 `check` 与同机 WSL2 逐字一致（A11）；默认锚 default、probe 得宿主 0.2.1-rc.5 | 宿主 boot / 插件执行；`flow sandbox` 在 `npm pack` 前即失败 | 先修 Windows 上 `npm.cmd` / `dsh.cmd` 的 spawn（`shell:true`），再谈 runtime |
 
 ## 2 证据锚
 
@@ -65,10 +85,11 @@
 | A8 | 结果文件（已失效） | `40-checker/results/flow/real/*.json`：schema `dsh-flow-runtime/1`，10 个包（`index.json` 除外）：J1 `pass` 7、J2 `pass` 7、J4 `pass` 8、J6 `pass` 1，仅 `ci-diet` 四态全 `pass`；`generatedAt` 2026-11-01 | 1.2.1 起 v1 链路 `deprecated` → 这些 FLOW pass 全部退回 `not-run`（见 `CHANGELOG-RULES.md`） | `python3 -c "import json;print(json.load(open('40-checker/results/flow/real/ci-diet.json'))['verdicts'])"` |
 | A9 | 源码（规范） + A7 | `35-三层开发建议与验收清单.md:125`：Node `>=24.9.0`「自 0.2.2-alpha.2 起；0.2.1-rc.5 仍是 `^22.19` 或 `>=24`」；A7 的 rc.1 声明一致 | 0.2.2 线的 Node 22 格为 `NA`；0.2.1-rc.5 的 Node 22 格仍成立 | `sed -n '125p' 35-三层开发建议与验收清单.md` |
 | A10 | CI run（Windows） | A4 的 Windows 作业：1.1.x 双 OS 自测绿（41866400694、41869228199）、1.2.2 红（run 42177690479，159 tests / 154 pass / 2 fail / 3 skipped）；`node-version: 22`，实际 `v22.23.4` | Windows + Node 22 的检查器自测绿/红；**不含宿主 boot**。Windows 无 `unshare` / `prlimit` → sandbox degraded | `gh api repos/PerryLink/dsh-standards/actions/runs/42177690479/jobs` |
+| A11 | 本机实测（Windows 11，checker 1.4.1） | 2026-11-07，Windows 11 `10.0.26200.9818` + Windows node `v24.22.1`（`C:\Program Files\nodejs\node.exe`）；`cmd.exe /c "dsh --version"` = `0.2.1-rc.5`。checker `1.4.1`（checker 0.1.0），从 **HEAD `31900e1`** 的 `git archive` 副本运行（共享工作树当时有并行未提交改动，未采用）。三包：`dsh-fast@0.2.27`（本地仓）、`dsh-plugin-radar@0.4.12`（`npm pack`）、`@perrylink/dsh-domain-pilot@0.0.0`（`packs/domain-pilot`，bundle）。`check` 默认、`--no-exec`、`--json`、`--allow-host-probe --json` 与同机 WSL2 Ubuntu 24.04 + node `v24.22.1` **逐字一致**（路径归一后 JSON 全等）：三包 `checked=12/14`，FAIL 0/1/0（FAIL 均为 DSC-02 C-2.2：`@deepseek-ai/dsh-llm` 的 `^0.1.0-rc.6` 不满足锚——默认 0.2.2-alpha.2、probe 0.2.1-rc.5），默认锚 `0.2.2-alpha.2`（source=default, suspect=true），probe 得 `anchor.dsh=0.2.1-rc.5`（runtimeSource=host, hostVersionSource=probe）。`check --format json` = 用法错误 exit 3（用 `--json`）；裸 `dsh-standards <dir> --format json` 在 Windows 探测失败 → `runtimeSource=fallback`（`spawnSync('dsh.cmd')` → EINVAL）。`buildSandboxPlan({})` = `sandbox-degraded`（`unshare-missing`、`prlimit-missing`）；`flow collect --sandbox` 在 `npm pack` 处 exit 127（`npm.cmd` 不能被无 shell spawn），未进入沙箱执行。 | Windows 的静态 `check` 有真实数据（`partial`）；**runtime / sandbox 仍 `not-run`**，不声称任何 Windows runtime | `"$NODE" "$CHK" check 'D:\…' [--no-exec] [--json] [--allow-host-probe]`；`"$NODE" "$CHK" 'D:\…' --format json`；`"$NODE" …\dsh-flow-collect.mjs --package 'D:\…' --sandbox` |
 | N1 | 本地测试（1.3.0） | `npm test` 在本机 WSL2 Ubuntu 24.04 + Node `v24.22.1` 全绿（2026-11-06；宿主 0.2.1-rc.5，A5）；新增 `40-checker/test/safety.test.mjs` 覆盖默认 `--entry-claim static --no-exec`、`--host-version` / `DSH_HOST_VERSION` / `--allow-host-probe` 三态 | 1.3.0 的自测与静态轴有证据；**不含**宿主 boot | `npm test` |
 | W1 | 本机环境（WSL2） | `uname -a`：`6.6.114.1-microsoft-standard-WSL2`；`unshare -Urn true` 与 `prlimit --nproc=1:1 true` 均退出 0；Node `v24.22.1`（2026-11-06） | WSL2 的 Linux 沙箱可用，可作为 runtime 采集环境；不等于任何 host × Node × checker 组合已跑 | `unshare -Urn true; prlimit --nproc=1:1 true` |
 
-行号均按 `cc378b2`（2026-11-06 HEAD）。`40-checker/src/cli.mjs`、`report.mjs` 正被其他改动波及，行号可能漂移——复核请按符号名 grep，别背行号。
+行号均按 `cc378b2`（2026-11-06 HEAD）；A11 的实测对象是 `31900e1`（2026-11-07 HEAD）。`40-checker/src/cli.mjs`、`report.mjs` 正被其他改动波及，行号可能漂移——复核请按符号名 grep，别背行号。
 
 全库锚分布（2026-11-06 实测，398 个 JSON）：`anchor.dsh` = `0.2.2-alpha.2` **241** 条、无锚 **157** 条、`0.2.2-rc.1` **0** 条、`0.2.1-rc.5` **0** 条；`anchor.scanner` = `dsh-plugin-verify@0.1.0` **239** 条。
 
@@ -80,8 +101,8 @@
 2. **无 web-app**：包只有 `dsh.client` 而无 web profile → G4 只静态、G5 不测；client runtime 不得写成 runtime。
 3. **client-only / 单半边**：缺 `exports["./client"]` 或只有 shell，host 侧 boot 通过也只算 ENTRY。
 4. **沙箱不可用**：`unshare -Urn` / `prlimit` 不生效 → `sandbox-degraded`，1.2.1 起**永不** runtime（`40-checker/src/flow-evidence.mjs:189`、`40-checker/scripts/level-audit.mjs:254`）。
-5. **平台未测 / sandbox degraded**：Windows 的 Node 22 自测在 1.2.2 红（A10，2/159 失败），且 `unshare -Urn` / `prlimit` 不可用 → `sandbox-degraded`，**永不** runtime。Windows 行因此固定 `not-run`（1.1.x 自测绿也只记 `partial`），不声称任何 Windows runtime。WSL2 Ubuntu 24.04 的 Linux 沙箱可用（W1），但 WSL2 可用不等于组合已跑。
-6. **检查器版本不可归属**：结果缺 `checkerVersion`（`anchor.scanner` 硬编码 `0.1.0`）→ 任何结果都不能记到 1.1.x/1.2.x/1.3.0 名下。这是 §1「0 格 runtime」的唯一原因。
+5. **平台未测 / sandbox degraded**：Windows 的 Node 22 自测在 1.2.2 红（A10，2/159 失败），且 `unshare -Urn` / `prlimit` 不可用 → `sandbox-degraded`，**永不** runtime。2026-11-07 起 Windows 有 checker 1.4.1 的**静态 `check`** 实测（A11，三包，`partial`），但 runtime 路径仍 `not-run`：`flow collect --sandbox` 在 Windows 上先卡在 `npm pack`（Node 不能无 shell spawn `npm.cmd`，exit 127）。WSL2 Ubuntu 24.04 的 Linux 沙箱可用（W1），但 WSL2 可用不等于组合已跑。
+6. **检查器版本不可归属**：结果缺 `checkerVersion`（`anchor.scanner` 硬编码 `0.1.0`）→ 任何结果都不能记到 1.1.x/1.2.x/1.3.0/1.4.1 名下。这是 §1「0 格 runtime」的唯一原因。
 7. **锚过期**：`expiresAt` 已过（`40-checker/scripts/stale-check.mjs` 的 `effective()`）→ 旧 PASS 必须重跑，不能复用。
 
 ## 4 锚变即 stale
@@ -105,10 +126,10 @@
 
 ## 5 默认 runtime 锚的取法
 
-**现状（1.3.0）**：
+**现状（1.3.0–1.4.1）**：
 
 1. **`dsh-standards check` 已受控**：优先 `--host-version`，其次 `DSH_HOST_VERSION`；只有在显式 `--allow-host-probe` 时才解析 `dsh` 的 JS 入口并执行 `node <entry> --version`；三者都没有时写 `anchor.runtimeSource=default`、`anchor.suspect=true`，报告顶部写「host 版本未知」。`check` 不会无条件执行 PATH 里的 `dsh`（N1 有测试覆盖三态）。
-2. **裸检查器仍是兼容旧路径**：`dsh-standards <dir>` 调 `cli.mjs` 的 `detectHostRuntime()`，仍会执行 `dsh --version`；`DEFAULT_RUNTIME_VERSION = '0.2.2-alpha.2'` 也仍是它的最后回退。该文件不在 1.3.0 的安全默认改动范围内，故本表不把它算作已修。
+2. **裸检查器仍是兼容旧路径**：`dsh-standards <dir>` 调 `cli.mjs` 的 `detectHostRuntime()`，仍会执行 `dsh --version`；`DEFAULT_RUNTIME_VERSION = '0.2.2-alpha.2'` 也仍是它的最后回退。该文件不在 1.3.0 的安全默认改动范围内，故本表不把它算作已修。Windows 上该路径必失败：`spawnSync('dsh.cmd')` 返回 EINVAL（Node 对 `.cmd` 的加固），落 `runtimeSource=fallback`（A11），所以 Windows 裸检查器的锚永远不是宿主版本。
 3. 不跑 runtime 时 `anchor.runtime` 为 `null`（398 条里 207 条 null、34 条写占位符 `<dsh-checkout>/…`）。
 
 **已知后果**：真实宿主是 `0.2.2-rc.1`（A7），裸检查器默认锚仍是 `alpha.2`。gap-audit 实测（`FINAL-PLAN.md` §C2，2026-11-06）：**默认锚产生 56 条隐藏 detail FAIL，显式 `--runtime-version 0.2.2-rc.1` 后只剩 2 条**。差值来自锚，不是插件。要跑 rc.1 的对照，用 `check --host-version 0.2.2-rc.1` 或显式 `--runtime-version`。
@@ -136,7 +157,8 @@
 
 - 0 格 `runtime`：所有 runtime 证据的产出方都早于 1.0.0（A1/A2/A8），无法归属到本表的任何一列。
 - Node 只量到 `v22.23.4` / `v24.22.1`，`22.19`、`24.9` 是引擎线而非实测版本。
-- 平台：Linux（含 WSL2）是唯一 runtime 采集环境；Windows 无 `unshare` / `prlimit` → sandbox degraded，Windows / Node 22 行固定 `not-run` 或 `partial`，不声称 runtime。
+- 平台：Linux（含 WSL2）是唯一 runtime 采集环境；Windows 无 `unshare` / `prlimit` → sandbox degraded。Windows 只有 checker 1.4.1 的静态 `check` 实测（A11，`partial`），runtime 与 `flow collect --sandbox` 仍 `not-run`（Windows 上 `npm.cmd` 无 shell spawn 即 exit 127）。
 - 1.3.0 只有自测 / 静态证据（N1），没有宿主 boot；1.3.0 列的 `partial` 不代表 runtime。
+- 1.4.1 列只有 Windows / 24.9 的静态证据（A11）；1.4.1 无宿主 boot，Windows 的 `partial` 不代表 runtime。
 - 宿主 rc.1 从未被跑过（0/398），且默认锚会自动把它算成 alpha.2（§5）——**先修锚，再看矩阵**。
 - `1.1.0`、`1.0.4`–`1.0.7` 从未发布到 npm；`1.1.1` 有 tag 但 npm 发布失败（run 41855336115）。「1.1.x」列因此只能用 `1.1.2` 代表。

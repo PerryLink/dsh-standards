@@ -108,7 +108,7 @@ function allowedNa(check, scope, profile, kind) {
   return false
 }
 
-export function buildReport({ subject, anchor, checks, g4 = null, scope, profile, kind, staticOnly = false, entryRuntime = 'require', entryClaim = 'runtime', advice = true, declarations = null }) {
+export function buildReport({ subject, anchor, checks, g4 = null, scope, profile, kind, staticOnly = false, entryRuntime = 'require', entryClaim = 'runtime', advice = true, declarations = null, runtimeChecks = null }) {
   const mandatory = mandatoryFor(scope, profile, staticOnly, entryClaim)
   const adjustedChecks = scope === 'entry' ? checks.map(item => adjustEntryCheck(item, entryClaim)) : checks
   const runtimeIds = new Set(['DSC-04', 'DSC-05', 'DSC-06', 'DSC-07', 'DSC-08', 'DSC-09'])
@@ -123,7 +123,12 @@ export function buildReport({ subject, anchor, checks, g4 = null, scope, profile
   const missing = mandatory.filter(id => !byId.has(id))
   const failed = selected.filter(item => item.result === 'FAIL')
   const errored = selected.filter(item => item.result === 'ERROR')
-  const notRun = selected.filter(item => !allowedNa(item, scope, profile, kind) && (item.coverage === 'not-run' || item.coverage === 'partial'))
+  // A static `partial` PASS is still a PASS for the mandatory set: it is
+  // recorded in buckets.partial / coverage.partial, and "what was not run" is
+  // its own signal. Only a check that did not run at all makes the report
+  // incomplete. Otherwise every bundle would be exit 2 forever, because the
+  // static subset can never be full without executing the package.
+  const notRun = selected.filter(item => !allowedNa(item, scope, profile, kind) && item.coverage === 'not-run')
   const notRunIds = [...new Set([...missing, ...errored.map(item => item.id), ...notRun.map(item => item.id)])]
   const warnings = selected.filter(item => item.result === 'WARN')
   const pass = selected.filter(item => item.result === 'PASS')
@@ -134,7 +139,7 @@ export function buildReport({ subject, anchor, checks, g4 = null, scope, profile
   const evaluatedAll = effectiveChecks.filter(item => ['PASS', 'WARN', 'FAIL'].includes(item.result))
   const naAll = effectiveChecks.filter(item => item.result === 'NA')
   const errorAll = effectiveChecks.filter(item => item.result === 'ERROR')
-  const notRunAll = effectiveChecks.filter(item => item.result !== 'NA' && (item.coverage === 'not-run' || item.coverage === 'partial'))
+  const notRunAll = effectiveChecks.filter(item => item.result !== 'NA' && item.coverage === 'not-run')
   const notRunAllIds = [...new Set([...notRunAll.map(item => item.id), ...errorAll.map(item => item.id), ...missing])]
   const entryBlockingIds = scope === 'entry' ? (entryClaim === 'static' ? ENTRY_BLOCKING : ENTRY_RUNTIME_BLOCKING) : null
   const entryBlocking = entryBlockingIds ? summarizeBlocking(effectiveChecks, entryBlockingIds) : null
@@ -251,6 +256,11 @@ export function buildReport({ subject, anchor, checks, g4 = null, scope, profile
       reason: reasonParts.join('; '),
     },
   }
+  // Additive only: describes what actually executed (runtime/host), the
+  // elapsed time, and the isolation it used. It is a sibling of `checks` and
+  // never changes the verdict. Kept out of the 1.0.0 schema shape and only
+  // emitted when a runtime/host run was requested.
+  if (runtimeChecks) report.runtimeChecks = runtimeChecks
   // Additive only: `advice` is a sibling of `checks`, never part of a check,
   // and the verdict is computed above without reading it.
   if (advice !== false) {
@@ -302,6 +312,41 @@ function renderBucket(lines, title, rows, byId) {
   }
 }
 
+/**
+ * Runtime provenance: what actually ran, for how long, and where. A failed
+ * run must say why instead of silently falling back to static rows.
+ */
+function renderRuntime(lines, runtime) {
+  if (!runtime) return
+  if (!runtime.executed) {
+    // Do not repeat six not-run rows that the partial/not-checked buckets
+    // already explain; one line is enough to say nothing executed.
+    lines.push(`Runtime checks (not executed): ${runtime.reason ?? runtime.failure ?? 'no runtime requested'}`)
+    lines.push('')
+    return
+  }
+  const modes = Array.isArray(runtime.modes) && runtime.modes.length > 0 ? runtime.modes.join('+') : 'none'
+  const elapsed = Number.isFinite(runtime.durationMs) ? `${runtime.durationMs} ms` : 'n/a'
+  const isolation = runtime.isolation?.isolatedHome ? 'temporary DSH_HOME' : 'un-isolated'
+  lines.push(`Runtime checks (${modes}, ${elapsed}, ${isolation}):`)
+  if (runtime.failure) lines.push(`  failure: ${String(runtime.failure).replace(/\s+/g, ' ').slice(0, 200)}`)
+  const rows = Array.isArray(runtime.checks) ? runtime.checks : []
+  if (rows.length === 0) {
+    lines.push('  none')
+  } else {
+    for (const row of rows) {
+      const reason = String(row.reason ?? '').replace(/\s+/g, ' ').slice(0, 140)
+      lines.push(`  ${(ICON[row.result] ?? row.result).padEnd(4)} ${String(row.id).padEnd(7)} ${String(row.coverage ?? '-').padEnd(8)} ${reason}`)
+    }
+  }
+  const entry = runtime.entry
+  if (entry) {
+    const reason = String(entry.reason ?? '').replace(/\s+/g, ' ').slice(0, 140)
+    lines.push(`  ${(ICON[entry.result] ?? entry.result).padEnd(4)} ${String(entry.id).padEnd(7)} ${String(entry.coverage ?? '-').padEnd(8)} ${reason}`)
+  }
+  lines.push('')
+}
+
 export function formatText(report) {
   const lines = []
   const { subject, anchor = {}, conclusion, coverage } = report
@@ -318,6 +363,7 @@ export function formatText(report) {
   lines.push('')
   renderBucket(lines, 'Partly checked (static subset)', report.buckets?.partial ?? [], byId)
   lines.push('')
+  renderRuntime(lines, report.runtimeChecks)
   renderBucket(lines, 'Not checked (NA / not-run / ERROR)', report.buckets?.notChecked ?? [], byId)
   lines.push('')
   const passed = (report.checks ?? []).filter(item => item.result === 'PASS')

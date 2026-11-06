@@ -193,7 +193,9 @@ export async function runRuntimeChecks(input) {
   const provideResult = declared.length === 0 ? 'NA' : worst(provideDetails.map(item => item.result))
   const provideCheck = check({
     id: 'DSC-05', clause: 'C-5', layer: 'L1', result: provideResult,
-    reason: provideDetails.filter(item => item.result !== 'PASS' && item.result !== 'NA').map(item => `${item.item}: ${item.reason}`).join(' | '),
+    // NA is a real finding too ("nothing declared"), so keep its reason; an
+    // empty reason here used to make DSC-05 look unexplained in the report.
+    reason: provideDetails.filter(item => item.result !== 'PASS').map(item => `${item.item}: ${item.reason}`).join(' | '),
     details: provideDetails,
   })
 

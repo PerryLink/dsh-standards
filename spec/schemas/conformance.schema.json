@@ -73,6 +73,11 @@
       "items": {
         "$ref": "#/$defs/bucketRow"
       }
+    },
+    "runtimeChecks": {
+      "type": "object",
+      "additionalProperties": true,
+      "description": "Additive block for explicit runtime runs (dsh-runtime-checks/1): executed, modes, durationMs, isolation, reason, failure, checks, entry."
     }
   },
   "$defs": {

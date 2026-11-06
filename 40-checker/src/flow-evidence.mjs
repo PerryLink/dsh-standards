@@ -28,6 +28,15 @@ import fs from 'node:fs'
 import os from 'node:os'
 import path from 'node:path'
 import { spawnSync } from 'node:child_process'
+import { signEvidence } from './signature.mjs'
+
+// Signing helpers live in signature.mjs; re-exported here so callers that
+// already import the evidence model do not need a second module path.
+export {
+  SIGNATURE_ALG, SIGNATURE_SCHEMA, canonicalJson as signatureCanonicalJson,
+  evidenceSigningPayload, generateEd25519KeyPair, keyIdFromPublicKey,
+  signEvidence, verifyEvidenceSignature,
+} from './signature.mjs'
 
 export const FLOW_IDS = ['J1', 'J2', 'J3', 'J4', 'J5', 'J6', 'J7', 'J8']
 export const FLOW_EVIDENCE_SCHEMA = 'dsh-flow-evidence/2'
@@ -105,6 +114,18 @@ export function evidenceHashMatches(document) {
   const declared = document?.chain?.evidenceHash
   if (typeof declared !== 'string') return false
   return declared === evidenceHash(document)
+}
+
+/**
+ * Attach an Ed25519 signature to a flow-evidence document. The signature
+ * covers canonical JSON minus `signature` (the body plus `chain`), so it binds
+ * the declared chain hash while never changing `chain.evidenceHash`; it never
+ * upgrades a claim level. Verification is `verifyEvidenceSignature()`
+ * (re-exported from signature.mjs); structural acceptance remains
+ * `validateFlowEvidence()`.
+ */
+export function attachEvidenceSignature(document, privateKey, options = {}) {
+  return signEvidence(document, privateKey, options)
 }
 
 const DEFAULT_TREE_EXCLUDE = ['.git', 'node_modules']

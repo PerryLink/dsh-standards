@@ -1,3 +1,23 @@
+## 1.5.0 — 2026-11-07
+
+### Added
+
+- 真实运行时检查：`--runtime`/`--host` 自动解析已装 dsh，在临时 HOME/DSH_HOME + env 白名单 + 超时硬杀下跑 DSC-04–09；报告新增 `runtimeChecks`（executed/modes/durationMs/isolation/checks）。
+- Ed25519 证据签名：`sign-evidence.mjs keygen|sign|verify`（node:crypto，零依赖），`docs/SIGNING.md` 说明密钥与信任边界。
+- 沙箱加固：`setpriv --no-new-privs --bounding-set=-all`、`nofile/fsize` rlimit、`unshare -Urm` + 只读 bind，记录 `hardening[]/hardeningDegraded[]`。
+
+### Fixed
+
+- `incomplete` 只由「mandatory 且 not-run」触发；静态 `partial` 不再把 ds-c bundle 判成 incomplete（修复前 dsh-fast 静态 ds-c 为 incomplete/exit 2，修复后 pass/exit 0）。
+- runtime-child 写 fd3 后立即退出，不再被插件 timers 拖到超时导致六项全 not-run。
+- 裸 `--runtime` 对带入口 bundle 直接走 server-entry；无入口纯 patch bundle 仍需 `--host`。
+- `conformance.schema.json` 加 `runtimeChecks`。
+
+### Verified
+
+- `npm test` 249/249；真实宿主 dsh 0.2.1-rc.5：dsh-fast/mcp-panel 的 DSC-04–09 出 P/NA/P/P/W/P，security-pack 20.9s 完成 G0–G3。
+- Windows 11 + node 24.22.1 实测：check 结果与 WSL 逐字一致；sandbox 记 degraded（unshare/prlimit 缺失），`flow collect --sandbox` 因 `npm.cmd` 无法无 shell spawn 记 not-run。
+
 ## 1.4.1 — 2026-11-06
 
 - 建议的 `docsUrl` 基址跟到 `dsh-plugin-guide@v0.4.6`（FLOW 示例修正版），不再指向 0.4.4。
