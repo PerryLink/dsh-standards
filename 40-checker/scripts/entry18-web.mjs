@@ -17,6 +17,7 @@ import fs from 'node:fs'
 import os from 'node:os'
 import path from 'node:path'
 import { spawnSync } from 'node:child_process'
+import { sanitizedEnv, scrubProcessEnv } from '../src/sandbox-env.mjs'
 import { fileURLToPath } from 'node:url'
 
 const HERE = path.dirname(fileURLToPath(import.meta.url))
@@ -87,7 +88,7 @@ function run(command, args, { cwd, timeout, env } = {}) {
     timeout,
     encoding: 'utf8',
     maxBuffer: 64 * 1024 * 1024,
-    env: { ...process.env, NO_COLOR: '1', ...env },
+    env: sanitizedEnv({ NO_COLOR: '1', ...(process.env.DSH_HOME ? { DSH_HOME: process.env.DSH_HOME } : {}), ...env }),
   })
   return {
     status: result.status,
@@ -159,6 +160,8 @@ function targetRows(pkgDir, manifest, loadOverlayPatches, composeEntries) {
 
 async function main() {
   const options = parseArgs(process.argv.slice(2))
+  // This harness boots the sample in-process; drop secrets before any import.
+  scrubProcessEnv()
   const startedAt = new Date().toISOString()
   const work = fs.mkdtempSync(path.join(os.tmpdir(), 'dsh-entry18-web-'))
   const home = fs.mkdtempSync(path.join(os.tmpdir(), 'dsh-entry18-home-'))

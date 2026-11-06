@@ -14,6 +14,7 @@ import fs from 'node:fs'
 import os from 'node:os'
 import path from 'node:path'
 import { pathToFileURL } from 'node:url'
+import { scrubProcessEnv } from '../src/sandbox-env.mjs'
 
 function parse(argv) {
   const options = { package: null, host: null, base: null, web: null, bare: null, json: false, timeout: 30_000 }
@@ -42,6 +43,8 @@ function withTimeout(promise, ms, label) {
 }
 
 async function main() {
+  // Boot happens in this process: drop secrets before any plugin import.
+  scrubProcessEnv()
   const options = parse(process.argv.slice(2))
   const pkg = path.resolve(options.package)
   const manifest = JSON.parse(fs.readFileSync(path.join(pkg, 'package.json'), 'utf8'))

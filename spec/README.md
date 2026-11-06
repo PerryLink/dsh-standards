@@ -14,7 +14,9 @@ Machine-readable:
 - [levels.json](levels.json) — levels, gates, evidence states, crosswalk.
 - [clauses.json](clauses.json) — stable clause IDs mapped to gates (`clause-map.mjs`).
 - [reference-suite.json](reference-suite.json) — versioned samples, anchors, change rules.
+- [remediation.json](remediation.json) — 68-key advice table for the additive `advice[]` report field (docs anchors + severity hints).
 - [schemas/evidence.schema.json](schemas/evidence.schema.json) — `dsh-levels/1` record.
+- [flow-evidence.schema.json](flow-evidence.schema.json) — `dsh-flow-evidence/2` FLOW chain (J1–J8 checks, subject/host binding, `evidenceHash`). v1 and bare `{Jx:{status}}` rows are deprecated and never count as a pass.
 - [schemas/attestation.schema.json](schemas/attestation.schema.json) — `dsh-attestation/1` quality record.
 - [schemas/report.schema.json](schemas/report.schema.json) — `dsh-report/1` inspection report (no grade).
 - [../40-checker/scripts/level-audit.mjs](../40-checker/scripts/level-audit.mjs) — one-command audit.

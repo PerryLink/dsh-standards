@@ -5,8 +5,9 @@
  * What it does:
  *   ENTRY  runs the existing ENTRY checker (static by default; real G0-G3 boot
  *          when --host is supplied) and maps its conclusion to an evidence state.
- *   FLOW   reads an optional J1-J8 evidence file; with no file it reports the
- *          checklist as `not-run` and never invents a pass.
+ *   FLOW   reads an optional `dsh-flow-evidence/2` file; with no file it reports
+ *          the checklist as `not-run` and never invents a pass. v1 schemas and
+ *          bare {Jx:{status}} rows are `deprecated` and never count as a pass.
  *   BOOST  reads an optional LEV evidence file; with no file it reports
  *          `not-measured`. It does not run benchmarks for you.
  *
@@ -26,6 +27,7 @@ import fs from 'node:fs'
 import path from 'node:path'
 import { spawnSync } from 'node:child_process'
 import { fileURLToPath } from 'node:url'
+import { FLOW_IDS, FLOW_EVIDENCE_SCHEMA, validateFlowEvidence } from '../src/flow-evidence.mjs'
 
 const HERE = path.dirname(fileURLToPath(import.meta.url))
 const STD = path.resolve(HERE, '..', '..')
@@ -43,7 +45,9 @@ Options:
   --base <file>            dsh-base cordis.patch.yml
   --bare <dir>             bare-module farm for the bundle smoke
   --no-runtime             force static ENTRY even when --host is given
-  --flow-evidence <file>   JSON: { "J1": { "status": "pass|fail|not-run", "evidence": "..." }, ... }
+  --flow-evidence <file>   dsh-flow-evidence/2 JSON from dsh-flow-collect.mjs (J1-J8 checks
+                            with command/exitCode/times/stdout sha256/assertions). v1 and bare
+                            {Jx:{status}} files are reported deprecated and never count as pass.
   --boost-evidence <file>  JSON: { "LEV-3": { "status": "measured|not-measured|failed", "evidenceCard": { ... } }, ... }
                             measured requires a valid evidence card; a status-only row is downgraded to not-measured
   --timeout <ms>           checker timeout, default 150000
@@ -151,32 +155,96 @@ function classifyEntry(report, invoked) {
 }
 
 function classifyFlow(evidence) {
-  const ids = ['J1', 'J2', 'J3', 'J4', 'J5', 'J6', 'J7', 'J8']
+  const ids = FLOW_IDS
+  const emptyJourneys = () => Object.fromEntries(ids.map(id => [id, { status: 'not-run', declared: null, checks: 0, passes: false }]))
   if (!evidence) {
     return {
       state: 'not-run',
-      reason: 'no --flow-evidence file; run the J1-J8 journeys and record pass/fail/not-run',
-      journeys: Object.fromEntries(ids.map(id => [id, { status: 'not-run' }])),
+      schema: null,
+      deprecated: false,
+      invalid: false,
+      evidenceHash: null,
+      passed: 0,
+      errors: [],
+      reason: 'no --flow-evidence file; run dsh-flow-collect.mjs and re-run the audit',
+      journeys: emptyJourneys(),
+    }
+  }
+  const verdict = validateFlowEvidence(evidence)
+  const declaredOf = id => {
+    const row = evidence[id] ?? evidence[id.toLowerCase()]
+    return row?.status ?? null
+  }
+  const base = {
+    schema: verdict.schema,
+    deprecated: verdict.kind === 'v1-deprecated' || verdict.kind === 'legacy',
+    invalid: false,
+    evidenceHash: null,
+    passed: 0,
+    errors: verdict.errors,
+  }
+  if (verdict.kind === 'v1-deprecated' || verdict.kind === 'legacy') {
+    return {
+      ...base,
+      state: 'deprecated',
+      reason: `${verdict.errors[0]}. Run node 40-checker/bin/dsh-flow-collect.mjs --package <dir> to produce ${FLOW_EVIDENCE_SCHEMA}`,
+      journeys: Object.fromEntries(ids.map(id => [id, { status: 'deprecated', declared: declaredOf(id), checks: 0, passes: false }])),
+    }
+  }
+  if (!verdict.valid) {
+    return {
+      ...base,
+      state: 'invalid',
+      invalid: true,
+      reason: `${FLOW_EVIDENCE_SCHEMA} failed structural validation: ${verdict.errors.slice(0, 5).join('; ')}${verdict.errors.length > 5 ? ` (+${verdict.errors.length - 5} more)` : ''}`,
+      evidenceHash: {
+        declared: verdict.declaredHash,
+        computed: verdict.computedHash,
+        ok: verdict.declaredHash !== null && verdict.declaredHash === verdict.computedHash,
+      },
+      journeys: Object.fromEntries(ids.map(id => {
+        const row = verdict.journeys[id] ?? { declared: null, derived: 'not-run', checks: 0, passes: false }
+        return [id, { status: row.declared ?? row.derived, declared: row.declared, checks: row.checks, passes: false }]
+      })),
     }
   }
   const journeys = {}
   for (const id of ids) {
-    const row = evidence[id] ?? evidence[id.toLowerCase()]
-    const status = row?.status
+    const row = verdict.journeys[id]
     journeys[id] = {
-      status: ['pass', 'fail', 'not-run', 'manual'].includes(status) ? status : 'not-run',
-      evidence: row?.evidence ?? null,
+      status: row.derived,
+      declared: row.declared,
+      checks: row.checks,
+      passes: row.passes,
+      reason: evidence.journeys?.[id]?.reason ?? null,
     }
   }
-  const failed = ids.filter(id => journeys[id].status === 'fail')
-  const passed = ids.filter(id => journeys[id].status === 'pass')
+  const passed = ids.filter(id => journeys[id].passes)
+  const failed = ids.filter(id => journeys[id].status === 'fail' && journeys[id].declared !== 'blocked')
+  const blocked = ids.filter(id => journeys[id].declared === 'blocked')
+  const state = failed.length > 0
+    ? 'failed'
+    : passed.length === ids.length
+      ? 'runtime'
+      : blocked.length > 0 ? 'blocked' : 'not-run'
+  const reasons = []
+  if (failed.length > 0) reasons.push(`failed journeys: ${failed.join(', ')}`)
+  if (blocked.length > 0) reasons.push(`blocked journeys (never a pass): ${blocked.join(', ')}`)
+  if (failed.length === 0 && passed.length !== ids.length) {
+    const rest = ids.filter(id => !passed.includes(id) && !blocked.includes(id))
+    if (rest.length > 0) reasons.push(`${passed.length}/8 journeys pass; ${rest.length} static/warn/not-run`)
+  }
+  if (passed.length === ids.length) reasons.push('all J1-J8 journey checks pass (exitCode 0, assertions held)')
   return {
-    state: failed.length > 0 ? 'failed' : passed.length === ids.length ? 'runtime' : 'not-run',
-    reason: failed.length > 0
-      ? `failed journeys: ${failed.join(', ')}`
-      : passed.length === ids.length
-        ? 'all J1-J8 have pass evidence'
-        : `${passed.length}/8 journeys have pass evidence`,
+    ...base,
+    state,
+    reason: reasons.join('; '),
+    passed: passed.length,
+    evidenceHash: {
+      declared: verdict.declaredHash,
+      computed: verdict.computedHash,
+      ok: verdict.declaredHash === verdict.computedHash,
+    },
     journeys,
   }
 }
@@ -270,7 +338,11 @@ function nextActions(entry, flow, boost) {
   if (entry.g4 && entry.g4.hasClient && entry.g4.ok === false) actions.push(`ENTRY: fix G4 — ${entry.g4.reason}`)
   for (const warning of entry.warnings) actions.push(`ENTRY: consider ${warning.id} — ${warning.reason}`)
   if (entry.state === 'recognized') actions.push('ENTRY: run with --host to replace static recognition with a real G0-G3 boot')
-  if (flow.state === 'not-run') actions.push('FLOW: record J1-J8 in a flow-evidence JSON; do not claim FLOW until they run')
+  if (flow.state === 'not-run') actions.push('FLOW: record J1-J8 with node 40-checker/bin/dsh-flow-collect.mjs; do not claim FLOW until they run')
+  if (flow.state === 'deprecated') actions.push('FLOW: v1/bare evidence is deprecated; collect a dsh-flow-evidence/2 file (spec/flow-evidence.schema.json)')
+  if (flow.state === 'invalid') actions.push('FLOW: flow evidence failed structural validation; fix the listed fields or recollect')
+  if (flow.state === 'failed') actions.push(`FLOW: fix failed journeys: ${Object.entries(flow.journeys).filter(([, row]) => row.status === 'fail').map(([id]) => id).join(', ')}`)
+  if (flow.state === 'blocked') actions.push('FLOW: blocked journeys need a prerequisite (usable dsh, --previous, or a compatible host); blocked is not a pass')
   if (boost.state === 'not-measured') actions.push('BOOST: attach LEV evidence cards (subject/host/method/scope/command/result/negativeControl/generatedAt/expiresAt/recordHash/claimLevel/issuer/selfAssessed); a status alone is not measured')
   if (boost.state === 'stale') actions.push('BOOST: refresh stale evidence cards before claiming measured')
   return actions

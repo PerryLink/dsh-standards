@@ -24,6 +24,7 @@ import fs from 'node:fs'
 import os from 'node:os'
 import path from 'node:path'
 import { spawnSync } from 'node:child_process'
+import { sanitizedEnv } from '../src/sandbox-env.mjs'
 import { fileURLToPath } from 'node:url'
 
 const HERE = path.dirname(fileURLToPath(import.meta.url))
@@ -127,11 +128,10 @@ function removeDir(dir) {
   fs.rmSync(assertUnderSampleBase(dir), { recursive: true, force: true })
 }
 
+// The journey probe boots the plugin; forward an allowlisted env, never the
+// caller's tokens/keys (the probe also rebuilds this list for the plugin child).
 function childEnv() {
-  const env = { ...process.env }
-  delete env.DEEPSEEK_API_KEY
-  delete env.OPENAI_API_KEY
-  return env
+  return sanitizedEnv()
 }
 
 function manifestSummary(dir) {

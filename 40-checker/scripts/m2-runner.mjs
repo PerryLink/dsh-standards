@@ -18,6 +18,7 @@ import fs from 'node:fs'
 import os from 'node:os'
 import path from 'node:path'
 import { spawn, spawnSync } from 'node:child_process'
+import { sanitizedEnv } from '../src/sandbox-env.mjs'
 
 function parse(argv) {
   const options = {
@@ -129,15 +130,15 @@ async function main() {
   const reportPath = path.join(work, 'report.json')
   const cli = path.resolve(path.dirname(new URL(import.meta.url).pathname), '..', 'bin', 'dsh-plugin-verify.mjs')
   const args = [cli, pkg, '--format', 'json', '--treat-as-plugin', '--runtime', path.resolve(options.runtime), '--runtime-version', options.runtimeVersion, '--cordis-version', options.cordisVersion, '--out', reportPath]
-  const env = {
-    ...process.env,
+  // The child imports the inspected package: never forward the caller's env.
+  const env = sanitizedEnv({
     DSH_HOME: home,
     HOME: home,
     USERPROFILE: home,
     TMPDIR: path.join(root, 'tmp'),
     TEMP: path.join(root, 'tmp'),
     TMP: path.join(root, 'tmp'),
-  }
+  })
   fs.mkdirSync(env.TMPDIR, { recursive: true })
   const started = Date.now()
   const needsLandlock = options.backend === 'landlock' || options.backend === 'unshare-landlock'

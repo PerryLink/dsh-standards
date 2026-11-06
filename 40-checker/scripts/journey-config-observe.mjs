@@ -19,6 +19,7 @@ import fs from 'node:fs'
 import os from 'node:os'
 import path from 'node:path'
 import { spawnSync } from 'node:child_process'
+import { sanitizedEnv } from '../src/sandbox-env.mjs'
 
 function parse(argv) {
   const out = { package: null, dsh: process.env.DSH_BIN || 'dsh', json: false, timeout: 120_000 }
@@ -43,10 +44,11 @@ function main() {
   const pkg = path.resolve(options.package)
   const manifest = JSON.parse(fs.readFileSync(path.join(pkg, 'package.json'), 'utf8'))
   const home = fs.mkdtempSync(path.join(os.tmpdir(), 'dsh-config-'))
+  const tmp = path.join(home, 'tmp')
+  fs.mkdirSync(tmp, { recursive: true })
   const profile = 'flow-config'
-  const env = { ...process.env, DSH_HOME: home }
-  delete env.DEEPSEEK_API_KEY
-  delete env.OPENAI_API_KEY
+  // Allowlisted env only: a plugin boots on import and must not see tokens/keys.
+  const env = sanitizedEnv({ DSH_HOME: home, HOME: home, USERPROFILE: home, TMPDIR: tmp, TEMP: tmp, TMP: tmp })
   const checks = []
   let dshVersion = null
   const add = (id, result, reason) => checks.push({ id, result, reason })

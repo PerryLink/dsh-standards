@@ -156,6 +156,8 @@
       "machine": {
         "journey": "40-checker/scripts/journey.mjs",
         "journeyRuntime": "40-checker/scripts/journey-runtime.mjs",
+        "collector": "40-checker/bin/dsh-flow-collect.mjs",
+        "flowEvidence": "spec/flow-evidence.schema.json",
         "audit": "40-checker/scripts/level-audit.mjs"
       }
     },

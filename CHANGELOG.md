@@ -1,3 +1,17 @@
+## 未发布
+
+- **FLOW 证据链**：新增 `spec/flow-evidence.schema.json`（`dsh-flow-evidence/2`）与 `40-checker/src/flow-evidence.mjs`。`level-audit --flow-evidence` 只接受 v2；v1（`dsh-flow-journey/1`、`dsh-flow-runtime/1`）与裸 `{Jx:{status}}` 标 `deprecated`，不计 pass。每个 J 须有 `checks[]` 且全部 `exitCode === 0`、断言成立、至少一条非 `static` 观测检查才计 pass（`warn`/`blocked`/`na`/`static` 不计 8/8）。v2 的 `chain.evidenceHash` 由 audit 重算，改动一个字节即 `invalid`。
+- **collector**：新增 `40-checker/bin/dsh-flow-collect.mjs`（根入口 `bin/dsh-flow-collect.mjs`，并支持 `dsh-levels flow collect`）。只读副本 + 前后 `treeSha256` 一致、`npm pack --ignore-scripts` 的 integrity/tarballSha256、`git rev-parse` commit、临时 HOME/DSH_HOME、失败五要素提示（子检查/命令/exitCode/stderr 末 20 行/日志绝对路径 + 条款锚）；前置缺失记 `blocked` 且 exit 0，真失败 exit 1。
+- **安全**：新增 `40-checker/src/sandbox-env.mjs` 白名单 env。`src/cli.mjs` 的 runtime-child/bundle-smoke 子进程、`bundle-smoke.mjs`/`runtime-child.mjs` 进程内 boot、`m2-runner.mjs`、`journey-runtime.mjs`、`journey-config-observe.mjs`、`flow-sample-ci.mjs`、`host-farm.mjs`、`entry18-web.mjs` 不再把 `process.env` 透传给被检插件/宿主 boot。
+- 测试 137 → 149（新增 `40-checker/test/flow-evidence.test.mjs`：v1 不再 pass、v2 伪造 checks/exitCode 不 pass、篡改链路 invalid、blocked 不判 fail、collector 产物可被 audit 读取、失败五要素提示、env 白名单）。
+
+## 1.2.0 — 2026-11-06
+
+- 新增**建议管道**：`spec/remediation.json` 提供 68 条规则（`details[].item` ∪ `checks[].clause` ∪ G0–G4），`40-checker/src/remediation.mjs` 的纯函数 `joinAdvice(report, rules, docsBase)` 把 FAIL/WARN detail 连接成 `advice[]`；无 detail 的运行时 FAIL 用 `check.clause` 兜底（C-4/C-14）。
+- `buildReport()` 输出新增**加性** `advice[]`（key/severity/title/why/fix/docsUrl/source/version/evidence），不改任何 check 构造、不改判定与 exit code；CLI 新增 `--advice`（默认开）与 `--no-advice`。
+- 建议文档统一指向 `dsh-plugin-guide` 的 v0.4.3：`docsUrl = https://github.com/PerryLink/dsh-plugin-guide/blob/v0.4.3/ + docs`；规则表 `docs` 只存 `文件#锚点`。
+- 新增 `40-checker/test/remediation.test.mjs`：规则表覆盖全集、fixture 无 `ruleMissing`、本地 guide 锚点存在、severity/merge/兜底/纯函数回归。测试 128 → 137。
+
 ## 1.1.2 — 2026-11-04
 
 - 修复 1.1.1 的发布失败：vendored `@babel/parser` 的 `node_modules/` 被根 `.gitignore` 忽略，CI checkout 缺依赖导致 `npm test` 失败。现在 force-add 四个 vendored 包（约 2 MB），并加 1.1.2 的回归说明。

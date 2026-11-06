@@ -58,6 +58,7 @@ import fs from 'node:fs'
 import os from 'node:os'
 import path from 'node:path'
 import { spawnSync } from 'node:child_process'
+import { sanitizedEnv } from '../src/sandbox-env.mjs'
 import { fileURLToPath } from 'node:url'
 
 const HERE = path.dirname(fileURLToPath(import.meta.url))
@@ -153,16 +154,16 @@ function run(command, args, { cwd, timeout, env } = {}) {
     encoding: 'utf8',
     maxBuffer: 64 * 1024 * 1024,
     killSignal: 'SIGKILL',
-    env: {
-      ...process.env,
+    env: sanitizedEnv({
       NO_COLOR: '1',
       npm_config_update_notifier: 'false',
       // Bound registry waits so one unresponsive metadata request cannot wedge
       // a shard past its job timeout.
       npm_config_fetch_timeout: '60000',
       npm_config_fetch_retries: '2',
+      ...(process.env.DSH_HOME ? { DSH_HOME: process.env.DSH_HOME } : {}),
       ...env,
-    },
+    }),
   })
   return {
     command,

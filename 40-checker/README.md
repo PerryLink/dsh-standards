@@ -19,6 +19,8 @@ node bin/dsh-plugin-verify.mjs /path/to/plugin --format json --out report.json
 node bin/dsh-plugin-verify.mjs /path/to/plugin --format sarif --out report.sarif
 ```
 
+`buildReport()` 与 `--format json` 默认带**加性** `advice[]`（来自 `spec/remediation.json` 的 68 条规则；FAIL/WARN detail 优先，无 detail 的运行时 FAIL 用 `check.clause` 兜底）。`--no-advice` 可关闭；它不改变任何 check 的结果或 exit code。
+
 ## 2. 检查项
 
 | ID | 条款 | 层 | 说明 |
@@ -123,6 +125,19 @@ node scripts/level-audit.mjs ./my-bundle \
 - 机器源：`spec/levels.json`；标签格式：`publish/level-labels.example.json`。
 - ENTRY 自动；FLOW 只读 `--flow-evidence`（J1–J8），BOOST 只读 `--boost-evidence`（LEV-1–8）。
 - 没有证据就写 `not-run` / `not-measured`，工具不会替作者升级。
+
+### FLOW 证据链 `dsh-flow-collect`
+
+```bash
+node bin/dsh-flow-collect.mjs --package ./my-plugin --out flow-evidence.json
+# 等价：node bin/dsh-levels.mjs flow collect --package ./my-plugin --out flow-evidence.json
+```
+
+- 只接受 `dsh-flow-evidence/2`（`spec/flow-evidence.schema.json`）。`level-audit --flow-evidence` 对 v1（`dsh-flow-journey/1`、`dsh-flow-runtime/1`）和裸 `{Jx:{status}}` 标 `deprecated`，不计 pass。
+- 每个 J 必须至少 1 条 `checks[]` 且全部 `exitCode === 0`、断言成立、至少一条非 `static` 观测检查，才计 pass；`static` preflight 不是 runtime，`warn`/`blocked`/`na` 都不计 8/8。
+- collector 把包复制到临时目录再跑，前后 `treeSha256` 必须一致；子进程 env 走白名单（不含 token/key/secret）；不授予 `allowBuilds`，不自动 `allow-version`。
+- 前置缺失（无 dsh、无 `--previous`、宿主兼容门禁拒绝）记 `blocked` + reason，出口码 0；真失败出口码 1，并打印五要素提示（子检查 / 命令 / exitCode / stderr 末 20 行 / 日志绝对路径 + 条款锚）。
+- 本地证据只是 `self-attested`：结构自洽 + 绑定此包 + 未过期，**不证明真跑过**，也不是沙箱、认证或安全审计。
 
 ## 4. 运行 L1–L3
 

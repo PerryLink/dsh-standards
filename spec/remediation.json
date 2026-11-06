@@ -1,0 +1,478 @@
+{
+  "C-1": {
+    "title": "清单与入口可解析",
+    "why": "package.json 是宿主识别插件的唯一入口；name/version/入口缺失会让安装或加载直接失败。",
+    "fix": "确保 package.json 可 JSON 解析，声明合法 name 与精确 SemVer version，并让 exports[\".\"] 或 main 指向包内真实存在的文件。",
+    "docs": "docs/entry.md#what-it-covers",
+    "severityHint": "fail"
+  },
+  "C-1.1": {
+    "title": "包名与版本必须合法",
+    "why": "非法 npm 包名或 range/tag 版本无法被 registry/market 解析，也会破坏升级与回滚。",
+    "fix": "name 用 @scope/name 或小写 name；version 写精确 SemVer（如 1.2.3），不要写 latest 或 ^1.2.3。",
+    "docs": "docs/entry.md#what-it-covers",
+    "severityHint": "fail"
+  },
+  "C-1.2": {
+    "title": "入口必须可解析且留在包内",
+    "why": "exports/main 指向缺失或越界文件时，安装成功但加载必失败。",
+    "fix": "确认 exports[\".\"]/main 指向实际发布进包的文件；不要在 files 里漏掉该目录；路径不得用 .. 逃出包。",
+    "docs": "docs/entry.md#author-checklist",
+    "severityHint": "fail"
+  },
+  "C-1.3": {
+    "title": "导出形态要符合 Loader 约定",
+    "why": "Cordis Loader 只接受函数插件的 apply 或默认导出服务类，混用会让插件无法装载。",
+    "fix": "二选一：export function apply(ctx)（可带 name/inject/Config），或 export default class ... extends Service；不要在同一入口再混一个默认导出。",
+    "docs": "docs/entry.md#author-checklist",
+    "severityHint": "warn"
+  },
+  "C-1.4": {
+    "title": "bundle patch 必须在包内且可解析",
+    "why": "patch 路径越界、缺失或行 name 逃逸会让 bundle 安装后无法合成 profile。",
+    "fix": "把 patch 文件放进包内并在 dsh.bundle.patch 用相对路径声明；避免 ..、绝对路径、~、$VAR；确认每个 patch 行的 name 仍在包内。",
+    "docs": "docs/entry.md#author-checklist",
+    "severityHint": "fail"
+  },
+  "C-1.5": {
+    "title": "声明 license（建议 SPDX）",
+    "why": "缺 license 是 advisory WARN，但会让市场/企业用户无法判断使用条款。",
+    "fix": "在 package.json 加 \"license\": \"Apache-2.0\"（或实际 SPDX 标识），并在 files 里带上 LICENSE。",
+    "docs": "docs/entry.md#author-checklist",
+    "severityHint": "warn"
+  },
+  "C-1.6": {
+    "title": "private 包不可发布",
+    "why": "private: true 的包能被本地安装但不该出现在 registry/市场。",
+    "fix": "要发布就移除 private: true；若只是内部包，请在 README/描述里写清来源与安装方式。",
+    "docs": "docs/entry.md#author-checklist",
+    "severityHint": "warn"
+  },
+  "C-2": {
+    "title": "版本约束必须声明且兼容",
+    "why": "宿主对“无声明”按兼容处理，插件会在错误版本上静默装载然后崩溃。",
+    "fix": "在 package.json 声明 engines.dsh（首选），至少声明一个 @deepseek-ai/dsh* peer 范围；范围要覆盖目标运行时。",
+    "docs": "docs/entry.md#author-checklist",
+    "severityHint": "fail"
+  },
+  "C-2.1": {
+    "title": "必须声明 engines.dsh 或 dsh peer 范围",
+    "why": "两者皆无时宿主无法阻止不兼容安装；只有 peer 时是较弱的替代声明。",
+    "fix": "加 \"engines\": { \"dsh\": \">=0.2.2-0 <0.3.0\" }；若只能用 peer，至少写 \"@deepseek-ai/dsh-tools\": \">=0.2.2-0 <0.3.0\"，不要留空。",
+    "docs": "docs/entry.md#author-checklist",
+    "severityHint": "fail"
+  },
+  "C-2.2": {
+    "title": "声明的范围必须满足当前运行时",
+    "why": "范围不覆盖 --runtime-version 时，宿主会跳过或装上一个跑不起来的插件。",
+    "fix": "把 engines.dsh/peer 范围放宽到包含目标运行时（如 >=0.2.2-0 <0.3.0），并用 --runtime-version 复跑 C-2。",
+    "docs": "docs/entry.md#author-checklist",
+    "severityHint": "fail"
+  },
+  "C-2.3": {
+    "title": "不得用 workspace: 范围糊弄版本声明",
+    "why": "workspace: 是 monorepo 内部协议，registry 消费者无法解析。",
+    "fix": "发布前把 workspace:^/workspace:* 改成真实 SemVer 范围；peer 中如确需 workspace 语义，确认宿主等价规则后再发布。",
+    "docs": "docs/entry.md#author-checklist",
+    "severityHint": "fail"
+  },
+  "C-2.4": {
+    "title": "engines 与 peer 结论冲突要收敛",
+    "why": "两套声明给出不同兼容结论时，用户无法判断该信哪个；宿主以 engines 单独裁决。",
+    "fix": "保留一套权威范围（优先 engines.dsh），让 peer 范围与它一致；删掉过窄/过宽的重复声明。",
+    "docs": "docs/entry.md#author-checklist",
+    "severityHint": "warn"
+  },
+  "C-3": {
+    "title": "安装来源可解析、可固定、可追溯",
+    "why": "浮动 tag/branch/裸名会在下一次安装时换成另一个 commit，无法复现。",
+    "fix": "registry 用精确版本或可校验 tag；git 用 40 位 commit；tarball 用固定 URL；不要让非 registry 依赖随 HEAD 漂移。",
+    "docs": "docs/entry.md#run-it",
+    "severityHint": "fail"
+  },
+  "C-3.1": {
+    "title": "install spec 必须能被解析",
+    "why": "CLI 把 spec 原样交给 pnpm；解析失败意味着用户按文档装不上。",
+    "fix": "用 pkg@1.2.3、github:owner/repo#<40hex>、固定 tarball URL 或包内 path；在 README 里给出可复制命令。",
+    "docs": "docs/entry.md#run-it",
+    "severityHint": "fail"
+  },
+  "C-3.2": {
+    "title": "registry/git 来源必须钉住",
+    "why": "裸包名或浮动 branch 会随上游发布变化，破坏可追溯性。",
+    "fix": "registry 写精确版本（@scope/pkg@1.2.3）或可校验 tag；git 写 #<40 位 commit>，不要用 #main。",
+    "docs": "docs/entry.md#run-it",
+    "severityHint": "fail"
+  },
+  "C-3.3": {
+    "title": "非 registry 依赖必须固定",
+    "why": "file:/link:/浮动 git 依赖在别人机器上解析不到或指向不同代码。",
+    "fix": "改成固定 commit 的 git URL、固定 tarball URL 或包内相对 path；workspace:/file: 发布前替换掉。",
+    "docs": "docs/flow.md#the-eight-journeys",
+    "severityHint": "warn"
+  },
+  "C-3.4": {
+    "title": "安装期构建脚本要可枚举",
+    "why": "preinstall/install/postinstall/prepare 会在用户机器上执行，profile 看不到就无法审批。",
+    "fix": "尽量去掉安装期脚本，改为显式构建；必须在 README/发布说明列出脚本与 allowBuilds 需求。",
+    "docs": "docs/flow.md#the-eight-journeys",
+    "severityHint": "warn"
+  },
+  "C-3.5": {
+    "title": "市场索引条目必须可解析且固定",
+    "why": "条目版本/来源/commit 不合法时，市场无法生成可复现的安装串。",
+    "fix": "用 format-1 schema：精确 SemVer、source.type=npm|git、git 40hex、engines.dsh 合法；修完用 --market-index 复跑。",
+    "docs": "docs/levels.md#run-the-checks",
+    "severityHint": "fail"
+  },
+  "C-4": {
+    "title": "插件必须能装载并进入 ACTIVE",
+    "why": "装载抛错/停在 PENDING/超时都意味着用户装上了但跑不起来。",
+    "fix": "在隔离 Cordis Context 中用真实 --runtime 复跑；检查入口 import、inject 服务是否在目标 profile 存在、apply 是否抛错；把阻塞初始化移到 apply 内并处理失败。",
+    "docs": "docs/levels.md#entry",
+    "severityHint": "fail"
+  },
+  "C-5": {
+    "title": "声明的 provide 必须真实注册",
+    "why": "provide 只是元数据，Cordis 不会自动注册；声明了却不注册会骗过依赖方。",
+    "fix": "在 apply 里用 ctx.provide(\"name\", impl)（或 Service 构造器）注册每个声明的服务；不要只写 export const provide。",
+    "docs": "docs/boost.md#the-eight-practices",
+    "severityHint": "fail"
+  },
+  "C-5.1": {
+    "title": "provide 声明要可枚举",
+    "why": "动态/配置生成的 provide 让检查器无法核对，依赖方也无法预期。",
+    "fix": "把 export const provide = [...] 写成静态字符串数组；若必须动态，在 README 说明并接受 WARN。",
+    "docs": "docs/boost.md#the-eight-practices",
+    "severityHint": "warn"
+  },
+  "C-5.2": {
+    "title": "provide 的所有权必须是本 fiber",
+    "why": "服务被别的 fiber 注册或根本没注册，卸载/重挂时会留下悬挂依赖。",
+    "fix": "用 ctx.provide/Service 在本插件 fiber 注册；不要直接写 ctx.reflect.store 或让子 fiber 代注册。",
+    "docs": "docs/boost.md#the-eight-practices",
+    "severityHint": "fail"
+  },
+  "C-6": {
+    "title": "注册型副作用必须由 fiber effect 承载",
+    "why": "裸定时器/监听器不进入 _disposables，卸载后仍在跑，污染宿主。",
+    "fix": "所有 timer/listener/connection/subprocess 都包进 ctx.effect(() => { ...; return dispose })；不要直接写 ctx.events._hooks/reflect.store。",
+    "docs": "docs/boost.md#the-eight-practices",
+    "severityHint": "fail"
+  },
+  "C-6.1": {
+    "title": "不得直写 Cordis 私有注册面",
+    "why": "绕过 ctx.on/ctx.effect 的注册不会被卸载，且跨版本必坏。",
+    "fix": "改用公开 API：ctx.on、ctx.effect、ctx.provide；删除对 _hooks、reflect.store、registry._internal、_disposables 的写操作。",
+    "docs": "docs/boost.md#the-eight-practices",
+    "severityHint": "fail"
+  },
+  "C-6.2": {
+    "title": "注册的 effect 要能对上声明",
+    "why": "声明了 provide/on 但 effect 树里没有对应 label，说明注册是匿名的或没发生。",
+    "fix": "给 ctx.effect(fn, \"plugin.label\") 加稳定 label；确认 fiber.getEffects() 覆盖声明的服务与监听器。",
+    "docs": "docs/boost.md#the-eight-practices",
+    "severityHint": "warn"
+  },
+  "C-7": {
+    "title": "dispose 后可观测残留必须归零",
+    "why": "卸载不干净会让重装/热更新累积 effect、服务、监听器和 fiber。",
+    "fix": "用 ctx.effect 注册所有资源；dispose() 后断言 getEffects().length===0、服务 key 回到基线、registry.size 回到基线。",
+    "docs": "docs/boost.md#the-eight-practices",
+    "severityHint": "fail"
+  },
+  "C-7.1": {
+    "title": "effect 必须清空",
+    "why": "dispose 后还有 effect 说明 disposer 没执行或资源没交给 effect。",
+    "fix": "把裸 timer/listener 放进 ctx.effect 并返回清理函数；检查 disposer 是否抛错被吞掉。",
+    "docs": "docs/boost.md#the-eight-practices",
+    "severityHint": "fail"
+  },
+  "C-7.2": {
+    "title": "服务 store 要回到基线",
+    "why": "残留的 provide 会让后续插件拿到已卸载的实现。",
+    "fix": "用 ctx.provide/Service 的 disposer 注销；不要手工往 reflect.store 写，卸载后对比 key 集。",
+    "docs": "docs/boost.md#the-eight-practices",
+    "severityHint": "fail"
+  },
+  "C-7.3": {
+    "title": "registry/fiber 不得残留",
+    "why": "fiber 留在 registry 里意味着它仍被宿主认为存活，重挂会重复。",
+    "fix": "await fiber.dispose() 后检查 registry.size 与 runtime.fibers；不要把 fiber 存到模块级全局。",
+    "docs": "docs/boost.md#the-eight-practices",
+    "severityHint": "fail"
+  },
+  "C-7.5": {
+    "title": "dispose 必须 await 到 quiescence",
+    "why": "只发 dispose 请求不等完成，测试会假绿而资源仍在释放中。",
+    "fix": "await fiber.dispose()，必要时再 await ctx.root.fiber.await()；不要用 fire-and-forget。",
+    "docs": "docs/boost.md#the-eight-practices",
+    "severityHint": "fail"
+  },
+  "C-8": {
+    "title": "重挂必须幂等、冷重装可重复",
+    "why": "restart/remount 累积状态或 revision 不推进，会让热更新看起来成功实际没重载。",
+    "fix": "把模块级缓存清掉或移入 fiber；重复 restart() 后对比 effect/registry/reflect 快照；确认 revision/epoch 推进。",
+    "docs": "docs/boost.md#the-eight-practices",
+    "severityHint": "fail"
+  },
+  "C-8.1": {
+    "title": "连续 restart 不累积 effect",
+    "why": "第二次 restart 后 effect 数量/标签漂移，说明 disposer 没清干净。",
+    "fix": "每次 effect 都有稳定 label 与 disposer；restart 前后做归一化快照比较。",
+    "docs": "docs/boost.md#the-eight-practices",
+    "severityHint": "fail"
+  },
+  "C-8.2": {
+    "title": "restart 必须推进 revision/epoch",
+    "why": "被 internal/update 监听者 veto 时，size 可能不变但插件没真正重载。",
+    "fix": "在测试里断言 revision/epoch 前进；检查是否有 update 监听器吞掉重启，必要时用私有适配层观测并记录 WARN。",
+    "docs": "docs/boost.md#the-eight-practices",
+    "severityHint": "warn"
+  },
+  "C-8.3": {
+    "title": "冷重装后快照一致",
+    "why": "registry.delete 后重新 plugin 若状态不同，说明有跨实例残留。",
+    "fix": "清掉模块级 Map/globalThis 缓存；比较两轮装载后的归一化快照。",
+    "docs": "docs/boost.md#the-eight-practices",
+    "severityHint": "fail"
+  },
+  "C-9": {
+    "title": "声明与实测必须交叉一致",
+    "why": "声明 provide/inject 与实测不符会让依赖解析、重挂和权限判断全部失真。",
+    "fix": "用 L1 实测核对：声明的 provide 必须注册，inject 必须真实读取；多报/少报分别修声明或代码。",
+    "docs": "docs/boost.md#the-eight-practices",
+    "severityHint": "fail"
+  },
+  "C-9.1": {
+    "title": "声明 provide 必须在实测中注册",
+    "why": "缺一个注册，依赖方会拿到 undefined 或一直 PENDING。",
+    "fix": "在 apply 里注册每个声明的服务；或从 export const provide 删掉未实现的项。",
+    "docs": "docs/boost.md#the-eight-practices",
+    "severityHint": "fail"
+  },
+  "C-9.2": {
+    "title": "实测服务必须写进声明",
+    "why": "多注册的公开服务没有声明，用户/市场看不到它，卸载时也难以核对。",
+    "fix": "把多出的公开服务补进 provide，或改成内部/命名空间服务；不要静默暴露。",
+    "docs": "docs/boost.md#the-eight-practices",
+    "severityHint": "warn"
+  },
+  "C-9.3": {
+    "title": "inject 必须真的被读取",
+    "why": "多声明 inject 会让无关服务替换时也触发插件重挂。",
+    "fix": "删掉代码里从未 ctx.<service> 读取的 inject；需要可选依赖时用 ctx.get()。",
+    "docs": "docs/boost.md#the-eight-practices",
+    "severityHint": "warn"
+  },
+  "C-10": {
+    "title": "入口不应有 import 期副作用（advisory）",
+    "why": "模块被 import 时执行副作用会拖慢/污染所有 importer，且在 apply 前就运行。",
+    "fix": "顶层只留类型/常量/纯函数；把 timer/fs/子进程/全局修改移进 apply() 并用 ctx.effect() 清理。",
+    "docs": "docs/entry.md#import-time-side-effects",
+    "severityHint": "advisory"
+  },
+  "C-10.1": {
+    "title": "不要用顶层 await",
+    "why": "模块级 await 会让每个 importer 的求值等待，且宿主无法注入清理。",
+    "fix": "把 await 移进 apply() 或 Service.init；顶层只导出声明。",
+    "docs": "docs/entry.md#import-time-side-effects",
+    "severityHint": "advisory"
+  },
+  "C-10.2": {
+    "title": "顶层不要挂 timer/process.on/void main",
+    "why": "这些调用在 import 时执行，卸载时没有 disposer，容易泄漏和重复。",
+    "fix": "把 setInterval/process.on/void main() 移进 apply；用 ctx.effect 注册并在 disposer 清理。",
+    "docs": "docs/entry.md#import-time-side-effects",
+    "severityHint": "advisory"
+  },
+  "C-10.3": {
+    "title": "import 闭包覆盖说明",
+    "why": "包导入/解析不到的本地模块不在静态分析范围内，不能当作已检查。",
+    "fix": "尽量让入口只依赖可解析的本地相对模块；对包导入/动态路径在报告里保留 not-run，必要时人工复核。",
+    "docs": "docs/entry.md#import-time-side-effects",
+    "severityHint": "advisory"
+  },
+  "C-10.4": {
+    "title": "顶层不要做 fs 写/子进程调用",
+    "why": "import 时写文件或 spawn 会在宿主加载阶段产生外部副作用。",
+    "fix": "移进 apply/Service.init，并用 ctx.effect 包住资源；只读 openSync 不算写。",
+    "docs": "docs/entry.md#import-time-side-effects",
+    "severityHint": "advisory"
+  },
+  "C-11": {
+    "title": "权限面必须声明",
+    "why": "dsh.capabilities 是装载期声明；漏报高风险能力会让用户看不到插件能做什么。",
+    "fix": "在 dsh.capabilities 列出所有实际使用的宿主能力（闭集 ID）；字段存在后漏报会 FAIL。",
+    "docs": "docs/entry.md#declaration-fields",
+    "severityHint": "fail"
+  },
+  "C-11.1": {
+    "title": "capabilities 必须是闭集内的字符串数组",
+    "why": "未知 ID/非数组无法被市场/UI 解析，等于没声明。",
+    "fix": "用 \"capabilities\": [\"fs:read\", \"tools:register\"]；只从 15 个闭集 ID 里取，不要空数组占位。",
+    "docs": "docs/entry.md#declaration-fields",
+    "severityHint": "fail"
+  },
+  "C-11.2": {
+    "title": "高信号触发必须申报能力",
+    "why": "代码用了 ctx.tools.register/ctx.webServer 等却不声明，市场无法提示风险。",
+    "fix": "按 details 的 file:line 找到触发点，把对应能力加入 dsh.capabilities（如 tools:register、network:ingress）；字段缺失时先补字段。",
+    "docs": "docs/entry.md#declaration-fields",
+    "severityHint": "fail"
+  },
+  "C-11.3": {
+    "title": "不得默认启用 plugin-manager/tools",
+    "why": "打开它等于把“模型自安装”能力放给所有会话，越过 profile 的安装门。",
+    "fix": "从 bundle patch 删除/禁用 @deepseek-ai/dsh-plugin-manager/tools；确需安装能力时声明 plugin:install 并走显式审批。",
+    "docs": "docs/entry.md#declaration-fields",
+    "severityHint": "fail"
+  },
+  "C-11.4": {
+    "title": "danger-full-access 字面量要收敛",
+    "why": "真实授权/命令上下文里的 danger-full-access 会绕过沙箱；即使是文档字符串也会误导。",
+    "fix": "用最小权限 sandboxPolicy 替代；把 danger-full-access 从 .set()/.resolve()/spawn args 里删掉；只保留在文档字符串里的说明也要标注。",
+    "docs": "docs/entry.md#declaration-fields",
+    "severityHint": "warn"
+  },
+  "C-11.5": {
+    "title": "声明了能力但实测没触发",
+    "why": "过度声明会误导用户，也会让权限面看起来比实际大。",
+    "fix": "删掉未使用的 capability，或补上实际调用；动态触发无法静态确认时在 README 说明。",
+    "docs": "docs/entry.md#declaration-fields",
+    "severityHint": "warn"
+  },
+  "C-12": {
+    "title": "凭据与全局 seam 声明一致",
+    "why": "绕过 ctx.credentials 直读 backing file，或未声明 provider 就替换全局 seam，会破坏用户凭据边界。",
+    "fix": "通过 ctx.credentials seam 读写；声明 credentials:read/list/provider；不要直接读 $DSH_HOME/.credentials.yaml 或 credentials-local 内部 API。",
+    "docs": "docs/entry.md#credentials-and-seams",
+    "severityHint": "fail"
+  },
+  "C-12.1": {
+    "title": "不得绕过 credentials seam 直读 backing file",
+    "why": "直读 .credentials.yaml/credentials-local 绕过权限与审计，且格式可能变。",
+    "fix": "改用 ctx.credentials.resolve(...)；确需 provider 时声明 credentials:provider 并走公开接口。",
+    "docs": "docs/entry.md#credentials-and-seams",
+    "severityHint": "fail"
+  },
+  "C-12.2": {
+    "title": "listRecords 必须声明 credentials:list",
+    "why": "能枚举全部凭据记录是高风险能力，不声明用户无法知情。",
+    "fix": "在 dsh.capabilities 加 credentials:list；若只是内部使用，改为按名 resolve，不要枚举。",
+    "docs": "docs/entry.md#credentials-and-seams",
+    "severityHint": "fail"
+  },
+  "C-12.3": {
+    "title": "全局 seam provider 注册要显式声明",
+    "why": "替换 shell/credentials/sandboxPolicy 等全局 provider 会改变所有后续调用。",
+    "fix": "在 README 与 dsh.capabilities 说明注册的 seam 与影响范围；能不用全局替换就不要用。",
+    "docs": "docs/entry.md#credentials-and-seams",
+    "severityHint": "warn"
+  },
+  "C-12.4": {
+    "title": "danger-full-access/--add-dir 字面量要收敛",
+    "why": "命令/授权参数里的这些值会扩大文件与执行范围。",
+    "fix": "用最小 sandboxPolicy；从 spawn args/.set()/.resolve() 移除 --add-dir 与 danger-full-access；文档字符串保留说明。",
+    "docs": "docs/entry.md#credentials-and-seams",
+    "severityHint": "warn"
+  },
+  "C-12.6": {
+    "title": "dsh.commitments（可选披露）格式",
+    "why": "commitments 是作者自述的安全承诺；类型/缺项错误会让披露不可信。",
+    "fix": "按 9 个 ID 写布尔值：\"commitments\": { \"no-session-upload\": true, ... }；不承诺的项写 false，不要省略。",
+    "docs": "docs/entry.md#credentials-and-seams",
+    "severityHint": "warn"
+  },
+  "C-12.7": {
+    "title": "dsh.disclosure（可选披露）格式",
+    "why": "endpoints/retention/systemPrompt 写错会让第三方数据流向不可读。",
+    "fix": "\"disclosure\": { \"endpoints\": [\"https://api.example.com\"], \"retention\": \"none\", \"systemPrompt\": \"unchanged\" }；endpoints 必须是 https URL 数组。",
+    "docs": "docs/entry.md#credentials-and-seams",
+    "severityHint": "warn"
+  },
+  "C-13": {
+    "title": "高风险类别必须标注",
+    "why": "标签是市场/用户识别 prompt 修改、第三方模型、远程访问、镜像的唯一声明面。",
+    "fix": "按能力触发补 dsh.labels；镜像同时写 dsh.upstream；不要用 official/verified/certified/secure/audited。",
+    "docs": "docs/entry.md#declaration-fields",
+    "severityHint": "fail"
+  },
+  "C-13.1": {
+    "title": "labels 必须是闭集内的字符串数组",
+    "why": "未知标签会被市场丢弃或误读，等于没标。",
+    "fix": "只用 prompt-modification、red-team、third-party-model-provider、remote-access、mirror；不要空数组占位。",
+    "docs": "docs/entry.md#declaration-fields",
+    "severityHint": "fail"
+  },
+  "C-13.2": {
+    "title": "能力触发必须补对应标签",
+    "why": "声明了 system-prompt:write 等能力却不打标签，用户看不到高风险类别。",
+    "fix": "按映射补标签：system-prompt:write→prompt-modification；llm:adapter+network:egress→third-party-model-provider；network:ingress→remote-access；dsh.upstream→mirror。",
+    "docs": "docs/entry.md#declaration-fields",
+    "severityHint": "fail"
+  },
+  "C-13.3": {
+    "title": "dsh.upstream 必须是合法 https URL 且不自指",
+    "why": "镜像/分叉不写上游或指向自己，用户无法追溯来源。",
+    "fix": "写 \"dsh\": { \"upstream\": \"https://github.com/owner/repo\" }，不要填自己的 repository；同时加 mirror 标签。",
+    "docs": "docs/entry.md#declaration-fields",
+    "severityHint": "fail"
+  },
+  "C-13.4": {
+    "title": "不得使用官方/认证类标签",
+    "why": "official/verified/certified/secure/audited 会被当成背书，而本标准不做认证。",
+    "fix": "从 labels/README/描述里删掉这些词；改用中性描述“兼容/已自测”。",
+    "docs": "docs/levels.md#vocabulary-that-must-not-be-inflated",
+    "severityHint": "fail"
+  },
+  "C-13.5": {
+    "title": "red-team 标签要配 usageScope",
+    "why": "红队类插件风险高，只有标签没有使用范围说明，用户无法判断边界。",
+    "fix": "加 \"dsh\": { \"usageScope\": \"...\" } 说明授权范围与禁止用途；没有红队用途就删掉该标签。",
+    "docs": "docs/entry.md#declaration-fields",
+    "severityHint": "warn"
+  },
+  "C-14": {
+    "title": "运行时声明必须有证据",
+    "why": "ENTRY 的 runtime claim 需要真实插件启动或 bundle G0-G3；not-run 不能写成通过。",
+    "fix": "用 --runtime 提供真实 Cordis/宿主，或 bundle 用 --host 跑 G0-G3；修完 apply/启动问题再复跑，不要用 static claim 冒充 runtime。",
+    "docs": "docs/entry.md#the-two-claims",
+    "severityHint": "fail"
+  },
+  "G0": {
+    "title": "bundle patch 必须可解析",
+    "why": "G0 过不了，后续 G1-G3 都无法开始，bundle 安装即失败。",
+    "fix": "修 cordis.patch.yml 的 YAML/字段；确认 dsh.bundle.patch 指向的文件能被宿主解析，再跑 bundle smoke。",
+    "docs": "docs/entry.md#the-two-claims",
+    "severityHint": "fail"
+  },
+  "G1": {
+    "title": "patch 目标行必须能解析",
+    "why": "G1 失败说明 patch 行的 name/target 对不上，宿主无法合成 profile。",
+    "fix": "按宿主 patch 语法修 name/target；确认目标包在 host farm 中存在；用 --base/--web/--bare 提供真实宿主再复跑。",
+    "docs": "docs/entry.md#the-two-claims",
+    "severityHint": "fail"
+  },
+  "G2": {
+    "title": "宿主兼容性门必须接受",
+    "why": "G2 reject 表示宿主会直接跳过该 bundle，用户装了也不会生效。",
+    "fix": "修 engines.dsh/peer 范围到宿主接受；核对 host 的 plugin-compatibility 结果，不要靠豁免当通过。",
+    "docs": "docs/entry.md#the-two-claims",
+    "severityHint": "fail"
+  },
+  "G3": {
+    "title": "bundle 行必须全部 ACTIVE",
+    "why": "G3 partial 表示目标 profile 没提供某些服务，bundle 只挂上了一部分。",
+    "fix": "用 --host/--base/--web/--bare 提供完整目标 profile；检查 patch 行的 inject/provide 与宿主服务是否匹配；partial 不能写成通过。",
+    "docs": "docs/entry.md#the-two-claims",
+    "severityHint": "fail"
+  },
+  "G4": {
+    "title": "client 形态必须能被宿主识别",
+    "why": "G4 失败说明 dsh.client 没有 package-root 行或 client 导出缺失，客户端加载不到。",
+    "fix": "补 dsh.client 的 package-root 行与 client 导出；确认构建产物在 files 里；用 --entry-runtime server-entry/client probe 复跑。",
+    "docs": "docs/entry.md#the-two-claims",
+    "severityHint": "fail"
+  }
+}

@@ -1,4 +1,6 @@
 import path from 'node:path'
+import remediationSpec from '../../spec/remediation.json' with { type: 'json' }
+import { DOCS_BASE, joinAdvice } from './remediation.mjs'
 
 export const PACKAGE_MANDATORY = [
   'DSC-01', 'DSC-02', 'DSC-04', 'DSC-05', 'DSC-06', 'DSC-07', 'DSC-08', 'DSC-09', 'DSC-11', 'DSC-12', 'DSC-13',
@@ -37,7 +39,7 @@ function allowedNa(check, scope, profile, kind) {
   return false
 }
 
-export function buildReport({ subject, anchor, checks, g4 = null, scope, profile, kind, staticOnly = false, entryRuntime = 'require', entryClaim = 'runtime' }) {
+export function buildReport({ subject, anchor, checks, g4 = null, scope, profile, kind, staticOnly = false, entryRuntime = 'require', entryClaim = 'runtime', advice = true }) {
   const mandatory = mandatoryFor(scope, profile, staticOnly, entryClaim)
   const adjustedChecks = scope === 'entry' ? checks.map(item => adjustEntryCheck(item, entryClaim)) : checks
   const runtimeIds = new Set(['DSC-04', 'DSC-05', 'DSC-06', 'DSC-07', 'DSC-08', 'DSC-09'])
@@ -85,7 +87,7 @@ export function buildReport({ subject, anchor, checks, g4 = null, scope, profile
   if (warnings.length > 0) reasonParts.push(`WARN: ${warnings.map(item => item.id).join(', ')}`)
   if (advisoryWarnings.length > 0) reasonParts.push(`advisory: ${advisoryWarnings.map(item => item.id).join(', ')}`)
 
-  return {
+  const report = {
     schema: 'dsh-conformance/1',
     standard: { id: 'DS-C', version: '1.0.0' },
     subject,
@@ -120,6 +122,12 @@ export function buildReport({ subject, anchor, checks, g4 = null, scope, profile
       reason: reasonParts.join('; '),
     },
   }
+  // Additive only: `advice` is a sibling of `checks`, never part of a check,
+  // and the verdict is computed above without reading it.
+  if (advice !== false) {
+    report.advice = joinAdvice(report, remediationSpec, DOCS_BASE)
+  }
+  return report
 }
 
 const ICON = { PASS: 'PASS', WARN: 'WARN', FAIL: 'FAIL', NA: 'NA  ', ERROR: 'ERR ' }
@@ -145,6 +153,15 @@ export function formatText(report) {
   lines.push(`coverage: mandatory=${coverage.mandatory} pass=${coverage.pass} warn=${coverage.warn} fail=${coverage.fail} na=${coverage.na} notRun=${coverage.notRun}`)
   if (conclusion.reason) lines.push(`reason: ${conclusion.reason}`)
   if (conclusion.status === 'incomplete') lines.push('NOT A DS-C PASS: at least one mandatory check did not run (see notRun).')
+  if (Array.isArray(report.advice) && report.advice.length > 0) {
+    lines.push('')
+    lines.push('advice (non-blocking):')
+    for (const item of report.advice) {
+      const missing = item.ruleMissing ? ' [ruleMissing]' : ''
+      lines.push(`  ${String(item.severity).padEnd(4)} ${String(item.key).padEnd(7)} ${item.source}${missing}: ${String(item.fix ?? item.title ?? '').replace(/\s+/g, ' ').slice(0, 160)}`)
+      if (item.docsUrl) lines.push(`          ${item.docsUrl}`)
+    }
+  }
   lines.push('')
   return `${lines.join('\n')}\n`
 }

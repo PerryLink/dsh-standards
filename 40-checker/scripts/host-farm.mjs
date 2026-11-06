@@ -20,6 +20,7 @@
 import fs from 'node:fs'
 import path from 'node:path'
 import { spawnSync } from 'node:child_process'
+import { sanitizedEnv } from '../src/sandbox-env.mjs'
 
 function parse(argv) {
   const options = { plugin: null, farm: null, host: '<dsh-checkout>', install: false, build: false, link: false, quiet: false }
@@ -124,7 +125,7 @@ function copyPlugin(plugin, farm, asLink) {
 }
 
 function run(command, args, cwd) {
-  const result = spawnSync(command, args, { cwd, stdio: 'inherit', env: { ...process.env, npm_config_audit: 'false', npm_config_fund: 'false' } })
+  const result = spawnSync(command, args, { cwd, stdio: 'inherit', env: sanitizedEnv({ npm_config_audit: 'false', npm_config_fund: 'false' }) })
   if (result.error) return { ok: false, error: String(result.error) }
   return { ok: result.status === 0, status: result.status }
 }

@@ -5,6 +5,7 @@ import { runManifestChecks, DEFAULT_RUNTIME_VERSION } from './manifest.mjs'
 import { checkCapabilities, checkCredentials, checkImportTimeAdvisory, checkLabels } from './declarations.mjs'
 import { runRuntimeChecks } from './runtime.mjs'
 import { spawn, spawnSync } from 'node:child_process'
+import { sanitizedEnv } from './sandbox-env.mjs'
 import { readSources } from './util.mjs'
 import { buildReport, writeReport } from './report.mjs'
 
@@ -40,6 +41,8 @@ Options:
   --web <file>               optional web-app cordis.patch.yml for bundle smoke
   --bare <dir>               optional bare-module base for bundle smoke (host farm)
   --out <file>               write the report to a file (stdout otherwise)
+  --advice                   include remediation advice in the report (default: on)
+  --no-advice                omit the additive advice[] field
   --help                     show this help
   --version                  show the checker version
 
@@ -75,6 +78,7 @@ function parseArgs(argv) {
     web: null,
     bare: null,
     out: null,
+    advice: true,
     help: false,
     version: false,
   }
@@ -117,6 +121,8 @@ function parseArgs(argv) {
       case '--base': options.base = value(); break
       case '--web': options.web = value(); break
       case '--bare': options.bare = value(); break
+      case '--advice': options.advice = inline === undefined ? true : inline !== 'false'; break
+      case '--no-advice': options.advice = false; break
       default: throw new Error(`unknown option: ${key}`)
     }
   }
@@ -152,7 +158,8 @@ function runtimeNotRun(reason) {
 function isolatedRuntimeChecks(input) {
   return new Promise((resolve) => {
     const script = path.resolve(path.dirname(fileURLToPath(import.meta.url)), '..', 'scripts', 'runtime-child.mjs')
-    const child = spawn(process.execPath, [script], { stdio: ['pipe', 'pipe', 'pipe'] })
+    // The child imports the inspected package: never inherit the caller's env.
+    const child = spawn(process.execPath, [script], { stdio: ['pipe', 'pipe', 'pipe'], env: sanitizedEnv() })
     let out = ''
     let err = ''
     const timer = setTimeout(() => { try { child.kill('SIGKILL') } catch {} }, input.timeoutMs + 3000)
@@ -198,7 +205,7 @@ async function entryRunCheck(kind, runtimeChecks, options, dir) {
     if (options.base) args.push('--base', options.base)
     if (options.web) args.push('--web', options.web)
     if (options.bare) args.push('--bare', options.bare)
-    const run = spawnSync(process.execPath, args, { encoding: 'utf8', timeout: options.timeoutMs + 5000, maxBuffer: 8 * 1024 * 1024 })
+    const run = spawnSync(process.execPath, args, { encoding: 'utf8', timeout: options.timeoutMs + 5000, maxBuffer: 8 * 1024 * 1024, env: sanitizedEnv() })
     if (run.error) return { ...base, result: 'ERROR', coverage: 'not-run', reason: `bundle smoke failed to start: ${run.error.message}` }
     let smoke
     try { smoke = JSON.parse(run.stdout) } catch { return { ...base, result: 'ERROR', coverage: 'not-run', reason: `bundle smoke produced no JSON: ${(run.stderr || '').slice(0, 300)}` } }
@@ -343,6 +350,7 @@ export async function main(argv = process.argv.slice(2)) {
     staticOnly: options.staticOnly,
     entryRuntime: options.entryRuntime,
     entryClaim: options.entryClaim,
+    advice: options.advice,
   })
   const output = writeReport(report, options.format)
   if (options.out) {

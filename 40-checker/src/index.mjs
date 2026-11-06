@@ -4,5 +4,8 @@ export { runManifestChecks, checkMarketEntry, DEFAULT_RUNTIME_VERSION, inferKind
 export { checkCapabilities, checkCredentials, checkLabels, checkImportTimeAdvisory, CAPABILITIES, LABELS } from './declarations.mjs'
 export { runRuntimeChecks } from './runtime.mjs'
 export { buildReport, formatText, formatSarif, writeReport } from './report.mjs'
+export { joinAdvice, DOCS_BASE } from './remediation.mjs'
 export { satisfies, validRange, parseVersion, compareVersions } from './semver.mjs'
 export { parseInstallSpec } from './install-spec.mjs'
+export { FLOW_IDS, FLOW_EVIDENCE_SCHEMA, evidenceHash, finalizeEvidence, journeyAggregate, treeSha256, validateFlowEvidence } from './flow-evidence.mjs'
+export { sanitizedEnv, scrubProcessEnv, isSecretEnvName, isAllowedEnvName, envPolicy } from './sandbox-env.mjs'

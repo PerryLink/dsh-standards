@@ -3,6 +3,10 @@
 // the checker. Input: JSON on stdin. Output: JSON { checks } on stdout.
 import { runRuntimeChecks } from '../src/runtime.mjs'
 import { readSources } from '../src/util.mjs'
+import { scrubProcessEnv } from '../src/sandbox-env.mjs'
+
+// This process imports the inspected package; keep only allowlisted env keys.
+scrubProcessEnv()
 
 const chunks = []
 for await (const chunk of process.stdin) chunks.push(chunk)
