@@ -190,22 +190,22 @@ DSH 插件生态里，“合格”至少有三层含义，而且它们不是同�
 |---|---|---|---|
 | 安装脚本 | 读脚本文本，找 `curl\|sh`、`base64 -d`、`node -e`、`sh -c`、`powershell -enc`、特权路径 | 证明安装期没有联网取代码；证明依赖的 install 脚本干净 | C-15 |
 | 动态执行 | AST 找 `eval`/`Function`/`vm`/`_compile`/`process.binding`/裸 `child_process` | 证明运行时没有 `globalThis['ev'+'al']`、反射、WASM、远程代码加载 | C-16 |
-| 敏感文件 | 读 API 实参回溯到 `~/.ssh`/`$DSH_HOME`/credentials 字面量 | 证明没有 `readdir`+前缀匹配、软链、子进程读、编码后读 | C-17 |
+| 敏感文件 | 读/列 API 实参回溯到 `~/.ssh`/`$DSH_HOME`/credentials 字面量；同函数内 `readdir`+前缀/派生路径+出站可判一部分 | 证明没有完全动态路径、软链、子进程读、编码后读；单独目录列举只 WARN | C-17 |
 | 外联端点 | 解析调网点、披露差集、可疑形态 | 证明实际流量、重定向、DNS、运行时拼 URL、私网出口 | C-18 |
 | 混淆/二进制 | 清点二进制并记 sha256；量长行/base64/熵 | 反编译、证明没有隐藏载荷、判断"混淆是否恶意" | C-19 |
 | 提示词注入 | 静态线索（外部文本进 systemPrompt、指令样字面量）+ v2 运行时 hook | 证明语义安全、证明模型没被污染；静态分不清"检测规则"与"注入指令" | C-20 |
-| 供应链 | 名字/scope 近似、registry 元数据、lockfile 一致 | 证明依赖树未投毒、传递依赖干净、发布者身份 | C-21 |
+| 供应链 | 名字/scope 近似（WARN）；依赖/传递元数据与 lockfile 一致性为 `not-run`（1.6.1 不联网查 registry） | 证明依赖树未投毒、传递依赖干净、发布者身份 | C-21 |
 | 来源/完整性 | `dist.integrity`/`dsh.attestation`/`dsh.signature` 字段是否存在 | digest 比对、Ed25519 验签、证明公钥属于发布者、构建可复现、代码无恶意 | C-22 |
 | 权限最小化 | 声明 vs 静态触发交叉（C-11） | 真正阻止未声明能力；宿主不读 `dsh.capabilities` | C-11 |
 | 审批/沙箱 | 只能记录"宿主没提供" | 改变宿主行为；给插件代码加隔离 | 流程/宿主 |
 | 同进程逃逸 | 无 | 静态/运行时都不可判；只能靠 OS 级隔离 + 人工评审 | 无 |
 
-**能力边界**：C-15/C-16/C-17 可以 FAIL；C-21 是强制项但发现只到 WARN；C-18/C-19/C-20/C-22 是 advisory；其余安全面根本没有机械判据。**4 条可判（15/16/17/21，其中 21 只到 WARN）、4 条只给线索**，没有一条能证明"无恶意"。
+**能力边界**：C-15/C-16/C-17 可以 FAIL；C-21 是强制项但 **WARN-only、不阻断（listing 同）**；C-18/C-19/C-20/C-22 是 advisory；其余安全面根本没有机械判据。**3 条可阻断（15/16/17）、1 条强制但只 WARN（21）、4 条只给线索（18/19/20/22）**，没有一条能证明"无恶意"。
 
 ### 10.3 对外说法与落点
 
-- `DS-C PASS` 只表示"该 profile 的强制条款在本次锚点上通过"，**不表示安全**；`security.status=pass` 也只表示"8 条安全检查在本次覆盖内未见 FAIL/WARN"，**不是安全审计**。
+- `DS-C PASS` 只表示"该 profile 的强制条款在本次锚点上通过"，**不表示安全**；`security.status=pass` 也只表示"8 条安全检查在本次覆盖内未见 FAIL/WARN"（`partial` 不在 pass 判定内，需读 `security.checks[].coverage`），**不是安全审计**。
 - 禁止写"安全""认证""审计通过""100% 无风险"；固定写"非官方·非认证·非安全审计·非背书·不提供担保"。
-- 市场/徽章只透传 `security.status` 与 `security.notRun[]`，不加安全徽章、不按安全分排序；`security` 的 FAIL 不得撤销 `DS-C` 的 PASS，反之亦然。
+- 市场/徽章只透传 `security.status`、`security.checks[]`（含 `coverage`）与 `security.notRun[]`，不加安全徽章、不按安全分排序；`security` 的 FAIL 不得撤销 `DS-C` 的 PASS，反之亦然。
 - `!!js` 配置与 client→Remote 两条目前**没有独立条款**：C-16 只扫代码闭包，C-11 只判声明；它们的修复在宿主（声明式配置替代、Remote 调用方身份/审批），不能靠检查器补。
 - 漏洞与绕过按 `SECURITY.md` 私密上报；不要在公开 issue 里贴可利用细节、凭据或未修复样本。

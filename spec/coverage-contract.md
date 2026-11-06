@@ -1,6 +1,6 @@
 # coverage 契约（`dsh-conformance/1`）
 
-> 适用版本：dsh-standards **1.6.0**（计划版本；1.5.0 及更早为 14 项）。`40-checker/src/report.mjs` 的 `buildReport()` 负责计数；`security` 块见 §6。
+> 适用版本：dsh-standards **1.6.0+**（当前 1.6.1；1.5.0 及更早为 14 项）。`40-checker/src/report.mjs` 的 `buildReport()` 负责计数；`security` 块见 §6。
 > 机器可校验形状见 [`schemas/conformance.schema.json`](schemas/conformance.schema.json)；本文只统一字段含义。
 > 结论：`coverage` 是**加性计数**，不参与 verdict；`PASS/WARN/FAIL` 与 `status/level` 由 `conclusion` 和对应 profile 的强制项决定。
 
@@ -25,14 +25,14 @@
 | `advisory` | `check.advisory === true` 且结果为 `WARN` 的数量；是 `warn` 的子集，只作信号，永不改 verdict。 |
 | `fail` | 结果 `FAIL` 的数量。 |
 | `na` | 结果 `NA` 的数量（对象形态/上下文不适用），**不是通过**。 |
-| `notRun` | `coverage` 为 `not-run`/`partial` 且结果非 `NA` 的项、结果 `ERROR` 的项、以及**缺失的强制项** ID 去重后的数量；包含 `error`。 |
+| `notRun` | `coverage` 为 `not-run` 且结果非 `NA` 的项、结果 `ERROR` 的项、以及**缺失的强制项** ID 去重后的数量；包含 `error`。**不含** `partial`。 |
 | `error` | 结果 `ERROR` 的数量（检查器失效或该跑没跑）；是 `notRun` 的子集。 |
 
 加性诊断字段（1.3.0 工作树同时输出；旧消费者应按“可选”处理，不参与 verdict）：
 
 | 字段 | 定义 |
 |---|---|
-| `coverage.partial` | `checks[].coverage === "partial"` 的数量。它同时保留在 `checked`（若结果 PASS/WARN/FAIL）和 `notRun` 中；这个计数只是把重叠显式化，**不是第 10 个通过口径**。 |
+| `coverage.partial` | `checks[].coverage === "partial"` 的数量。结果 PASS/WARN/FAIL 时仍计入 `checked`；但**不并入** `coverage.notRun`，只在 `coverage.partial` 与 `buckets.partial` 中单列。这个计数**不是第 10 个通过口径**。 |
 | 顶层 `notChecked` | `buckets.notChecked` 与 `buckets.partial` 按 `id` 去重后的可读视图，每行带 `howToEnable`。等价信息已在 `buckets` 里子集化，消费者可忽略。 |
 | `buckets.partial` | `coverage: "partial"` 的检查行；同一行可能也出现在 `blocking` / `hygiene`。 |
 | 行级 `howToEnable` | 让该 NA/ERROR/partial 行可运行的命令或 flag；仅提示。 |
@@ -42,7 +42,8 @@
 - `checked = pass + warn + fail`（`advisory <= warn`）。
 - `error <= notRun`；`notRun` 统计的是“没拿到完整结论”的项，`NA` 不算没跑。
 - 默认 `ds-c` 完整跑（14 项、无缺失）与 `--scope security` 完整跑（22 项、无缺失）都满足 `checked + na + notRun = total`；两份报告的 `total` 不同，不能混算通过率。
-- **例外**：若某项 `coverage: "partial"` 但结果仍是 `WARN`/`FAIL`，它会同时出现在 `checked` 与 `notRun` 中——已评估但不完整，不能当成 `full`。有缺失强制项时，`notRun` 会含不在 `checks[]` 里的 ID，此时上述加法可大于 `total`。
+- **例外**：`coverage: "partial"` 的项若结果仍是 `WARN`/`FAIL`，它同时出现在 `checked` 与 `coverage.partial`/`buckets.partial`；它是"已评估但不完整"，不并入 `notRun`。有缺失强制项时，`notRun` 会含不在 `checks[]` 里的 ID，此时加法可大于 `total`。
+- **注**：`schemas/conformance.schema.json` 里 `coverage.notRun` 的旧描述仍写“含 partial”，与本表不符；以 `buildReport()` 当前输出（不含 partial）为准，schema 文案待后续版本同步。
 - `metrics = { checked, total, declaredFields }`：`checked`/`total` 与 `coverage` 同源；`declaredFields` 是 capabilities/labels/commitments/disclosure/engines.dsh 五个可选声明面中实际声明的个数（0–5），只作上下文。
 
 ## 3. 与旧检查级 `full` / `partial` 的映射
@@ -53,7 +54,7 @@
 |---|---|---|
 | `full` + `PASS`/`WARN`/`FAIL` | `checked`，并落入 `pass`/`warn`/`fail` | 完整评估，计入结论。 |
 | `full` + `NA` | `na` | 显式不适用；旧报告常把 NA 记在 `full` 之外。 |
-| `partial`（无论结果） | `notRun` | 只跑了一部分，必须当未完成；若结果仍是 `WARN`/`FAIL`，同时计入 `checked`。 |
+| `partial`（无论结果） | `checked`（若结果 PASS/WARN/FAIL）+ `coverage.partial` / `buckets.partial` | 只跑了一部分：已评估但不完整；**不计入** `coverage.notRun`，不得当 `full`。 |
 | `not-run` | `notRun` | 完全没跑。 |
 | `ERROR`（旧 `error` 计数） | `notRun` + `error` | 检查器失效/未执行；两者都计。 |
 
@@ -61,7 +62,8 @@
 
 - 旧 `mandatory` → 新 `mandatory`（同义，选出的强制项数）。
 - 旧 `full` → 新 `checked` **减去** `partial` 但已评估的项，再减去 `full + NA` 的项；最稳妥的读法是“旧 full 只看覆盖，新 checked 看结果”。
-- 旧 `partial` / `notRun` → 新 `notRun`。
+- 旧 `partial` → 新 `coverage.partial` / `buckets.partial`（结果 PASS/WARN/FAIL 时同时在 `checked`；不进 `notRun`）。
+- 旧 `notRun` → 新 `notRun`。
 - 旧 `na` → 新 `na`。
 - 旧 `error` → 新 `error`（并已包含在 `notRun`）。
 - 旧对象没有 `total` / `pass` / `warn` / `advisory` / `fail` / `checked`；这些是 1.3.0 的新增计数。
@@ -108,10 +110,11 @@
 | `security.status=fail` | **仅 security scope**：`DSC-15`/`DSC-16`/`DSC-17` 任一 FAIL。`DSC-21` 永不 FAIL；默认模式 FAIL 封顶 WARN，不会出现 fail。 |
 | `security.status=warn` | 无 FAIL，但有 `DSC-21` 或 15/16/17 的 WARN，或 18/19/20/22 的 advisory WARN。 |
 | `security.status=incomplete` | **security scope 下** `DSC-15`/`DSC-16`/`DSC-17`/`DSC-21` 任一结果不在 `PASS`/`WARN`/`FAIL`（即 `NA`/`ERROR`/`not-run`）。 |
+| `security` 块的 `partial` | 1.6.1 **没有** `security.partial[]`：部分覆盖看 `security.checks[].coverage === "partial"`；`security.notRun[]` 只收 `NA`/`ERROR`/完整 `not-run`，**不收 partial**。`security.status=pass` 不要求 partial 为空，市场必须读 `checks[]`，不能只看四个数组。顶层 `coverage.partial` / `buckets.partial` 在 security scope 下统计 `checks[]` 全部 22 项（含这 8 项）。 |
 | 与 DS-C 关系 | **独立**：security FAIL 不撤销 DS-C PASS；DS-C PASS 不证明 security 通过；反之亦然。 |
 | 徽章 | **不得**发 security 徽章；市场只透传 `security.status`、`security.checks[]` 与 `security.notRun[]`，不按安全分排序/筛选。 |
 
-严重度以 `spec/dsc-clauses.json` 的 `mandatory`/`advisory` 与 31 §2 C-15～C-22 为准：`DSC-15/16/17` 为 blocking（可 FAIL）；`DSC-21` 是强制项但发现封顶 WARN（永不 FAIL，未跑才 `incomplete`）；`DSC-18/19/20/22` 为 advisory（`advisory:true`，永不改 verdict）。`security` 块只汇总这 8 项，不与顶层 `coverage` 换算成第二套通过率。
+严重度以 `spec/dsc-clauses.json` 的 `mandatory`/`advisory` 与 31 §2 C-15～C-22 为准：`DSC-15/16/17` 为 blocking（可 FAIL）；`DSC-21` 是强制项但 **WARN-only、不阻断（listing 同；永不 FAIL，未跑才 `incomplete`）**；`DSC-18/19/20/22` 为 advisory（`advisory:true`，永不改 verdict）。`security` 块只汇总这 8 项，不与顶层 `coverage` 换算成第二套通过率。
 
 ## 7. 禁止事项
 

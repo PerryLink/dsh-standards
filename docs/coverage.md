@@ -15,8 +15,10 @@ dsh-standards check <package-dir> \
 |---|---|---|
 | 完整口径 | **22** | `DSC-01` … `DSC-22`；`--scope security` 时 `checks[]` 带全 22 项 |
 | 默认 `checks[]` | **14** | `DSC-01` … `DSC-14`；默认 DS-C 判定只看这 14 项 |
-| 默认实际评估 | **6** | `DSC-01`、`DSC-02`、`DSC-10`、`DSC-11`、`DSC-12`、`DSC-13` |
-| 默认未检查 | **8** | `DSC-03`（NA）+ `DSC-04`–`DSC-09`（not-run）+ `DSC-14`（NA） |
+| 默认 ds-c 实际评估（bundle） | **12 / 14** | bundle 的 `DSC-04`–`09` 以静态子集 `PASS`+`partial` 计入；`DSC-03`/`DSC-14` 为 NA |
+| 默认 ds-c 实际评估（plugin，无 `--runtime`） | **6 / 14** | `DSC-04`–`09` 为 not-run；`DSC-03`/`DSC-14` 为 NA |
+| 默认未检查（plugin 静态） | **8** | 2 NA + 6 not-run；不等于通过 |
+| `--scope security` `checks[]` | **22** | 加 `DSC-15`–`DSC-22`；`coverage.mandatory=4`（15/16/17/21），仍可能 not-run |
 | 默认 security 块 | **8** | `DSC-15`–`DSC-22` 在 `security` 块里跑 advisory；FAIL 封顶 WARN，不改变 DS-C 结论 |
 
 `not checked` 桶把 NA / not-run / ERROR 都列出来；**没检查不等于通过**。`DSC-10` 是 advisory，只提供信号，不改变结论。
@@ -45,7 +47,7 @@ dsh-standards check <package-dir> \
 | `DSC-18` | L0 | **advisory（security 块）** | 端点线索，永不 FAIL | `--scope security`；外联端点 |
 | `DSC-19` | L0 | **advisory（security 块）** | 只登记不判恶 | `--scope security`；混淆/二进制 |
 | `DSC-20` | L0 | **advisory（security 块）** | 语义不可判、误报高 | `--scope security`；提示词注入 |
-| `DSC-21` | L0 | **advisory WARN（security 块）** | 名字线索；默认 scope 不 FAIL | `--scope security`；供应链，强制项但只 WARN |
+| `DSC-21` | L0 | **WARN（security 块）** | 名字线索；默认 scope 不 FAIL | `--scope security`；供应链，强制项但只 WARN、不阻断 |
 | `DSC-22` | L0 | **advisory（security 块）** | 只有字段自证 | `--scope security`；来源/完整性，v1 只读字段 |
 
 ## security scope（C-15～C-22）
@@ -55,17 +57,21 @@ dsh-standards check <package-dir> \
 | 项 | security scope 判定 | 触发 |
 |---|---|---|
 | `DSC-15` 生命周期脚本 | **blocking**（可 FAIL） | 安装期 `curl\|sh`、`base64 -d`、`node -e`、`sh -c`、`powershell -enc`、引用缺失脚本、写 `$HOME`/`/etc` |
-| `DSC-16` 动态执行 | **blocking**（可 FAIL） | `eval`/`new Function(非空)`/`vm`/`module._compile`/`process.binding` → FAIL；裸 `child_process` → WARN |
+| `DSC-16` 动态执行 | **blocking**（可 FAIL） | `eval`/`new Function(非空)`/`vm`/`module._compile`/`process.binding` → FAIL；裸 `child_process` → WARN；静态危险子进程命令 1.6.2 起 FAIL |
 | `DSC-17` 敏感文件 | **blocking**（可 FAIL） | 直接读 `~/.ssh`、`$DSH_HOME` credentials、`id_rsa`、`.aws`、`.npmrc`、`.netrc` 等；`.env` 只 WARN |
 | `DSC-18` 外联端点 | **advisory**（永不 FAIL） | 非 https、userinfo、公网裸 IP、webhook/paste/ngrok/onion、未披露端点 |
 | `DSC-19` 混淆/二进制 | **advisory** | 二进制 sha256、超长单行、大块 base64、高熵；只登记不判恶 |
 | `DSC-20` 提示词注入 | **advisory** | 外部文本进 systemPrompt、指令样字面量、无 untrusted 包裹；语义不可判 |
-| `DSC-21` 供应链 | **blocking（强制项）/ WARN（发现封顶）** | scope 同形字/近似 scope、近似名、元数据缺失；**永不 FAIL**，但未跑会使 security `incomplete` |
+| `DSC-21` 供应链 | **WARN-only（强制项，不阻断）** | scope 同形字/近似 scope、近似名、元数据缺失；**永不 FAIL**，listing/package 均只 WARN；未跑会使 security `incomplete` |
 | `DSC-22` 来源/完整性 | **advisory**（永不 FAIL） | 只读 `dist.integrity` / `dsh.attestation` / `dsh.signature` 字段是否存在；不验签、不比对 digest；无输入即 `not-run` |
 
 **默认不改变判定**：不传 `--scope security` 时，这 8 项不进 `checks[]`，只在 `security` 块里以 `scope=advisory` 运行；任何 FAIL 封顶 WARN，`DS-C` 的 11/12 条强制集合与 exit code 不变。security 的 FAIL 不能撤销 `DS-C` PASS，`DS-C` PASS 也不能证明 security 通过。
 
-**边界**：C-15/C-16/C-17 可以 FAIL；C-21 是强制项但发现只到 WARN；C-18/C-19/C-20/C-22 是 advisory；其余安全面（实际网络流量、审批绕过、同进程逃逸、client DOM、`!!js` 配置、Remote 调用方身份）**没有机械判据**。任何 PASS 都只是"本次覆盖内未见该类线索"，不是"安全/已审计"。
+**报告读法（headline vs buckets）**：`conclusion.headline` 的 `blocking N` 与 `buckets.blocking[]` 只数 `checks[]` 里的 FAIL。默认 scope 下 security FAIL 封顶 WARN，只在 `security` 块（`security.warn[]`，`security.blocking=[]`），**不进 `buckets.blocking`**；`--scope security` 下 `DSC-15/16/17` FAIL 才进 `buckets.blocking`、抬高 headline 并 exit 1。`DSC-21` 永不 FAIL，两个 profile 都不阻断。
+
+**partial 怎么读**：`checks[].coverage=partial` 仍计入 `coverage.checked`（若结果 PASS/WARN/FAIL），并单列到 `coverage.partial` / `buckets.partial`；它**不并入** `coverage.notRun`（后者只数完整 `not-run` + `ERROR` + 缺失强制项）。`security` 块没有独立 `partial[]`：看 `security.checks[].coverage`；`security.notRun[]` 不收 partial。
+
+**边界**：C-15/C-16/C-17 可以 FAIL；C-21 是强制项但 **WARN-only、不阻断（listing 同）**；C-18/C-19/C-20/C-22 是 advisory；其余安全面（实际网络流量、审批绕过、同进程逃逸、client DOM、`!!js` 配置、Remote 调用方身份）**没有机械判据**。任何 PASS 都只是"本次覆盖内未见该类线索"，不是"安全/已审计"。
 
 ## 执行 opt-in
 
@@ -95,10 +101,14 @@ dsh-standards check <package-dir> \
 - **WSL2（Ubuntu 24.04）：** Linux 沙箱可用，能提供 `unshare` / `prlimit`；这是本仓做 runtime 采集的环境。WSL2 可用不等于某个 host × Node × checker 组合已经跑过，具体以 [SUPPORTED.md](../SUPPORTED.md) 的格子为准。
 - **Node：** 包声明 `engines.node >=24.9.0`；Node 22 只在自测 / 静态矩阵中有记录（见 SUPPORTED.md）。
 
+## advice 的 docsUrl
+
+报告 `advice[].docsUrl` 的基址是 checker 的 `DOCS_BASE`：1.6.1 为 `dsh-plugin-guide` `v0.4.6`，计划在 **1.6.2 升到 `v0.5.0`**。guide 0.5.0 的 `docs/security.md` 中 C-15～C-22 advice 使用的锚点（`#2-credentials-and-sensitive-files-dsc-17`、`#3-egress-endpoints-dsc-18`、`#4-files-subprocesses-and-dynamic-execution-dsc-15-dsc-16-dsc-17-dsc-19`、`#5-tool-output-and-prompt-injection-dsc-20`、`#6-dependencies-build-and-publish-dsc-15-dsc-21-dsc-22`）以及显式锚点 `#author-files`、`#author-credentials`、`#author-egress`、`#author-prompt`、`#author-publish`、`#scope` 已核对存在。
+
 ## 复核命令
 
 ```sh
-# 默认：6/14 评估，8 项 not-run/NA；security 块是 advisory
+# 默认静态：plugin 6/14（04–09 not-run），bundle 12/14（04–09 PASS+partial）；security 块是 advisory
 dsh-standards check <package-dir> --json | node -e 'let s="";process.stdin.on("data",d=>s+=d).on("end",()=>{const r=JSON.parse(s);console.log(r.coverage.checked+"/"+r.coverage.total);console.log(r.anchor);console.log(r.security)})'
 
 # 默认 + security scope：checks[] 变 22 项（不执行插件）

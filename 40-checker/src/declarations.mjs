@@ -27,6 +27,7 @@ const TRIGGERS = [
   { cap: 'tools:register', pattern: /ctx\.tools\.register\s*\(/g },
   { cap: 'remote:expose', pattern: /@Remote(?:Scope)?\s*\(/g },
   { cap: 'credentials:list', pattern: /\.listRecords\s*\(/g },
+  { cap: 'credentials:read', pattern: /ctx\.credentials\b/g },
   { cap: 'sessions:read', pattern: /ctx\.(?:sessions|sessionQuery)\b/g },
   { cap: 'shell', pattern: /ctx\.(?:shell|bash)\b/g },
   { cap: 'subprocess', pattern: /ctx\.subprocess\b/g },
@@ -628,7 +629,11 @@ export function checkCapabilities(manifest, sources, patch) {
     }
   } else if (!caps.error) {
     for (const [cap, hits] of triggered) {
-      const satisfied = caps.list.includes(cap) || (cap === 'fs:read' && caps.list.includes('fs:write'))
+      const satisfied = caps.list.includes(cap)
+        || (cap === 'fs:read' && caps.list.includes('fs:write'))
+        // Reading through ctx.credentials covers both list metadata and the
+        // provider seam; declaring either one satisfies the read trigger.
+        || (cap === 'credentials:read' && (caps.list.includes('credentials:list') || caps.list.includes('credentials:provider')))
       if (!satisfied) {
         details.push(detail('C-11.2', 'FAIL', `static trigger ${cap} is not declared in dsh.capabilities`, hitEvidence(hits)))
       }

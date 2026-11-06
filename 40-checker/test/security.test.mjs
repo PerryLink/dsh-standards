@@ -8,6 +8,7 @@ import { fileURLToPath } from 'node:url'
 import { runManifestChecks } from '../src/manifest.mjs'
 import { readSourcesWithStats } from '../src/util.mjs'
 import { runSecurityChecks, SECURITY_IDS } from '../src/security.mjs'
+import { checkCapabilities } from '../src/declarations.mjs'
 import { buildReport, buildSecurityView } from '../src/report.mjs'
 
 const HERE = path.dirname(fileURLToPath(import.meta.url))
@@ -16,6 +17,13 @@ const SECURITY_FIXTURES = path.join(HERE, '..', 'fixtures', 'security')
 const ANCHOR = {
   repo: 'test', commit: '0'.repeat(40), scanner: 'test', dsh: '0.2.2-alpha.2',
   cordis: '4.0.6-alpha.1', runtime: null, runtimeSource: 'cli', hostVersion: null, suspect: false,
+}
+
+function declarationsOfFixture(name) {
+  const dir = path.join(SECURITY_FIXTURES, name)
+  const manifest = runManifestChecks(dir)
+  const { sources } = readSourcesWithStats(dir)
+  return checkCapabilities(manifest.manifest, sources, {})
 }
 
 function securityOfFixture(name) {
@@ -361,4 +369,76 @@ test('DSC-19 inventory: a sourcemap comment keeps a long line advisory-free', ()
   } finally {
     fs.rmSync(dir, { recursive: true, force: true })
   }
+})
+
+test('DSC-17: process.env.HOME folds into the .dsh credential path; a config read stays PASS', () => {
+  const home = securityOfFixture('sec17-home-env').get('DSC-17')
+  assert.equal(home.result, 'FAIL')
+  assert.ok(home.details.some(item => item.item === 'C-17.1' && /sensitive path/.test(item.reason)), JSON.stringify(home.details))
+  assert.equal(securityOfFixture('sec17-home-env-clean').get('DSC-17').result, 'PASS')
+})
+
+test('DSC-17: a one-level readFileSync alias is resolved and a non-secret read stays PASS', () => {
+  const alias = securityOfFixture('sec17-alias-read').get('DSC-17')
+  assert.equal(alias.result, 'FAIL')
+  assert.ok(alias.details.some(item => item.item === 'C-17.1' && /sensitive path/.test(item.reason)), JSON.stringify(alias.details))
+  assert.equal(securityOfFixture('sec17-alias-clean').get('DSC-17').result, 'PASS')
+})
+
+test('DSC-18: a computed fetch alias is recognized and stays advisory; disclosed endpoint PASSes', () => {
+  const split = securityOfFixture('sec18-split-fetch').get('DSC-18')
+  assert.equal(split.result, 'WARN')
+  assert.ok(split.details.some(item => item.item === 'C-18.1' && /public bare IP host/.test(item.reason)), JSON.stringify(split.details))
+  assert.equal(securityOfFixture('sec18-split-fetch-clean').get('DSC-18').result, 'PASS')
+})
+
+test('DSC-16: download-and-run subprocess commands FAIL; plain subprocess and import-only stay WARN', () => {
+  for (const name of ['sec16-exec-curl', 'sec16-spawn-shell']) {
+    const execution = securityOfFixture(name).get('DSC-16')
+    assert.equal(execution.result, 'FAIL', name)
+    assert.ok(execution.details.some(item => item.item === 'C-16.1' && /remote script piped to a shell/.test(item.reason)), JSON.stringify(execution.details))
+  }
+  for (const name of ['sec16-subprocess-safe', 'sec16-import-only']) {
+    assert.equal(securityOfFixture(name).get('DSC-16').result, 'WARN', name)
+  }
+})
+
+test('DSC-15: network download plus dynamic require FAILs; a literal require stays WARN', () => {
+  const dynamic = securityOfFixture('sec15-install-dynamic').get('DSC-15')
+  assert.equal(dynamic.result, 'FAIL')
+  assert.match(dynamic.reason, /dynamically loads/)
+  const safe = securityOfFixture('sec15-install-download-safe').get('DSC-15')
+  assert.equal(safe.result, 'WARN')
+  assert.doesNotMatch(safe.reason, /dynamically loads/)
+})
+
+test('DSC-16: base64 plus eval FAILs; base64-only PASSes; decoded path/command FAILs', () => {
+  const obfuscated = securityOfFixture('sec16-base64-eval').get('DSC-16')
+  assert.equal(obfuscated.result, 'FAIL')
+  assert.ok(obfuscated.details.some(item => item.item === 'C-16.1' && /obfuscated/.test(item.reason)), JSON.stringify(obfuscated.details))
+  assert.equal(securityOfFixture('sec16-base64-clean').get('DSC-16').result, 'PASS')
+  const decoded = securityOfFixture('sec17-base64-path')
+  assert.equal(decoded.get('DSC-16').result, 'FAIL')
+  assert.equal(decoded.get('DSC-17').result, 'FAIL')
+  assert.equal(securityOfFixture('sec17-base64-path-clean').get('DSC-17').result, 'PASS')
+})
+
+test('DSC-11 C-11.2: ctx.credentials triggers credentials:read without a spurious C-11.5', () => {
+  const declared = declarationsOfFixture('sec11-cred-declared')
+  assert.equal(declared.result, 'PASS')
+  assert.ok(!declared.details.some(item => item.item === 'C-11.5'), JSON.stringify(declared.details))
+  const undeclared = declarationsOfFixture('sec11-cred-undeclared')
+  assert.equal(undeclared.result, 'FAIL')
+  assert.ok(undeclared.details.some(item => item.item === 'C-11.2' && /credentials:read/.test(item.reason)), JSON.stringify(undeclared.details))
+  assert.equal(declarationsOfFixture('sec11-cred-list').result, 'PASS')
+})
+
+test('CLI: healed credential, command and install fixtures are blocking in security scope', () => {
+  for (const [name, id] of [['sec17-home-env', 'DSC-17'], ['sec16-exec-curl', 'DSC-16'], ['sec15-install-dynamic', 'DSC-15']]) {
+    const run = runCli(path.join(SECURITY_FIXTURES, name), ['--scope', 'security', '--no-exec'])
+    assert.equal(run.code, 1, `${name}: ${run.stderr}`)
+    assert.ok(run.report.security.blocking.includes(id), `${name}: ${JSON.stringify(run.report.security.blocking)}`)
+  }
+  const clean = runCli(path.join(SECURITY_FIXTURES, 'sec17-alias-clean'), ['--scope', 'security', '--no-exec'])
+  assert.equal(clean.code, 0, clean.stderr)
 })

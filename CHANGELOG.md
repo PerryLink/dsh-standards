@@ -1,3 +1,15 @@
+## 1.6.2 — 2026-11-07
+
+### Fixed
+
+- 红队加固：`process.env.HOME` 拼接凭据路径、`exec/spawn` 危险命令、安装脚本「下载后动态 require」、一层 read 别名、base64+eval、拆分 fetch 均能命中；恶意变体阻断从 1/11 升到 7/11，负对照误报 0/12。
+- `ctx.credentials` 触发补入 C-11.2，声明 credentials:read 不再反报 C-11.5。
+- 文档口径：C-15 读脚本正文、C-17 readdir 可判、C-21 WARN-only、coverage 12/14、security 块 partial/读法、SECURITY 支持版本、advice 链接改 guide 0.5.0（security.md）。
+- 10 个真实包 DSC-15/17 FAIL 0/10。
+
+### Verified
+
+- `npm test` 282/282。
 ## 1.6.1 — 2026-11-07
 
 ### Fixed

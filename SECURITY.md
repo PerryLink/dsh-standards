@@ -11,9 +11,10 @@ best-effort fixes only when the fix is small and the reporter is affected.
 
 | Version | Supported | Notes |
 |---|---|---|
-| `1.5.x` (current) | **Yes** | Security fixes and checker-rule corrections. |
+| `1.6.x` (current) | **Yes** | Security fixes and checker-rule corrections. |
+| `1.5.x` | Best effort | Upgrade recommended; no new features. |
 | `1.4.x` | Best effort | Upgrade recommended; no new features. |
-| `<= 1.3` | No | Please reproduce on `1.5.x` before reporting. |
+| `<= 1.3` | No | Please reproduce on `1.6.x` before reporting. |
 
 The table describes **targets**, not a service-level agreement. This project has
 a bus factor of 1 (see [`CONTINUITY.md`](CONTINUITY.md)); response may be slower
@@ -118,11 +119,12 @@ being actively exploited, we may publish a mitigation before a full fix.
 - In `--scope security`, `security.status=pass` only means: within the 8
   security checks (`C-15`–`C-22`), no blocking check produced FAIL and no
   mandatory check was left `NA`/`ERROR`/`not-run`; there was also no WARN.
-  Outside that scope the block is advisory only (FAIL is capped to WARN), so
-  `pass` there does not assert coverage. `C-18`/`C-19`/`C-20`/`C-22` are
-  advisory and never produce FAIL (their WARN can make the status `warn`, not
-  `fail`). `C-21` is mandatory in `--scope security` but its findings cap at
-  WARN; a `not-run` can make the status `incomplete`.
+  Outside that scope the block is advisory only (FAIL is capped to WARN and does
+  not enter `buckets.blocking`), so `pass` there does not assert coverage.
+  `C-18`/`C-19`/`C-20`/`C-22` are advisory and never produce FAIL (their WARN can
+  make the status `warn`, not `fail`). `C-21` is mandatory in `--scope security`
+  but its findings are **WARN-only and never block, in the listing profile
+  too**; a check-level `not-run` can make the status `incomplete`.
 - A plugin is code that runs in the host process with the user's privileges.
   Static checks cannot prove the absence of malice: dynamic code loading,
   runtime URL construction, `readdir` + prefix matching, transitive dependency

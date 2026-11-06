@@ -45,6 +45,18 @@ const READ_APIS = new Set([
   'open', 'openSync', 'createReadStream', 'readdir', 'readdirSync',
 ])
 const CHILD_PROCESS = /^(?:node:)?child_process$/
+const COMMAND_EXEC_APIS = new Set(['exec', 'execSync', 'spawn', 'spawnSync', 'execFile', 'execFileSync'])
+// A subprocess call is only a FAIL when its statically-known command is
+// unambiguously a download-and-run / obfuscated payload, never for a plain
+// `git status` or an import that is never called.
+const DANGEROUS_COMMAND = [
+  { pattern: /\b(?:curl|wget)\b[^\n|]*\|\s*(?:sudo\s+)?(?:sh|bash|zsh|dash|ksh|fish)\b/, label: 'remote script piped to a shell' },
+  { pattern: /\b(?:curl|wget)\b[^\n]{0,200}(?:&&|;|\|\|)\s*(?:sudo\s+)?(?:sh|bash|zsh|dash|ksh|fish|node)\b/, label: 'downloaded file executed by a shell' },
+  { pattern: /\bbase64\s+(?:-d|--decode|-D)\b/, label: 'base64 decode command' },
+  { pattern: /\bnode\s+(?:-e|--eval)\b/, label: 'inline node code' },
+  { pattern: /\bpowershell(?:\.exe)?\b[^\n]*(?:-enc|-encodedcommand)\b/i, label: 'powershell encoded command' },
+  { pattern: /\b(?:bash|sh|zsh|dash|ksh)\s+-[a-z]*c\b[^\n]{0,200}\b(?:curl|wget|base64|nc|eval)\b/, label: 'shell -c with a download/decode payload' },
+]
 const INSTRUCTION_PATTERN = /\b(?:ignore|disregard|forget)\b[^\n]{0,60}\b(?:previous|prior|above|earlier|system)\b|\byou are now\b|\bdo not (?:tell|reveal|mention|disclose)\b|\bsystem prompt\b|\bact as\b/i
 const SUSPICIOUS_HOST = /(?:^|\.)(?:webhook|pastebin|paste|ngrok\.io|ngrok-free\.app|requestbin|pipedream|interact\.sh|burpcollaborator|canarytokens)\./i
 const TEXT_EXTENSIONS = /\.(?:[cm]?[jt]sx?|json|md|txt|ya?ml|html|css)$/i
@@ -122,6 +134,91 @@ function collectBindings(ast) {
   return bindings
 }
 
+const BASE64_TEXT = /^[A-Za-z0-9+/]+={0,2}$/
+
+/** Decode a base64 literal only when the result is printable text. */
+function decodeBase64Literal(text) {
+  if (typeof text !== 'string' || text.length < 8 || text.length % 4 !== 0) return null
+  if (!BASE64_TEXT.test(text)) return null
+  let decoded
+  try {
+    decoded = Buffer.from(text, 'base64').toString('utf8')
+  } catch {
+    return null
+  }
+  if (decoded === '' || decoded.includes('\uFFFD')) return null
+  if (!/^[\t\n\r\x20-\x7e]*$/.test(decoded)) return null
+  return decoded
+}
+
+/**
+ * `Buffer.from(<string>, 'base64').toString()` / `atob(<string>)` when the
+ * payload is a static literal (also reachable through a local binding).
+ * Returns null for runtime-joined or non-base64 encodings.
+ */
+function base64DecodedFrom(node, bindings, depth = 0, seen = new Set()) {
+  if (!node || node.type !== 'CallExpression' || depth > 4 || seen.has(node)) return null
+  const names = chainNames(node.callee)
+  const last = names[names.length - 1]
+  if (last === 'atob') {
+    const payload = stringFromNode(node.arguments[0], bindings, depth + 1, new Set(seen).add(node))
+    return payload === null ? null : decodeBase64Literal(payload)
+  }
+  if (last !== 'from' || names[names.length - 2] !== 'Buffer') return null
+  const encodingNode = node.arguments[1]
+  const encoding = encodingNode === undefined ? 'utf8' : (encodingNode.type === 'Literal' ? encodingNode.value : null)
+  if (encoding !== 'base64' && encoding !== 'base64url') return null
+  const payload = stringFromNode(node.arguments[0], bindings, depth + 1, new Set(seen).add(node))
+  return payload === null ? null : decodeBase64Literal(payload)
+}
+
+function isBase64DecodeCall(node, bindings) {
+  if (!node || node.type !== 'CallExpression') return false
+  const names = chainNames(node.callee)
+  const last = names[names.length - 1]
+  if (last === 'from' && names[names.length - 2] === 'Buffer') {
+    const encoding = node.arguments[1]
+    if (encoding?.type !== 'Literal' || (encoding.value !== 'base64' && encoding.value !== 'base64url')) return false
+    return stringFromNode(node.arguments[0], bindings) !== null
+  }
+  if (last === 'toString' && node.callee.type === 'MemberExpression') {
+    const encoding = node.arguments[0]
+    if (encoding?.type === 'Literal' && (encoding.value === 'base64' || encoding.value === 'base64url')) return false
+    return base64DecodedFrom(node.callee.object, bindings) !== null
+  }
+  if (last === 'atob' && names[0] === 'atob') return base64DecodedFrom(node, bindings) !== null
+  return false
+}
+
+function isProcessLike(node) {
+  if (identifierName(node) === 'process') return true
+  return node?.type === 'MemberExpression'
+    && memberPropertyName(node) === 'process'
+    && ['globalThis', 'global', 'window', 'self'].includes(identifierName(node.object))
+}
+
+/**
+ * `process.env.HOME` / `process.env['DSH_HOME']` / `globalThis.process.env.HOME`.
+ * The old check compared identifierName(node.object) with 'process', but
+ * node.object is the `process.env` MemberExpression, so it never matched.
+ */
+function envPropertyOf(member) {
+  if (!member || member.type !== 'MemberExpression') return null
+  const env = member.object
+  if (env?.type !== 'MemberExpression' || memberPropertyName(env) !== 'env') return null
+  if (!isProcessLike(env.object)) return null
+  return memberPropertyName(member)
+}
+
+/** Property name with static computed keys folded: globalThis['fe' + 'tch']. */
+function foldedPropertyName(member, bindings) {
+  if (!member || member.type !== 'MemberExpression') return null
+  const direct = memberPropertyName(member)
+  if (direct !== null) return direct
+  if (!member.computed) return null
+  return stringFromNode(member.property, bindings)
+}
+
 function stringFromNode(node, bindings, depth = 0, seen = new Set()) {
   if (!node || depth > 5 || seen.has(node)) return null
   if (node.type === 'Literal' && typeof node.value === 'string') return node.value
@@ -161,12 +258,9 @@ function stringFromNode(node, bindings, depth = 0, seen = new Set()) {
     const property = memberPropertyName(node)
     const objectName = identifierName(node.object)
     if (objectName === 'process' && property === 'cwd') return '/work/package'
-    if (objectName === 'process' && node.object.type === 'MemberExpression'
-      && memberPropertyName(node.object) === 'env'
-      && ['HOME', 'USERPROFILE'].includes(property)) return '/home/dsh-user'
-    if (objectName === 'process' && node.object.type === 'MemberExpression'
-      && memberPropertyName(node.object) === 'env'
-      && ['DSH_HOME', 'XDG_CONFIG_HOME'].includes(property)) return '/home/dsh-user/.dsh'
+    const envProperty = envPropertyOf(node)
+    if (envProperty === 'HOME' || envProperty === 'USERPROFILE') return '/home/dsh-user'
+    if (envProperty === 'DSH_HOME' || envProperty === 'XDG_CONFIG_HOME') return '/home/dsh-user/.dsh'
     return null
   }
   if (node.type === 'CallExpression') {
@@ -194,7 +288,22 @@ function stringFromNode(node, bindings, depth = 0, seen = new Set()) {
     }
     if (last === 'toString') {
       const object = node.callee.type === 'MemberExpression' ? node.callee.object : null
+      const encoding = node.arguments[0]
+      const reEncoding = encoding?.type === 'Literal' && (encoding.value === 'base64' || encoding.value === 'base64url')
+      if (!reEncoding) {
+        const decoded = base64DecodedFrom(object, bindings, depth + 1, new Set(seen).add(node))
+        if (decoded !== null) return decoded
+      }
       if (object?.type === 'Literal') return String(object.value)
+      return null
+    }
+    if (last === 'atob' && names[0] === 'atob') {
+      const payload = stringFromNode(node.arguments[0], bindings, depth + 1, new Set(seen).add(node))
+      if (payload !== null) {
+        const decoded = decodeBase64Literal(payload)
+        if (decoded !== null) return decoded
+      }
+      return null
     }
     if (names[0] === 'String') return stringFromNode(node.arguments[0], bindings, depth + 1, new Set(seen).add(node))
     return null
@@ -272,6 +381,9 @@ const SCRIPT_DANGER_RULES = [
 ]
 const SCRIPT_NETWORK = /\b(?:fetch|axios\.(?:get|post)|https?\.(?:get|request))\s*\(|\bcurl\b|\bwget\b/
 const SCRIPT_EXECUTE = /\beval\b|\bnew\s+Function\b|\b(?:exec|execSync|spawn|spawnSync|execFile|execFileSync)\s*\(|\bvm\.(?:runIn\w+|compileFunction)/
+// require(<variable>) / import(<variable>): loading code that is not a static
+// literal. Only dangerous when the same script also downloads or pipes code.
+const SCRIPT_DYNAMIC_LOAD = /\brequire\s*\(\s*(?!['"`])[A-Za-z_$]|\bimport\s*\(\s*(?!['"`])[A-Za-z_$]/
 const SCRIPT_CHILD_DYNAMIC = [
   /\b(?:exec|execSync|spawn|spawnSync|execFile|execFileSync)\s*\(\s*`[^`]*\$\{/,
   /\b(?:exec|execSync|spawn|spawnSync|execFile|execFileSync)\s*\(\s*[A-Za-z_$][\w$]*\s*[,)]/,
@@ -282,6 +394,7 @@ function scriptDangerLabels(text) {
   const add = (label) => { if (!labels.includes(label)) labels.push(label) }
   for (const rule of SCRIPT_DANGER_RULES) if (rule.pattern.test(text)) add(rule.label)
   if (SCRIPT_NETWORK.test(text) && SCRIPT_EXECUTE.test(text)) add('downloads remote content and executes it')
+  if (SCRIPT_NETWORK.test(text) && SCRIPT_DYNAMIC_LOAD.test(text)) add('downloads remote content and dynamically loads it')
   if (/\bchild_process\b/.test(text) && SCRIPT_CHILD_DYNAMIC.some(pattern => pattern.test(text))) {
     add('child_process with a dynamic command')
   }
@@ -435,6 +548,50 @@ function functionConstructorExempt(node, ancestors) {
   return allowsEvalContext(ancestors)
 }
 
+/** exec/execSync/spawn/... called directly or through a one-level alias. */
+function commandExecApiOf(callee, bindings) {
+  if (!callee) return null
+  if (callee.type === 'Identifier') {
+    if (COMMAND_EXEC_APIS.has(callee.name)) return callee.name
+    const init = bindings.get(callee.name)
+    if (init?.type === 'MemberExpression') {
+      const property = memberPropertyName(init)
+      if (property && COMMAND_EXEC_APIS.has(property)) return property
+    }
+    return null
+  }
+  if (callee.type === 'MemberExpression') {
+    const property = memberPropertyName(callee)
+    if (property && COMMAND_EXEC_APIS.has(property)) return property
+  }
+  return null
+}
+
+/** Join the statically resolvable command/argv parts; options objects are skipped. */
+function commandTextOf(node, bindings) {
+  const parts = []
+  for (const argument of node.arguments ?? []) {
+    if (!argument || argument.type === 'ObjectExpression') continue
+    if (argument.type === 'ArrayExpression') {
+      for (const element of argument.elements) {
+        if (!element) continue
+        const value = stringFromNode(element, bindings)
+        if (value !== null) parts.push(value)
+      }
+      continue
+    }
+    const value = stringFromNode(argument, bindings)
+    if (value !== null) parts.push(value)
+  }
+  return parts.length > 0 ? parts.join(' ') : null
+}
+
+function dangerousCommandLabels(text) {
+  const labels = []
+  for (const rule of DANGEROUS_COMMAND) if (rule.pattern.test(text)) labels.push(rule.label)
+  return labels
+}
+
 export function checkDynamicExecution(manifest, sources, entry, kind = null) {
   if (kind === 'client') {
     return check({
@@ -464,10 +621,19 @@ export function checkDynamicExecution(manifest, sources, entry, kind = null) {
   const details = [...closure.notes]
   const dynamic = []
   const subprocess = []
+  const fileFacts = new Map()
   for (const relative of closure.visited) {
     const parsed = parseModule(closure.byRelative.get(relative))
     if (parsed.error) continue
+    let facts = fileFacts.get(relative)
+    if (!facts) {
+      facts = { base64Line: null, evalLike: false }
+      fileFacts.set(relative, facts)
+    }
     walkAst(parsed.ast, (node, ancestors) => {
+      if (isBase64DecodeCall(node, parsed.bindings)) {
+        if (facts.base64Line === null) facts.base64Line = lineOf(node)
+      }
       if (node.type === 'ImportDeclaration' && typeof node.source?.value === 'string' && CHILD_PROCESS.test(node.source.value)) {
         subprocess.push({ file: relative, line: lineOf(node), what: `import ${node.source.value}` })
         return
@@ -482,12 +648,25 @@ export function checkDynamicExecution(manifest, sources, entry, kind = null) {
         subprocess.push({ file: relative, line: lineOf(node), what: `import('${node.source.value}')` })
       }
       if (node.type === 'CallExpression' && node.callee.type === 'Identifier' && node.callee.name === 'eval') {
+        facts.evalLike = true
         dynamic.push({ file: relative, line: lineOf(node), what: 'eval()', item: 'C-16.1' })
         return
       }
       if (isFunctionConstructor(node)) {
+        facts.evalLike = true
         if (!functionConstructorExempt(node, ancestors)) dynamic.push({ file: relative, line: lineOf(node), what: 'new Function()', item: 'C-16.1' })
         return
+      }
+      if (node.type === 'CallExpression') {
+        const execApi = commandExecApiOf(node.callee, parsed.bindings)
+        if (execApi) {
+          const command = commandTextOf(node, parsed.bindings)
+          const labels = command === null ? [] : dangerousCommandLabels(command)
+          if (labels.length > 0) {
+            dynamic.push({ file: relative, line: lineOf(node), what: `child_process.${execApi} executes a dangerous command (${labels.join('; ')})`, item: 'C-16.1' })
+            return
+          }
+        }
       }
       if (node.type === 'CallExpression' || node.type === 'NewExpression') {
         const names = chainNames(node.callee)
@@ -505,10 +684,20 @@ export function checkDynamicExecution(manifest, sources, entry, kind = null) {
       }
     })
   }
+  const obfuscated = []
+  for (const [file, facts] of fileFacts) {
+    if (facts.base64Line !== null && facts.evalLike) {
+      obfuscated.push({ file, line: facts.base64Line, what: 'base64-decoded payload in the same file as eval/new Function' })
+    }
+  }
   const dynamicEvidence = dynamic.slice(0, 5).map(item => `${item.file}:${item.line}`)
+  const obfuscatedEvidence = obfuscated.slice(0, 5).map(item => `${item.file}:${item.line}`)
   const subprocessEvidence = subprocess.slice(0, 5).map(item => `${item.file}:${item.line}`)
   for (const item of dynamic.slice(0, 8)) {
     details.push(detail(item.item, 'FAIL', `dynamic execution (code:dynamic): ${item.what} at ${item.file}:${item.line}`, [`${item.file}:${item.line}`]))
+  }
+  for (const item of obfuscated.slice(0, 4)) {
+    details.push(detail('C-16.1', 'FAIL', `dynamic execution (code:obfuscated): ${item.what} at ${item.file}:${item.line}`, [`${item.file}:${item.line}`]))
   }
   for (const item of subprocess.slice(0, 8)) {
     details.push(detail('C-16.3', 'WARN', `subprocess capability observed: ${item.what} at ${item.file}:${item.line}`, [`${item.file}:${item.line}`]))
@@ -522,9 +711,10 @@ export function checkDynamicExecution(manifest, sources, entry, kind = null) {
   const coverage = closure.parseErrors.length > 0 || closure.packageImports.length > 0 || closure.unresolved.length > 0 ? 'partial' : 'full'
   let result
   let reason = ''
-  if (dynamic.length > 0) {
+  if (dynamic.length > 0 || obfuscated.length > 0) {
     result = 'FAIL'
     reason = `${dynamic.length} dynamic-execution site(s) in the server entry closure (code:dynamic)`
+    if (obfuscated.length > 0) reason += `; ${obfuscated.length} base64-obfuscated execution clue(s)`
     if (closure.parseErrors.length > 0) reason += `; ${closure.parseErrors.length} file(s) could not be parsed`
   } else if (closure.parseErrors.length > 0) {
     result = 'ERROR'
@@ -544,7 +734,7 @@ export function checkDynamicExecution(manifest, sources, entry, kind = null) {
     coverage: result === 'ERROR' ? 'not-run' : coverage,
     reason,
     details,
-    evidence: dynamicEvidence.length > 0 ? dynamicEvidence : subprocessEvidence.length > 0 ? subprocessEvidence : [...closure.visited].slice(0, 3),
+    evidence: dynamicEvidence.length > 0 ? dynamicEvidence : obfuscatedEvidence.length > 0 ? obfuscatedEvidence : subprocessEvidence.length > 0 ? subprocessEvidence : [...closure.visited].slice(0, 3),
   })
 }
 
@@ -700,12 +890,36 @@ function securityScopeOf(ancestors, root) {
   return root
 }
 
-function isEgressCall(node) {
-  if (!node || node.type !== 'CallExpression') return false
-  const names = chainNames(node.callee)
-  const last = names[names.length - 1]
-  if (last === 'fetch') return true
-  return names.length >= 2 && ['http', 'https'].includes(names[0]) && ['get', 'request'].includes(last)
+function resolveMemberCallee(callee, bindings, depth = 0, seen = new Set()) {
+  if (!callee || depth > 3 || seen.has(callee)) return null
+  if (callee.type === 'MemberExpression') return callee
+  if (callee.type !== 'Identifier') return null
+  const init = bindings.get(callee.name)
+  if (!init) return null
+  if (init.type === 'MemberExpression') return init
+  if (init.type === 'Identifier') return resolveMemberCallee(init, bindings, depth + 1, new Set(seen).add(callee))
+  return null
+}
+
+/**
+ * fetch / http(s).get called directly, through a one-level alias, or through a
+ * statically folded computed property such as globalThis['fe' + 'tch'].
+ */
+function egressKindOf(node, bindings) {
+  if (!node || node.type !== 'CallExpression') return null
+  const callee = node.callee
+  if (callee.type === 'Identifier' && callee.name === 'fetch') return 'fetch'
+  const member = resolveMemberCallee(callee, bindings)
+  if (!member) return null
+  const name = foldedPropertyName(member, bindings)
+  if (name === 'fetch') return 'fetch'
+  const objectName = identifierName(member.object)
+  if ((objectName === 'http' || objectName === 'https') && (name === 'get' || name === 'request')) return name
+  return null
+}
+
+function isEgressCall(node, bindings) {
+  return egressKindOf(node, bindings) !== null
 }
 
 function isEnvEnumeration(node) {
@@ -718,12 +932,35 @@ function isEnvEnumeration(node) {
     && memberPropertyName(node.arguments[0]) === 'env'
 }
 
-function hasEgressCall(ast) {
+function hasEgressCall(ast, bindings) {
   let found = false
   walkAst(ast, (node) => {
-    if (!found && isEgressCall(node)) found = true
+    if (!found && isEgressCall(node, bindings)) found = true
   })
   return found
+}
+
+/**
+ * Direct read API or a one-level alias: `const read = fs.readFileSync;
+ * read(path)`. Only a direct identifier declaration is resolved; destructuring
+ * aliases such as `{ readFileSync: read }` remain out of scope.
+ */
+function readApiOf(callee, bindings) {
+  if (!callee) return null
+  if (callee.type === 'Identifier') {
+    if (READ_APIS.has(callee.name)) return callee.name
+    const init = bindings.get(callee.name)
+    if (init?.type === 'MemberExpression') {
+      const property = memberPropertyName(init)
+      if (property && READ_APIS.has(property)) return property
+    }
+    return null
+  }
+  if (callee.type === 'MemberExpression') {
+    const property = memberPropertyName(callee)
+    return property && READ_APIS.has(property) ? property : null
+  }
+  return null
 }
 
 export function checkSensitiveFileReads(manifest, sources) {
@@ -751,7 +988,7 @@ export function checkSensitiveFileReads(manifest, sources) {
         facts = { secretLiteral: null, egress: false, reads: [] }
         scopeFacts.set(scope, facts)
       }
-      if (isEgressCall(node)) facts.egress = true
+      if (isEgressCall(node, parsed.bindings)) facts.egress = true
       const literal = literalPathText(node)
       if (literal !== null) {
         const strength = isPathLikeSecretLiteral(node, literal)
@@ -759,8 +996,8 @@ export function checkSensitiveFileReads(manifest, sources) {
       }
       if (isEnvEnumeration(node)) envEnumeration = true
       if (node.type !== 'CallExpression' || node.arguments.length === 0) return
-      const api = node.callee.type === 'Identifier' ? node.callee.name : memberPropertyName(node.callee)
-      if (!READ_APIS.has(api)) return
+      const api = readApiOf(node.callee, parsed.bindings)
+      if (!api) return
       const argument = node.arguments[0]
       facts.reads.push({
         api,
@@ -813,7 +1050,7 @@ export function checkSensitiveFileReads(manifest, sources) {
         }
       }
     }
-    if (envEnumeration && hasEgressCall(parsed.ast)) {
+    if (envEnumeration && hasEgressCall(parsed.ast, parsed.bindings)) {
       warnings.push({ file: source.relative, line: 1, api: 'Object.keys(process.env)', item: 'C-17.2', reason: 'environment enumeration with egress' })
     }
   }
@@ -904,8 +1141,7 @@ export function checkEgressEndpoints(manifest, sources) {
       let target = null
       if (node.type === 'CallExpression') {
         const names = chainNames(node.callee)
-        const last = names[names.length - 1]
-        if (last === 'fetch' || (names.length >= 2 && ['http', 'https'].includes(names[0]) && ['get', 'request'].includes(last)) || names[0] === 'axios') {
+        if (egressKindOf(node, parsed.bindings) !== null || names[0] === 'axios') {
           target = egressEndpointFrom(node.arguments[0], parsed.bindings)
         }
       } else if (node.type === 'NewExpression' && chainNames(node.callee).join('.') === 'WebSocket') {
