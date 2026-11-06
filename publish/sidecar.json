@@ -7,8 +7,8 @@
   },
   "checker": {
     "name": "dsh-standards",
-    "version": "1.3.0",
-    "sha": "e6372412b586bfa4989086b1dce51ded5cc83c30"
+    "version": "1.4.0",
+    "sha": "e3a52db1e591d7a01aad40aa2a1f2c6ea14642e6"
   },
   "notClaimed": [
     "official",
@@ -54,7 +54,7 @@
         },
         {
           "id": "DSC-02",
-          "result": "WARN",
+          "result": "PASS",
           "coverage": "full"
         },
         {
@@ -64,33 +64,33 @@
         },
         {
           "id": "DSC-04",
-          "result": "NA",
-          "coverage": "not-run"
+          "result": "PASS",
+          "coverage": "partial"
         },
         {
           "id": "DSC-05",
-          "result": "NA",
-          "coverage": "not-run"
+          "result": "PASS",
+          "coverage": "partial"
         },
         {
           "id": "DSC-06",
-          "result": "NA",
-          "coverage": "not-run"
+          "result": "PASS",
+          "coverage": "partial"
         },
         {
           "id": "DSC-07",
-          "result": "NA",
-          "coverage": "not-run"
+          "result": "PASS",
+          "coverage": "partial"
         },
         {
           "id": "DSC-08",
-          "result": "NA",
-          "coverage": "not-run"
+          "result": "PASS",
+          "coverage": "partial"
         },
         {
           "id": "DSC-09",
-          "result": "NA",
-          "coverage": "not-run"
+          "result": "PASS",
+          "coverage": "partial"
         },
         {
           "id": "DSC-14",
@@ -123,12 +123,12 @@
         "reportSha256": "7e2b878a9e92b3b781423dff6ab1788a753b011e156a3b3d36925f644bf4a208"
       },
       "checkedBy": {
-        "checker": "dsh-standards@1.3.0 (dsh-plugin-verify@0.1.0)",
+        "checker": "dsh-standards@1.4.0 (dsh-plugin-verify@0.1.0)",
         "command": "dsh-levels <package-dir> --no-runtime --format json"
       },
       "notChecked": [
         "ENTRY:runtime (claim=static; not exercised)",
-        "ENTRY:DSC-03, DSC-04, DSC-05, DSC-06, DSC-07, DSC-08, DSC-09, DSC-14 (coverage=not-run)",
+        "ENTRY:DSC-03, DSC-14 (coverage=not-run)",
         "FLOW:J1-J8 (not-run; 0/8 journeys pass)",
         "BOOST:LEV-3..LEV-4 (not-measured)"
       ],
@@ -174,7 +174,7 @@
         },
         {
           "id": "DSC-02",
-          "result": "WARN",
+          "result": "FAIL",
           "coverage": "full"
         },
         {
@@ -184,33 +184,33 @@
         },
         {
           "id": "DSC-04",
-          "result": "NA",
-          "coverage": "not-run"
+          "result": "PASS",
+          "coverage": "partial"
         },
         {
           "id": "DSC-05",
-          "result": "NA",
-          "coverage": "not-run"
+          "result": "PASS",
+          "coverage": "partial"
         },
         {
           "id": "DSC-06",
-          "result": "NA",
-          "coverage": "not-run"
+          "result": "PASS",
+          "coverage": "partial"
         },
         {
           "id": "DSC-07",
-          "result": "NA",
-          "coverage": "not-run"
+          "result": "PASS",
+          "coverage": "partial"
         },
         {
           "id": "DSC-08",
-          "result": "NA",
-          "coverage": "not-run"
+          "result": "PASS",
+          "coverage": "partial"
         },
         {
           "id": "DSC-09",
-          "result": "NA",
-          "coverage": "not-run"
+          "result": "PASS",
+          "coverage": "partial"
         },
         {
           "id": "DSC-14",
@@ -243,12 +243,12 @@
         "reportSha256": "01dfcf050db813f290deee04cd3ac49fd25860048ea6045d135cae8e10330303"
       },
       "checkedBy": {
-        "checker": "dsh-standards@1.3.0 (dsh-plugin-verify@0.1.0)",
+        "checker": "dsh-standards@1.4.0 (dsh-plugin-verify@0.1.0)",
         "command": "dsh-levels <package-dir> --no-runtime --format json"
       },
       "notChecked": [
         "ENTRY:runtime (claim=static; not exercised)",
-        "ENTRY:DSC-03, DSC-04, DSC-05, DSC-06, DSC-07, DSC-08, DSC-09, DSC-14 (coverage=not-run)",
+        "ENTRY:DSC-03, DSC-14 (coverage=not-run)",
         "FLOW:J1-J8 (not-run; 0/8 journeys pass)",
         "BOOST:LEV-3..LEV-4 (not-measured)"
       ],
@@ -294,7 +294,7 @@
         },
         {
           "id": "DSC-02",
-          "result": "WARN",
+          "result": "PASS",
           "coverage": "full"
         },
         {
@@ -304,33 +304,33 @@
         },
         {
           "id": "DSC-04",
-          "result": "NA",
-          "coverage": "not-run"
+          "result": "PASS",
+          "coverage": "partial"
         },
         {
           "id": "DSC-05",
-          "result": "NA",
-          "coverage": "not-run"
+          "result": "PASS",
+          "coverage": "partial"
         },
         {
           "id": "DSC-06",
-          "result": "NA",
-          "coverage": "not-run"
+          "result": "PASS",
+          "coverage": "partial"
         },
         {
           "id": "DSC-07",
-          "result": "NA",
-          "coverage": "not-run"
+          "result": "PASS",
+          "coverage": "partial"
         },
         {
           "id": "DSC-08",
-          "result": "NA",
-          "coverage": "not-run"
+          "result": "PASS",
+          "coverage": "partial"
         },
         {
           "id": "DSC-09",
-          "result": "NA",
-          "coverage": "not-run"
+          "result": "PASS",
+          "coverage": "partial"
         },
         {
           "id": "DSC-14",
@@ -363,12 +363,12 @@
         "reportSha256": "6742c40385e4a2982e9e40a3e699428398dc2b984f8448c5e85ac1bbafe303a8"
       },
       "checkedBy": {
-        "checker": "dsh-standards@1.3.0 (dsh-plugin-verify@0.1.0)",
+        "checker": "dsh-standards@1.4.0 (dsh-plugin-verify@0.1.0)",
         "command": "dsh-levels <package-dir> --no-runtime --format json"
       },
       "notChecked": [
         "ENTRY:runtime (claim=static; not exercised)",
-        "ENTRY:DSC-03, DSC-04, DSC-05, DSC-06, DSC-07, DSC-08, DSC-09, DSC-14 (coverage=not-run)",
+        "ENTRY:DSC-03, DSC-14 (coverage=not-run)",
         "FLOW:J1-J8 (not-run; 0/8 journeys pass)",
         "BOOST:LEV-3..LEV-4 (not-measured)"
       ],
@@ -414,7 +414,7 @@
         },
         {
           "id": "DSC-02",
-          "result": "WARN",
+          "result": "PASS",
           "coverage": "full"
         },
         {
@@ -424,33 +424,33 @@
         },
         {
           "id": "DSC-04",
-          "result": "NA",
-          "coverage": "not-run"
+          "result": "PASS",
+          "coverage": "partial"
         },
         {
           "id": "DSC-05",
-          "result": "NA",
-          "coverage": "not-run"
+          "result": "PASS",
+          "coverage": "partial"
         },
         {
           "id": "DSC-06",
-          "result": "NA",
-          "coverage": "not-run"
+          "result": "PASS",
+          "coverage": "partial"
         },
         {
           "id": "DSC-07",
-          "result": "NA",
-          "coverage": "not-run"
+          "result": "PASS",
+          "coverage": "partial"
         },
         {
           "id": "DSC-08",
-          "result": "NA",
-          "coverage": "not-run"
+          "result": "PASS",
+          "coverage": "partial"
         },
         {
           "id": "DSC-09",
-          "result": "NA",
-          "coverage": "not-run"
+          "result": "PASS",
+          "coverage": "partial"
         },
         {
           "id": "DSC-14",
@@ -483,12 +483,12 @@
         "reportSha256": "6633a04e06dee91836987b282d89aad13e1f972d588ef1b1dffa854fb1972c23"
       },
       "checkedBy": {
-        "checker": "dsh-standards@1.3.0 (dsh-plugin-verify@0.1.0)",
+        "checker": "dsh-standards@1.4.0 (dsh-plugin-verify@0.1.0)",
         "command": "dsh-levels <package-dir> --no-runtime --format json"
       },
       "notChecked": [
         "ENTRY:runtime (claim=static; not exercised)",
-        "ENTRY:DSC-03, DSC-04, DSC-05, DSC-06, DSC-07, DSC-08, DSC-09, DSC-14 (coverage=not-run)",
+        "ENTRY:DSC-03, DSC-14 (coverage=not-run)",
         "FLOW:J1-J8 (not-run; 0/8 journeys pass)",
         "BOOST:LEV-3..LEV-4 (not-measured)"
       ],
@@ -544,33 +544,33 @@
         },
         {
           "id": "DSC-04",
-          "result": "NA",
-          "coverage": "not-run"
+          "result": "PASS",
+          "coverage": "partial"
         },
         {
           "id": "DSC-05",
-          "result": "NA",
-          "coverage": "not-run"
+          "result": "PASS",
+          "coverage": "partial"
         },
         {
           "id": "DSC-06",
-          "result": "NA",
-          "coverage": "not-run"
+          "result": "PASS",
+          "coverage": "partial"
         },
         {
           "id": "DSC-07",
-          "result": "NA",
-          "coverage": "not-run"
+          "result": "PASS",
+          "coverage": "partial"
         },
         {
           "id": "DSC-08",
-          "result": "NA",
-          "coverage": "not-run"
+          "result": "PASS",
+          "coverage": "partial"
         },
         {
           "id": "DSC-09",
-          "result": "NA",
-          "coverage": "not-run"
+          "result": "PASS",
+          "coverage": "partial"
         },
         {
           "id": "DSC-14",
@@ -603,12 +603,12 @@
         "reportSha256": "634b322c3043580b209dc03c970085b4584224ee0fb4a111569d6f32b8471b2b"
       },
       "checkedBy": {
-        "checker": "dsh-standards@1.3.0 (dsh-plugin-verify@0.1.0)",
+        "checker": "dsh-standards@1.4.0 (dsh-plugin-verify@0.1.0)",
         "command": "dsh-levels <package-dir> --no-runtime --format json"
       },
       "notChecked": [
         "ENTRY:runtime (claim=static; not exercised)",
-        "ENTRY:DSC-03, DSC-04, DSC-05, DSC-06, DSC-07, DSC-08, DSC-09, DSC-14 (coverage=not-run)",
+        "ENTRY:DSC-03, DSC-14 (coverage=not-run)",
         "FLOW:J1-J8 (not-run; 0/8 journeys pass)",
         "BOOST:LEV-3..LEV-4 (not-measured)"
       ],
@@ -664,33 +664,33 @@
         },
         {
           "id": "DSC-04",
-          "result": "NA",
-          "coverage": "not-run"
+          "result": "PASS",
+          "coverage": "partial"
         },
         {
           "id": "DSC-05",
-          "result": "NA",
-          "coverage": "not-run"
+          "result": "PASS",
+          "coverage": "partial"
         },
         {
           "id": "DSC-06",
-          "result": "NA",
-          "coverage": "not-run"
+          "result": "PASS",
+          "coverage": "partial"
         },
         {
           "id": "DSC-07",
-          "result": "NA",
-          "coverage": "not-run"
+          "result": "PASS",
+          "coverage": "partial"
         },
         {
           "id": "DSC-08",
-          "result": "NA",
-          "coverage": "not-run"
+          "result": "PASS",
+          "coverage": "partial"
         },
         {
           "id": "DSC-09",
-          "result": "NA",
-          "coverage": "not-run"
+          "result": "PASS",
+          "coverage": "partial"
         },
         {
           "id": "DSC-14",
@@ -723,12 +723,12 @@
         "reportSha256": "4320e6227eac66128148597d4f9e1dd3bc19289908864712a0c7122216b52f5a"
       },
       "checkedBy": {
-        "checker": "dsh-standards@1.3.0 (dsh-plugin-verify@0.1.0)",
+        "checker": "dsh-standards@1.4.0 (dsh-plugin-verify@0.1.0)",
         "command": "dsh-levels <package-dir> --no-runtime --format json"
       },
       "notChecked": [
         "ENTRY:runtime (claim=static; not exercised)",
-        "ENTRY:DSC-03, DSC-04, DSC-05, DSC-06, DSC-07, DSC-08, DSC-09, DSC-14 (coverage=not-run)",
+        "ENTRY:DSC-03, DSC-14 (coverage=not-run)",
         "FLOW:J1-J8 (not-run; 0/8 journeys pass)",
         "BOOST:LEV-3..LEV-4 (not-measured)"
       ],
@@ -774,7 +774,7 @@
         },
         {
           "id": "DSC-02",
-          "result": "WARN",
+          "result": "PASS",
           "coverage": "full"
         },
         {
@@ -784,33 +784,33 @@
         },
         {
           "id": "DSC-04",
-          "result": "NA",
-          "coverage": "not-run"
+          "result": "PASS",
+          "coverage": "partial"
         },
         {
           "id": "DSC-05",
-          "result": "NA",
-          "coverage": "not-run"
+          "result": "PASS",
+          "coverage": "partial"
         },
         {
           "id": "DSC-06",
-          "result": "NA",
-          "coverage": "not-run"
+          "result": "PASS",
+          "coverage": "partial"
         },
         {
           "id": "DSC-07",
-          "result": "NA",
-          "coverage": "not-run"
+          "result": "PASS",
+          "coverage": "partial"
         },
         {
           "id": "DSC-08",
-          "result": "NA",
-          "coverage": "not-run"
+          "result": "PASS",
+          "coverage": "partial"
         },
         {
           "id": "DSC-09",
-          "result": "NA",
-          "coverage": "not-run"
+          "result": "PASS",
+          "coverage": "partial"
         },
         {
           "id": "DSC-14",
@@ -843,12 +843,12 @@
         "reportSha256": "54cdd314a2a9354348446f150aa878753149c0b5942ae1a5d9c1f94f19e94853"
       },
       "checkedBy": {
-        "checker": "dsh-standards@1.3.0 (dsh-plugin-verify@0.1.0)",
+        "checker": "dsh-standards@1.4.0 (dsh-plugin-verify@0.1.0)",
         "command": "dsh-levels <package-dir> --no-runtime --format json"
       },
       "notChecked": [
         "ENTRY:runtime (claim=static; not exercised)",
-        "ENTRY:DSC-03, DSC-04, DSC-05, DSC-06, DSC-07, DSC-08, DSC-09, DSC-14 (coverage=not-run)",
+        "ENTRY:DSC-03, DSC-14 (coverage=not-run)",
         "FLOW:J1-J8 (not-run; 0/8 journeys pass)",
         "BOOST:LEV-3..LEV-4 (not-measured)"
       ],
@@ -904,33 +904,33 @@
         },
         {
           "id": "DSC-04",
-          "result": "NA",
-          "coverage": "not-run"
+          "result": "PASS",
+          "coverage": "partial"
         },
         {
           "id": "DSC-05",
-          "result": "NA",
-          "coverage": "not-run"
+          "result": "PASS",
+          "coverage": "partial"
         },
         {
           "id": "DSC-06",
-          "result": "NA",
-          "coverage": "not-run"
+          "result": "PASS",
+          "coverage": "partial"
         },
         {
           "id": "DSC-07",
-          "result": "NA",
-          "coverage": "not-run"
+          "result": "PASS",
+          "coverage": "partial"
         },
         {
           "id": "DSC-08",
-          "result": "NA",
-          "coverage": "not-run"
+          "result": "PASS",
+          "coverage": "partial"
         },
         {
           "id": "DSC-09",
-          "result": "NA",
-          "coverage": "not-run"
+          "result": "PASS",
+          "coverage": "partial"
         },
         {
           "id": "DSC-14",
@@ -940,7 +940,7 @@
         {
           "id": "DSC-10",
           "result": "PASS",
-          "coverage": "full"
+          "coverage": "partial"
         },
         {
           "id": "DSC-11",
@@ -963,12 +963,12 @@
         "reportSha256": "82c7575db6b882b923630f4df0d48af479ebb98384ad41b1f5b4a78350dd537a"
       },
       "checkedBy": {
-        "checker": "dsh-standards@1.3.0 (dsh-plugin-verify@0.1.0)",
+        "checker": "dsh-standards@1.4.0 (dsh-plugin-verify@0.1.0)",
         "command": "dsh-levels <package-dir> --no-runtime --format json"
       },
       "notChecked": [
         "ENTRY:runtime (claim=static; not exercised)",
-        "ENTRY:DSC-03, DSC-04, DSC-05, DSC-06, DSC-07, DSC-08, DSC-09, DSC-14 (coverage=not-run)",
+        "ENTRY:DSC-03, DSC-14 (coverage=not-run)",
         "FLOW:J1-J8 (not-run; 0/8 journeys pass)",
         "BOOST:LEV-3..LEV-4 (not-measured)"
       ],
@@ -1024,33 +1024,33 @@
         },
         {
           "id": "DSC-04",
-          "result": "NA",
-          "coverage": "not-run"
+          "result": "PASS",
+          "coverage": "partial"
         },
         {
           "id": "DSC-05",
-          "result": "NA",
-          "coverage": "not-run"
+          "result": "PASS",
+          "coverage": "partial"
         },
         {
           "id": "DSC-06",
-          "result": "NA",
-          "coverage": "not-run"
+          "result": "PASS",
+          "coverage": "partial"
         },
         {
           "id": "DSC-07",
-          "result": "NA",
-          "coverage": "not-run"
+          "result": "PASS",
+          "coverage": "partial"
         },
         {
           "id": "DSC-08",
-          "result": "NA",
-          "coverage": "not-run"
+          "result": "PASS",
+          "coverage": "partial"
         },
         {
           "id": "DSC-09",
-          "result": "NA",
-          "coverage": "not-run"
+          "result": "PASS",
+          "coverage": "partial"
         },
         {
           "id": "DSC-14",
@@ -1083,12 +1083,12 @@
         "reportSha256": "dc874b9f924bf9c64fd16e1b166273e42cde46232e1a336579fc1bb19035fe33"
       },
       "checkedBy": {
-        "checker": "dsh-standards@1.3.0 (dsh-plugin-verify@0.1.0)",
+        "checker": "dsh-standards@1.4.0 (dsh-plugin-verify@0.1.0)",
         "command": "dsh-levels <package-dir> --no-runtime --format json"
       },
       "notChecked": [
         "ENTRY:runtime (claim=static; not exercised)",
-        "ENTRY:DSC-03, DSC-04, DSC-05, DSC-06, DSC-07, DSC-08, DSC-09, DSC-14 (coverage=not-run)",
+        "ENTRY:DSC-03, DSC-14 (coverage=not-run)",
         "FLOW:J1-J8 (not-run; 0/8 journeys pass)",
         "BOOST:LEV-3..LEV-4 (not-measured)"
       ],
@@ -1134,7 +1134,7 @@
         },
         {
           "id": "DSC-02",
-          "result": "WARN",
+          "result": "PASS",
           "coverage": "full"
         },
         {
@@ -1144,33 +1144,33 @@
         },
         {
           "id": "DSC-04",
-          "result": "NA",
-          "coverage": "not-run"
+          "result": "PASS",
+          "coverage": "partial"
         },
         {
           "id": "DSC-05",
-          "result": "NA",
-          "coverage": "not-run"
+          "result": "PASS",
+          "coverage": "partial"
         },
         {
           "id": "DSC-06",
-          "result": "NA",
-          "coverage": "not-run"
+          "result": "PASS",
+          "coverage": "partial"
         },
         {
           "id": "DSC-07",
-          "result": "NA",
-          "coverage": "not-run"
+          "result": "PASS",
+          "coverage": "partial"
         },
         {
           "id": "DSC-08",
-          "result": "NA",
-          "coverage": "not-run"
+          "result": "PASS",
+          "coverage": "partial"
         },
         {
           "id": "DSC-09",
-          "result": "NA",
-          "coverage": "not-run"
+          "result": "PASS",
+          "coverage": "partial"
         },
         {
           "id": "DSC-14",
@@ -1180,7 +1180,7 @@
         {
           "id": "DSC-10",
           "result": "PASS",
-          "coverage": "full"
+          "coverage": "partial"
         },
         {
           "id": "DSC-11",
@@ -1203,12 +1203,12 @@
         "reportSha256": "bfaa5f2c5c6a175f1e8dbdda88150e79d600ad7caec1e3aaf27092b5ee22fdee"
       },
       "checkedBy": {
-        "checker": "dsh-standards@1.3.0 (dsh-plugin-verify@0.1.0)",
+        "checker": "dsh-standards@1.4.0 (dsh-plugin-verify@0.1.0)",
         "command": "dsh-levels <package-dir> --no-runtime --format json"
       },
       "notChecked": [
         "ENTRY:runtime (claim=static; not exercised)",
-        "ENTRY:DSC-03, DSC-04, DSC-05, DSC-06, DSC-07, DSC-08, DSC-09, DSC-14 (coverage=not-run)",
+        "ENTRY:DSC-03, DSC-14 (coverage=not-run)",
         "FLOW:J1-J8 (not-run; 0/8 journeys pass)",
         "BOOST:LEV-3..LEV-4 (not-measured)"
       ],
@@ -1264,33 +1264,33 @@
         },
         {
           "id": "DSC-04",
-          "result": "NA",
-          "coverage": "not-run"
+          "result": "PASS",
+          "coverage": "partial"
         },
         {
           "id": "DSC-05",
-          "result": "NA",
-          "coverage": "not-run"
+          "result": "PASS",
+          "coverage": "partial"
         },
         {
           "id": "DSC-06",
-          "result": "NA",
-          "coverage": "not-run"
+          "result": "PASS",
+          "coverage": "partial"
         },
         {
           "id": "DSC-07",
-          "result": "NA",
-          "coverage": "not-run"
+          "result": "PASS",
+          "coverage": "partial"
         },
         {
           "id": "DSC-08",
-          "result": "NA",
-          "coverage": "not-run"
+          "result": "PASS",
+          "coverage": "partial"
         },
         {
           "id": "DSC-09",
-          "result": "NA",
-          "coverage": "not-run"
+          "result": "PASS",
+          "coverage": "partial"
         },
         {
           "id": "DSC-14",
@@ -1323,12 +1323,12 @@
         "reportSha256": "d26a07a49f2495f7e4c9228fa98650e2dc7d3a3f72ab530a497045bbc4eab672"
       },
       "checkedBy": {
-        "checker": "dsh-standards@1.3.0 (dsh-plugin-verify@0.1.0)",
+        "checker": "dsh-standards@1.4.0 (dsh-plugin-verify@0.1.0)",
         "command": "dsh-levels <package-dir> --no-runtime --format json"
       },
       "notChecked": [
         "ENTRY:runtime (claim=static; not exercised)",
-        "ENTRY:DSC-03, DSC-04, DSC-05, DSC-06, DSC-07, DSC-08, DSC-09, DSC-14 (coverage=not-run)",
+        "ENTRY:DSC-03, DSC-14 (coverage=not-run)",
         "FLOW:J1-J8 (not-run; 0/8 journeys pass)",
         "BOOST:LEV-3..LEV-4 (not-measured)"
       ],
@@ -1374,7 +1374,7 @@
         },
         {
           "id": "DSC-02",
-          "result": "WARN",
+          "result": "FAIL",
           "coverage": "full"
         },
         {
@@ -1384,33 +1384,33 @@
         },
         {
           "id": "DSC-04",
-          "result": "NA",
-          "coverage": "not-run"
+          "result": "PASS",
+          "coverage": "partial"
         },
         {
           "id": "DSC-05",
-          "result": "NA",
-          "coverage": "not-run"
+          "result": "PASS",
+          "coverage": "partial"
         },
         {
           "id": "DSC-06",
-          "result": "NA",
-          "coverage": "not-run"
+          "result": "PASS",
+          "coverage": "partial"
         },
         {
           "id": "DSC-07",
-          "result": "NA",
-          "coverage": "not-run"
+          "result": "PASS",
+          "coverage": "partial"
         },
         {
           "id": "DSC-08",
-          "result": "NA",
-          "coverage": "not-run"
+          "result": "PASS",
+          "coverage": "partial"
         },
         {
           "id": "DSC-09",
-          "result": "NA",
-          "coverage": "not-run"
+          "result": "PASS",
+          "coverage": "partial"
         },
         {
           "id": "DSC-14",
@@ -1443,12 +1443,12 @@
         "reportSha256": "5b22366146965e73719e0e6b6e0bea71def0e34f5beaf45df2eb10efb1ce5a63"
       },
       "checkedBy": {
-        "checker": "dsh-standards@1.3.0 (dsh-plugin-verify@0.1.0)",
+        "checker": "dsh-standards@1.4.0 (dsh-plugin-verify@0.1.0)",
         "command": "dsh-levels <package-dir> --no-runtime --format json"
       },
       "notChecked": [
         "ENTRY:runtime (claim=static; not exercised)",
-        "ENTRY:DSC-03, DSC-04, DSC-05, DSC-06, DSC-07, DSC-08, DSC-09, DSC-14 (coverage=not-run)",
+        "ENTRY:DSC-03, DSC-14 (coverage=not-run)",
         "FLOW:J1-J8 (not-run; 0/8 journeys pass)",
         "BOOST:LEV-3..LEV-4 (not-measured)"
       ],
@@ -1494,7 +1494,7 @@
         },
         {
           "id": "DSC-02",
-          "result": "WARN",
+          "result": "PASS",
           "coverage": "full"
         },
         {
@@ -1504,33 +1504,33 @@
         },
         {
           "id": "DSC-04",
-          "result": "NA",
-          "coverage": "not-run"
+          "result": "PASS",
+          "coverage": "partial"
         },
         {
           "id": "DSC-05",
-          "result": "NA",
-          "coverage": "not-run"
+          "result": "PASS",
+          "coverage": "partial"
         },
         {
           "id": "DSC-06",
-          "result": "NA",
-          "coverage": "not-run"
+          "result": "PASS",
+          "coverage": "partial"
         },
         {
           "id": "DSC-07",
-          "result": "NA",
-          "coverage": "not-run"
+          "result": "PASS",
+          "coverage": "partial"
         },
         {
           "id": "DSC-08",
-          "result": "NA",
-          "coverage": "not-run"
+          "result": "PASS",
+          "coverage": "partial"
         },
         {
           "id": "DSC-09",
-          "result": "NA",
-          "coverage": "not-run"
+          "result": "PASS",
+          "coverage": "partial"
         },
         {
           "id": "DSC-14",
@@ -1563,12 +1563,12 @@
         "reportSha256": "adc3d6ce0c4c70bb8db0eeab5d181da5199f29aa729f47d947a3a3f773e8b6cd"
       },
       "checkedBy": {
-        "checker": "dsh-standards@1.3.0 (dsh-plugin-verify@0.1.0)",
+        "checker": "dsh-standards@1.4.0 (dsh-plugin-verify@0.1.0)",
         "command": "dsh-levels <package-dir> --no-runtime --format json"
       },
       "notChecked": [
         "ENTRY:runtime (claim=static; not exercised)",
-        "ENTRY:DSC-03, DSC-04, DSC-05, DSC-06, DSC-07, DSC-08, DSC-09, DSC-14 (coverage=not-run)",
+        "ENTRY:DSC-03, DSC-14 (coverage=not-run)",
         "FLOW:J1-J8 (not-run; 0/8 journeys pass)",
         "BOOST:LEV-3..LEV-4 (not-measured)"
       ],
@@ -1614,7 +1614,7 @@
         },
         {
           "id": "DSC-02",
-          "result": "WARN",
+          "result": "FAIL",
           "coverage": "full"
         },
         {
@@ -1624,33 +1624,33 @@
         },
         {
           "id": "DSC-04",
-          "result": "NA",
-          "coverage": "not-run"
+          "result": "PASS",
+          "coverage": "partial"
         },
         {
           "id": "DSC-05",
-          "result": "NA",
-          "coverage": "not-run"
+          "result": "PASS",
+          "coverage": "partial"
         },
         {
           "id": "DSC-06",
-          "result": "NA",
-          "coverage": "not-run"
+          "result": "PASS",
+          "coverage": "partial"
         },
         {
           "id": "DSC-07",
-          "result": "NA",
-          "coverage": "not-run"
+          "result": "PASS",
+          "coverage": "partial"
         },
         {
           "id": "DSC-08",
-          "result": "NA",
-          "coverage": "not-run"
+          "result": "PASS",
+          "coverage": "partial"
         },
         {
           "id": "DSC-09",
-          "result": "NA",
-          "coverage": "not-run"
+          "result": "PASS",
+          "coverage": "partial"
         },
         {
           "id": "DSC-14",
@@ -1683,12 +1683,12 @@
         "reportSha256": "eaff4b5a68afb3ae3bdcb09ca577078b1a5cd02ab7b556ea1633cec0cadec7d8"
       },
       "checkedBy": {
-        "checker": "dsh-standards@1.3.0 (dsh-plugin-verify@0.1.0)",
+        "checker": "dsh-standards@1.4.0 (dsh-plugin-verify@0.1.0)",
         "command": "dsh-levels <package-dir> --no-runtime --format json"
       },
       "notChecked": [
         "ENTRY:runtime (claim=static; not exercised)",
-        "ENTRY:DSC-03, DSC-04, DSC-05, DSC-06, DSC-07, DSC-08, DSC-09, DSC-14 (coverage=not-run)",
+        "ENTRY:DSC-03, DSC-14 (coverage=not-run)",
         "FLOW:J1-J8 (not-run; 0/8 journeys pass)",
         "BOOST:LEV-3..LEV-4 (not-measured)"
       ],
@@ -1734,7 +1734,7 @@
         },
         {
           "id": "DSC-02",
-          "result": "WARN",
+          "result": "FAIL",
           "coverage": "full"
         },
         {
@@ -1744,33 +1744,33 @@
         },
         {
           "id": "DSC-04",
-          "result": "NA",
-          "coverage": "not-run"
+          "result": "PASS",
+          "coverage": "partial"
         },
         {
           "id": "DSC-05",
-          "result": "NA",
-          "coverage": "not-run"
+          "result": "PASS",
+          "coverage": "partial"
         },
         {
           "id": "DSC-06",
-          "result": "NA",
-          "coverage": "not-run"
+          "result": "PASS",
+          "coverage": "partial"
         },
         {
           "id": "DSC-07",
-          "result": "NA",
-          "coverage": "not-run"
+          "result": "PASS",
+          "coverage": "partial"
         },
         {
           "id": "DSC-08",
-          "result": "NA",
-          "coverage": "not-run"
+          "result": "PASS",
+          "coverage": "partial"
         },
         {
           "id": "DSC-09",
-          "result": "NA",
-          "coverage": "not-run"
+          "result": "PASS",
+          "coverage": "partial"
         },
         {
           "id": "DSC-14",
@@ -1803,12 +1803,12 @@
         "reportSha256": "54bcdcb3ace47a7e7f13f7dc4579ba82da1029f2eb009c29189d7f7d6e927a7b"
       },
       "checkedBy": {
-        "checker": "dsh-standards@1.3.0 (dsh-plugin-verify@0.1.0)",
+        "checker": "dsh-standards@1.4.0 (dsh-plugin-verify@0.1.0)",
         "command": "dsh-levels <package-dir> --no-runtime --format json"
       },
       "notChecked": [
         "ENTRY:runtime (claim=static; not exercised)",
-        "ENTRY:DSC-03, DSC-04, DSC-05, DSC-06, DSC-07, DSC-08, DSC-09, DSC-14 (coverage=not-run)",
+        "ENTRY:DSC-03, DSC-14 (coverage=not-run)",
         "FLOW:J1-J8 (not-run; 0/8 journeys pass)",
         "BOOST:LEV-3..LEV-4 (not-measured)"
       ],
@@ -1864,33 +1864,33 @@
         },
         {
           "id": "DSC-04",
-          "result": "NA",
-          "coverage": "not-run"
+          "result": "PASS",
+          "coverage": "partial"
         },
         {
           "id": "DSC-05",
-          "result": "NA",
-          "coverage": "not-run"
+          "result": "PASS",
+          "coverage": "partial"
         },
         {
           "id": "DSC-06",
-          "result": "NA",
-          "coverage": "not-run"
+          "result": "PASS",
+          "coverage": "partial"
         },
         {
           "id": "DSC-07",
-          "result": "NA",
-          "coverage": "not-run"
+          "result": "PASS",
+          "coverage": "partial"
         },
         {
           "id": "DSC-08",
-          "result": "NA",
-          "coverage": "not-run"
+          "result": "PASS",
+          "coverage": "partial"
         },
         {
           "id": "DSC-09",
-          "result": "NA",
-          "coverage": "not-run"
+          "result": "PASS",
+          "coverage": "partial"
         },
         {
           "id": "DSC-14",
@@ -1923,12 +1923,12 @@
         "reportSha256": "89a491388fb8f35c33cc864a93063059969be07934e23ab35d381810642b93b3"
       },
       "checkedBy": {
-        "checker": "dsh-standards@1.3.0 (dsh-plugin-verify@0.1.0)",
+        "checker": "dsh-standards@1.4.0 (dsh-plugin-verify@0.1.0)",
         "command": "dsh-levels <package-dir> --no-runtime --format json"
       },
       "notChecked": [
         "ENTRY:runtime (claim=static; not exercised)",
-        "ENTRY:DSC-03, DSC-04, DSC-05, DSC-06, DSC-07, DSC-08, DSC-09, DSC-14 (coverage=not-run)",
+        "ENTRY:DSC-03, DSC-14 (coverage=not-run)",
         "FLOW:J1-J8 (not-run; 0/8 journeys pass)",
         "BOOST:LEV-3..LEV-4 (not-measured)"
       ],
@@ -1974,7 +1974,7 @@
         },
         {
           "id": "DSC-02",
-          "result": "WARN",
+          "result": "FAIL",
           "coverage": "full"
         },
         {
@@ -1984,33 +1984,33 @@
         },
         {
           "id": "DSC-04",
-          "result": "NA",
-          "coverage": "not-run"
+          "result": "PASS",
+          "coverage": "partial"
         },
         {
           "id": "DSC-05",
-          "result": "NA",
-          "coverage": "not-run"
+          "result": "PASS",
+          "coverage": "partial"
         },
         {
           "id": "DSC-06",
-          "result": "NA",
-          "coverage": "not-run"
+          "result": "PASS",
+          "coverage": "partial"
         },
         {
           "id": "DSC-07",
-          "result": "NA",
-          "coverage": "not-run"
+          "result": "PASS",
+          "coverage": "partial"
         },
         {
           "id": "DSC-08",
-          "result": "NA",
-          "coverage": "not-run"
+          "result": "PASS",
+          "coverage": "partial"
         },
         {
           "id": "DSC-09",
-          "result": "NA",
-          "coverage": "not-run"
+          "result": "PASS",
+          "coverage": "partial"
         },
         {
           "id": "DSC-14",
@@ -2043,12 +2043,12 @@
         "reportSha256": "4f2b51e539047f2549ebb5fb65c117445903f8d41d3c53f08df8728c865915f7"
       },
       "checkedBy": {
-        "checker": "dsh-standards@1.3.0 (dsh-plugin-verify@0.1.0)",
+        "checker": "dsh-standards@1.4.0 (dsh-plugin-verify@0.1.0)",
         "command": "dsh-levels <package-dir> --no-runtime --format json"
       },
       "notChecked": [
         "ENTRY:runtime (claim=static; not exercised)",
-        "ENTRY:DSC-03, DSC-04, DSC-05, DSC-06, DSC-07, DSC-08, DSC-09, DSC-14 (coverage=not-run)",
+        "ENTRY:DSC-03, DSC-14 (coverage=not-run)",
         "FLOW:J1-J8 (not-run; 0/8 journeys pass)",
         "BOOST:LEV-3..LEV-4 (not-measured)"
       ],
@@ -2094,7 +2094,7 @@
         },
         {
           "id": "DSC-02",
-          "result": "WARN",
+          "result": "FAIL",
           "coverage": "full"
         },
         {
@@ -2104,33 +2104,33 @@
         },
         {
           "id": "DSC-04",
-          "result": "NA",
-          "coverage": "not-run"
+          "result": "PASS",
+          "coverage": "partial"
         },
         {
           "id": "DSC-05",
-          "result": "NA",
-          "coverage": "not-run"
+          "result": "PASS",
+          "coverage": "partial"
         },
         {
           "id": "DSC-06",
-          "result": "NA",
-          "coverage": "not-run"
+          "result": "PASS",
+          "coverage": "partial"
         },
         {
           "id": "DSC-07",
-          "result": "NA",
-          "coverage": "not-run"
+          "result": "PASS",
+          "coverage": "partial"
         },
         {
           "id": "DSC-08",
-          "result": "NA",
-          "coverage": "not-run"
+          "result": "PASS",
+          "coverage": "partial"
         },
         {
           "id": "DSC-09",
-          "result": "NA",
-          "coverage": "not-run"
+          "result": "PASS",
+          "coverage": "partial"
         },
         {
           "id": "DSC-14",
@@ -2163,12 +2163,12 @@
         "reportSha256": "8ac7e7d3a46581b289785ee66f5cc3347e79d925e45e42ef39bb0fd47ebc0601"
       },
       "checkedBy": {
-        "checker": "dsh-standards@1.3.0 (dsh-plugin-verify@0.1.0)",
+        "checker": "dsh-standards@1.4.0 (dsh-plugin-verify@0.1.0)",
         "command": "dsh-levels <package-dir> --no-runtime --format json"
       },
       "notChecked": [
         "ENTRY:runtime (claim=static; not exercised)",
-        "ENTRY:DSC-03, DSC-04, DSC-05, DSC-06, DSC-07, DSC-08, DSC-09, DSC-14 (coverage=not-run)",
+        "ENTRY:DSC-03, DSC-14 (coverage=not-run)",
         "FLOW:J1-J8 (not-run; 0/8 journeys pass)",
         "BOOST:LEV-3..LEV-4 (not-measured)"
       ],
@@ -2224,33 +2224,33 @@
         },
         {
           "id": "DSC-04",
-          "result": "NA",
-          "coverage": "not-run"
+          "result": "PASS",
+          "coverage": "partial"
         },
         {
           "id": "DSC-05",
-          "result": "NA",
-          "coverage": "not-run"
+          "result": "PASS",
+          "coverage": "partial"
         },
         {
           "id": "DSC-06",
-          "result": "NA",
-          "coverage": "not-run"
+          "result": "PASS",
+          "coverage": "partial"
         },
         {
           "id": "DSC-07",
-          "result": "NA",
-          "coverage": "not-run"
+          "result": "PASS",
+          "coverage": "partial"
         },
         {
           "id": "DSC-08",
-          "result": "NA",
-          "coverage": "not-run"
+          "result": "PASS",
+          "coverage": "partial"
         },
         {
           "id": "DSC-09",
-          "result": "NA",
-          "coverage": "not-run"
+          "result": "PASS",
+          "coverage": "partial"
         },
         {
           "id": "DSC-14",
@@ -2260,7 +2260,7 @@
         {
           "id": "DSC-10",
           "result": "PASS",
-          "coverage": "full"
+          "coverage": "partial"
         },
         {
           "id": "DSC-11",
@@ -2283,12 +2283,12 @@
         "reportSha256": "1fed4ff6f7f1d9656924796711ec4ade9d4bb93a5c81841a40984cbf3a24de30"
       },
       "checkedBy": {
-        "checker": "dsh-standards@1.3.0 (dsh-plugin-verify@0.1.0)",
+        "checker": "dsh-standards@1.4.0 (dsh-plugin-verify@0.1.0)",
         "command": "dsh-levels <package-dir> --no-runtime --format json"
       },
       "notChecked": [
         "ENTRY:runtime (claim=static; not exercised)",
-        "ENTRY:DSC-03, DSC-04, DSC-05, DSC-06, DSC-07, DSC-08, DSC-09, DSC-14 (coverage=not-run)",
+        "ENTRY:DSC-03, DSC-14 (coverage=not-run)",
         "FLOW:J1-J8 (not-run; 0/8 journeys pass)",
         "BOOST:LEV-3..LEV-4 (not-measured)"
       ],
@@ -2334,7 +2334,7 @@
         },
         {
           "id": "DSC-02",
-          "result": "WARN",
+          "result": "FAIL",
           "coverage": "full"
         },
         {
@@ -2344,33 +2344,33 @@
         },
         {
           "id": "DSC-04",
-          "result": "NA",
-          "coverage": "not-run"
+          "result": "PASS",
+          "coverage": "partial"
         },
         {
           "id": "DSC-05",
-          "result": "NA",
-          "coverage": "not-run"
+          "result": "PASS",
+          "coverage": "partial"
         },
         {
           "id": "DSC-06",
-          "result": "NA",
-          "coverage": "not-run"
+          "result": "PASS",
+          "coverage": "partial"
         },
         {
           "id": "DSC-07",
-          "result": "NA",
-          "coverage": "not-run"
+          "result": "PASS",
+          "coverage": "partial"
         },
         {
           "id": "DSC-08",
-          "result": "NA",
-          "coverage": "not-run"
+          "result": "PASS",
+          "coverage": "partial"
         },
         {
           "id": "DSC-09",
-          "result": "NA",
-          "coverage": "not-run"
+          "result": "PASS",
+          "coverage": "partial"
         },
         {
           "id": "DSC-14",
@@ -2403,12 +2403,12 @@
         "reportSha256": "1977bfae91bb54e9bf55918b8f3211e8fc38e7fc94341887a3044abe3f01f422"
       },
       "checkedBy": {
-        "checker": "dsh-standards@1.3.0 (dsh-plugin-verify@0.1.0)",
+        "checker": "dsh-standards@1.4.0 (dsh-plugin-verify@0.1.0)",
         "command": "dsh-levels <package-dir> --no-runtime --format json"
       },
       "notChecked": [
         "ENTRY:runtime (claim=static; not exercised)",
-        "ENTRY:DSC-03, DSC-04, DSC-05, DSC-06, DSC-07, DSC-08, DSC-09, DSC-14 (coverage=not-run)",
+        "ENTRY:DSC-03, DSC-14 (coverage=not-run)",
         "FLOW:J1-J8 (not-run; 0/8 journeys pass)",
         "BOOST:LEV-3..LEV-4 (not-measured)"
       ],
