@@ -16,8 +16,14 @@ let target = AUDIT
 if (args[0] === 'flow' && args[1] === 'collect') {
   args.splice(0, 2)
   target = FLOW_COLLECT
+} else if (args[0] === 'flow' && args[1] === 'sandbox') {
+  // Convenience alias for `flow collect --sandbox`.
+  args.splice(0, 2)
+  args.unshift('--sandbox')
+  target = FLOW_COLLECT
 } else if (args[0] === 'flow') {
-  console.error('usage: dsh-levels flow collect --package <dir> [--out <file>] [--static] [--previous <dir>]')
+  console.error('usage: dsh-levels flow collect --package <dir> [--out <file>] [--static|--sandbox] [--previous <dir>]')
+  console.error('       dsh-levels flow sandbox --package <dir> [--out <file>]   (= flow collect --sandbox)')
   process.exit(2)
 } else if (args[0] === 'audit') {
   args.shift()

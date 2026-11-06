@@ -1,6 +1,6 @@
 {
   "name": "dsh-standards",
-  "version": "1.2.1",
+  "version": "1.2.2",
   "description": "DSH plugin standards and conformance checks: ENTRY/FLOW checks plus BOOST guidance. Non-official; no certification or ranking.",
   "type": "module",
   "main": "40-checker/src/index.mjs",
@@ -33,7 +33,7 @@
     "NOTICE"
   ],
   "scripts": {
-    "test": "node --test 40-checker/test/*.test.mjs",
+    "test": "node 40-checker/scripts/run-tests.mjs",
     "test:fixtures": "node bin/dsh-standards.mjs 40-checker/fixtures/good --scope entry --entry-claim static --format text"
   },
   "engines": {

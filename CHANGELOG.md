@@ -1,3 +1,8 @@
+## 1.2.2 — 2026-11-06
+
+- FLOW 沙箱：`flow collect --sandbox` 在 `unshare -Urn` + `prlimit` 下运行，记录 `sandbox{}`；env 白名单硬断言 token 不在子进程；进程组超时击杀；`producer.kind=sandbox` 仅当隔离项全部生效，否则 `sandbox-degraded` 且 audit 永不 runtime。测试 152 → 159。
+- 发布包：`npm test` 改为 `run-tests.mjs`，未随包分发的 test 目录不再导致安装后测试失败。
+
 ## 1.2.1 — 2026-11-06
 
 - **V2 核验修复**：`level-audit` 不再把结构自洽的 self-attested/ci-attested `dsh-flow-evidence/2` 判成 FLOW `runtime`。只有 `claims.claimLevel=sandbox-attested` 或 `producer.kind=sandbox` 才允许 `runtime`；self/ci 的 `passed` 计数保留但 state 记 `not-run`，reason 为 `<claimLevel> evidence; runtime requires sandbox-attested`。`spec/flow-evidence.schema.json` 的 `claims`/`producer.kind` 补充了该判定说明。`advice[]` 新增 `gate`（该 check 的最终结果 PASS/WARN/FAIL），`severity` 跟随 `gate`：ENTRY static claim 把 DSC-02 降为 WARN 时，C-2.1 的 FAIL detail 仍保留在 `reason`，但 advice severity 为 WARN。测试 150 → 152。

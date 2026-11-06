@@ -9,9 +9,14 @@
  *   2. copy the package to a temp dir and run every journey against that copy
  *      only; the original directory is never written;
  *   3. static preflight (`journey.mjs`) for J1-J8, then the runtime probe
- *      (`journey-runtime.mjs`) for J1/J2/J4/J6 with a temp HOME/DSH_HOME and
- *      an allowlisted child env;
- *   4. re-hash the original tree and record `subject.treeStable`;
+ *      (`journey-runtime.mjs`, which runs `dsh plugin add` and boots the tree)
+ *      with a temp HOME/DSH_HOME and an allowlisted child env; with
+ *      `--sandbox` the runtime probe runs behind `unshare` (network),
+ *      `prlimit` (nproc/as), and a process-group timeout that kills the whole
+ *      tree. Any missing isolation item makes `producer.kind`
+ *      `sandbox-degraded`, which is never runtime;
+ *   4. re-hash the original tree and record `subject.treeStable`; a changed
+ *      tree invalidates the evidence;
  *   5. write the JSON, per-check logs, the chain hash, and SHA256SUMS.
  *
  * Missing prerequisites (no dsh, no --previous, host compatibility gate
@@ -22,7 +27,8 @@
  * Usage:
  *   node 40-checker/bin/dsh-flow-collect.mjs --package <dir> [--out flow-evidence.json]
  *     [--logs <dir>] [--previous <dir>] [--dsh <bin>] [--timeout <ms>]
- *     [--static] [--ci] [--json]
+ *     [--static] [--ci] [--sandbox [--sandbox-no-network] [--sandbox-no-limits]
+ *     [--sandbox-nproc <n>] [--sandbox-as <bytes>]] [--json]
  */
 import fs from 'node:fs'
 import os from 'node:os'
@@ -34,6 +40,9 @@ import {
   sha256File, sha256Value, treeSha256, validateFlowEvidence,
 } from '../src/flow-evidence.mjs'
 import { sanitizedEnv } from '../src/sandbox-env.mjs'
+import {
+  assertNoCredentialEnv, buildSandboxPlan, runInProcessTree, sandboxArgv,
+} from '../src/sandbox-run.mjs'
 
 const HERE = path.dirname(fileURLToPath(import.meta.url))
 const STD = path.resolve(HERE, '..', '..')
@@ -68,6 +77,14 @@ Options:
   --timeout <ms>        per-command budget (default: 120000)
   --static              skip the runtime probe (J1/J2/J4/J6 become static/blocked)
   --ci                  mark producer.kind=ci, claims.claimLevel=ci-attested
+  --sandbox             run the runtime probe under unshare/prlimit/process-group
+                        timeout with an allowlisted env; producer.kind=sandbox only
+                        when every isolation item is effective (otherwise
+                        sandbox-degraded, never runtime)
+  --sandbox-no-network  force the degraded path (records unshare-missing)
+  --sandbox-no-limits   force the degraded path (records prlimit-missing)
+  --sandbox-nproc <n>   RLIMIT_NPROC (default: current task count + headroom)
+  --sandbox-as <bytes>  RLIMIT_AS (default: 4 GiB)
   --no-assert-unchanged skip the before/after tree hash comparison (not recommended)
   --json                print the evidence JSON instead of the summary
   --help                show this help
@@ -82,6 +99,8 @@ function parse(argv) {
     package: null, out: path.resolve('flow-evidence.json'), logs: null, previous: null,
     dsh: process.env.DSH_BIN || null, timeout: 120_000, static: false, ci: false,
     assertUnchanged: true, json: false,
+    sandbox: false, sandboxNoNetwork: false, sandboxNoLimits: false,
+    sandboxNproc: null, sandboxAs: 4 * 1024 ** 3,
   }
   for (let i = 0; i < argv.length; i += 1) {
     const next = () => {
@@ -99,6 +118,11 @@ function parse(argv) {
     else if (arg === '--timeout') out.timeout = Number(next())
     else if (arg === '--static' || arg === '--no-runtime') out.static = true
     else if (arg === '--ci') out.ci = true
+    else if (arg === '--sandbox') out.sandbox = true
+    else if (arg === '--sandbox-no-network' || arg === '--no-sandbox-network') out.sandboxNoNetwork = true
+    else if (arg === '--sandbox-no-limits' || arg === '--no-sandbox-limits') out.sandboxNoLimits = true
+    else if (arg === '--sandbox-nproc') out.sandboxNproc = Number(next())
+    else if (arg === '--sandbox-as') out.sandboxAs = Number(next())
     else if (arg === '--no-assert-unchanged') out.assertUnchanged = false
     else if (arg === '--json') out.json = true
     else if (arg === '--help' || arg === '-h') { usage(); process.exit(0) }
@@ -106,6 +130,10 @@ function parse(argv) {
   }
   if (!out.package) throw new Error('--package is required')
   if (!Number.isFinite(out.timeout) || out.timeout < 1000) throw new Error('--timeout must be >= 1000')
+  if (out.sandboxNproc !== null && (!Number.isFinite(out.sandboxNproc) || out.sandboxNproc < 2)) throw new Error('--sandbox-nproc must be >= 2')
+  if (!Number.isFinite(out.sandboxAs) || out.sandboxAs < 64 * 1024 * 1024) throw new Error('--sandbox-as must be >= 67108864')
+  if (out.sandbox && out.static) throw new Error('--sandbox cannot be combined with --static')
+  if (out.sandbox && out.ci) throw new Error('--sandbox cannot be combined with --ci (a sandboxed run is sandbox-attested)')
   return out
 }
 
@@ -144,7 +172,7 @@ function writeLog(logDir, name, text) {
   return { file, sha256: sha256Value(text ?? '') }
 }
 
-function main() {
+async function main() {
   const options = parse(process.argv.slice(2))
   const pkg = path.resolve(options.package)
   if (!fs.existsSync(path.join(pkg, 'package.json'))) throw new Error(`not a package directory: ${pkg}`)
@@ -162,12 +190,25 @@ function main() {
   fs.mkdirSync(tmpHome, { recursive: true })
   fs.mkdirSync(tmpCache, { recursive: true })
   const childEnv = () => sanitizedEnv({
-    HOME: tmpHome, USERPROFILE: tmpHome, TMPDIR: path.join(tmpRoot, 'tmp'), TEMP: path.join(tmpRoot, 'tmp'), TMP: path.join(tmpRoot, 'tmp'),
+    HOME: tmpHome, DSH_HOME: tmpHome, USERPROFILE: tmpHome, TMPDIR: path.join(tmpRoot, 'tmp'), TEMP: path.join(tmpRoot, 'tmp'), TMP: path.join(tmpRoot, 'tmp'),
     npm_config_cache: tmpCache, npm_config_audit: 'false', npm_config_fund: 'false', npm_config_update_notifier: 'false',
   })
+  // The sandbox is planned before any plugin code runs. `assertNoCredentialEnv`
+  // is a hard gate: a surviving token aborts collection instead of booting with it.
+  let sandboxPlan = null
 
   const warnings = []
   try {
+    if (options.sandbox) {
+      assertNoCredentialEnv(childEnv())
+      sandboxPlan = buildSandboxPlan({
+        env: childEnv(),
+        nproc: options.sandboxNproc,
+        asBytes: options.sandboxAs,
+        force: { network: options.sandboxNoNetwork, limits: options.sandboxNoLimits },
+      })
+      sandboxPlan.env = assertNoCredentialEnv(childEnv())
+    }
     // 0. Never let our own output/log dirs count as a tree change.
     const treeExclude = []
     for (const candidate of [outFile, logDir]) {
@@ -245,13 +286,59 @@ function main() {
     if (options.static) runtimeSkipped = 'runtime collection disabled (--static)'
     else if (dshVersion === null) runtimeSkipped = `dsh executable not usable: ${dshBin} (exit ${versionRun.exitCode})`
     let runtimeVerdict = null
+    let sandboxExecution = null
     if (runtimeSkipped === null) {
       const args = [JOURNEY_RUNTIME, '--package', copy, '--dsh', dshBin, '--json', '--log-dir', logDir, '--timeout', String(options.timeout)]
       if (previousCopy) args.push('--previous', previousCopy)
-      const runtimeRun = run(process.execPath, args, { env: childEnv(), timeout: options.timeout * 2 + 60_000 })
-      writeLog(logDir, 'runtime-journey.json', runtimeRun.stdoutText)
-      if (runtimeRun.stderrText) writeLog(logDir, 'runtime-journey.err.log', runtimeRun.stderrText)
-      try { runtimeVerdict = JSON.parse(runtimeRun.stdoutText) } catch { runtimeSkipped = `runtime probe produced no JSON (exit ${runtimeRun.exitCode}): ${tailLines(runtimeRun.stderrText, 5)}` }
+      let runtimeRun
+      if (sandboxPlan) {
+        // journey-runtime spawns `dsh plugin add` and the boot as its own
+        // children; they inherit this process group and network namespace.
+        const argv = sandboxArgv(sandboxPlan, process.execPath, args)
+        runtimeRun = await runInProcessTree({
+          command: argv[0],
+          args: argv.slice(1),
+          cwd: copy,
+          env: childEnv(),
+          timeoutMs: options.timeout * 2 + 60_000,
+        })
+        sandboxExecution = {
+          command: argv,
+          exitCode: runtimeRun.exitCode,
+          timedOut: runtimeRun.timedOut,
+          killed: runtimeRun.killed,
+          spawnError: runtimeRun.spawnError ?? null,
+          durationMs: runtimeRun.durationMs,
+          pid: runtimeRun.pid ?? null,
+          processTree: {
+            mechanism: runtimeRun.treeKill?.mechanism ?? sandboxPlan.processTreeKill.mechanism,
+            signalled: runtimeRun.treeKill?.signalled ?? null,
+            cleared: runtimeRun.treeKill?.cleared ?? null,
+          },
+        }
+        if (runtimeRun.spawnError) {
+          // The probe passed but the sandboxed spawn itself failed: do not keep
+          // calling this run `sandbox`.
+          sandboxPlan.degraded = [...new Set([...sandboxPlan.degraded, 'sandbox-execution-failed'])]
+          sandboxPlan.mode = 'sandbox-degraded'
+        }
+        if (runtimeRun.timedOut) {
+          runtimeSkipped = `sandboxed runtime probe timed out after ${options.timeout * 2 + 60_000} ms; whole process tree killed (${sandboxExecution.processTree.mechanism}, cleared=${sandboxExecution.processTree.cleared})`
+        }
+      } else {
+        runtimeRun = run(process.execPath, args, { env: childEnv(), timeout: options.timeout * 2 + 60_000 })
+      }
+      const stdoutText = runtimeRun.stdoutText ?? runtimeRun.stdout ?? ''
+      const stderrText = runtimeRun.stderrText ?? runtimeRun.stderr ?? ''
+      writeLog(logDir, 'runtime-journey.json', stdoutText)
+      if (stderrText) writeLog(logDir, 'runtime-journey.err.log', stderrText)
+      if (runtimeSkipped === null) {
+        try {
+          runtimeVerdict = JSON.parse(stdoutText)
+        } catch {
+          runtimeSkipped = `runtime probe produced no JSON (exit ${runtimeRun.exitCode}): ${tailLines(stderrText, 5)}`
+        }
+      }
       if (runtimeVerdict) {
         for (const check of runtimeVerdict.checks ?? []) {
           const mapped = toEvidenceCheck(check, logDir, toEvidencePath)
@@ -266,6 +353,9 @@ function main() {
           blockerReasons[blocker.journey].push(blocker.reason)
         }
       }
+    }
+    if (sandboxPlan) {
+      writeLog(logDir, 'sandbox-plan.json', JSON.stringify({ ...sandboxPlan, execution: sandboxExecution }, null, 2))
     }
     if (runtimeSkipped !== null) warnings.push(`runtime probe skipped: ${runtimeSkipped}`)
 
@@ -342,18 +432,40 @@ function main() {
       ? 'flow-fail'
       : statuses.includes('blocked') ? 'flow-blocked' : statuses.every(status => status === 'pass') ? 'flow-pass' : 'flow-warn'
     const producerCommand = [process.execPath, path.relative(STD, fileURLToPath(import.meta.url)).split(path.sep).join('/'), ...process.argv.slice(2)]
+    const sandboxExecuted = Boolean(sandboxExecution)
+    const sandboxKind = sandboxPlan && sandboxExecuted
+      ? (sandboxPlan.degraded.length === 0 ? 'sandbox' : 'sandbox-degraded')
+      : null
+    const producerKind = sandboxKind ?? (options.ci ? 'ci' : 'local')
+    const notClaimed = [...NOT_CLAIMED]
+    if (sandboxKind === 'sandbox') {
+      const localIndex = notClaimed.findIndex(item => item.startsWith('sandbox confinement'))
+      if (localIndex >= 0) notClaimed.splice(localIndex, 1)
+      notClaimed.push('OCI/container image, seccomp, and cgroup memory/pids limits (not implemented)', 'signature (not produced)')
+    } else if (sandboxKind === 'sandbox-degraded') {
+      notClaimed.push(`sandbox confinement (degraded: ${sandboxPlan.degraded.join(', ')})`)
+    }
+    const claimLevel = sandboxKind === 'sandbox' ? 'sandbox-attested' : options.ci ? 'ci-attested' : 'self-attested'
+    const method = sandboxKind === 'sandbox'
+      ? 'sandboxed collector: allowlisted env (no tokens), temporary HOME/DSH_HOME, network+user namespace, prlimit nproc/as, process-group SIGKILL timeout'
+      : sandboxKind === 'sandbox-degraded'
+        ? `sandboxed collector DEGRADED (${sandboxPlan.degraded.join(', ')}): allowlisted env, temporary HOME/DSH_HOME, process-group SIGKILL timeout; every missing isolation item is recorded`
+        : 'local-collector: read-only copy, allowlisted child env, no allowBuilds, no exemption'
+    const sandbox = sandboxPlan ? { ...sandboxPlan, executed: sandboxExecuted, execution: sandboxExecution } : null
     const document = finalizeEvidence({
       schema: FLOW_EVIDENCE_SCHEMA,
       generatedAt,
-      producer: { command: producerCommand, at: generatedAt, kind: options.ci ? 'ci' : 'local', runner: 'flow-collect/1' },
+      producer: {
+        command: producerCommand,
+        at: generatedAt,
+        kind: producerKind,
+        runner: sandboxPlan ? 'flow-collect/2-sandbox' : 'flow-collect/1',
+      },
+      ...(sandbox ? { sandbox } : {}),
       subject,
       host,
       journeys,
-      claims: {
-        claimLevel: options.ci ? 'ci-attested' : 'self-attested',
-        notClaimed: NOT_CLAIMED,
-        method: 'local-collector: read-only copy, allowlisted child env, no allowBuilds, no exemption',
-      },
+      claims: { claimLevel, notClaimed, method },
       conclusion,
     })
     const verdict = validateFlowEvidence(document)
@@ -385,8 +497,17 @@ function main() {
         `  totals   : ${JSON.stringify(counts)}`,
         `  conclusion: ${conclusion}`,
         `  chain    : ${document.chain.evidenceHash}`,
+        ...(sandboxPlan ? [
+          `  sandbox  : ${sandboxPlan.mode}${sandboxPlan.degraded.length > 0 ? ` degraded=[${sandboxPlan.degraded.join(', ')}]` : ''}`,
+          `             env=${sandboxPlan.env.policy} tokens-absent=${sandboxPlan.env.absent} network=${sandboxPlan.network.isolated ? sandboxPlan.network.mechanism : 'off'} limits=${sandboxPlan.limits.available ? sandboxPlan.limits.applied.join('+') : 'off'} home=${sandboxPlan.home.isolated ? 'temp' : 'real'}`,
+          `             execution=${sandboxExecuted ? `exit=${sandboxExecution.exitCode} timedOut=${sandboxExecution.timedOut} killed=${sandboxExecution.killed} treeCleared=${sandboxExecution.processTree.cleared}` : 'not-run'}`,
+        ] : []),
         `  logs     : ${logDir} (+ ${path.join(outDir, 'SHA256SUMS')})`,
-        'Claims: self-attested structure + binding only; no certification, no security audit, not a sandbox.',
+        sandboxKind === 'sandbox'
+          ? 'Claims: sandbox-attested (containment only; no OCI image, seccomp, cgroup, signature); not a certification or security audit.'
+          : sandboxKind === 'sandbox-degraded'
+            ? `Claims: self-attested; sandbox DEGRADED (${sandboxPlan.degraded.join(', ')}). Degraded evidence is never FLOW runtime.`
+            : 'Claims: self-attested structure + binding only; no certification, no security audit, not a sandbox.',
       ]
       if (warnings.length > 0) {
         lines.push('Warnings:')
@@ -486,9 +607,7 @@ function collectHints(journeyId, checks, hints, outDir, logDir, toEvidencePath) 
   }
 }
 
-try {
-  main()
-} catch (error) {
+main().catch(error => {
   console.error(`flow-collect: ${error.message}`)
   process.exitCode = 3
-}
+})

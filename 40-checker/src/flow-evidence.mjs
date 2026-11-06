@@ -19,6 +19,9 @@
  * `producer.kind === 'sandbox'`) may be reported as `flow.state = 'runtime'`.
  * `self-attested`/`ci-attested` documents keep their `passed` count but stay
  * `not-run`, because structural validation cannot prove where commands ran.
+ * A `sandbox-degraded` producer (any isolation item missing) is never runtime,
+ * and a document whose `subject.treeStable` is false is structurally invalid:
+ * a collector that changed the inspected tree has no trustworthy evidence.
  */
 import crypto from 'node:crypto'
 import fs from 'node:fs'
@@ -178,6 +181,11 @@ export function journeyCountsAsPass(journey) {
  */
 export function isSandboxAttested(document) {
   if (!isPlainObject(document)) return false
+  // Degradation is disqualifying even if a claim was left at sandbox-attested:
+  // the producer admits an isolation item was missing.
+  if (document.producer?.kind === 'sandbox-degraded') return false
+  if (document.sandbox?.mode === 'sandbox-degraded') return false
+  if (Array.isArray(document.sandbox?.degraded) && document.sandbox.degraded.length > 0) return false
   return document.claims?.claimLevel === 'sandbox-attested' || document.producer?.kind === 'sandbox'
 }
 
@@ -268,8 +276,8 @@ function validateV2(document) {
     if (!Array.isArray(command) || command.length === 0 || command.some(item => typeof item !== 'string')) {
       errors.push('producer.command must be a non-empty array of strings')
     }
-    if ('kind' in document.producer && document.producer.kind !== null && !['local', 'ci', 'sandbox'].includes(document.producer.kind)) {
-      errors.push('producer.kind must be local, ci, or sandbox')
+    if ('kind' in document.producer && document.producer.kind !== null && !['local', 'ci', 'sandbox', 'sandbox-degraded'].includes(document.producer.kind)) {
+      errors.push('producer.kind must be local, ci, sandbox, or sandbox-degraded')
     }
     for (const key of ['runner', 'actor', 'runUrl']) {
       if (key in document.producer && document.producer[key] !== null) requireString(document.producer[key], `producer.${key}`)
@@ -292,6 +300,12 @@ function validateV2(document) {
       }
     }
     if ('source' in subject) requireString(subject.source, 'subject.source')
+    if (subject.treeStable === false) {
+      errors.push('subject.treeStable is false: the package tree changed during collection')
+    }
+    if ('treeSha256After' in subject && subject.treeSha256After && subject.treeSha256After !== subject.treeSha256 && subject.treeStable !== false) {
+      errors.push('subject.treeSha256After differs from subject.treeSha256: the package tree changed during collection')
+    }
   }
 
   if (requireObject(document.host, 'host')) {
@@ -344,6 +358,8 @@ function validateV2(document) {
     if ('method' in claims) requireString(claims.method, 'claims.method')
   }
 
+  validateSandbox(document, errors)
+
   if (requireObject(document.chain, 'chain')) {
     requireHash(document.chain.evidenceHash, 'chain.evidenceHash')
     for (const key of Object.keys(document.chain)) if (key !== 'evidenceHash') errors.push(`chain.${key} is not allowed`)
@@ -389,7 +405,72 @@ function validateV2(document) {
     conclusion: document.conclusion ?? null,
     claimLevel: isPlainObject(document.claims) ? document.claims.claimLevel ?? null : null,
     producerKind: isPlainObject(document.producer) ? document.producer.kind ?? null : null,
+    sandbox: isPlainObject(document.sandbox)
+      ? {
+        mode: document.sandbox.mode ?? null,
+        degraded: Array.isArray(document.sandbox.degraded) ? [...document.sandbox.degraded] : [],
+      }
+      : null,
     sandboxAttested: isSandboxAttested(document),
+  }
+
+  function validateSandbox(doc, errors) {
+    const kind = isPlainObject(doc.producer) ? doc.producer.kind ?? null : null
+    const declaredSandbox = 'sandbox' in doc
+    if (!declaredSandbox && kind !== 'sandbox' && kind !== 'sandbox-degraded') return
+    if (!declaredSandbox) {
+      errors.push('sandbox is required when producer.kind is sandbox or sandbox-degraded')
+      return
+    }
+    const sandbox = doc.sandbox
+    if (!isPlainObject(sandbox)) {
+      errors.push('sandbox must be an object')
+      return
+    }
+    if (!['sandbox', 'sandbox-degraded'].includes(sandbox.mode)) {
+      errors.push('sandbox.mode must be sandbox or sandbox-degraded')
+    }
+    const degraded = Array.isArray(sandbox.degraded) ? sandbox.degraded : null
+    if (!degraded || degraded.some(item => typeof item !== 'string' || item.length === 0)) {
+      errors.push('sandbox.degraded must be an array of non-empty strings')
+    }
+    const list = degraded ?? []
+    if (sandbox.mode === 'sandbox' && list.length > 0) errors.push('sandbox.mode is sandbox but sandbox.degraded is not empty')
+    if (sandbox.mode === 'sandbox-degraded' && list.length === 0) errors.push('sandbox.mode is sandbox-degraded but sandbox.degraded is empty')
+    if ('env' in sandbox) {
+      if (!isPlainObject(sandbox.env)) errors.push('sandbox.env must be an object')
+      else if (typeof sandbox.env.absent !== 'boolean') errors.push('sandbox.env.absent must be a boolean')
+    }
+    if ('network' in sandbox && (!isPlainObject(sandbox.network) || typeof sandbox.network.isolated !== 'boolean')) {
+      errors.push('sandbox.network.isolated must be a boolean')
+    }
+    if ('limits' in sandbox) {
+      if (!isPlainObject(sandbox.limits)) errors.push('sandbox.limits must be an object')
+      else {
+        if ('available' in sandbox.limits && typeof sandbox.limits.available !== 'boolean') errors.push('sandbox.limits.available must be a boolean')
+        if ('applied' in sandbox.limits && (!Array.isArray(sandbox.limits.applied) || sandbox.limits.applied.some(item => typeof item !== 'string'))) {
+          errors.push('sandbox.limits.applied must be an array of strings')
+        }
+      }
+    }
+    if ('home' in sandbox && (!isPlainObject(sandbox.home) || typeof sandbox.home.isolated !== 'boolean')) {
+      errors.push('sandbox.home.isolated must be a boolean')
+    }
+    if ('executed' in sandbox && typeof sandbox.executed !== 'boolean') errors.push('sandbox.executed must be a boolean')
+    if (kind === 'sandbox') {
+      if (sandbox.mode !== 'sandbox') errors.push('producer.kind=sandbox requires sandbox.mode=sandbox')
+      if (list.length > 0) errors.push('producer.kind=sandbox requires an empty sandbox.degraded list')
+      if (sandbox.executed !== true) errors.push('producer.kind=sandbox requires sandbox.executed=true')
+      if (sandbox.env?.absent !== true) errors.push('producer.kind=sandbox requires sandbox.env.absent=true')
+      if (sandbox.network?.isolated !== true) errors.push('producer.kind=sandbox requires sandbox.network.isolated=true')
+      if (sandbox.limits?.available !== true) errors.push('producer.kind=sandbox requires sandbox.limits.available=true')
+      if (sandbox.home?.isolated !== true) errors.push('producer.kind=sandbox requires sandbox.home.isolated=true')
+    }
+    if (kind === 'sandbox-degraded') {
+      if (sandbox.mode !== 'sandbox-degraded') errors.push('producer.kind=sandbox-degraded requires sandbox.mode=sandbox-degraded')
+      if (list.length === 0) errors.push('producer.kind=sandbox-degraded requires at least one sandbox.degraded reason')
+      if (doc.claims?.claimLevel === 'sandbox-attested') errors.push('producer.kind=sandbox-degraded cannot claim sandbox-attested')
+    }
   }
 
   function validateCheck(check, label) {

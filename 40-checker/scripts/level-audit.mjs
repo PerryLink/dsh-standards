@@ -167,6 +167,8 @@ function classifyFlow(evidence) {
       schema: null,
       claimLevel: null,
       producerKind: null,
+      sandboxMode: null,
+      sandboxDegraded: [],
       sandboxAttested: false,
       deprecated: false,
       invalid: false,
@@ -186,6 +188,8 @@ function classifyFlow(evidence) {
     schema: verdict.schema,
     claimLevel: verdict.claimLevel ?? null,
     producerKind: verdict.producerKind ?? null,
+    sandboxMode: verdict.sandbox?.mode ?? null,
+    sandboxDegraded: verdict.sandbox?.degraded ?? [],
     sandboxAttested: verdict.sandboxAttested === true,
     deprecated: verdict.kind === 'v1-deprecated' || verdict.kind === 'legacy',
     invalid: false,
@@ -245,7 +249,11 @@ function classifyFlow(evidence) {
         ? 'runtime'
         : 'not-run'
   const reasons = []
-  if (!runtimeEligible && failed.length === 0) {
+  const degraded = Array.isArray(base.sandboxDegraded) ? base.sandboxDegraded : []
+  if (degraded.length > 0) {
+    reasons.push(`sandbox-degraded (${degraded.join(', ')}); runtime requires every isolation item effective`)
+  }
+  if (!runtimeEligible && failed.length === 0 && degraded.length === 0) {
     reasons.push(`${base.claimLevel ?? 'non-sandbox'} evidence; runtime requires sandbox-attested`)
   }
   if (failed.length > 0) reasons.push(`failed journeys: ${failed.join(', ')}`)
@@ -362,7 +370,9 @@ function nextActions(entry, flow, boost) {
   if (entry.g4 && entry.g4.hasClient && entry.g4.ok === false) actions.push(`ENTRY: fix G4 — ${entry.g4.reason}`)
   for (const warning of entry.warnings) actions.push(`ENTRY: consider ${warning.id} — ${warning.reason}`)
   if (entry.state === 'recognized') actions.push('ENTRY: run with --host to replace static recognition with a real G0-G3 boot')
-  if (flow.state === 'not-run' && flow.claimLevel && flow.sandboxAttested !== true) {
+  if (flow.sandboxDegraded?.length > 0) {
+    actions.push(`FLOW: sandbox degraded (${flow.sandboxDegraded.join(', ')}); re-run where unshare and prlimit are effective; degraded evidence is never runtime`)
+  } else if (flow.state === 'not-run' && flow.claimLevel && flow.sandboxAttested !== true) {
     actions.push(`FLOW: ${flow.claimLevel} evidence keeps ${flow.passed}/8 journey passes but is not runtime; re-run under a sandbox and set claims.claimLevel=sandbox-attested (or producer.kind=sandbox)`)
   } else if (flow.state === 'not-run') {
     actions.push('FLOW: record J1-J8 with node 40-checker/bin/dsh-flow-collect.mjs; do not claim FLOW until they run')

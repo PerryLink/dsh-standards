@@ -2,7 +2,7 @@
   "$schema": "https://json-schema.org/draft/2020-12/schema",
   "$id": "https://github.com/PerryLink/dsh-standards/spec/flow-evidence.schema.json",
   "title": "DSH FLOW evidence chain",
-  "description": "One collected FLOW result (J1-J8) bound to a package, a host, a timestamp, and a chain hash. Structural validation only: it does not prove the commands really ran. v1 (dsh-flow-journey/1, dsh-flow-runtime/1) and bare {Jx:{status}} documents are deprecated and never count as a pass. `level-audit.mjs --flow-evidence` accepts this document only, and reports `runtime` only when `claims.claimLevel` is `sandbox-attested` or `producer.kind` is `sandbox`; self-attested/ci-attested keeps its pass count but stays not-run.",
+  "description": "One collected FLOW result (J1-J8) bound to a package, a host, a timestamp, and a chain hash. Structural validation only: it does not prove the commands really ran. v1 (dsh-flow-journey/1, dsh-flow-runtime/1) and bare {Jx:{status}} documents are deprecated and never count as a pass. `level-audit.mjs --flow-evidence` accepts this document only, and reports `runtime` only when `claims.claimLevel` is `sandbox-attested` or `producer.kind` is `sandbox`; `sandbox-degraded` (any isolation item missing) and self-attested/ci-attested keep their pass count but stay not-run.",
   "type": "object",
   "additionalProperties": false,
   "required": [
@@ -43,8 +43,8 @@
           "format": "date-time"
         },
         "kind": {
-          "enum": ["local", "ci", "sandbox"],
-          "description": "`local`/`ci` are structural evidence only; `sandbox` may count toward FLOW runtime."
+          "enum": ["local", "ci", "sandbox", "sandbox-degraded"],
+          "description": "`local`/`ci` are structural evidence only; `sandbox` (every isolation item effective) may count toward FLOW runtime; `sandbox-degraded` never does."
         },
         "runner": { "type": "string" },
         "actor": { "type": "string" },
@@ -108,6 +108,72 @@
         "platform": { "type": "string", "minLength": 1 }
       }
     },
+    "sandbox": {
+      "type": "object",
+      "description": "Containment report from `flow collect --sandbox`. `mode` is `sandbox` only when every isolation item (env allowlist + token assertion, temporary HOME/DSH_HOME, network namespace, prlimit nproc/as, process-group tree kill) is effective. `producer.kind=sandbox` requires mode=sandbox and an empty `degraded` list.",
+      "required": ["mode", "degraded"],
+      "properties": {
+        "schema": { "const": "dsh-sandbox-report/1" },
+        "mode": { "enum": ["sandbox", "sandbox-degraded"] },
+        "degraded": {
+          "type": "array",
+          "items": { "type": "string", "minLength": 1 },
+          "description": "Missing isolation items, e.g. unshare-missing, prlimit-missing, env-token-present, home-not-isolated."
+        },
+        "platform": { "type": "string" },
+        "env": {
+          "type": "object",
+          "properties": {
+            "policy": { "type": "string" },
+            "checked": { "type": "array", "items": { "type": "string" } },
+            "absent": { "type": "boolean" },
+            "offenders": { "type": "array", "items": { "type": "string" } }
+          }
+        },
+        "home": {
+          "type": "object",
+          "properties": {
+            "isolated": { "type": "boolean" },
+            "mode": { "type": "string" }
+          }
+        },
+        "network": {
+          "type": "object",
+          "properties": {
+            "isolated": { "type": "boolean" },
+            "mechanism": { "type": "string" },
+            "reason": { "type": "string" },
+            "bin": { "type": "string" },
+            "args": { "type": "array", "items": { "type": "string" } },
+            "probe": { "type": "object" },
+            "attempts": { "type": "array", "items": { "type": "object" } }
+          }
+        },
+        "limits": {
+          "type": "object",
+          "properties": {
+            "available": { "type": "boolean" },
+            "bin": { "type": "string" },
+            "nproc": { "type": "integer", "minimum": 2 },
+            "asBytes": { "type": "integer", "minimum": 67108864 },
+            "applied": { "type": "array", "items": { "type": "string" } },
+            "observed": { "type": "object" },
+            "probe": { "type": "object" },
+            "reason": { "type": "string" }
+          }
+        },
+        "processTreeKill": {
+          "type": "object",
+          "properties": {
+            "available": { "type": "boolean" },
+            "mechanism": { "type": "string" }
+          }
+        },
+        "executed": { "type": "boolean", "description": "True when the sandboxed runtime probe actually ran." },
+        "execution": { "type": "object", "description": "Command, exit code, timeout/kill outcome, and process-tree clearing proof." },
+        "note": { "type": "string" }
+      }
+    },
     "journeys": {
       "type": "object",
       "additionalProperties": false,
@@ -118,7 +184,7 @@
     },
     "claims": {
       "type": "object",
-      "description": "Attestation level of this evidence. Passing journeys are not runtime by themselves: `level-audit` may report `runtime` only when `claimLevel` is `sandbox-attested` (or `producer.kind` is `sandbox`). `self-attested` (local collector) and `ci-attested` (`--ci`) keep their `passed` count but are reported `not-run`, because structural validation cannot prove the commands ran, let alone in a sandbox.",
+      "description": "Attestation level of this evidence. Passing journeys are not runtime by themselves: `level-audit` may report `runtime` only when `claimLevel` is `sandbox-attested` (or `producer.kind` is `sandbox`). `self-attested` (local collector), `ci-attested` (`--ci`), and every `sandbox-degraded` document keep their `passed` count but are reported `not-run`, because structural validation cannot prove the commands ran, let alone in a fully isolated sandbox.",
       "additionalProperties": false,
       "required": ["claimLevel"],
       "properties": {

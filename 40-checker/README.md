@@ -131,13 +131,18 @@ node scripts/level-audit.mjs ./my-bundle \
 ```bash
 node bin/dsh-flow-collect.mjs --package ./my-plugin --out flow-evidence.json
 # 等价：node bin/dsh-levels.mjs flow collect --package ./my-plugin --out flow-evidence.json
+# 隔离运行（unshare 无网 + prlimit + 进程组超时杀树 + 白名单 env）：
+node bin/dsh-flow-collect.mjs --package ./my-plugin --sandbox --out flow-evidence.json
+# 等价：node bin/dsh-levels.mjs flow sandbox --package ./my-plugin --out flow-evidence.json
 ```
 
 - 只接受 `dsh-flow-evidence/2`（`spec/flow-evidence.schema.json`）。`level-audit --flow-evidence` 对 v1（`dsh-flow-journey/1`、`dsh-flow-runtime/1`）和裸 `{Jx:{status}}` 标 `deprecated`，不计 pass。
 - 每个 J 必须至少 1 条 `checks[]` 且全部 `exitCode === 0`、断言成立、至少一条非 `static` 观测检查，才计 pass；`static` preflight 不是 runtime，`warn`/`blocked`/`na` 都不计 8/8。
-- collector 把包复制到临时目录再跑，前后 `treeSha256` 必须一致；子进程 env 走白名单（不含 token/key/secret）；不授予 `allowBuilds`，不自动 `allow-version`。
+- collector 把包复制到临时目录再跑，前后 `treeSha256` 必须一致；`treeStable:false` 或 `treeSha256After` 不同直接判证据无效（invalid），不是 warn。子进程 env 走白名单（不含 token/key/secret）；不授予 `allowBuilds`，不自动 `allow-version`。
+- `--sandbox` 在临时 HOME/DSH_HOME 下跑 `dsh plugin add` + boot：先试 `unshare -n`，不行再试 `unshare -Urn`；用 `prlimit` 设 `nproc`/`as` 并从 `/proc/self/limits` 回读实际生效项；超时 SIGKILL 整个进程组（Windows `taskkill /T /F`）。硬断言 `GH_TOKEN`/`NPM_TOKEN`/`GITHUB_TOKEN` 不在子进程 env，发现即中止。
+- 只有**所有**隔离项都生效才写 `producer.kind=sandbox` / `claims.claimLevel=sandbox-attested`；任何一项缺失（`unshare-missing`、`prlimit-missing`、`env-token-present`、`home-not-isolated`）写 `sandbox-degraded` + `sandbox.degraded[]`，仍是 self-attested，`level-audit` 永不判 runtime。`--sandbox-no-network` / `--sandbox-no-limits` 用于强制验证降级路径。
 - 前置缺失（无 dsh、无 `--previous`、宿主兼容门禁拒绝）记 `blocked` + reason，出口码 0；真失败出口码 1，并打印五要素提示（子检查 / 命令 / exitCode / stderr 末 20 行 / 日志绝对路径 + 条款锚）。
-- 本地证据只是 `self-attested`：结构自洽 + 绑定此包 + 未过期，**不证明真跑过**，也不是沙箱、认证或安全审计。`level-audit` 只有见到 `claims.claimLevel=sandbox-attested` 或 `producer.kind=sandbox` 才判 `runtime`；self/ci 证据保留 `passed` 计数但记 `not-run`。
+- 本地证据默认 `self-attested`：结构自洽 + 绑定此包 + 未过期，**不证明真跑过**。即使 `--sandbox` 通过，它也只是 containment（无 seccomp/cgroup/OCI 镜像/签名），不是认证或安全审计。`level-audit` 只有见到 `claims.claimLevel=sandbox-attested` 或 `producer.kind=sandbox` 才判 `runtime`；self/ci/degraded 证据保留 `passed` 计数但记 `not-run`。
 
 ## 4. 运行 L1–L3
 

@@ -56,6 +56,23 @@ function evidenceDocument({ journeys = {}, subject, ...rest } = {}) {
   return finalizeEvidence(base)
 }
 
+function sandboxReport(overrides = {}) {
+  const base = {
+    schema: 'dsh-sandbox-report/1',
+    mode: 'sandbox',
+    platform: process.platform,
+    env: { policy: 'allowlist', checked: ['GH_TOKEN', 'NPM_TOKEN', 'GITHUB_TOKEN'], absent: true, offenders: [] },
+    home: { isolated: true, mode: 'temporary HOME/DSH_HOME/TMPDIR' },
+    network: { isolated: true, mechanism: 'unshare -n (network namespace)' },
+    limits: { available: true, nproc: 1024, asBytes: 4294967296, applied: ['nproc', 'as'] },
+    processTreeKill: { available: true, mechanism: 'process-group SIGKILL' },
+    degraded: [],
+    executed: true,
+    execution: { exitCode: 0, timedOut: false, killed: false },
+  }
+  return { ...base, ...overrides }
+}
+
 function writeTemp(name, value) {
   const dir = fs.mkdtempSync(path.join(os.tmpdir(), 'dsh-flow-evidence-test-'))
   const file = path.join(dir, name)
@@ -133,6 +150,7 @@ test('level-audit: bare {Jx:{status:pass}} rows are deprecated and never a pass'
 test('level-audit: producer.kind=sandbox with all eight journeys passing is runtime', () => {
   const doc = evidenceDocument({
     producer: { command: ['node', '40-checker/bin/dsh-flow-collect.mjs'], at: ISO, kind: 'sandbox' },
+    sandbox: sandboxReport(),
   })
   const temp = writeTemp('v2-sandbox-producer.json', doc)
   try {
