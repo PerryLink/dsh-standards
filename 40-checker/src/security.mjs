@@ -258,21 +258,91 @@ function analyseClosure(sources, entryRelative) {
 // DSC-15: install lifecycle scripts
 // ---------------------------------------------------------------------------
 
-function scriptReferenceProblems(name, command, dir, scripts) {
-  const problems = []
-  const missing = []
-  const checkRef = (reference) => {
-    if (!reference || reference.startsWith('-')) return
-    if (!/^(?:\.{0,2}\/|[\w@.-]+\/)/.test(reference) && !/\.(?:[cm]?[jt]s|sh|ps1)$/.test(reference)) return
-    const absolute = path.resolve(dir, reference)
-    if (!fs.existsSync(absolute)) missing.push(reference)
+const SCRIPT_FILE_EXTENSION = /\.(?:[cm]?[jt]s|sh|bash|zsh|ps1)$/i
+const SCRIPT_INSPECT_MAX_BYTES = 512 * 1024
+const SCRIPT_DANGER_RULES = [
+  { pattern: /\b(?:curl|wget)\b[^\n|]*\|\s*(?:sudo\s+)?(?:sh|bash|zsh|dash|ksh|fish)\b/, label: 'remote script piped to a shell' },
+  { pattern: /\bbase64\s+(?:-d|--decode)\b|\bbase64\s+-D\b/, label: 'base64 decode' },
+  { pattern: /\beval\b\s*\)?\s*\(|\bnew\s+Function\s*\(|\bvm\.(?:runIn\w+|compileFunction)\s*\(/, label: 'eval/Function of a string' },
+  { pattern: /\bnode\s+(?:-e|--eval)\b|\b(?:sh|bash|zsh|dash|ksh)\s+-[a-z]*c\b/, label: 'inline code passed to an interpreter' },
+  { pattern: /\bpowershell(?:\.exe)?\b[^\n]*(?:-enc|-encodedcommand)\b/i, label: 'powershell encoded command' },
+  { pattern: /(?:readFile(?:Sync)?|createReadStream|open(?:Sync)?)\s*\([^\n]{0,200}(?:\.ssh|\.dsh|credential|id_rsa|id_ed25519|\.aws|\.npmrc|\.netrc|tokens?)/i, label: 'reads a credential-like path' },
+  { pattern: /\b(?:cat|cp|scp|tar|zip)\b[^\n]{0,160}(?:\.ssh\/|\.dsh\/|credentials|id_rsa|\.aws\/|\.npmrc|\.netrc)/i, label: 'collects credential-like files' },
+  { pattern: /(?:os\.homedir\(\)|process\.env\.(?:HOME|USERPROFILE|DSH_HOME))[^\n]{0,160}(?:\.dsh|\.ssh|credential|tokens?|id_rsa)/i, label: 'combines the home directory with a secret path' },
+]
+const SCRIPT_NETWORK = /\b(?:fetch|axios\.(?:get|post)|https?\.(?:get|request))\s*\(|\bcurl\b|\bwget\b/
+const SCRIPT_EXECUTE = /\beval\b|\bnew\s+Function\b|\b(?:exec|execSync|spawn|spawnSync|execFile|execFileSync)\s*\(|\bvm\.(?:runIn\w+|compileFunction)/
+const SCRIPT_CHILD_DYNAMIC = [
+  /\b(?:exec|execSync|spawn|spawnSync|execFile|execFileSync)\s*\(\s*`[^`]*\$\{/,
+  /\b(?:exec|execSync|spawn|spawnSync|execFile|execFileSync)\s*\(\s*[A-Za-z_$][\w$]*\s*[,)]/,
+]
+
+function scriptDangerLabels(text) {
+  const labels = []
+  const add = (label) => { if (!labels.includes(label)) labels.push(label) }
+  for (const rule of SCRIPT_DANGER_RULES) if (rule.pattern.test(text)) add(rule.label)
+  if (SCRIPT_NETWORK.test(text) && SCRIPT_EXECUTE.test(text)) add('downloads remote content and executes it')
+  if (/\bchild_process\b/.test(text) && SCRIPT_CHILD_DYNAMIC.some(pattern => pattern.test(text))) {
+    add('child_process with a dynamic command')
   }
-  for (const match of command.matchAll(/\bnode\s+(?!-e\b|--eval\b)([^\s;&|]+)/g)) checkRef(match[1])
+  return labels
+}
+
+/** Local script paths referenced by one lifecycle command (node/sh/tsx/direct). */
+function commandScriptReferences(command) {
+  const references = []
+  const add = (value) => {
+    if (!value || value.startsWith('-')) return
+    if (value.includes('://')) return
+    if (!SCRIPT_FILE_EXTENSION.test(value)) return
+    if (!references.includes(value)) references.push(value)
+  }
+  for (const match of command.matchAll(/\bnode\s+(?!-e\b|--eval\b)(?:(?:--?[\w-]+(?:=[^\s]+)?)\s+)*([^\s;&|()]+)/g)) add(match[1])
+  for (const match of command.matchAll(/\b(?:sh|bash|zsh|dash|ksh|fish)\s+(?!-[a-z]*c\b)([^\s;&|()]+)/g)) add(match[1])
+  for (const match of command.matchAll(/(?:^|[;&|]\s*|\b(?:then|do|else)\s+)((?:\.{1,2}\/)?[\w@./-]+\.(?:[cm]?[jt]s|sh|ps1))/g)) add(match[1])
+  return references
+}
+
+/** Follow `npm run x` one level so `postinstall: npm run setup` is inspectable. */
+function collectScriptFacts(command, dir, scripts, depth = 0, seen = new Set(), acc = null) {
+  const facts = acc ?? { references: [], missing: [] }
+  for (const reference of commandScriptReferences(command)) {
+    if (!facts.references.includes(reference)) facts.references.push(reference)
+  }
   for (const match of command.matchAll(/\b(?:npm|pnpm|yarn)\s+run\s+([\w:.@-]+)/g)) {
-    if (!Object.hasOwn(scripts, match[1])) missing.push(`npm run ${match[1]}`)
+    const name = match[1]
+    if (!Object.hasOwn(scripts, name)) {
+      if (!facts.missing.includes(`npm run ${name}`)) facts.missing.push(`npm run ${name}`)
+      continue
+    }
+    if (depth >= 2 || seen.has(name)) continue
+    seen.add(name)
+    collectScriptFacts(String(scripts[name] ?? ''), dir, scripts, depth + 1, seen, facts)
   }
-  if (missing.length > 0) problems.push(`scripts.${name} references missing script(s): ${[...new Set(missing)].join(', ')}`)
-  return problems
+  return facts
+}
+
+/**
+ * Read a referenced local script and look for install-time danger. The file is
+ * never executed; only text is inspected and the walk is bounded to the
+ * package directory so a lifecycle command cannot make the checker read an
+ * arbitrary host file.
+ */
+function inspectInstallScript(reference, dir) {
+  const root = path.resolve(dir)
+  const absolute = path.resolve(root, reference)
+  if (absolute !== root && !absolute.startsWith(root + path.sep)) {
+    return { reference, skipped: 'outside the package tree' }
+  }
+  let stats
+  try { stats = fs.lstatSync(absolute) } catch { return { reference, missing: true } }
+  if (stats.isSymbolicLink()) return { reference, skipped: 'symlink not followed' }
+  if (!stats.isFile()) return { reference, missing: true }
+  if (stats.size > SCRIPT_INSPECT_MAX_BYTES) return { reference, skipped: `larger than ${SCRIPT_INSPECT_MAX_BYTES} bytes` }
+  let text
+  try { text = fs.readFileSync(absolute, 'utf8') } catch { return { reference, skipped: 'unreadable' } }
+  if (text.includes('\0')) return { reference, skipped: 'binary content' }
+  return { reference, labels: scriptDangerLabels(text) }
 }
 
 export function checkLifecycleScripts(manifest, dir) {
@@ -286,7 +356,16 @@ export function checkLifecycleScripts(manifest, dir) {
     present += 1
     const evidence = [`package.json#scripts.${name}`]
     const dangerous = DANGEROUS_SCRIPT.filter(rule => rule.pattern.test(command)).map(rule => rule.label)
-    const missing = scriptReferenceProblems(name, command, dir, scripts)
+    const facts = dir ? collectScriptFacts(command, dir, scripts) : { references: [], missing: [] }
+    const missing = [...new Set(facts.missing)]
+    const contentFindings = []
+    const skipped = []
+    for (const reference of facts.references) {
+      const inspected = inspectInstallScript(reference, dir)
+      if (inspected.missing) missing.push(reference)
+      else if (inspected.skipped) skipped.push(`${reference}: ${inspected.skipped}`)
+      else if (inspected.labels.length > 0) contentFindings.push(`${reference}: ${inspected.labels.join(', ')}`)
+    }
     if (name === 'prepare' && dangerous.length > 0) {
       details.push(detail('C-15.1', 'WARN', `scripts.prepare uses a dangerous form (${dangerous.join('; ')}); prepare is allowBuilds-gated, so this is WARN not FAIL`, evidence))
       findings.push('warn')
@@ -297,10 +376,20 @@ export function checkLifecycleScripts(manifest, dir) {
       // `prepare` also runs for git/source installs, which pnpm gates behind
       // allowBuilds; a missing prepare target is therefore WARN, not FAIL.
       const level = name === 'prepare' ? 'WARN' : 'FAIL'
-      details.push(detail('C-15.3', level, `${missing.join('; ')}${name === 'prepare' ? ' (prepare is allowBuilds-gated)' : ''}`, evidence))
+      details.push(detail('C-15.3', level, `scripts.${name} references missing script(s): ${missing.join(', ')}${name === 'prepare' ? ' (prepare is allowBuilds-gated)' : ''}`, evidence))
       findings.push(level === 'WARN' ? 'warn' : 'fail')
+    } else if (contentFindings.length > 0) {
+      const level = name === 'prepare' ? 'WARN' : 'FAIL'
+      details.push(detail('C-15.1', level, `referenced install script is dangerous: ${contentFindings.join('; ')}${name === 'prepare' ? ' (prepare is allowBuilds-gated)' : ''}`, evidence))
+      findings.push(level === 'WARN' ? 'warn' : 'fail')
+    } else if (skipped.length > 0) {
+      details.push(detail('C-15.2', 'WARN', `referenced install script was not inspected: ${skipped.join('; ')}`, evidence))
+      findings.push('warn')
     } else {
       details.push(detail('C-15.2', 'WARN', `lifecycle script scripts.${name} is present; install-time commands are not executed by the checker`, evidence))
+      if (facts.references.length > 0) {
+        details.push(detail('C-15.2', 'PASS', `inspected referenced script(s): ${facts.references.join(', ')}; no dangerous pattern found`))
+      }
       findings.push('warn')
     }
   }
@@ -474,6 +563,151 @@ function classifySecretPath(value) {
   return null
 }
 
+const HOME_ENV_NAMES = new Set(['HOME', 'USERPROFILE', 'DSH_HOME', 'XDG_CONFIG_HOME'])
+const SECRET_STRONG = /(?:^|[^a-z0-9])(?:\.ssh|id_rsa|id_ed25519|credentials?(?![a-z0-9])|tokens?(?![a-z0-9-]))(?:[^a-z0-9]|$)/i
+const SECRET_WEAK = /(?:^|[^a-z0-9])\.dsh(?:[^a-z0-9]|$)/i
+const FUNCTION_SCOPE_NODES = new Set([
+  'FunctionDeclaration', 'FunctionExpression', 'ArrowFunctionExpression',
+  'ObjectMethod', 'ClassMethod', 'ClassPrivateMethod', 'Program',
+])
+const FUNCTION_LIKE_NODES = new Set([...FUNCTION_SCOPE_NODES].filter(type => type !== 'Program'))
+const PATH_LIKE_NAME = /(?:path|file|dir|folder|config|secret|cred|token|home)/i
+
+function secretStrengthOfText(text) {
+  if (typeof text !== 'string' || text === '') return null
+  if (SECRET_STRONG.test(text)) return 'strong'
+  if (SECRET_WEAK.test(text)) return 'weak'
+  return null
+}
+
+function strongerSecret(left, right) {
+  if (left === 'strong' || right === 'strong') return 'strong'
+  return left ?? right ?? null
+}
+
+/** Literal text, template text or regex pattern; comments never reach the AST. */
+function literalPathText(node) {
+  if (!node) return null
+  if (node.type === 'Literal') {
+    if (node.regex && typeof node.regex.pattern === 'string') return node.regex.pattern
+    if (typeof node.value === 'string') return node.value
+  }
+  if (node.type === 'TemplateElement' && node.value) {
+    return typeof node.value.cooked === 'string' ? node.value.cooked : (typeof node.value.raw === 'string' ? node.value.raw : null)
+  }
+  return null
+}
+
+/**
+ * Only path-like literals count. A sentence such as "invalid credentials" is
+ * not a clue; `'.dsh'`, `'~/.ssh/id_rsa'`, `'credentials.json'` and a regex like
+ * `/^\.?credentials/` are.
+ */
+function isPathLikeSecretLiteral(node, text) {
+  const strength = secretStrengthOfText(text)
+  if (!strength) return null
+  if (node.type === 'Literal' && node.regex) return strength
+  const trimmed = String(text).trim()
+  if (trimmed === '') return null
+  if (trimmed.startsWith('.') || /[\\/]/.test(trimmed)) return strength
+  if (/^(?:credentials?|tokens?|id_rsa|id_ed25519|\.dsh|\.ssh)$/i.test(trimmed)) return strength
+  if (/^[\w@.-]*(?:credentials?|tokens?|id_rsa|id_ed25519)[\w@.-]*\.(?:json|ya?ml|txt|pem|key|env|ini|conf)$/i.test(trimmed)) return strength
+  return null
+}
+
+/** Follow the argument through local assignments for a secret-path clue. */
+function containsSecretSource(node, bindings, depth = 0, seen = new Set()) {
+  if (!node || depth > 4 || seen.has(node)) return null
+  const text = literalPathText(node)
+  if (text !== null) {
+    const strength = isPathLikeSecretLiteral(node, text)
+    if (strength) return strength
+  }
+  if (node.type === 'Identifier') {
+    const init = bindings.get(node.name)
+    if (!init || FUNCTION_LIKE_NODES.has(init.type)) return null
+    return containsSecretSource(init, bindings, depth + 1, new Set(seen).add(node))
+  }
+  let best = null
+  for (const key of Object.keys(node)) {
+    if (key === 'loc') continue
+    const value = node[key]
+    const children = Array.isArray(value) ? value : [value]
+    for (const child of children) {
+      if (!child || typeof child.type !== 'string' || FUNCTION_LIKE_NODES.has(child.type)) continue
+      const found = containsSecretSource(child, bindings, depth + 1, new Set(seen).add(node))
+      if (found === 'strong') return 'strong'
+      if (found === 'weak') best = 'weak'
+    }
+  }
+  return best
+}
+
+/** Home markers: os.homedir(), process.env.HOME/USERPROFILE/DSH_HOME/XDG_CONFIG_HOME. */
+function containsHomeSource(node, bindings, depth = 0, seen = new Set()) {
+  if (!node || depth > 4 || seen.has(node)) return false
+  if (node.type === 'CallExpression') {
+    const names = chainNames(node.callee)
+    if (names[names.length - 1] === 'homedir') return true
+  }
+  if (node.type === 'MemberExpression') {
+    const property = memberPropertyName(node)
+    const object = node.object
+    if (property && HOME_ENV_NAMES.has(property) && object?.type === 'MemberExpression'
+      && identifierName(object.object) === 'process' && memberPropertyName(object) === 'env') return true
+  }
+  if (node.type === 'Identifier') {
+    if (HOME_ENV_NAMES.has(node.name)) return true
+    const init = bindings.get(node.name)
+    if (!init || FUNCTION_LIKE_NODES.has(init.type)) return false
+    return containsHomeSource(init, bindings, depth + 1, new Set(seen).add(node))
+  }
+  for (const key of Object.keys(node)) {
+    if (key === 'loc') continue
+    const value = node[key]
+    const children = Array.isArray(value) ? value : [value]
+    for (const child of children) {
+      if (!child || typeof child.type !== 'string' || FUNCTION_LIKE_NODES.has(child.type)) continue
+      if (containsHomeSource(child, bindings, depth + 1, new Set(seen).add(node))) return true
+    }
+  }
+  return false
+}
+
+/** A variable argument whose name suggests a path, e.g. configPath or secretFile. */
+function argumentLooksPathLike(node) {
+  let found = false
+  walkAst(node, (child) => {
+    if (found) return
+    if (child.type === 'Identifier' && PATH_LIKE_NAME.test(child.name)) found = true
+    if (child.type === 'MemberExpression') {
+      const property = memberPropertyName(child)
+      if (property && PATH_LIKE_NAME.test(property)) found = true
+    }
+  })
+  return found
+}
+
+function isDshDirectoryPath(value) {
+  const normalized = String(value).replace(/\\/g, '/').replace(/\/+$/, '').toLowerCase()
+  return /(?:^|\/)\.dsh$/.test(normalized)
+}
+
+function securityScopeOf(ancestors, root) {
+  for (let index = ancestors.length - 1; index >= 0; index -= 1) {
+    if (FUNCTION_SCOPE_NODES.has(ancestors[index].type)) return ancestors[index]
+  }
+  return root
+}
+
+function isEgressCall(node) {
+  if (!node || node.type !== 'CallExpression') return false
+  const names = chainNames(node.callee)
+  const last = names[names.length - 1]
+  if (last === 'fetch') return true
+  return names.length >= 2 && ['http', 'https'].includes(names[0]) && ['get', 'request'].includes(last)
+}
+
 function isEnvEnumeration(node) {
   return node.type === 'CallExpression'
     && node.callee.type === 'MemberExpression'
@@ -487,10 +721,7 @@ function isEnvEnumeration(node) {
 function hasEgressCall(ast) {
   let found = false
   walkAst(ast, (node) => {
-    if (found || node.type !== 'CallExpression') return
-    const names = chainNames(node.callee)
-    if (names[names.length - 1] === 'fetch') found = true
-    if (names.length >= 2 && ['http', 'https'].includes(names[0]) && ['get', 'request'].includes(names[names.length - 1])) found = true
+    if (!found && isEgressCall(node)) found = true
   })
   return found
 }
@@ -512,28 +743,85 @@ export function checkSensitiveFileReads(manifest, sources) {
     const parsed = parseModule(source)
     if (parsed.error) { parseErrors += 1; continue }
     let envEnumeration = false
-    walkAst(parsed.ast, (node) => {
-      if (node.type !== 'CallExpression') return
+    const scopeFacts = new Map()
+    walkAst(parsed.ast, (node, ancestors) => {
+      const scope = securityScopeOf(ancestors, parsed.ast)
+      let facts = scopeFacts.get(scope)
+      if (!facts) {
+        facts = { secretLiteral: null, egress: false, reads: [] }
+        scopeFacts.set(scope, facts)
+      }
+      if (isEgressCall(node)) facts.egress = true
+      const literal = literalPathText(node)
+      if (literal !== null) {
+        const strength = isPathLikeSecretLiteral(node, literal)
+        if (strength) facts.secretLiteral = strongerSecret(facts.secretLiteral, strength)
+      }
       if (isEnvEnumeration(node)) envEnumeration = true
+      if (node.type !== 'CallExpression' || node.arguments.length === 0) return
       const api = node.callee.type === 'Identifier' ? node.callee.name : memberPropertyName(node.callee)
-      if (!READ_APIS.has(api) || node.arguments.length === 0) return
-      const value = stringFromNode(node.arguments[0], parsed.bindings)
-      if (value === null || value === '') return
-      const classification = classifySecretPath(value)
-      if (classification === null) return
-      const record = { file: source.relative, line: lineOf(node), api, value }
-      if (classification === 'fail') failures.push(record)
-      else warnings.push(record)
+      if (!READ_APIS.has(api)) return
+      const argument = node.arguments[0]
+      facts.reads.push({
+        api,
+        line: lineOf(node),
+        value: stringFromNode(argument, parsed.bindings),
+        homeDerived: containsHomeSource(argument, parsed.bindings),
+        secretDerived: containsSecretSource(argument, parsed.bindings),
+        pathNamed: argumentLooksPathLike(argument),
+      })
     })
+    for (const facts of scopeFacts.values()) {
+      for (const read of facts.reads) {
+        const where = `${source.relative}:${read.line}`
+        if (read.value !== null && read.value !== '') {
+          const classification = classifySecretPath(read.value)
+          if (classification === 'fail') {
+            failures.push({ file: source.relative, line: read.line, api: read.api, reason: `${read.api} reads a sensitive path at ${where}` })
+            continue
+          }
+          if (classification === 'warn') {
+            warnings.push({ file: source.relative, line: read.line, api: read.api, item: 'C-17.2', reason: `${read.api} reads a dotenv/environment surface at ${where}` })
+            continue
+          }
+          if (isDshDirectoryPath(read.value)) {
+            if (facts.egress && facts.secretLiteral) {
+              failures.push({ file: source.relative, line: read.line, api: read.api, reason: `${read.api} lists the DSH home directory while the same function handles credential-like names and network egress at ${where}` })
+            } else {
+              warnings.push({ file: source.relative, line: read.line, api: read.api, item: 'C-17.2', reason: `${read.api} lists the DSH home directory at ${where}` })
+            }
+          }
+          continue
+        }
+        // Variable argument: approximate taint using the argument's assignment
+        // chain, a sibling credential-like literal, and network egress.
+        if (!read.homeDerived && !read.secretDerived) {
+          // A sibling literal alone is weak: only a path-named variable plus a
+          // credential literal (and egress for FAIL) is actionable.
+          if (!facts.secretLiteral || !read.pathNamed) continue
+          if (facts.egress && facts.secretLiteral === 'strong') {
+            failures.push({ file: source.relative, line: read.line, api: read.api, reason: `${read.api} reads a path-named variable while the same function contains a credential-like literal and network egress at ${where}` })
+          } else {
+            warnings.push({ file: source.relative, line: read.line, api: read.api, item: 'C-17.2', reason: `${read.api} reads a path-named variable while the same function contains a credential-like literal at ${where}` })
+          }
+          continue
+        }
+        if (facts.egress) {
+          failures.push({ file: source.relative, line: read.line, api: read.api, reason: `${read.api} reads a home/secret-derived path and the same function performs network egress at ${where}` })
+        } else {
+          warnings.push({ file: source.relative, line: read.line, api: read.api, item: 'C-17.2', reason: `${read.api} uses a home/secret-derived path that cannot be fully resolved at ${where}` })
+        }
+      }
+    }
     if (envEnumeration && hasEgressCall(parsed.ast)) {
-      warnings.push({ file: source.relative, line: 1, api: 'Object.keys(process.env)', value: 'environment enumeration with egress' })
+      warnings.push({ file: source.relative, line: 1, api: 'Object.keys(process.env)', item: 'C-17.2', reason: 'environment enumeration with egress' })
     }
   }
   for (const item of failures.slice(0, 8)) {
-    details.push(detail('C-17.1', 'FAIL', `${item.api} reads a sensitive path at ${item.file}:${item.line}`, [`${item.file}:${item.line}`]))
+    details.push(detail('C-17.1', 'FAIL', item.reason, [`${item.file}:${item.line}`]))
   }
   for (const item of warnings.slice(0, 8)) {
-    details.push(detail('C-17.2', 'WARN', `${item.api} reads a dotenv/environment surface at ${item.file}:${item.line}`, [`${item.file}:${item.line}`]))
+    details.push(detail(item.item ?? 'C-17.2', 'WARN', item.reason, [`${item.file}:${item.line}`]))
   }
   if (parseErrors > 0) {
     details.push(detail('C-17.3', 'ERROR', `not-run: AST parse failed in ${parseErrors} source file(s)`, []))

@@ -105,6 +105,29 @@ test('DSC-16: child_process is WARN, vm is FAIL, empty new Function is exempt', 
   assert.match(clientOnly.reason, /client/)
 })
 
+test('DSC-15: a referenced install.js is inspected; fetch+eval FAILs', () => {
+  const danger = securityOfFixture('sec15-install-danger').get('DSC-15')
+  assert.equal(danger.result, 'FAIL')
+  assert.match(danger.reason, /downloads remote content and executes it/)
+  assert.ok(danger.details.some(item => item.item === 'C-15.1' && item.result === 'FAIL'))
+})
+
+test('DSC-15: an ordinary console.log install.js stays WARN', () => {
+  const safe = securityOfFixture('sec15-install-safe').get('DSC-15')
+  assert.equal(safe.result, 'WARN')
+  assert.match(safe.reason, /C-15\.2/)
+  assert.ok(safe.details.some(item => /no dangerous pattern/.test(item.reason)))
+})
+
+test('DSC-15: curl|sh and credential reads inside referenced scripts FAIL', () => {
+  const curl = securityOfFixture('sec15-install-curl').get('DSC-15')
+  assert.equal(curl.result, 'FAIL')
+  assert.match(curl.reason, /remote script piped to a shell/)
+  const cred = securityOfFixture('sec15-install-cred').get('DSC-15')
+  assert.equal(cred.result, 'FAIL')
+  assert.match(cred.reason, /credential-like path/)
+})
+
 test('DSC-17: ~/.ssh id_rsa in a readFileSync argument is FAIL, ctx.credentials seam is PASS', () => {
   const ssh = securityOfFixture('sec17-ssh').get('DSC-17')
   assert.equal(ssh.result, 'FAIL')
@@ -119,6 +142,46 @@ test('DSC-17: .env is WARN, comments and unrelated literals are not hits', () =>
   const enumeration = securityOfSource("export async function apply() {\n  const env = Object.keys(process.env)\n  return fetch('https://api.example.com', { body: JSON.stringify(env) })\n}\n").get('DSC-17')
   assert.equal(enumeration.result, 'WARN')
   assert.match(enumeration.reason, /dotenv\/environment/)
+})
+
+test('DSC-17: home-derived .dsh credential enumeration plus egress FAILs (WARN without egress)', () => {
+  const exfil = securityOfFixture('sec17-cred-exfil').get('DSC-17')
+  assert.equal(exfil.result, 'FAIL')
+  assert.match(exfil.reason, /sensitive-file/)
+  assert.ok(exfil.details.some(item => item.item === 'C-17.1' && /DSH|home\/secret/.test(item.reason)), JSON.stringify(exfil.details))
+  const run = runCli(path.join(SECURITY_FIXTURES, 'sec17-cred-exfil'), ['--scope', 'security', '--no-exec'])
+  assert.equal(run.code, 1, run.stderr)
+  assert.equal(run.report.security.status, 'fail')
+  assert.deepEqual(run.report.security.blocking, ['DSC-17'])
+
+  const noEgress = securityOfSource("import fs from 'node:fs'\nimport os from 'node:os'\nimport path from 'node:path'\nexport function read(f) {\n  const dir = path.join(os.homedir(), '.dsh')\n  return fs.readFileSync(path.join(dir, f), 'utf8')\n}\n").get('DSC-17')
+  assert.equal(noEgress.result, 'WARN', JSON.stringify(noEgress.details))
+})
+
+test('DSC-17: 10 real npm packages show no new false positive', (t) => {
+  const corpora = [process.env.DSH_SECURITY_CORPUS, '/tmp/regression10/pkgs'].filter(Boolean)
+  const corpus = corpora.find(candidate => {
+    try { return fs.statSync(candidate).isDirectory() } catch { return false }
+  })
+  if (!corpus) {
+    t.skip('no real-package corpus; the measured corpus is documented in 00-live/security-audit-2026-11-07/impl/S1b-fix.md')
+    return
+  }
+  const dirs = fs.readdirSync(corpus, { withFileTypes: true })
+    .filter(entry => entry.isDirectory())
+    .map(entry => path.join(corpus, entry.name))
+    .filter(dir => fs.existsSync(path.join(dir, 'package.json')))
+    .sort()
+  assert.ok(dirs.length >= 10, `expected at least 10 real packages in ${corpus}, found ${dirs.length}`)
+  for (const dir of dirs.slice(0, 10)) {
+    const manifest = runManifestChecks(dir)
+    const { sources } = readSourcesWithStats(dir)
+    const checks = new Map(runSecurityChecks({
+      dir, manifest: manifest.manifest, sources, entry: manifest.entry, kind: manifest.kind,
+    }).map(item => [item.id, item]))
+    assert.equal(checks.get('DSC-17').result, 'PASS', `${path.basename(dir)}: ${checks.get('DSC-17').reason}`)
+    assert.notEqual(checks.get('DSC-15').result, 'FAIL', `${path.basename(dir)}: ${checks.get('DSC-15').reason}`)
+  }
 })
 
 test('DSC-18: suspicious endpoint WARNs, disclosed endpoint PASSes, undeclared endpoint WARNs', () => {

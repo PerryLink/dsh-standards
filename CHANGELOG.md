@@ -1,3 +1,14 @@
+## 1.6.1 — 2026-11-07
+
+### Fixed
+
+- DSC-17 现在识别 `os.homedir()`/`HOME`/`DSH_HOME` 与 `.dsh`/`.ssh`/`credentials`/`tokens` 的组合，并对“读取后外发”判 FAIL；恶意样本 s2 由 pass 改为 fail/exit 1。
+- DSC-15 现在读取 `scripts` 引用的本地 JS/SH 内容（限包内、≤512 KB），`curl|sh`、`base64 -d`、`eval`、读凭据、下载执行判 FAIL；普通构建脚本仍 WARN。
+- 10 个真实包回归：DSC-17 0 误报，DSC-15 0 新增 FAIL。
+
+### Verified
+
+- `npm test` 274/274。
 ## 1.6.0 — 2026-11-07
 
 ### Added
