@@ -56,7 +56,7 @@ C-3 是 **listing 属性**：package 模式下 C-3 整体输出 `NA`（reason: i
 
 两个 profile 的徽章必须分别写 `DS-C (package)` / `DS-C (listing)`，不得混写。
 
-**security scope（新增，opt-in）**：`dsh-standards check <package-dir> --scope security` 单独评估 C-15～C-22，报告写 `security.status`（`pass` / `warn` / `fail` / `incomplete`）。该 scope 自 **1.6.0** 发布，1.6.1 当前支持；1.5.x 及更早会把 `security` 当未知 scope 并 exit 3。它**不并入**上面两个 profile 的强制集合，也**不改变** `DS-C` 徽章；C-15/C-16/C-17 的 FAIL 只影响 security 结论与 `--scope security` 的 exit code，C-21 只 WARN、不阻断。security scope 不能写成"安全/已审计"，也不能替代人工评审。默认 `--scope ds-c` 下这 8 项只在 `security` 块里以 advisory 模式运行（FAIL 封顶 WARN），不进 `checks[]`，不改变 DS-C 结论。
+**security scope（新增，opt-in）**：`dsh-standards check <package-dir> --scope security` 单独评估 C-15～C-22，报告写 `security.status`（`pass` / `warn` / `fail` / `incomplete`）。该 scope 自 **1.6.0** 发布，1.6.x 当前支持；1.5.x 及更早会把 `security` 当未知 scope 并 exit 3。它**不并入**上面两个 profile 的强制集合，也**不改变** `DS-C` 徽章；C-15/C-16/C-17 的 FAIL 只影响 security 结论与 `--scope security` 的 exit code，C-21 只 WARN、不阻断。security scope 不能写成"安全/已审计"，也不能替代人工评审。默认 `--scope ds-c` 下这 8 项只在 `security` 块里以 advisory 模式运行（FAIL 封顶 WARN），不进 `checks[]`，不改变 DS-C 结论。
 
 ### 1.4 三值、NA 与覆盖度（禁止假绿）
 

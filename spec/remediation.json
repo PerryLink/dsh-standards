@@ -525,9 +525,9 @@
     "severityHint": "fail"
   },
   "C-16.3": {
-    "title": "child_process 是需要声明的子进程能力",
-    "why": "子进程可执行任意命令并绕过进程内 seam。",
-    "fix": "如确需子进程，声明 subprocess 能力并在评审中说明命令与输入边界。",
+    "title": "child_process 不得拼接外部输入，且需声明子进程能力",
+    "why": "子进程可执行任意命令并绕过进程内 seam；把用户/外部输入拼进 exec/spawn 会让命令注入直接变成代码执行。",
+    "fix": "不要把用户/外部输入拼进 exec/spawn；用参数数组（execFile/spawn 的 argv）并做命令/参数白名单。确需子进程时声明 subprocess 能力，并在评审中说明命令与输入边界。",
     "docs": "docs/security.md#4-files-subprocesses-and-dynamic-execution-dsc-15-dsc-16-dsc-17-dsc-19",
     "severityHint": "warn"
   },
@@ -563,6 +563,13 @@
     "title": "枚举 process.env 并与外联同现需要审查",
     "why": "Object.keys(process.env) 加 fetch 是常见的外泄形态。",
     "fix": "只读取具名环境变量；不要枚举全部环境并与网络调用组合。",
+    "docs": "docs/security.md#2-credentials-and-sensitive-files-dsc-17",
+    "severityHint": "warn"
+  },
+  "C-17.4": {
+    "title": "完全动态的读取实参使检查不完整",
+    "why": "运行时拼接/编码/子进程读出的路径无法静态回溯；把它当 full PASS 会高估覆盖。",
+    "fix": "把读取路径在调用点显式化（字面量或可静态折叠的常量）；确实无法解析时接受 partial/not-run，不要声称该读取已检查。",
     "docs": "docs/security.md#2-credentials-and-sensitive-files-dsc-17",
     "severityHint": "warn"
   },

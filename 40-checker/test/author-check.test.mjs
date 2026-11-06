@@ -131,6 +131,60 @@ test('renderMarkdown keeps priority fixes to three unique keys', () => {
   assert.match(md, /## Hygiene \(WARN\) — 1/)
 })
 
+function sampleSecurityReport(overrides = {}) {
+  return sampleReport({
+    security: {
+      scope: 'advisory',
+      status: 'warn',
+      checks: [
+        { id: 'DSC-15', clause: 'C-15', result: 'PASS', coverage: 'full', reason: '' },
+        { id: 'DSC-16', clause: 'C-16', result: 'WARN', coverage: 'partial', reason: 'capped WARN: dynamic execution <script>alert(1)</script>' },
+        { id: 'DSC-22', clause: 'C-22', result: 'NA', coverage: 'not-run', reason: 'no registry metadata/attestation input; not-run' },
+      ],
+      blocking: [],
+      warn: ['DSC-16'],
+      advisory: [],
+      partial: [{ id: 'DSC-16', reason: 'capped WARN: dynamic execution' }],
+      notRun: ['DSC-22'],
+    },
+    ...overrides,
+  })
+}
+
+test('renderMarkdown renders the security block with status, counts and only non-PASS rows', () => {
+  const md = renderMarkdown(sampleSecurityReport())
+  assert.match(md, /## Security \(advisory\)/)
+  assert.match(md, /- Status: \*\*warn\*\* · blocking 0 · warn 1 · advisory 0 · partial 1 · notRun 1/)
+  assert.match(md, /- DSC-16 WARN — capped WARN: dynamic execution/)
+  assert.match(md, /- DSC-22 NA — no registry metadata/)
+  assert.doesNotMatch(md, /- DSC-15 PASS/)
+  assert.match(md, /Static clues only: this block is not a security proof, audit, or certification\./)
+
+  // Eight rows max; the rest is folded into a single "more" line.
+  const many = sampleSecurityReport()
+  many.security.checks = Array.from({ length: 10 }, (_, index) => ({ id: `X-${index}`, result: 'WARN', coverage: 'full', reason: 'r' }))
+  const folded = renderMarkdown(many)
+  assert.equal((folded.match(/^- X-\d+ WARN/gm) ?? []).length, 8)
+  assert.match(folded, /…and 2 more non-PASS checks/)
+})
+
+test('renderHtml renders the security block and escapes its dynamic values', () => {
+  const html = renderHtml(sampleSecurityReport())
+  assert.match(html, /<h2>Security \(advisory\)<\/h2>/)
+  assert.match(html, /<strong class="result warn">DSC-16 WARN<\/strong>/)
+  assert.match(html, /Status: <strong>warn<\/strong> · blocking 0 · warn 1 · advisory 0 · partial 1 · notRun 1/)
+  assert.match(html, /&lt;script&gt;alert\(1\)&lt;\/script&gt;/)
+  assert.doesNotMatch(html, /<script/i)
+})
+
+test('renderMarkdown and renderHtml omit an empty security block', () => {
+  const emptySecurity = { scope: 'advisory', status: 'pass', checks: [], blocking: [], warn: [], advisory: [], partial: [], notRun: [] }
+  for (const report of [sampleReport(), sampleReport({ security: null }), sampleReport({ security: emptySecurity })]) {
+    assert.doesNotMatch(renderMarkdown(report), /## Security \(/)
+    assert.doesNotMatch(renderHtml(report), /Security \(/)
+  }
+})
+
 test('advice.schema.json declares dsh-advice/1 with 13 required fields', () => {
   const schema = JSON.parse(fs.readFileSync(SCHEMA, 'utf8'))
   assert.equal(schema.$schema, 'https://json-schema.org/draft/2020-12/schema')

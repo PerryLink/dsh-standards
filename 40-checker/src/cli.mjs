@@ -34,7 +34,8 @@ Usage:
 Options:
   --format text|json|sarif   output format (default: text)
   --scope mvp|ds-c|entry|security  mvp = 8 MVP ids; ds-c = full claim (default); entry = compatibility gate;
-                             security = DSC-15/16/17/21 are blocking, DSC-18/19/20/22 advisory
+                             security = DSC-15/16/17 are blocking; DSC-21 is WARN-only;
+                             DSC-18/19/20/22 are advisory
   --profile package|listing|both  evaluation profile (default: package; listing if --market-index is set)
   --runtime [path|auto]      built @deepseek-ai/cordis lib/index.js (or its package dir); bare or
                              'auto' resolves from the installed dsh; enables real L1-L3

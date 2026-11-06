@@ -134,8 +134,14 @@ function capSecurityCheck(item) {
 
 /**
  * The additive `security` block. In `--scope security` the eight checks keep
- * their real verdict (and four of them are mandatory); in every other scope a
+ * their real verdict (and DSC-15/16/17 are blocking); in every other scope a
  * FAIL is capped to WARN so the default verdict cannot change.
+ *
+ * `status` only says `pass` when all eight checks are PASS with full coverage.
+ * A WARN, an advisory WARN or a partial coverage is `warn`; a check that did not
+ * run is `incomplete`; a blocking DSC-15/16/17 FAIL is `fail`. Before this fix
+ * a report could say `pass` while `notRun`/partial were non-empty, which markets
+ * read as "everything was checked".
  */
 export function buildSecurityView(securityChecks, scope) {
   const input = Array.isArray(securityChecks) ? securityChecks.filter(item => SECURITY_CHECKS.has(item.id)) : []
@@ -150,11 +156,23 @@ export function buildSecurityView(securityChecks, scope) {
   const notRun = checks
     .filter(item => item.result === 'NA' || item.result === 'ERROR' || item.coverage === 'not-run')
     .map(item => item.id)
-  const mandatoryNotRun = SECURITY_MANDATORY.some(id => !checks.some(item => item.id === id && ['PASS', 'WARN', 'FAIL'].includes(item.result)))
+  const missing = [...SECURITY_CHECKS].filter(id => !checks.some(item => item.id === id && ['PASS', 'WARN', 'FAIL'].includes(item.result)))
+  // Partial coverage is not a verdict of its own: a check that was only partly
+  // evaluated can still be PASS/WARN/FAIL. It is listed here with its reason so
+  // "what was only statically covered" is machine-readable, and it prevents
+  // `status=pass` (which now means all eight fully checked and PASS).
+  const partial = checks
+    .filter(item => item.coverage === 'partial')
+    .map(item => ({
+      id: item.id,
+      reason: item.reason
+        || (item.details ?? []).find(detailRow => ['NA', 'WARN', 'FAIL'].includes(detailRow.result) && detailRow.reason)?.reason
+        || 'coverage=partial (reason not reported)',
+    }))
   let status
   if (blocking.length > 0) status = 'fail'
-  else if (scope === 'security' && mandatoryNotRun) status = 'incomplete'
-  else if (warn.length > 0 || advisory.length > 0 || mandatoryNotRun) status = 'warn'
+  else if (notRun.length > 0 || missing.length > 0) status = 'incomplete'
+  else if (warn.length > 0 || advisory.length > 0 || partial.length > 0) status = 'warn'
   else status = 'pass'
   return {
     scope: scope === 'security' ? 'security' : 'advisory',
@@ -163,6 +181,7 @@ export function buildSecurityView(securityChecks, scope) {
     blocking,
     warn,
     advisory,
+    partial,
     notRun,
   }
 }
@@ -181,7 +200,18 @@ export function buildReport({ subject, anchor, checks, g4 = null, scope, profile
   const selected = selectedAll.filter(item => item.advisory !== true)
   const advisoryWarnings = selectedAll.filter(item => item.advisory === true && item.result === 'WARN')
   const missing = mandatory.filter(id => !byId.has(id))
-  const failed = selected.filter(item => item.result === 'FAIL')
+  // In --scope security the verdict belongs to the security layer: only
+  // DSC-15/16/17 may fail it. Other DSC FAILs are still reported in checks[],
+  // but they are not blocking in this scope (see the bucket split below).
+  const securityScope = scope === 'security'
+  const securityBlockingIds = new Set(securityScope
+    ? effectiveChecks
+      .filter(item => item.advisory !== true && item.result === 'FAIL' && ['DSC-15', 'DSC-16', 'DSC-17'].includes(item.id))
+      .map(item => item.id)
+    : [])
+  const failed = securityScope
+    ? selected.filter(item => securityBlockingIds.has(item.id))
+    : selected.filter(item => item.result === 'FAIL')
   const errored = selected.filter(item => item.result === 'ERROR')
   // A static `partial` PASS is still a PASS for the mandatory set: it is
   // recorded in buckets.partial / coverage.partial, and "what was not run" is
@@ -236,13 +266,30 @@ export function buildReport({ subject, anchor, checks, g4 = null, scope, profile
   if (advisoryWarnings.length > 0) reasonParts.push(`advisory: ${advisoryWarnings.map(item => item.id).join(', ')}`)
 
   // Findings by reader-relevant bucket. A check appears in exactly one bucket:
-  // FAIL -> blocking, WARN -> hygiene, NA/ERROR/not-run -> notChecked.
-  const blockingBucket = effectiveChecks.filter(item => item.result === 'FAIL').map(item => bucketRow(item))
+  // FAIL -> blocking, WARN -> hygiene, NA/ERROR/not-run -> notChecked. In
+  // --scope security only a mandatory security FAIL blocks; any other FAIL is
+  // out of scope there and moves to hygiene as a non-blocking row, so the
+  // headline's "blocking N" can never contradict conclusion.status.
+  const blockingBucket = (securityScope
+    ? effectiveChecks.filter(item => securityBlockingIds.has(item.id))
+    : effectiveChecks.filter(item => item.result === 'FAIL')).map(item => bucketRow(item))
+  const outOfScopeFailures = securityScope
+    ? effectiveChecks.filter(item => item.result === 'FAIL' && !securityBlockingIds.has(item.id))
+    : []
   const hygieneBucket = effectiveChecks.filter(item => item.result === 'WARN').map(item => bucketRow(item, {
     declaration: DECLARATION_CHECKS.has(item.id),
     advisory: item.advisory === true,
     ...(SECURITY_CHECKS.has(item.id) ? { security: true } : {}),
   }))
+  for (const item of outOfScopeFailures) {
+    hygieneBucket.push(bucketRow(item, {
+      result: 'WARN',
+      reason: `capped WARN (not blocking in --scope security): ${item.reason ?? ''}`.trim(),
+      declaration: DECLARATION_CHECKS.has(item.id),
+      advisory: item.advisory === true,
+      ...(SECURITY_CHECKS.has(item.id) ? { security: true } : {}),
+    }))
+  }
   const notCheckedBucket = effectiveChecks
     .filter(item => item.result === 'NA' || item.result === 'ERROR')
     .map(item => bucketRow(item, { howToEnable: howToEnableFor(item) }))
@@ -326,9 +373,33 @@ export function buildReport({ subject, anchor, checks, g4 = null, scope, profile
   // Additive only: `advice` is a sibling of `checks`, never part of a check,
   // and the verdict is computed above without reading it.
   if (advice !== false) {
-    report.advice = retargetCompatibilityAdvice(joinAdvice(report, remediationSpec, DOCS_BASE), anchor)
+    report.advice = retargetCompatibilityAdvice(
+      capAdviceGates(joinAdvice(report, remediationSpec, DOCS_BASE), effectiveChecks),
+      anchor,
+    )
   }
   return report
+}
+
+/**
+ * `joinAdvice` gates every advice entry with the check's final result. That is
+ * right for a check downgraded to WARN (the FAIL detail is then a WARN finding),
+ * but it can also *upgrade* a WARN-only detail: a DSC-16 FAIL caused by eval()
+ * would show the harmless `import child_process` site (C-16.3 WARN) as FAIL
+ * advice. Downgrade only, and only when every live detail for that key is WARN;
+ * one FAIL detail keeps the entry at FAIL.
+ */
+function capAdviceGates(advice, checks) {
+  const byId = new Map(checks.map(item => [item.id, item]))
+  for (const entry of advice) {
+    if (entry.gate !== 'FAIL') continue
+    const details = (byId.get(entry.source)?.details ?? [])
+      .filter(detailRow => detailRow && ['FAIL', 'WARN'].includes(detailRow.result) && detailRow.item === entry.key)
+    if (details.length === 0 || details.some(detailRow => detailRow.result === 'FAIL')) continue
+    entry.gate = 'WARN'
+    entry.severity = 'WARN'
+  }
+  return advice
 }
 
 /**
@@ -433,7 +504,7 @@ export function formatText(report) {
   lines.push(`coverage: total=${coverage.total ?? report.checks.length} checked=${coverage.checked ?? coverage.pass + coverage.warn + coverage.fail} pass=${coverage.pass} warn=${coverage.warn} fail=${coverage.fail} na=${coverage.na} notRun=${coverage.notRun} partial=${coverage.partial ?? 0} error=${coverage.error} advisory=${coverage.advisory}`)
   if (report.security) {
     const security = report.security
-    lines.push(`security: scope=${security.scope} status=${security.status} blocking=[${(security.blocking ?? []).join(', ')}] warn=[${(security.warn ?? []).join(', ')}] advisory=[${(security.advisory ?? []).join(', ')}] notRun=[${(security.notRun ?? []).join(', ')}]`)
+    lines.push(`security: scope=${security.scope} status=${security.status} blocking=[${(security.blocking ?? []).join(', ')}] warn=[${(security.warn ?? []).join(', ')}] advisory=[${(security.advisory ?? []).join(', ')}] partial=[${(security.partial ?? []).map(item => item.id ?? item).join(', ')}] notRun=[${(security.notRun ?? []).join(', ')}]`)
   }
   if (coverage.entryBlocking) {
     const blocking = coverage.entryBlocking

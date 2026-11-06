@@ -80,6 +80,9 @@
       "additionalProperties": true,
       "description": "Additive block for explicit runtime runs (dsh-runtime-checks/1): executed, modes, durationMs, isolation, reason, failure, checks, entry."
     },
+    "safety": {
+      "$ref": "#/$defs/safety"
+    },
     "security": {
       "$ref": "#/$defs/security"
     }
@@ -247,8 +250,10 @@
           "enum": [
             "cli",
             "host",
-            "fallback"
-          ]
+            "fallback",
+            "default"
+          ],
+          "description": "default is emitted by the author-facing `check --json` path when no host version is known."
         },
         "hostVersion": {
           "oneOf": [
@@ -263,6 +268,19 @@
         },
         "suspect": {
           "type": "boolean"
+        },
+        "hostVersionKnown": {
+          "type": "boolean",
+          "description": "Additive: emitted by the author-facing `check --json` path. Raw checker reports omit it."
+        },
+        "hostVersionSource": {
+          "enum": [
+            "flag",
+            "env",
+            "probe",
+            "none"
+          ],
+          "description": "Additive: where the host version came from on the author-facing path."
         }
       }
     },
@@ -861,7 +879,7 @@
     "security": {
       "type": "object",
       "additionalProperties": false,
-      "description": "Additive security view (DSC-15..DSC-22). In --scope security the checks keep their real verdict and DSC-15/16/17/21 are mandatory; in every other scope a FAIL is capped to WARN. This block never changes the default verdict and never proves the absence of malicious code.",
+      "description": "Additive security view (DSC-15..DSC-22). In --scope security the checks keep their real verdict and DSC-15/16/17 are blocking (DSC-21 is mandatory but WARN-only); in every other scope a FAIL is capped to WARN. status=pass only when all eight checks are PASS with full coverage; partial[] lists the partly checked ones with reasons. This block never changes the default verdict and never proves the absence of malicious code.",
       "required": [
         "scope",
         "status",
@@ -919,6 +937,79 @@
             "type": "string"
           },
           "description": "Check ids that are NA, ERROR, or coverage=not-run."
+        },
+        "partial": {
+          "type": "array",
+          "description": "Additive (1.6.x+): checks with coverage=partial, each with its reason. Optional so reports produced before it still validate.",
+          "items": {
+            "type": "object",
+            "additionalProperties": false,
+            "required": [
+              "id",
+              "reason"
+            ],
+            "properties": {
+              "id": {
+                "type": "string",
+                "minLength": 1
+              },
+              "reason": {
+                "type": "string"
+              }
+            }
+          }
+        }
+      }
+    },
+    "safety": {
+      "type": "object",
+      "additionalProperties": false,
+      "description": "Additive safety/provenance block emitted by the author-facing `check --json` path (`dsh-standards check`). Raw checker reports omit it; it records whether plugin code was executed and where the host version came from.",
+      "required": [
+        "executed",
+        "defaultSafety",
+        "entryClaim",
+        "noExec",
+        "hostVersionKnown",
+        "hostVersionSource",
+        "hostProbeAllowed",
+        "runtimeVersionExplicit"
+      ],
+      "properties": {
+        "executed": {
+          "type": "boolean"
+        },
+        "defaultSafety": {
+          "type": "boolean"
+        },
+        "entryClaim": {
+          "enum": [
+            "runtime",
+            "static"
+          ]
+        },
+        "noExec": {
+          "type": "boolean"
+        },
+        "hostVersionKnown": {
+          "type": "boolean"
+        },
+        "hostVersionSource": {
+          "enum": [
+            "flag",
+            "env",
+            "probe",
+            "none"
+          ]
+        },
+        "hostProbeAllowed": {
+          "type": "boolean"
+        },
+        "runtimeVersionExplicit": {
+          "type": "boolean"
+        },
+        "hostVersionError": {
+          "type": "string"
         }
       }
     }

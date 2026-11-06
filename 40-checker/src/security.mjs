@@ -663,7 +663,10 @@ export function checkDynamicExecution(manifest, sources, entry, kind = null) {
           const command = commandTextOf(node, parsed.bindings)
           const labels = command === null ? [] : dangerousCommandLabels(command)
           if (labels.length > 0) {
-            dynamic.push({ file: relative, line: lineOf(node), what: `child_process.${execApi} executes a dangerous command (${labels.join('; ')})`, item: 'C-16.1' })
+            // Dangerous exec/spawn input is a subprocess finding (C-16.3), not
+            // eval/new Function (C-16.1): the remediation for it is "pass an
+            // argument array / allowlist", not "remove eval".
+            dynamic.push({ file: relative, line: lineOf(node), what: `child_process.${execApi} executes a dangerous command (${labels.join('; ')})`, item: 'C-16.3' })
             return
           }
         }
@@ -975,6 +978,7 @@ export function checkSensitiveFileReads(manifest, sources) {
   const details = []
   const failures = []
   const warnings = []
+  const unresolved = []
   let parseErrors = 0
   for (const source of serverSources(sources)) {
     const parsed = parseModule(source)
@@ -1035,7 +1039,13 @@ export function checkSensitiveFileReads(manifest, sources) {
         if (!read.homeDerived && !read.secretDerived) {
           // A sibling literal alone is weak: only a path-named variable plus a
           // credential literal (and egress for FAIL) is actionable.
-          if (!facts.secretLiteral || !read.pathNamed) continue
+          if (!facts.secretLiteral || !read.pathNamed) {
+            // Fully dynamic argument (function parameter, runtime concat, ...):
+            // nothing can be resolved statically. It is not a PASS with full
+            // coverage; C-17.4 requires partial/not-run plus a reason.
+            unresolved.push({ file: source.relative, line: read.line, api: read.api })
+            continue
+          }
           if (facts.egress && facts.secretLiteral === 'strong') {
             failures.push({ file: source.relative, line: read.line, api: read.api, reason: `${read.api} reads a path-named variable while the same function contains a credential-like literal and network egress at ${where}` })
           } else {
@@ -1060,12 +1070,22 @@ export function checkSensitiveFileReads(manifest, sources) {
   for (const item of warnings.slice(0, 8)) {
     details.push(detail(item.item ?? 'C-17.2', 'WARN', item.reason, [`${item.file}:${item.line}`]))
   }
+  for (const item of unresolved.slice(0, 8)) {
+    const where = `${item.file}:${item.line}`
+    details.push(detail('C-17.4', 'NA', `not-run: dynamic ${item.api} argument at ${where} could not be statically resolved`, [where]))
+  }
   if (parseErrors > 0) {
     details.push(detail('C-17.3', 'ERROR', `not-run: AST parse failed in ${parseErrors} source file(s)`, []))
   }
-  if (failures.length === 0 && warnings.length === 0 && parseErrors === 0) {
+  if (failures.length === 0 && warnings.length === 0 && parseErrors === 0 && unresolved.length === 0) {
     details.push(detail('C-17.1', 'PASS', 'no sensitive-file read argument found in the scanned sources'))
   }
+  // A fully dynamic read/readdir argument is not a full PASS: the check ran but
+  // could not see the path. Keep the PASS verdict (no clue found) and mark the
+  // coverage partial, with C-17.4 rows naming every unresolved call site.
+  const partialNote = unresolved.length > 0
+    ? `partial: ${unresolved.length} read argument(s) are dynamic and could not be statically resolved`
+    : ''
   let result
   if (failures.length > 0) result = 'FAIL'
   else if (parseErrors > 0) result = 'ERROR'
@@ -1076,12 +1096,14 @@ export function checkSensitiveFileReads(manifest, sources) {
     clause: 'C-17',
     layer: 'L0',
     result,
-    coverage: parseErrors > 0 ? 'partial' : 'full',
+    coverage: parseErrors > 0 || unresolved.length > 0 ? 'partial' : 'full',
     reason: failures.length > 0
-      ? `${failures.length} sensitive-file read(s) in API arguments`
+      ? `${failures.length} sensitive-file read(s) in API arguments${partialNote ? `; ${partialNote}` : ''}`
       : parseErrors > 0
         ? `AST parse failed in ${parseErrors} file(s); DSC-17 partial`
-        : warnings.length > 0 ? `${warnings.length} dotenv/environment clue(s)` : '',
+        : warnings.length > 0
+          ? `${warnings.length} dotenv/environment clue(s)${partialNote ? `; ${partialNote}` : ''}`
+          : partialNote,
     details,
     evidence: failures.slice(0, 5).map(item => `${item.file}:${item.line}`),
   })
@@ -1459,8 +1481,11 @@ function scopeOf(name) {
 }
 
 export function checkSupplyChain(manifest) {
+  // devDependencies are scanned as well: a near-miss name there still installs
+  // code into the author's machine and is what DS-C §C-21 asks about.
   const dependencies = {
     ...(manifest?.dependencies && typeof manifest.dependencies === 'object' ? manifest.dependencies : {}),
+    ...(manifest?.devDependencies && typeof manifest.devDependencies === 'object' ? manifest.devDependencies : {}),
     ...(manifest?.optionalDependencies && typeof manifest.optionalDependencies === 'object' ? manifest.optionalDependencies : {}),
     ...(manifest?.peerDependencies && typeof manifest.peerDependencies === 'object' ? manifest.peerDependencies : {}),
   }
@@ -1484,13 +1509,15 @@ export function checkSupplyChain(manifest) {
     details.push(detail(finding.item, 'WARN', finding.why, [`package.json#dependencies.${finding.name}`]))
   }
   if (names.length === 0) {
-    details.push(detail('C-21.1', 'PASS', 'no runtime dependencies declared'))
+    details.push(detail('C-21.1', 'PASS', 'no dependencies declared (dependencies/devDependencies/optional/peer)'))
     return check({
       id: 'DSC-21', clause: 'C-21', layer: 'L0', result: 'PASS', coverage: 'full', advisory: false,
       reason: '', details, evidence: ['package.json#dependencies'],
     })
   }
-  details.push(detail('C-21.3', 'NA', 'not-run: dependency install scripts and transitive registry metadata need registry data; a missing lockfile is not treated as a defect', []))
+  const nameList = names.slice(0, 20).join(', ')
+  const more = names.length > 20 ? ` (+${names.length - 20} more)` : ''
+  details.push(detail('C-21.3', 'NA', `not-run: dependency install scripts and transitive registry metadata need registry data; declared dependencies: ${nameList}${more}; a missing lockfile is not treated as a defect`, []))
   if (findings.length === 0) {
     details.push(detail('C-21.1', 'PASS', `${names.length} dependency name(s) checked; ${knownCount} exact known name(s)`))
   }

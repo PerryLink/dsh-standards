@@ -105,14 +105,16 @@
 | 项 | 语义 |
 |---|---|
 | 计入 `total` | **默认否**：`checks[]` 仍是 14，`security` 块单独存在、不计入 `coverage`。**security 是**：`checks[]` 22，`coverage.total=22`、`coverage.mandatory=4`。 |
-| 默认 `security.scope` | `"advisory"`。8 项照常评估，但任何 `FAIL` 封顶为 `WARN`，不改 `conclusion`/exit；`security.status` 可为 `pass`/`warn`。 |
-| `security.status=pass` | **security scope 下**：无 FAIL、无强制项结果不在 `PASS`/`WARN`/`FAIL`、无任何 WARN（含 advisory）。默认 advisory 模式只可能 `pass`/`warn`，且 `pass` 不代表覆盖完整。advisory 的 `not-run`（如 C-22 无元数据）不挡 `pass`，但必须留在 `security.notRun[]`；C-21 的传递依赖元数据缺失只记 check 级 `coverage: partial`，不等同 PASS。 |
-| `security.status=fail` | **仅 security scope**：`DSC-15`/`DSC-16`/`DSC-17` 任一 FAIL。`DSC-21` 永不 FAIL；默认模式 FAIL 封顶 WARN，不会出现 fail。 |
-| `security.status=warn` | 无 FAIL，但有 `DSC-21` 或 15/16/17 的 WARN，或 18/19/20/22 的 advisory WARN。 |
-| `security.status=incomplete` | **security scope 下** `DSC-15`/`DSC-16`/`DSC-17`/`DSC-21` 任一结果不在 `PASS`/`WARN`/`FAIL`（即 `NA`/`ERROR`/`not-run`）。 |
-| `security` 块的 `partial` | 1.6.1 **没有** `security.partial[]`：部分覆盖看 `security.checks[].coverage === "partial"`；`security.notRun[]` 只收 `NA`/`ERROR`/完整 `not-run`，**不收 partial**。`security.status=pass` 不要求 partial 为空，市场必须读 `checks[]`，不能只看四个数组。顶层 `coverage.partial` / `buckets.partial` 在 security scope 下统计 `checks[]` 全部 22 项（含这 8 项）。 |
+| 默认 `security.scope` | `"advisory"`。8 项照常评估，但任何 `FAIL` 封顶为 `WARN`，不改 `conclusion`/exit；`security.status` 可为 `pass`/`warn`/`incomplete`（`FAIL` 被封顶成 `WARN` 后不会出现 `fail`）。 |
+| `security.status=pass` | 仅当 **8 项全部** `PASS` 且每项 `coverage=full`（即 `blocking`/`warn`/`advisory`/`partial`/`notRun` 全空）。任一 `WARN`（含 advisory）、`partial`、`NA`/`ERROR`/`not-run` 或缺失项都**不得**记 `pass`；`pass` 只覆盖这 8 项的静态/元数据证据，不是覆盖完整或安全证明。C-21 的传递依赖元数据缺失只记 check 级 `coverage: partial`，因此也不等同 PASS。 |
+| `security.status=fail` | **仅 security scope**：`DSC-15`/`DSC-16`/`DSC-17` 任一 FAIL；优先于 `warn`/`incomplete`。`DSC-21` 永不 FAIL；默认 advisory 模式 FAIL 封顶 WARN，不会出现 `fail`。 |
+| `security.status=warn` | 无 blocking FAIL、无 `NA`/`ERROR`/完整 `not-run`，但存在任一 `WARN`（含 `DSC-21` 或 15/16/17 的 WARN、18/19/20/22 的 advisory WARN）或 `coverage=partial`。 |
+| `security.status=incomplete` | 8 项中任一结果为 `NA`/`ERROR`/`not-run`，或 8 项有缺失（未产出 `PASS`/`WARN`/`FAIL`）；先于 `warn` 判定，但已有 blocking FAIL 时仍是 `fail`。 |
+| `security.partial[]` | 1.6.x 起为对象数组 `{ "id": "DSC-16", "reason": "..." }`：收 `checks[].coverage === "partial"` 的 security 项，`reason` 取该检查行（或失败 detail）的理由；**不并入** `security.notRun[]`（`notRun` 只收 `NA`/`ERROR`/完整 `not-run`），但**会阻止 `security.status=pass`**。顶层 `coverage.partial` / `buckets.partial` 在 security scope 下统计 `checks[]` 全部 22 项（含这 8 项）。 |
 | 与 DS-C 关系 | **独立**：security FAIL 不撤销 DS-C PASS；DS-C PASS 不证明 security 通过；反之亦然。 |
 | 徽章 | **不得**发 security 徽章；市场只透传 `security.status`、`security.checks[]` 与 `security.notRun[]`，不按安全分排序/筛选。 |
+
+判定优先级：`fail` > `incomplete` > `warn` > `pass`（与 `buildSecurityView()` 一致）；同一项同时满足多个条件时取最高。
 
 严重度以 `spec/dsc-clauses.json` 的 `mandatory`/`advisory` 与 31 §2 C-15～C-22 为准：`DSC-15/16/17` 为 blocking（可 FAIL）；`DSC-21` 是强制项但 **WARN-only、不阻断（listing 同；永不 FAIL，未跑才 `incomplete`）**；`DSC-18/19/20/22` 为 advisory（`advisory:true`，永不改 verdict）。`security` 块只汇总这 8 项，不与顶层 `coverage` 换算成第二套通过率。
 

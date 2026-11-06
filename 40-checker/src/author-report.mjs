@@ -73,6 +73,41 @@ function bucketRows(report, key) {
   return Array.isArray(report?.buckets?.[key]) ? report.buckets[key] : []
 }
 
+const SECURITY_ROW_LIMIT = 8
+
+/** The additive `security` block, or null when the report carries no checks. */
+function securityView(report) {
+  const security = report?.security
+  if (!security || !Array.isArray(security.checks) || security.checks.length === 0) return null
+  return security
+}
+
+function securityScope(security) {
+  return text(security.scope) || 'advisory'
+}
+
+function securityCount(security, key) {
+  return Array.isArray(security[key]) ? security[key].length : 0
+}
+
+/** Non-PASS rows, capped at eight; `hidden` counts what was folded away. */
+function securityRows(security, limit = SECURITY_ROW_LIMIT) {
+  const rows = security.checks
+    .filter(item => text(item?.result).toUpperCase() !== 'PASS')
+    .map(item => ({
+      id: text(item.id),
+      result: text(item.result).toUpperCase() || 'UNKNOWN',
+      reason: text(item.reason) || 'no reason reported',
+    }))
+  return { shown: rows.slice(0, limit), hidden: Math.max(0, rows.length - limit) }
+}
+
+function securityCounts(security) {
+  return `blocking ${securityCount(security, 'blocking')} · warn ${securityCount(security, 'warn')} · advisory ${securityCount(security, 'advisory')} · partial ${securityCount(security, 'partial')} · notRun ${securityCount(security, 'notRun')}`
+}
+
+const SECURITY_NOTE = 'Static clues only: this block is not a security proof, audit, or certification.'
+
 export function renderMarkdown(report) {
   const subject = report?.subject ?? {}
   const conclusion = report?.conclusion ?? {}
@@ -119,6 +154,22 @@ export function renderMarkdown(report) {
         lines.push(`| ${mdCell(row.id)} | ${mdCell(row.clause ?? '-')} | ${mdCell(row.result)} | ${mdCell(row.coverage ?? '-')} | ${mdCell(reason)} |`)
       }
     }
+    lines.push('')
+  }
+
+  const security = securityView(report)
+  if (security) {
+    const { shown, hidden } = securityRows(security)
+    lines.push(`## Security (${securityScope(security)})`)
+    lines.push('')
+    lines.push(`- Status: **${text(security.status) || 'unknown'}** · ${securityCounts(security)}`)
+    if (shown.length === 0) {
+      lines.push('- No security check reported a non-PASS result.')
+    } else {
+      for (const row of shown) lines.push(`- ${row.id} ${row.result} — ${row.reason}`)
+    }
+    if (hidden > 0) lines.push(`- …and ${hidden} more non-PASS checks (not shown; run with \`--json\` for the full security block).`)
+    lines.push(`- ${SECURITY_NOTE}`)
     lines.push('')
   }
 
@@ -179,6 +230,21 @@ export function renderHtml(report) {
   const passed = passedIds(report)
   const notChecked = bucketRows(report, 'notChecked')
   const partial = bucketRows(report, 'partial')
+  const security = securityView(report)
+  const securityShown = security ? securityRows(security) : null
+  const securitySection = security ? [
+    `<h2>Security (${escapeHtml(securityScope(security))})</h2>`,
+    '<ul class="security">',
+    `<li>Status: <strong>${escapeHtml(text(security.status) || 'unknown')}</strong> · ${escapeHtml(securityCounts(security))}</li>`,
+    ...(securityShown.shown.length === 0
+      ? ['<li>No security check reported a non-PASS result.</li>']
+      : securityShown.shown.map(row => `<li><strong class="result ${escapeHtml(row.result.toLowerCase())}">${escapeHtml(row.id)} ${escapeHtml(row.result)}</strong> — ${escapeHtml(row.reason)}</li>`)),
+    ...(securityShown.hidden > 0
+      ? [`<li class="muted">…and ${securityShown.hidden} more non-PASS checks (not shown; run with --json for the full security block).</li>`]
+      : []),
+    `<li class="muted">${escapeHtml(SECURITY_NOTE)}</li>`,
+    '</ul>',
+  ].join('\n') : ''
 
   const table = (key) => {
     const rows = bucketRows(report, key)
@@ -248,6 +314,7 @@ code{font-family:ui-monospace,SFMono-Regular,Menlo,Consolas,monospace}
 <h2>Priority fixes (up to 3)</h2>
 ${fixList}
 ${BUCKETS.map(bucket => `<h2>${escapeHtml(bucket.title)} — ${bucketRows(report, bucket.key).length}</h2>\n${table(bucket.key)}`).join('\n')}
+${securitySection}
 <h2>Passed — ${passed.length}</h2>
 <p>${passed.length > 0 ? passed.map(escapeHtml).join(', ') : '<span class="none">None.</span>'}</p>
 <h2>Advice (non-blocking) — ${advice.length}</h2>

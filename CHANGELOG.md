@@ -1,3 +1,17 @@
+## 1.6.4 — 2026-11-07
+
+### Fixed
+
+- `security.status` semantics: `pass` only when all eight checks are PASS and fully covered; WARN/partial → `warn`, NA/ERROR/not-run → `incomplete`, 15/16/17 FAIL → `fail`; new `security.partial[]`.
+- `--scope security` no longer reports DSC-02 as blocking; `conclusion.status`, `headline` and `buckets.blocking` now agree.
+- C-16 subprocess findings use C-16.3 with the right fix; advice gates never promote a WARN detail to FAIL.
+- C-17 dynamic reads become `PASS/partial` (not full PASS); C-21 scans `devDependencies` and lists dependency names; C-21 stays WARN-only.
+- `SECURITY.md`, `31-*`, `34-*` now ship in the npm package; README version is 1.6.x; conformance schema accepts `safety`, host-version fields and `security.partial`.
+- Author Markdown/HTML render a `## Security (scope)` section (was invisible to `check` users); coverage contract updated.
+
+### Verified
+
+- `npm test` 299/299; 50 historical reports + 20 regenerated pass the schema; malicious samples still fail under security scope.
 ## 1.6.3 — 2026-11-07
 
 - DSC-15: an install script that downloads code and then loads a literal path outside the package (`require('/tmp/...')`, URL, `../`) now FAILs; the variable form was already covered.

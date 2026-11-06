@@ -165,3 +165,91 @@ test('detectHostRuntime reports null rather than inventing a version', () => {
   assert.equal(missing.version, null)
   assert.ok(missing.error)
 })
+
+function securityRow(id, result, extra = {}) {
+  return {
+    id,
+    clause: id.replace('DSC', 'C'),
+    layer: 'L0',
+    result,
+    coverage: extra.coverage ?? (result === 'NA' || result === 'ERROR' ? 'not-run' : 'full'),
+    reason: extra.reason ?? '',
+    details: extra.details ?? [],
+    evidence: [],
+    advisory: ['DSC-18', 'DSC-19', 'DSC-20', 'DSC-22'].includes(id),
+  }
+}
+
+test('security scope: only DSC-15/16/17 FAILs are blocking and the headline agrees', () => {
+  const securityChecks = [
+    securityRow('DSC-15', 'FAIL', { details: [{ item: 'C-15.1', result: 'FAIL', reason: 'curl | sh' }] }),
+    securityRow('DSC-16', 'PASS'),
+    securityRow('DSC-17', 'PASS'),
+    securityRow('DSC-18', 'PASS'),
+    securityRow('DSC-19', 'PASS'),
+    securityRow('DSC-20', 'PASS'),
+    securityRow('DSC-21', 'PASS'),
+    securityRow('DSC-22', 'PASS'),
+  ]
+  const checks = [
+    ...fourteenChecks().map(item => (item.id === 'DSC-02'
+      ? { ...item, result: 'FAIL', reason: 'C-2.2: engines.dsh misses the host' }
+      : item)),
+    ...securityChecks,
+  ]
+  const report = reportOf(checks, { scope: 'security', entryClaim: 'runtime', securityChecks })
+  assert.equal(report.conclusion.status, 'fail')
+  assert.equal(report.conclusion.exitCode, 1)
+  assert.deepEqual(report.buckets.blocking.map(item => item.id), ['DSC-15'])
+  assert.match(report.conclusion.headline, /blocking 1/)
+  assert.equal(report.security.status, 'fail')
+  assert.deepEqual(report.security.blocking, ['DSC-15'])
+})
+
+test('security scope: a non-security FAIL is not blocking and conclusion.status stays pass', () => {
+  const securityChecks = ['DSC-15', 'DSC-16', 'DSC-17', 'DSC-18', 'DSC-19', 'DSC-20', 'DSC-21', 'DSC-22']
+    .map(id => securityRow(id, 'PASS'))
+  const checks = [
+    ...fourteenChecks().map(item => (item.id === 'DSC-02'
+      ? { ...item, result: 'FAIL', reason: 'C-2.2: engines.dsh misses the host' }
+      : item)),
+    ...securityChecks,
+  ]
+  const report = reportOf(checks, { scope: 'security', entryClaim: 'runtime', securityChecks })
+  assert.equal(report.conclusion.status, 'pass')
+  assert.equal(report.conclusion.exitCode, 0)
+  assert.deepEqual(report.buckets.blocking, [])
+  assert.match(report.conclusion.headline, /blocking 0/)
+  assert.equal(report.security.status, 'pass')
+  const dsc02 = report.buckets.hygiene.find(row => row.id === 'DSC-02')
+  assert.ok(dsc02, 'the DSC-02 FAIL must stay visible outside the blocking bucket')
+  assert.equal(dsc02.result, 'WARN')
+  assert.match(dsc02.reason, /not blocking in --scope security/)
+})
+
+test('security scope: security partial coverage is listed with a reason', () => {
+  const securityChecks = [
+    securityRow('DSC-15', 'PASS'),
+    securityRow('DSC-16', 'PASS', { coverage: 'partial', reason: 'partial: 3 package imports outside the closure' }),
+    securityRow('DSC-17', 'PASS'),
+    securityRow('DSC-18', 'PASS'),
+    securityRow('DSC-19', 'PASS'),
+    securityRow('DSC-20', 'PASS'),
+    securityRow('DSC-21', 'PASS'),
+    securityRow('DSC-22', 'PASS'),
+  ]
+  const report = reportOf(securityChecks, { scope: 'security', entryClaim: 'runtime', securityChecks })
+  assert.equal(report.security.status, 'warn')
+  assert.deepEqual(report.security.partial, [{ id: 'DSC-16', reason: 'partial: 3 package imports outside the closure' }])
+  assert.match(report.conclusion.headline, /partial 1/)
+})
+
+test('default scope keeps the old blocking bucket for a mandatory FAIL', () => {
+  const checks = fourteenChecks().map(item => (item.id === 'DSC-02'
+    ? { ...item, result: 'FAIL', reason: 'C-2.2: engines.dsh misses the host' }
+    : item))
+  const report = reportOf(checks, { scope: 'ds-c', profile: 'package', entryClaim: 'runtime' })
+  assert.equal(report.conclusion.status, 'fail')
+  assert.deepEqual(report.buckets.blocking.map(item => item.id), ['DSC-02'])
+  assert.match(report.conclusion.headline, /blocking 1/)
+})
