@@ -1,8 +1,8 @@
 <div align="center">
 
 <picture>
-  <source media="(prefers-color-scheme: dark)" srcset="docs/assets/dsh-standards-flow-dark.svg">
-  <img src="docs/assets/dsh-standards-flow-light.svg" width="100%" alt="dsh-standards प्रवाह: प्लगइन डायरेक्टरी → dsh-standards (DSC-01…13 स्थिर) → L1–L3 रनटाइम → रिपोर्ट (text/json/sarif, exit 0|1|2|3) → dsh-levels (ENTRY / FLOW / BOOST)">
+  <source media="(prefers-color-scheme: dark)" srcset="docs/assets/dsh-standards-hero-en-dark.webp">
+  <img src="docs/assets/dsh-standards-hero-en-light.webp" width="100%" alt="dsh-standards: DSC-01…13 static checks + L1–L3 runtime, reproducible reports">
 </picture>
 
 # dsh-standards
@@ -75,6 +75,11 @@ npm पर पुराना आरक्षण `dsh-standards@0.0.3` केव
 पूरा 51-दस्तावेज़ सूचकांक चीनी [README.md](README.md) में है।
 
 </details>
+
+<picture>
+  <source media="(prefers-color-scheme: dark)" srcset="docs/assets/dsh-standards-flow-v3-dark.svg">
+  <img src="docs/assets/dsh-standards-flow-v3-light.svg" width="100%" alt="dsh-standards pipeline: plugin dir → DSC-01…13 → L1–L3 runtime → report → dsh-levels">
+</picture>
 
 ## तीन चरणों में शुरुआत
 

@@ -1,8 +1,8 @@
 <div align="center">
 
 <picture>
-  <source media="(prefers-color-scheme: dark)" srcset="docs/assets/dsh-standards-flow-dark.svg">
-  <img src="docs/assets/dsh-standards-flow-light.svg" width="100%" alt="Fluxo do dsh-standards: diretório do plugin → dsh-standards (DSC-01…13 estáticas) → runtime L1–L3 → relatório (text/json/sarif, exit 0|1|2|3) → dsh-levels (ENTRY / FLOW / BOOST)">
+  <source media="(prefers-color-scheme: dark)" srcset="docs/assets/dsh-standards-hero-en-dark.webp">
+  <img src="docs/assets/dsh-standards-hero-en-light.webp" width="100%" alt="dsh-standards: DSC-01…13 static checks + L1–L3 runtime, reproducible reports">
 </picture>
 
 # dsh-standards
@@ -75,6 +75,11 @@ Esses números são autoavaliação mais a cadeia de evidência do repositório,
 O índice completo de 51 documentos está no [README.md](README.md) em chinês.
 
 </details>
+
+<picture>
+  <source media="(prefers-color-scheme: dark)" srcset="docs/assets/dsh-standards-flow-v3-dark.svg">
+  <img src="docs/assets/dsh-standards-flow-v3-light.svg" width="100%" alt="dsh-standards pipeline: plugin dir → DSC-01…13 → L1–L3 runtime → report → dsh-levels">
+</picture>
 
 ## Instalação em três passos
 

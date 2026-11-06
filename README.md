@@ -1,8 +1,8 @@
 <div align="center">
 
 <picture>
-  <source media="(prefers-color-scheme: dark)" srcset="docs/assets/dsh-standards-flow-dark.svg">
-  <img src="docs/assets/dsh-standards-flow-light.svg" width="100%" alt="dsh-standards 流程：插件目录 → dsh-standards（DSC-01…13 静态）→ L1–L3 运行时 → 报告（text/json/sarif、exit 0|1|2|3）→ dsh-levels（ENTRY / FLOW / BOOST）">
+  <source media="(prefers-color-scheme: dark)" srcset="docs/assets/dsh-standards-hero-zh-dark.webp">
+  <img src="docs/assets/dsh-standards-hero-zh-light.webp" width="100%" alt="dsh-standards：DSC-01…13 静态检查 + L1–L3 运行时，报告可复现">
 </picture>
 
 # dsh-standards
@@ -93,6 +93,11 @@ npm 上的旧占位 `dsh-standards@0.0.3` 只是名字预留，这条 1.x 线取
 - [98-内测群与官方沟通包](98-内测群与官方沟通包.md) — 对外话术
 
 </details>
+
+<picture>
+  <source media="(prefers-color-scheme: dark)" srcset="docs/assets/dsh-standards-flow-v3-dark.svg">
+  <img src="docs/assets/dsh-standards-flow-v3-light.svg" width="100%" alt="dsh-standards 流程：插件目录 → DSC-01…13 静态 → L1–L3 运行时 → 报告 → dsh-levels">
+</picture>
 
 ## 三步上手
 
