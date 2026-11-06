@@ -2,7 +2,7 @@
   "$schema": "https://json-schema.org/draft/2020-12/schema",
   "$id": "https://github.com/PerryLink/dsh-standards/spec/flow-evidence.schema.json",
   "title": "DSH FLOW evidence chain",
-  "description": "One collected FLOW result (J1-J8) bound to a package, a host, a timestamp, and a chain hash. Structural validation only: it does not prove the commands really ran. v1 (dsh-flow-journey/1, dsh-flow-runtime/1) and bare {Jx:{status}} documents are deprecated and never count as a pass. `level-audit.mjs --flow-evidence` accepts this document only.",
+  "description": "One collected FLOW result (J1-J8) bound to a package, a host, a timestamp, and a chain hash. Structural validation only: it does not prove the commands really ran. v1 (dsh-flow-journey/1, dsh-flow-runtime/1) and bare {Jx:{status}} documents are deprecated and never count as a pass. `level-audit.mjs --flow-evidence` accepts this document only, and reports `runtime` only when `claims.claimLevel` is `sandbox-attested` or `producer.kind` is `sandbox`; self-attested/ci-attested keeps its pass count but stays not-run.",
   "type": "object",
   "additionalProperties": false,
   "required": [
@@ -29,6 +29,7 @@
     },
     "producer": {
       "type": "object",
+      "description": "Who collected the evidence. `kind: sandbox` is the producer-side equivalent of `claims.claimLevel: sandbox-attested` and is one of the two ways a document may be reported as FLOW runtime.",
       "additionalProperties": false,
       "required": ["command", "at"],
       "properties": {
@@ -42,7 +43,8 @@
           "format": "date-time"
         },
         "kind": {
-          "enum": ["local", "ci", "sandbox"]
+          "enum": ["local", "ci", "sandbox"],
+          "description": "`local`/`ci` are structural evidence only; `sandbox` may count toward FLOW runtime."
         },
         "runner": { "type": "string" },
         "actor": { "type": "string" },
@@ -116,11 +118,13 @@
     },
     "claims": {
       "type": "object",
+      "description": "Attestation level of this evidence. Passing journeys are not runtime by themselves: `level-audit` may report `runtime` only when `claimLevel` is `sandbox-attested` (or `producer.kind` is `sandbox`). `self-attested` (local collector) and `ci-attested` (`--ci`) keep their `passed` count but are reported `not-run`, because structural validation cannot prove the commands ran, let alone in a sandbox.",
       "additionalProperties": false,
       "required": ["claimLevel"],
       "properties": {
         "claimLevel": {
-          "enum": ["self-attested", "ci-attested", "sandbox-attested"]
+          "enum": ["self-attested", "ci-attested", "sandbox-attested"],
+          "description": "`sandbox-attested` is the only claim level that can yield FLOW runtime; `self-attested` and `ci-attested` are never runtime."
         },
         "notClaimed": {
           "type": "array",

@@ -8,6 +8,10 @@
  *   FLOW   reads an optional `dsh-flow-evidence/2` file; with no file it reports
  *          the checklist as `not-run` and never invents a pass. v1 schemas and
  *          bare {Jx:{status}} rows are `deprecated` and never count as a pass.
+ *          Only sandbox-attested evidence (claims.claimLevel =
+ *          'sandbox-attested' or producer.kind = 'sandbox') may become
+ *          `runtime`; self-attested/ci-attested keeps its pass count but stays
+ *          `not-run`.
  *   BOOST  reads an optional LEV evidence file; with no file it reports
  *          `not-measured`. It does not run benchmarks for you.
  *
@@ -161,6 +165,9 @@ function classifyFlow(evidence) {
     return {
       state: 'not-run',
       schema: null,
+      claimLevel: null,
+      producerKind: null,
+      sandboxAttested: false,
       deprecated: false,
       invalid: false,
       evidenceHash: null,
@@ -177,6 +184,9 @@ function classifyFlow(evidence) {
   }
   const base = {
     schema: verdict.schema,
+    claimLevel: verdict.claimLevel ?? null,
+    producerKind: verdict.producerKind ?? null,
+    sandboxAttested: verdict.sandboxAttested === true,
     deprecated: verdict.kind === 'v1-deprecated' || verdict.kind === 'legacy',
     invalid: false,
     evidenceHash: null,
@@ -222,19 +232,33 @@ function classifyFlow(evidence) {
   const passed = ids.filter(id => journeys[id].passes)
   const failed = ids.filter(id => journeys[id].status === 'fail' && journeys[id].declared !== 'blocked')
   const blocked = ids.filter(id => journeys[id].declared === 'blocked')
+  // Passing journeys are necessary but not sufficient: only sandbox-attested
+  // evidence may be reported as runtime. A self-attested/ci-attested document
+  // keeps its pass count but never upgrades to runtime. An honest FAIL/BLOCKED
+  // stays visible instead of being hidden behind the attestation level.
+  const runtimeEligible = base.sandboxAttested
   const state = failed.length > 0
     ? 'failed'
-    : passed.length === ids.length
-      ? 'runtime'
-      : blocked.length > 0 ? 'blocked' : 'not-run'
+    : blocked.length > 0
+      ? 'blocked'
+      : runtimeEligible && passed.length === ids.length
+        ? 'runtime'
+        : 'not-run'
   const reasons = []
+  if (!runtimeEligible && failed.length === 0) {
+    reasons.push(`${base.claimLevel ?? 'non-sandbox'} evidence; runtime requires sandbox-attested`)
+  }
   if (failed.length > 0) reasons.push(`failed journeys: ${failed.join(', ')}`)
   if (blocked.length > 0) reasons.push(`blocked journeys (never a pass): ${blocked.join(', ')}`)
   if (failed.length === 0 && passed.length !== ids.length) {
     const rest = ids.filter(id => !passed.includes(id) && !blocked.includes(id))
     if (rest.length > 0) reasons.push(`${passed.length}/8 journeys pass; ${rest.length} static/warn/not-run`)
   }
-  if (passed.length === ids.length) reasons.push('all J1-J8 journey checks pass (exitCode 0, assertions held)')
+  if (passed.length === ids.length) {
+    reasons.push(runtimeEligible
+      ? 'all J1-J8 journey checks pass (exitCode 0, assertions held)'
+      : 'all J1-J8 journey checks pass but the evidence is not sandbox-attested; not runtime')
+  }
   return {
     ...base,
     state,
@@ -338,7 +362,11 @@ function nextActions(entry, flow, boost) {
   if (entry.g4 && entry.g4.hasClient && entry.g4.ok === false) actions.push(`ENTRY: fix G4 — ${entry.g4.reason}`)
   for (const warning of entry.warnings) actions.push(`ENTRY: consider ${warning.id} — ${warning.reason}`)
   if (entry.state === 'recognized') actions.push('ENTRY: run with --host to replace static recognition with a real G0-G3 boot')
-  if (flow.state === 'not-run') actions.push('FLOW: record J1-J8 with node 40-checker/bin/dsh-flow-collect.mjs; do not claim FLOW until they run')
+  if (flow.state === 'not-run' && flow.claimLevel && flow.sandboxAttested !== true) {
+    actions.push(`FLOW: ${flow.claimLevel} evidence keeps ${flow.passed}/8 journey passes but is not runtime; re-run under a sandbox and set claims.claimLevel=sandbox-attested (or producer.kind=sandbox)`)
+  } else if (flow.state === 'not-run') {
+    actions.push('FLOW: record J1-J8 with node 40-checker/bin/dsh-flow-collect.mjs; do not claim FLOW until they run')
+  }
   if (flow.state === 'deprecated') actions.push('FLOW: v1/bare evidence is deprecated; collect a dsh-flow-evidence/2 file (spec/flow-evidence.schema.json)')
   if (flow.state === 'invalid') actions.push('FLOW: flow evidence failed structural validation; fix the listed fields or recollect')
   if (flow.state === 'failed') actions.push(`FLOW: fix failed journeys: ${Object.entries(flow.journeys).filter(([, row]) => row.status === 'fail').map(([id]) => id).join(', ')}`)

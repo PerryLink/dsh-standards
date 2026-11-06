@@ -125,7 +125,7 @@ test('remediation table covers every checker key exactly', () => {
 
 test('remediation rules have the required shape', () => {
   assert.equal(DOCS_BASE, 'https://github.com/PerryLink/dsh-plugin-guide/blob/v0.4.4/')
-  assert.equal(packageJson.version, '1.2.0')
+  assert.match(packageJson.version, /^\d+\.\d+\.\d+$/)
   assert.ok(Object.keys(RULES).length > 0)
   for (const [key, rule] of Object.entries(RULES)) {
     assert.match(key, /^(?:C-\d+(?:\.\d+)*|G[0-4])$/)
@@ -154,7 +154,8 @@ test('advice on every fixture has a rule (no ruleMissing)', () => {
       assert.ok(item.docsUrl, `${path.basename(dir)}: ${item.key} has no docsUrl`)
       assert.equal(item.docsUrl, `${DOCS_BASE}${RULES[item.key].docs}`, `${path.basename(dir)}: ${item.key} docsUrl`)
       assert.equal(item.version, packageJson.version)
-      assert.ok(['FAIL', 'WARN'].includes(item.severity))
+      assert.ok(['FAIL', 'WARN'].includes(item.gate), `${path.basename(dir)}: ${item.key} gate=${item.gate}`)
+      assert.equal(item.severity, item.gate, `${path.basename(dir)}: ${item.key} severity must follow gate`)
     }
     total += report.advice.length
   }
@@ -183,15 +184,16 @@ test('runtime FAIL without details falls back to check.clause', () => {
   const c4 = report.advice.find(item => item.source === 'DSC-04')
   const c14 = report.advice.find(item => item.source === 'DSC-14')
   assert.equal(c4.key, 'C-4')
+  assert.equal(c4.gate, 'FAIL')
   assert.equal(c4.severity, 'FAIL')
-  assert.equal(c4.version, '1.2.0')
+  assert.equal(c4.version, packageJson.version)
   assert.deepEqual(c4.evidence, ['index.mjs:1'])
   assert.equal(c4.docsUrl, `${DOCS_BASE}docs/levels.md#entry`)
   assert.equal(c14.key, 'C-14')
   assert.equal(c14.docsUrl, `${DOCS_BASE}docs/entry.md#the-two-claims`)
 })
 
-test('advice uses detail severity even when the check was adjusted to WARN', () => {
+test('advice severity follows the check gate when the check was adjusted to WARN', () => {
   const checks = [
     { id: 'DSC-01', clause: 'C-1', layer: 'L0', result: 'PASS', coverage: 'full', reason: '', details: [], evidence: [] },
     {
@@ -214,7 +216,8 @@ test('advice uses detail severity even when the check was adjusted to WARN', () 
   })
   assert.equal(report.checks.find(item => item.id === 'DSC-02').result, 'WARN')
   const item = report.advice.find(entry => entry.key === 'C-2.1')
-  assert.equal(item.severity, 'FAIL')
+  assert.equal(item.gate, 'WARN')
+  assert.equal(item.severity, 'WARN')
   assert.equal(item.source, 'DSC-02')
   assert.match(item.reason, /no engines/)
 })
@@ -239,6 +242,8 @@ test('duplicate details merge evidence and count once per check and key', () => 
   })
   const merged = report.advice.find(item => item.key === 'C-11.2')
   assert.ok(merged)
+  assert.equal(merged.gate, 'WARN')
+  assert.equal(merged.severity, 'WARN')
   assert.equal(merged.occurrences, 2)
   assert.deepEqual(merged.evidence, ['a.mjs:1', 'b.mjs:2'])
   assert.equal(merged.advisory, true)

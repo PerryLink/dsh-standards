@@ -130,12 +130,54 @@ test('level-audit: bare {Jx:{status:pass}} rows are deprecated and never a pass'
   }
 })
 
-test('level-audit: v2 with all eight journeys passing is runtime', () => {
-  const temp = writeTemp('v2-pass.json', evidenceDocument())
+test('level-audit: producer.kind=sandbox with all eight journeys passing is runtime', () => {
+  const doc = evidenceDocument({
+    producer: { command: ['node', '40-checker/bin/dsh-flow-collect.mjs'], at: ISO, kind: 'sandbox' },
+  })
+  const temp = writeTemp('v2-sandbox-producer.json', doc)
   try {
     const result = runAudit(temp.file)
     assert.equal(result.levels.flow.state, 'runtime')
     assert.equal(result.levels.flow.passed, 8)
+    assert.equal(result.levels.flow.sandboxAttested, true)
+    assert.equal(result.levels.flow.evidenceHash.ok, true)
+  } finally {
+    temp.cleanup()
+  }
+})
+
+test('level-audit: a hand-written self-attested/ci-attested v2 with all eight journeys passing is not runtime', () => {
+  for (const claimLevel of ['self-attested', 'ci-attested']) {
+    // Structurally perfect: every journey is an observed check with exitCode 0
+    // and a held assertion, and the chain hash is recomputed. Only the claim
+    // level says it is not sandbox evidence.
+    const doc = evidenceDocument({ claims: { claimLevel, notClaimed: ['certification'] } })
+    const temp = writeTemp(`v2-${claimLevel}.json`, doc)
+    try {
+      const result = runAudit(temp.file)
+      assert.equal(result.levels.flow.state, 'not-run')
+      assert.notEqual(result.levels.flow.state, 'runtime')
+      assert.equal(result.levels.flow.passed, 8)
+      assert.equal(result.levels.flow.claimLevel, claimLevel)
+      assert.equal(result.levels.flow.sandboxAttested, false)
+      assert.match(result.levels.flow.reason, new RegExp(`${claimLevel} evidence; runtime requires sandbox-attested`))
+      assert.equal(result.levels.flow.evidenceHash.ok, true)
+    } finally {
+      temp.cleanup()
+    }
+  }
+})
+
+test('level-audit: sandbox-attested v2 with all eight journeys passing is runtime', () => {
+  const doc = evidenceDocument({ claims: { claimLevel: 'sandbox-attested', notClaimed: ['certification'] } })
+  const temp = writeTemp('v2-sandbox-claims.json', doc)
+  try {
+    const result = runAudit(temp.file)
+    assert.equal(result.levels.flow.state, 'runtime')
+    assert.equal(result.levels.flow.passed, 8)
+    assert.equal(result.levels.flow.claimLevel, 'sandbox-attested')
+    assert.equal(result.levels.flow.producerKind, 'local')
+    assert.equal(result.levels.flow.sandboxAttested, true)
     assert.equal(result.levels.flow.evidenceHash.ok, true)
   } finally {
     temp.cleanup()

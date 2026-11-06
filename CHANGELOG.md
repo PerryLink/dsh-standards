@@ -1,9 +1,11 @@
-## 未发布
+## 1.2.1 — 2026-11-06
 
+- **V2 核验修复**：`level-audit` 不再把结构自洽的 self-attested/ci-attested `dsh-flow-evidence/2` 判成 FLOW `runtime`。只有 `claims.claimLevel=sandbox-attested` 或 `producer.kind=sandbox` 才允许 `runtime`；self/ci 的 `passed` 计数保留但 state 记 `not-run`，reason 为 `<claimLevel> evidence; runtime requires sandbox-attested`。`spec/flow-evidence.schema.json` 的 `claims`/`producer.kind` 补充了该判定说明。`advice[]` 新增 `gate`（该 check 的最终结果 PASS/WARN/FAIL），`severity` 跟随 `gate`：ENTRY static claim 把 DSC-02 降为 WARN 时，C-2.1 的 FAIL detail 仍保留在 `reason`，但 advice severity 为 WARN。测试 150 → 152。
 - **FLOW 证据链**：新增 `spec/flow-evidence.schema.json`（`dsh-flow-evidence/2`）与 `40-checker/src/flow-evidence.mjs`。`level-audit --flow-evidence` 只接受 v2；v1（`dsh-flow-journey/1`、`dsh-flow-runtime/1`）与裸 `{Jx:{status}}` 标 `deprecated`，不计 pass。每个 J 须有 `checks[]` 且全部 `exitCode === 0`、断言成立、至少一条非 `static` 观测检查才计 pass（`warn`/`blocked`/`na`/`static` 不计 8/8）。v2 的 `chain.evidenceHash` 由 audit 重算，改动一个字节即 `invalid`。
 - **collector**：新增 `40-checker/bin/dsh-flow-collect.mjs`（根入口 `bin/dsh-flow-collect.mjs`，并支持 `dsh-levels flow collect`）。只读副本 + 前后 `treeSha256` 一致、`npm pack --ignore-scripts` 的 integrity/tarballSha256、`git rev-parse` commit、临时 HOME/DSH_HOME、失败五要素提示（子检查/命令/exitCode/stderr 末 20 行/日志绝对路径 + 条款锚）；前置缺失记 `blocked` 且 exit 0，真失败 exit 1。
 - **安全**：新增 `40-checker/src/sandbox-env.mjs` 白名单 env。`src/cli.mjs` 的 runtime-child/bundle-smoke 子进程、`bundle-smoke.mjs`/`runtime-child.mjs` 进程内 boot、`m2-runner.mjs`、`journey-runtime.mjs`、`journey-config-observe.mjs`、`flow-sample-ci.mjs`、`host-farm.mjs`、`entry18-web.mjs` 不再把 `process.env` 透传给被检插件/宿主 boot。
 - 测试 137 → 149（新增 `40-checker/test/flow-evidence.test.mjs`：v1 不再 pass、v2 伪造 checks/exitCode 不 pass、篡改链路 invalid、blocked 不判 fail、collector 产物可被 audit 读取、失败五要素提示、env 白名单）。
+- 发布包不再包含 `40-checker/test`：该目录依赖仓库内 fixtures，装到用户环境后无法自测，`npm test` 会在 tarball 内失败。`npm test` 152/152。
 
 ## 1.2.0 — 2026-11-06
 

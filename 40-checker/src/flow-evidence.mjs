@@ -13,6 +13,12 @@
  * status alone): at least one check, every check has exitCode 0, at least one
  * observed (non-static) check, and every observed check's assertions hold.
  * A journey declared `warn`/`blocked`/`na`/`static`/`not-run` never counts.
+ *
+ * Runtime rule: passing journeys are necessary but not sufficient. Only
+ * sandbox-attested evidence (`claims.claimLevel === 'sandbox-attested'` or
+ * `producer.kind === 'sandbox'`) may be reported as `flow.state = 'runtime'`.
+ * `self-attested`/`ci-attested` documents keep their `passed` count but stay
+ * `not-run`, because structural validation cannot prove where commands ran.
  */
 import crypto from 'node:crypto'
 import fs from 'node:fs'
@@ -163,6 +169,18 @@ export function journeyCountsAsPass(journey) {
   return declared === null || declared === 'pass'
 }
 
+/**
+ * Runtime eligibility. A local collector run is `self-attested`
+ * (`ci-attested` with `--ci`): structurally valid, but it does not prove that
+ * commands ran, let alone in a sandbox. Only `claims.claimLevel ===
+ * 'sandbox-attested'` or the producer-side equivalent `producer.kind ===
+ * 'sandbox'` may be reported as FLOW runtime.
+ */
+export function isSandboxAttested(document) {
+  if (!isPlainObject(document)) return false
+  return document.claims?.claimLevel === 'sandbox-attested' || document.producer?.kind === 'sandbox'
+}
+
 function emptyVerdict(kind, schema, errors) {
   return {
     kind,
@@ -176,6 +194,9 @@ function emptyVerdict(kind, schema, errors) {
     host: null,
     generatedAt: null,
     conclusion: null,
+    claimLevel: null,
+    producerKind: null,
+    sandboxAttested: false,
   }
 }
 
@@ -366,6 +387,9 @@ function validateV2(document) {
     host: isPlainObject(document.host) ? document.host : null,
     generatedAt: document.generatedAt ?? null,
     conclusion: document.conclusion ?? null,
+    claimLevel: isPlainObject(document.claims) ? document.claims.claimLevel ?? null : null,
+    producerKind: isPlainObject(document.producer) ? document.producer.kind ?? null : null,
+    sandboxAttested: isSandboxAttested(document),
   }
 
   function validateCheck(check, label) {

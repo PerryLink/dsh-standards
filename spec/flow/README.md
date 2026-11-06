@@ -27,3 +27,7 @@ uninstall, diagnostics, client/server states.
 - `claims.claimLevel` is `self-attested` for a local collector run,
   `ci-attested` with `--ci`. Neither is `verified`, a certification, or a
   security audit; only a sandbox run may be described as runtime-attested.
+- `level-audit.mjs` reports FLOW `runtime` only when `claims.claimLevel` is
+  `sandbox-attested` or `producer.kind` is `sandbox`. A `self-attested`/
+  `ci-attested` document keeps its `passed` count but is reported `not-run`;
+  structural validation cannot prove where the commands ran.

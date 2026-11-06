@@ -1,6 +1,6 @@
 {
   "name": "dsh-standards",
-  "version": "1.2.0",
+  "version": "1.2.1",
   "description": "DSH plugin standards and conformance checks: ENTRY/FLOW checks plus BOOST guidance. Non-official; no certification or ranking.",
   "type": "module",
   "main": "40-checker/src/index.mjs",
@@ -20,7 +20,6 @@
     "40-checker/scripts",
     "40-checker/samples",
     "40-checker/fixtures",
-    "40-checker/test",
     "40-checker/package.json",
     "40-checker/README.md",
     "spec",
