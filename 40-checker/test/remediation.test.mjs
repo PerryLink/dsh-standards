@@ -124,7 +124,7 @@ test('remediation table covers every checker key exactly', () => {
 })
 
 test('remediation rules have the required shape', () => {
-  assert.equal(DOCS_BASE, 'https://github.com/PerryLink/dsh-plugin-guide/blob/v0.4.4/')
+  assert.equal(DOCS_BASE, 'https://github.com/PerryLink/dsh-plugin-guide/blob/v0.4.6/')
   assert.match(packageJson.version, /^\d+\.\d+\.\d+$/)
   assert.ok(Object.keys(RULES).length > 0)
   for (const [key, rule] of Object.entries(RULES)) {

@@ -13,7 +13,7 @@ import path from 'node:path'
 import packageJson from '../../package.json' with { type: 'json' }
 
 /** Release-pinned guide base. `docs` in the rule table is a relative path. */
-export const DOCS_BASE = 'https://github.com/PerryLink/dsh-plugin-guide/blob/v0.4.4/'
+export const DOCS_BASE = 'https://github.com/PerryLink/dsh-plugin-guide/blob/v0.4.6/'
 
 const LIVE = new Set(['FAIL', 'WARN'])
 const SEVERITY_RANK = { FAIL: 2, WARN: 1 }
