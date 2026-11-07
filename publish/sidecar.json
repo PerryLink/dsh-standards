@@ -1,14 +1,14 @@
 {
   "schema": "dsh-market-sidecar/1",
-  "generatedAt": "2026-11-06T00:00:00.000Z",
+  "generatedAt": "2026-11-07T00:00:00.000Z",
   "index": {
     "url": "https://awesome-dsh-plugin.com/index.json",
     "format": 1
   },
   "checker": {
     "name": "dsh-standards",
-    "version": "1.4.0",
-    "sha": "e3a52db1e591d7a01aad40aa2a1f2c6ea14642e6"
+    "version": "1.6.6",
+    "sha": "3463d6fdc9cf0211b063d550528fa0b04d14ba0b"
   },
   "notClaimed": [
     "official",
@@ -119,11 +119,11 @@
         }
       ],
       "evidence": {
-        "sha256": "7e2b878a9e92b3b781423dff6ab1788a753b011e156a3b3d36925f644bf4a208",
-        "reportSha256": "7e2b878a9e92b3b781423dff6ab1788a753b011e156a3b3d36925f644bf4a208"
+        "sha256": "8a3a6f00d87f3438d96304a5bd1701326c86927a8507449fbf3b3b7e354b0b33",
+        "reportSha256": "8a3a6f00d87f3438d96304a5bd1701326c86927a8507449fbf3b3b7e354b0b33"
       },
       "checkedBy": {
-        "checker": "dsh-standards@1.4.0 (dsh-plugin-verify@0.1.0)",
+        "checker": "dsh-standards@1.6.6 (dsh-plugin-verify@0.1.0)",
         "command": "dsh-levels <package-dir> --no-runtime --format json"
       },
       "notChecked": [
@@ -133,8 +133,8 @@
         "BOOST:LEV-3..LEV-4 (not-measured)"
       ],
       "validity": {
-        "checkedAt": "2026-11-06",
-        "expiresAt": "2027-02-04",
+        "checkedAt": "2026-11-07",
+        "expiresAt": "2027-02-05",
         "policy": "90d"
       },
       "lifecycle": "active",
@@ -239,11 +239,11 @@
         }
       ],
       "evidence": {
-        "sha256": "01dfcf050db813f290deee04cd3ac49fd25860048ea6045d135cae8e10330303",
-        "reportSha256": "01dfcf050db813f290deee04cd3ac49fd25860048ea6045d135cae8e10330303"
+        "sha256": "a65aa4975244351ce3468634b63f82763046dca801a07580725ac88314a83547",
+        "reportSha256": "a65aa4975244351ce3468634b63f82763046dca801a07580725ac88314a83547"
       },
       "checkedBy": {
-        "checker": "dsh-standards@1.4.0 (dsh-plugin-verify@0.1.0)",
+        "checker": "dsh-standards@1.6.6 (dsh-plugin-verify@0.1.0)",
         "command": "dsh-levels <package-dir> --no-runtime --format json"
       },
       "notChecked": [
@@ -253,8 +253,8 @@
         "BOOST:LEV-3..LEV-4 (not-measured)"
       ],
       "validity": {
-        "checkedAt": "2026-11-06",
-        "expiresAt": "2027-02-04",
+        "checkedAt": "2026-11-07",
+        "expiresAt": "2027-02-05",
         "policy": "90d"
       },
       "lifecycle": "active",
@@ -359,11 +359,11 @@
         }
       ],
       "evidence": {
-        "sha256": "6742c40385e4a2982e9e40a3e699428398dc2b984f8448c5e85ac1bbafe303a8",
-        "reportSha256": "6742c40385e4a2982e9e40a3e699428398dc2b984f8448c5e85ac1bbafe303a8"
+        "sha256": "1b1fcbbe1103b2cb9891412232cb81628045d909d8d28c5c81fa516edccb17d7",
+        "reportSha256": "1b1fcbbe1103b2cb9891412232cb81628045d909d8d28c5c81fa516edccb17d7"
       },
       "checkedBy": {
-        "checker": "dsh-standards@1.4.0 (dsh-plugin-verify@0.1.0)",
+        "checker": "dsh-standards@1.6.6 (dsh-plugin-verify@0.1.0)",
         "command": "dsh-levels <package-dir> --no-runtime --format json"
       },
       "notChecked": [
@@ -373,8 +373,8 @@
         "BOOST:LEV-3..LEV-4 (not-measured)"
       ],
       "validity": {
-        "checkedAt": "2026-11-06",
-        "expiresAt": "2027-02-04",
+        "checkedAt": "2026-11-07",
+        "expiresAt": "2027-02-05",
         "policy": "90d"
       },
       "lifecycle": "active",
@@ -479,11 +479,11 @@
         }
       ],
       "evidence": {
-        "sha256": "6633a04e06dee91836987b282d89aad13e1f972d588ef1b1dffa854fb1972c23",
-        "reportSha256": "6633a04e06dee91836987b282d89aad13e1f972d588ef1b1dffa854fb1972c23"
+        "sha256": "973a30566d71d9db0510d790b3b70775013ae8ec37e63f1bd65886117fc0e987",
+        "reportSha256": "973a30566d71d9db0510d790b3b70775013ae8ec37e63f1bd65886117fc0e987"
       },
       "checkedBy": {
-        "checker": "dsh-standards@1.4.0 (dsh-plugin-verify@0.1.0)",
+        "checker": "dsh-standards@1.6.6 (dsh-plugin-verify@0.1.0)",
         "command": "dsh-levels <package-dir> --no-runtime --format json"
       },
       "notChecked": [
@@ -493,8 +493,8 @@
         "BOOST:LEV-3..LEV-4 (not-measured)"
       ],
       "validity": {
-        "checkedAt": "2026-11-06",
-        "expiresAt": "2027-02-04",
+        "checkedAt": "2026-11-07",
+        "expiresAt": "2027-02-05",
         "policy": "90d"
       },
       "lifecycle": "active",
@@ -599,11 +599,11 @@
         }
       ],
       "evidence": {
-        "sha256": "634b322c3043580b209dc03c970085b4584224ee0fb4a111569d6f32b8471b2b",
-        "reportSha256": "634b322c3043580b209dc03c970085b4584224ee0fb4a111569d6f32b8471b2b"
+        "sha256": "14dab775a49b9fa4c1aca5208921c9e02659f0d25512172ffa7828d2d281162b",
+        "reportSha256": "14dab775a49b9fa4c1aca5208921c9e02659f0d25512172ffa7828d2d281162b"
       },
       "checkedBy": {
-        "checker": "dsh-standards@1.4.0 (dsh-plugin-verify@0.1.0)",
+        "checker": "dsh-standards@1.6.6 (dsh-plugin-verify@0.1.0)",
         "command": "dsh-levels <package-dir> --no-runtime --format json"
       },
       "notChecked": [
@@ -613,8 +613,8 @@
         "BOOST:LEV-3..LEV-4 (not-measured)"
       ],
       "validity": {
-        "checkedAt": "2026-11-06",
-        "expiresAt": "2027-02-04",
+        "checkedAt": "2026-11-07",
+        "expiresAt": "2027-02-05",
         "policy": "90d"
       },
       "lifecycle": "active",
@@ -719,11 +719,11 @@
         }
       ],
       "evidence": {
-        "sha256": "4320e6227eac66128148597d4f9e1dd3bc19289908864712a0c7122216b52f5a",
-        "reportSha256": "4320e6227eac66128148597d4f9e1dd3bc19289908864712a0c7122216b52f5a"
+        "sha256": "cb37513857d8cc4c3ea51bee76bb6f5059900584a72e0ae4072600c2214e08f9",
+        "reportSha256": "cb37513857d8cc4c3ea51bee76bb6f5059900584a72e0ae4072600c2214e08f9"
       },
       "checkedBy": {
-        "checker": "dsh-standards@1.4.0 (dsh-plugin-verify@0.1.0)",
+        "checker": "dsh-standards@1.6.6 (dsh-plugin-verify@0.1.0)",
         "command": "dsh-levels <package-dir> --no-runtime --format json"
       },
       "notChecked": [
@@ -733,8 +733,8 @@
         "BOOST:LEV-3..LEV-4 (not-measured)"
       ],
       "validity": {
-        "checkedAt": "2026-11-06",
-        "expiresAt": "2027-02-04",
+        "checkedAt": "2026-11-07",
+        "expiresAt": "2027-02-05",
         "policy": "90d"
       },
       "lifecycle": "active",
@@ -839,11 +839,11 @@
         }
       ],
       "evidence": {
-        "sha256": "54cdd314a2a9354348446f150aa878753149c0b5942ae1a5d9c1f94f19e94853",
-        "reportSha256": "54cdd314a2a9354348446f150aa878753149c0b5942ae1a5d9c1f94f19e94853"
+        "sha256": "d51a4ef40ead65112e67267ada4418d1f8ee941e5a65c3af4bd7869ca8ae164a",
+        "reportSha256": "d51a4ef40ead65112e67267ada4418d1f8ee941e5a65c3af4bd7869ca8ae164a"
       },
       "checkedBy": {
-        "checker": "dsh-standards@1.4.0 (dsh-plugin-verify@0.1.0)",
+        "checker": "dsh-standards@1.6.6 (dsh-plugin-verify@0.1.0)",
         "command": "dsh-levels <package-dir> --no-runtime --format json"
       },
       "notChecked": [
@@ -853,8 +853,8 @@
         "BOOST:LEV-3..LEV-4 (not-measured)"
       ],
       "validity": {
-        "checkedAt": "2026-11-06",
-        "expiresAt": "2027-02-04",
+        "checkedAt": "2026-11-07",
+        "expiresAt": "2027-02-05",
         "policy": "90d"
       },
       "lifecycle": "active",
@@ -959,11 +959,11 @@
         }
       ],
       "evidence": {
-        "sha256": "82c7575db6b882b923630f4df0d48af479ebb98384ad41b1f5b4a78350dd537a",
-        "reportSha256": "82c7575db6b882b923630f4df0d48af479ebb98384ad41b1f5b4a78350dd537a"
+        "sha256": "4afc84805bc03fb71f87101c16d23ea17f2817f78b9b13263fa804bb3cc2344e",
+        "reportSha256": "4afc84805bc03fb71f87101c16d23ea17f2817f78b9b13263fa804bb3cc2344e"
       },
       "checkedBy": {
-        "checker": "dsh-standards@1.4.0 (dsh-plugin-verify@0.1.0)",
+        "checker": "dsh-standards@1.6.6 (dsh-plugin-verify@0.1.0)",
         "command": "dsh-levels <package-dir> --no-runtime --format json"
       },
       "notChecked": [
@@ -973,8 +973,8 @@
         "BOOST:LEV-3..LEV-4 (not-measured)"
       ],
       "validity": {
-        "checkedAt": "2026-11-06",
-        "expiresAt": "2027-02-04",
+        "checkedAt": "2026-11-07",
+        "expiresAt": "2027-02-05",
         "policy": "90d"
       },
       "lifecycle": "active",
@@ -1079,11 +1079,11 @@
         }
       ],
       "evidence": {
-        "sha256": "dc874b9f924bf9c64fd16e1b166273e42cde46232e1a336579fc1bb19035fe33",
-        "reportSha256": "dc874b9f924bf9c64fd16e1b166273e42cde46232e1a336579fc1bb19035fe33"
+        "sha256": "0437b34ea36bcfc8d24a4ff218aeae04d8be7aad38a359f1e3e1e5d2040d3894",
+        "reportSha256": "0437b34ea36bcfc8d24a4ff218aeae04d8be7aad38a359f1e3e1e5d2040d3894"
       },
       "checkedBy": {
-        "checker": "dsh-standards@1.4.0 (dsh-plugin-verify@0.1.0)",
+        "checker": "dsh-standards@1.6.6 (dsh-plugin-verify@0.1.0)",
         "command": "dsh-levels <package-dir> --no-runtime --format json"
       },
       "notChecked": [
@@ -1093,8 +1093,8 @@
         "BOOST:LEV-3..LEV-4 (not-measured)"
       ],
       "validity": {
-        "checkedAt": "2026-11-06",
-        "expiresAt": "2027-02-04",
+        "checkedAt": "2026-11-07",
+        "expiresAt": "2027-02-05",
         "policy": "90d"
       },
       "lifecycle": "active",
@@ -1199,11 +1199,11 @@
         }
       ],
       "evidence": {
-        "sha256": "bfaa5f2c5c6a175f1e8dbdda88150e79d600ad7caec1e3aaf27092b5ee22fdee",
-        "reportSha256": "bfaa5f2c5c6a175f1e8dbdda88150e79d600ad7caec1e3aaf27092b5ee22fdee"
+        "sha256": "48a457a16a9951b454994d58869f36467c1d38c4d0c61258a7b8cae5087b7671",
+        "reportSha256": "48a457a16a9951b454994d58869f36467c1d38c4d0c61258a7b8cae5087b7671"
       },
       "checkedBy": {
-        "checker": "dsh-standards@1.4.0 (dsh-plugin-verify@0.1.0)",
+        "checker": "dsh-standards@1.6.6 (dsh-plugin-verify@0.1.0)",
         "command": "dsh-levels <package-dir> --no-runtime --format json"
       },
       "notChecked": [
@@ -1213,8 +1213,8 @@
         "BOOST:LEV-3..LEV-4 (not-measured)"
       ],
       "validity": {
-        "checkedAt": "2026-11-06",
-        "expiresAt": "2027-02-04",
+        "checkedAt": "2026-11-07",
+        "expiresAt": "2027-02-05",
         "policy": "90d"
       },
       "lifecycle": "active",
@@ -1319,11 +1319,11 @@
         }
       ],
       "evidence": {
-        "sha256": "d26a07a49f2495f7e4c9228fa98650e2dc7d3a3f72ab530a497045bbc4eab672",
-        "reportSha256": "d26a07a49f2495f7e4c9228fa98650e2dc7d3a3f72ab530a497045bbc4eab672"
+        "sha256": "c921153db38facae8eb604a1492cd45288a4c51daa6abf63e6b4c9e133a6aeea",
+        "reportSha256": "c921153db38facae8eb604a1492cd45288a4c51daa6abf63e6b4c9e133a6aeea"
       },
       "checkedBy": {
-        "checker": "dsh-standards@1.4.0 (dsh-plugin-verify@0.1.0)",
+        "checker": "dsh-standards@1.6.6 (dsh-plugin-verify@0.1.0)",
         "command": "dsh-levels <package-dir> --no-runtime --format json"
       },
       "notChecked": [
@@ -1333,8 +1333,8 @@
         "BOOST:LEV-3..LEV-4 (not-measured)"
       ],
       "validity": {
-        "checkedAt": "2026-11-06",
-        "expiresAt": "2027-02-04",
+        "checkedAt": "2026-11-07",
+        "expiresAt": "2027-02-05",
         "policy": "90d"
       },
       "lifecycle": "active",
@@ -1439,11 +1439,11 @@
         }
       ],
       "evidence": {
-        "sha256": "5b22366146965e73719e0e6b6e0bea71def0e34f5beaf45df2eb10efb1ce5a63",
-        "reportSha256": "5b22366146965e73719e0e6b6e0bea71def0e34f5beaf45df2eb10efb1ce5a63"
+        "sha256": "52b465618e9737961f42c4ef99122f317510b72a00555ed0384b425de686c621",
+        "reportSha256": "52b465618e9737961f42c4ef99122f317510b72a00555ed0384b425de686c621"
       },
       "checkedBy": {
-        "checker": "dsh-standards@1.4.0 (dsh-plugin-verify@0.1.0)",
+        "checker": "dsh-standards@1.6.6 (dsh-plugin-verify@0.1.0)",
         "command": "dsh-levels <package-dir> --no-runtime --format json"
       },
       "notChecked": [
@@ -1453,8 +1453,8 @@
         "BOOST:LEV-3..LEV-4 (not-measured)"
       ],
       "validity": {
-        "checkedAt": "2026-11-06",
-        "expiresAt": "2027-02-04",
+        "checkedAt": "2026-11-07",
+        "expiresAt": "2027-02-05",
         "policy": "90d"
       },
       "lifecycle": "active",
@@ -1559,11 +1559,11 @@
         }
       ],
       "evidence": {
-        "sha256": "adc3d6ce0c4c70bb8db0eeab5d181da5199f29aa729f47d947a3a3f773e8b6cd",
-        "reportSha256": "adc3d6ce0c4c70bb8db0eeab5d181da5199f29aa729f47d947a3a3f773e8b6cd"
+        "sha256": "223989da93296f15675cd9211f97d2b76dc2f26b4ec90b77de8985fc7bb33028",
+        "reportSha256": "223989da93296f15675cd9211f97d2b76dc2f26b4ec90b77de8985fc7bb33028"
       },
       "checkedBy": {
-        "checker": "dsh-standards@1.4.0 (dsh-plugin-verify@0.1.0)",
+        "checker": "dsh-standards@1.6.6 (dsh-plugin-verify@0.1.0)",
         "command": "dsh-levels <package-dir> --no-runtime --format json"
       },
       "notChecked": [
@@ -1573,8 +1573,8 @@
         "BOOST:LEV-3..LEV-4 (not-measured)"
       ],
       "validity": {
-        "checkedAt": "2026-11-06",
-        "expiresAt": "2027-02-04",
+        "checkedAt": "2026-11-07",
+        "expiresAt": "2027-02-05",
         "policy": "90d"
       },
       "lifecycle": "active",
@@ -1679,11 +1679,11 @@
         }
       ],
       "evidence": {
-        "sha256": "eaff4b5a68afb3ae3bdcb09ca577078b1a5cd02ab7b556ea1633cec0cadec7d8",
-        "reportSha256": "eaff4b5a68afb3ae3bdcb09ca577078b1a5cd02ab7b556ea1633cec0cadec7d8"
+        "sha256": "d64f95aea3cad2996e24f3479a281d179e3228037b661e7a35cead7e14a93fb8",
+        "reportSha256": "d64f95aea3cad2996e24f3479a281d179e3228037b661e7a35cead7e14a93fb8"
       },
       "checkedBy": {
-        "checker": "dsh-standards@1.4.0 (dsh-plugin-verify@0.1.0)",
+        "checker": "dsh-standards@1.6.6 (dsh-plugin-verify@0.1.0)",
         "command": "dsh-levels <package-dir> --no-runtime --format json"
       },
       "notChecked": [
@@ -1693,8 +1693,8 @@
         "BOOST:LEV-3..LEV-4 (not-measured)"
       ],
       "validity": {
-        "checkedAt": "2026-11-06",
-        "expiresAt": "2027-02-04",
+        "checkedAt": "2026-11-07",
+        "expiresAt": "2027-02-05",
         "policy": "90d"
       },
       "lifecycle": "active",
@@ -1799,11 +1799,11 @@
         }
       ],
       "evidence": {
-        "sha256": "54bcdcb3ace47a7e7f13f7dc4579ba82da1029f2eb009c29189d7f7d6e927a7b",
-        "reportSha256": "54bcdcb3ace47a7e7f13f7dc4579ba82da1029f2eb009c29189d7f7d6e927a7b"
+        "sha256": "91208897340d16594346d8b43dc2ca9addc85296b89a04b31afc934d5b28464f",
+        "reportSha256": "91208897340d16594346d8b43dc2ca9addc85296b89a04b31afc934d5b28464f"
       },
       "checkedBy": {
-        "checker": "dsh-standards@1.4.0 (dsh-plugin-verify@0.1.0)",
+        "checker": "dsh-standards@1.6.6 (dsh-plugin-verify@0.1.0)",
         "command": "dsh-levels <package-dir> --no-runtime --format json"
       },
       "notChecked": [
@@ -1813,8 +1813,8 @@
         "BOOST:LEV-3..LEV-4 (not-measured)"
       ],
       "validity": {
-        "checkedAt": "2026-11-06",
-        "expiresAt": "2027-02-04",
+        "checkedAt": "2026-11-07",
+        "expiresAt": "2027-02-05",
         "policy": "90d"
       },
       "lifecycle": "active",
@@ -1919,11 +1919,11 @@
         }
       ],
       "evidence": {
-        "sha256": "89a491388fb8f35c33cc864a93063059969be07934e23ab35d381810642b93b3",
-        "reportSha256": "89a491388fb8f35c33cc864a93063059969be07934e23ab35d381810642b93b3"
+        "sha256": "89683a85c5e30e8044bff6174a883ed531a80567a79fbb3e525f74438fa5e595",
+        "reportSha256": "89683a85c5e30e8044bff6174a883ed531a80567a79fbb3e525f74438fa5e595"
       },
       "checkedBy": {
-        "checker": "dsh-standards@1.4.0 (dsh-plugin-verify@0.1.0)",
+        "checker": "dsh-standards@1.6.6 (dsh-plugin-verify@0.1.0)",
         "command": "dsh-levels <package-dir> --no-runtime --format json"
       },
       "notChecked": [
@@ -1933,8 +1933,8 @@
         "BOOST:LEV-3..LEV-4 (not-measured)"
       ],
       "validity": {
-        "checkedAt": "2026-11-06",
-        "expiresAt": "2027-02-04",
+        "checkedAt": "2026-11-07",
+        "expiresAt": "2027-02-05",
         "policy": "90d"
       },
       "lifecycle": "active",
@@ -2039,11 +2039,11 @@
         }
       ],
       "evidence": {
-        "sha256": "4f2b51e539047f2549ebb5fb65c117445903f8d41d3c53f08df8728c865915f7",
-        "reportSha256": "4f2b51e539047f2549ebb5fb65c117445903f8d41d3c53f08df8728c865915f7"
+        "sha256": "fc07cfd7540bfd8b06c85f76a445b2ed0d3735f75ca669ea5dab4434ce96e8ce",
+        "reportSha256": "fc07cfd7540bfd8b06c85f76a445b2ed0d3735f75ca669ea5dab4434ce96e8ce"
       },
       "checkedBy": {
-        "checker": "dsh-standards@1.4.0 (dsh-plugin-verify@0.1.0)",
+        "checker": "dsh-standards@1.6.6 (dsh-plugin-verify@0.1.0)",
         "command": "dsh-levels <package-dir> --no-runtime --format json"
       },
       "notChecked": [
@@ -2053,8 +2053,8 @@
         "BOOST:LEV-3..LEV-4 (not-measured)"
       ],
       "validity": {
-        "checkedAt": "2026-11-06",
-        "expiresAt": "2027-02-04",
+        "checkedAt": "2026-11-07",
+        "expiresAt": "2027-02-05",
         "policy": "90d"
       },
       "lifecycle": "active",
@@ -2159,11 +2159,11 @@
         }
       ],
       "evidence": {
-        "sha256": "8ac7e7d3a46581b289785ee66f5cc3347e79d925e45e42ef39bb0fd47ebc0601",
-        "reportSha256": "8ac7e7d3a46581b289785ee66f5cc3347e79d925e45e42ef39bb0fd47ebc0601"
+        "sha256": "a145deb8b2792ba3fb4f4e2a461d394ac5b9bdddd82ec1d0f99941b912075ec0",
+        "reportSha256": "a145deb8b2792ba3fb4f4e2a461d394ac5b9bdddd82ec1d0f99941b912075ec0"
       },
       "checkedBy": {
-        "checker": "dsh-standards@1.4.0 (dsh-plugin-verify@0.1.0)",
+        "checker": "dsh-standards@1.6.6 (dsh-plugin-verify@0.1.0)",
         "command": "dsh-levels <package-dir> --no-runtime --format json"
       },
       "notChecked": [
@@ -2173,8 +2173,8 @@
         "BOOST:LEV-3..LEV-4 (not-measured)"
       ],
       "validity": {
-        "checkedAt": "2026-11-06",
-        "expiresAt": "2027-02-04",
+        "checkedAt": "2026-11-07",
+        "expiresAt": "2027-02-05",
         "policy": "90d"
       },
       "lifecycle": "active",
@@ -2279,11 +2279,11 @@
         }
       ],
       "evidence": {
-        "sha256": "1fed4ff6f7f1d9656924796711ec4ade9d4bb93a5c81841a40984cbf3a24de30",
-        "reportSha256": "1fed4ff6f7f1d9656924796711ec4ade9d4bb93a5c81841a40984cbf3a24de30"
+        "sha256": "c1beacea04c3d3c35553ec6ca11d42a73a35390f5122c1f85952205653b2db40",
+        "reportSha256": "c1beacea04c3d3c35553ec6ca11d42a73a35390f5122c1f85952205653b2db40"
       },
       "checkedBy": {
-        "checker": "dsh-standards@1.4.0 (dsh-plugin-verify@0.1.0)",
+        "checker": "dsh-standards@1.6.6 (dsh-plugin-verify@0.1.0)",
         "command": "dsh-levels <package-dir> --no-runtime --format json"
       },
       "notChecked": [
@@ -2293,8 +2293,8 @@
         "BOOST:LEV-3..LEV-4 (not-measured)"
       ],
       "validity": {
-        "checkedAt": "2026-11-06",
-        "expiresAt": "2027-02-04",
+        "checkedAt": "2026-11-07",
+        "expiresAt": "2027-02-05",
         "policy": "90d"
       },
       "lifecycle": "active",
@@ -2399,11 +2399,11 @@
         }
       ],
       "evidence": {
-        "sha256": "1977bfae91bb54e9bf55918b8f3211e8fc38e7fc94341887a3044abe3f01f422",
-        "reportSha256": "1977bfae91bb54e9bf55918b8f3211e8fc38e7fc94341887a3044abe3f01f422"
+        "sha256": "6d438c21c8c388dbd5dea03f3f4fb2a522e41ee45d193bd7e30c76ddaa394697",
+        "reportSha256": "6d438c21c8c388dbd5dea03f3f4fb2a522e41ee45d193bd7e30c76ddaa394697"
       },
       "checkedBy": {
-        "checker": "dsh-standards@1.4.0 (dsh-plugin-verify@0.1.0)",
+        "checker": "dsh-standards@1.6.6 (dsh-plugin-verify@0.1.0)",
         "command": "dsh-levels <package-dir> --no-runtime --format json"
       },
       "notChecked": [
@@ -2413,8 +2413,8 @@
         "BOOST:LEV-3..LEV-4 (not-measured)"
       ],
       "validity": {
-        "checkedAt": "2026-11-06",
-        "expiresAt": "2027-02-04",
+        "checkedAt": "2026-11-07",
+        "expiresAt": "2027-02-05",
         "policy": "90d"
       },
       "lifecycle": "active",
