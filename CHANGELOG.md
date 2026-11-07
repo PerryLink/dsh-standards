@@ -3,7 +3,7 @@
 ### Added
 
 - `conformance.schema.json`：`subject.source`（`package`/`registry`/`unknown`，可选加性）与 `checks[].howToEnable` 显式放行；`subject` 仍 `additionalProperties:false`，其余未知键照旧被拒。registry 报告（`dsh.plugin.json`，1.6.7 起输出 `source=registry`）现在可整份通过 schema。
-- 离线包 `publish/dsh-standards-offline-1.6.8.tgz`：1001037 B，64 文件，sha256 `2265d0cfb81d6e93a92cd3b10919d8d83f9d6ffd795f2cbedc701f8808f9e59d`；内层 npm tarball `dsh-standards-1.6.8.tgz`（911,278 B，sha256 `1e50195619cfe59caf5b0c26b82038d9556a07336038e5a2f18a9944ac55cbf1`）。
+- 离线包 `publish/dsh-standards-offline-1.6.8.tgz`：1,001,036 B，64 文件，sha256 `24117149e8dbc5ca44bc90e013461a6e1d385dd691c47d36e18728aa42a82fcb`；内层本地打包 911,496 B，sha256 `aa49e7d209eea37251d6a53851651eeb90692c2bea1e570f5c413c666c419e43`（npm 发布 tarball 911,485 B，sha256 `478716…`，差异仅 CHANGELOG）。
 
 ### Changed
 
