@@ -3,7 +3,7 @@
 > **版本**：v2.0.0-rc.1 ｜ **日期**：2026-10-31
 > **定位**：三套规范/实践的第三套；登记“有没有用 Cordis 原生能力把插件做得更可靠、更好维护”，性能收益另行测量。
 > **形态**：**实践库，不是插件等级**；登记的是做法+证据，不给插件贴“最高级”。
-> **对外状态**：内部草案。**可靠性有 LEV-1（loader/context-level）证据；性能未证实**。LEV-3（loader-level）、LEV-6（provider-capture）、LEV-7（合成 timer）有可复现 measured，但都不是生产基准，暂不作为对外规范。
+> **对外状态**：内部草案。**可靠性有 LEV-1（loader/context-level）证据；性能未证实**。LEV-3（loader-level）、LEV-6（provider-capture）、LEV-7（合成 timer）有可复现 measured，但都不是生产基准，暂不作为对外规范；LEV-6 另有 2026-11-07 真实 provider 前缀缓存复测（构造臂，见 §2.2）。
 > **依据**：`91-增效实践内核研究.md`（REPO `ce7073d` 源码）、`95-开发建议-加速.md`。
 > **版本警告**：旧 Linux checkout `22dde3` 是旧内核；`G-10 provide-last` 的旧结论只对旧内核成立，不能直接引用。
 > **三层模型**：`34`；作者清单：`35`；生命周期：`36`。
@@ -16,7 +16,7 @@
 - `DSH-FLOW` 判定“用户旅程能不能复现”（J1–J8 有记录）；
 - `DSH-BOOST` 登记“有没有用 Cordis 原生能力”，**可靠性有 LEV-1 证据；性能未证实**。
 
-**BOOST 与 FLOW 不可比**：FLOW 的结论是“J1–J8 旅程有没有记录、能不能复现”，BOOST 的结论是“某条实践在给定锚点上有没有证据卡”。两者量纲不同：FLOW 通过不能证明 BOOST 收益，BOOST 基准也不能替代 FLOW 验收；不存在“BOOST 比 FLOW 高/低”或“BOOST 省钱 X%”的可比结论。
+**BOOST 与 FLOW 不可比**：FLOW 验旅程、BOOST 验实践；FLOW 的结论是“J1–J8 旅程有没有记录、能不能复现”，BOOST 的结论是“某条实践在给定锚点上有没有证据卡”。两者量纲不同：FLOW 通过不能证明 BOOST 收益，BOOST 基准也不能替代 FLOW 验收；不存在“BOOST 比 FLOW 高/低”或“BOOST 省钱 X%”的可比结论。
 
 **不是第三个徽章**：一条 LEV 只说明“这个做法在给定锚点下有证据”，不代表插件整体“高级”。
 
@@ -35,7 +35,7 @@
 | LEV-7 并行/长活 | 独立调用并行有界；长活走 jobs；模型面有序；取消贯穿 | `T≈max(T_i)`；kill 后 100% 停止；step 阻塞 0 |
 | LEV-8 组合/证据卡 | bundle patch/preset 表达差异；每条实践附证据卡 | 新增层 1；单行启停不影响其他；`leaked 0`；证据卡可复跑 |
 
-**LEV-6 的边界**：稳定前缀只说明 provider-capture 里 promptOrder 可复用；该 capture 用合成端点，不能换算成 token 费用节省，也不构成计价依据。
+**LEV-6 的边界**：合成 capture（§2.1）只说明 promptOrder 可复用；真实 provider 复测（§2.2）只说明缓存命中。两者都不能换算成费用节省，也不构成计价依据。
 
 ### 2.1 2026-11-01 实测（八组）
 
@@ -46,13 +46,23 @@
 | LEV-7 | **synthetic timer**：64 tasks × 5 runs | 合并耗时中位数比 **8.24×**（合成负载，不是生产基线，不外推） | `examples/boost/results/lev7.json` |
 | LEV-1/2/4/5/8 | **loader/context-level**：真实 Cordis loader + 合成 fixture | LEV-1 effect 5/5 回收、裸 timer 泄漏 +5；LEV-2 PENDING→ACTIVE；LEV-4 next/veto/emit/serial/bail/parallel 实测；LEV-5 两 realm 隔离 0 串扰；LEV-8 组合只改目标行 | `40-checker/results/boost/lev12458.json` |
 
-八条都带负向对照，能证伪；但都不能写成“生产环境省 X%”或“真实 cache 命中率”。
+八条都带负向对照，能证伪；但都不能写成“生产环境省 X%”。§2.1 的 LEV-6 是合成端点上的 promptOrder 复用，不是真实 cache 命中率；真实 provider 复测见 §2.2。
+
+<a id="lev6-real-provider"></a>
+### 2.2 真实 provider 证据：LEV-6 前缀缓存（2026-11-07）
+
+§2.1 的 LEV-6 是合成端点上的 capture；下面换成真实 provider 复测，回答“稳定前缀在真实 API 上到底命不命中缓存”。
+
+- **环境**：2026-11-07，真实 DeepSeek API（`deepseek-official` / `deepseek-flash`），宿主 `dsh 0.2.1-rc.5`，node v24.22.1（WSL2）；prompt 13,110 字符 / **2,257 tokens**；每臂 **5 个独立会话**，每会话同 `sessionId` 发 2 次请求；指标 = 第二次请求的 `cache_read_input_tokens / prompt_tokens`，首次请求冷启动（cache=0）。
+- **数字**：boost（两次 prompt 相同）**2048 / 2257 = 90.7%**，5/5 会话一致；unboost（每次开头插 nonce）**0 / 2273–2276 = 0%**，5/5；tail（每次末尾插 nonce）**2048 / 2274–2276 = 90.0%**，5/5。**15/15 会话完全一致**，无抖动；缓存按 2048-token 块生效。
+- **出处**：hub `00-live/adopter-audit-2026-11-06/impl/evidence-lev6-real/`（15 份 usage JSON、`prompt.txt`、`META.md`、运行与聚合脚本）；报告 `00-live/adopter-audit-2026-11-06/impl/G5-lev6-real.md`（hub commit `de7e05a`）。
+- **边界**：构造臂（nonce），单包 / 单模型 / 单宿主；只测 LEV-6 的前缀缓存，只覆盖 user prompt；**未测延迟，也未对账账单**。它说明“稳定前缀在真实 provider 上可命中缓存、易变内容放开头会让命中归零、放末尾仍能保住命中”，**不是性能或费用结论，也不是 BOOST 与 FLOW 的可比结论**。
 
 ---
 
 ## 三、G-10 的边界
 
-- REPO `ce7073d` 新内核：`fiber._unload` 先等 `dependents` 释放，再撤 provider；consumer cleanup 调服务有保证。
+- REPO `ce7073d` 新内核：`fiber._unload` 先等 `dependents` 释放，再撤 provider；consumer cleanup 仍能调到服务。
 - 旧 Linux checkout `22dde3` 没有这层；旧“provide 最后 yield 是 P0”只对旧内核成立。
 - 仍需注意：**同 fiber 内 `ctx.get()` 的 cleanup**，`provide` disposer 会先同步删 store；走 `ctx.<service>` proxy 反而还能读到。
 - **结论**：G-10 只作配方，不作无条件 PASS/FAIL；建议上游加 effect teardown rank，但不要把 `Promise.all` 改串行。
@@ -104,5 +114,5 @@ selfAssessed: true
   1. volatile 热配置（LEV-3）；
   2. bounded batch + jobs（LEV-7）；
   3. seam 替换（LEV-5）。
-- LEV-6 的下一步不是再补一次 capture，而是接真实 provider usage（`cacheReadTokens`）或真实 key；当前只有 synthetic capture，不能报价。
+- LEV-6 已有真实 provider 的 usage 证据（§2.2，构造臂；单包/单模型/单宿主，未测延迟、未对账账单）；下一步是多包/多模型与同会话多轮复测；报价仍以 provider 价目为准，本文不写金额。
 - 所有基准必须记录：环境、输入规模、命令、负向控制、结果；单次实测只作语义证明，不作性能基线。

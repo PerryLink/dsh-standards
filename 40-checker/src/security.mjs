@@ -548,6 +548,158 @@ function functionConstructorExempt(node, ancestors) {
   return allowsEvalContext(ancestors)
 }
 
+// --- vendor-aware C-16.1 exemption -----------------------------------------
+//
+// A package may legitimately ship third-party code verbatim: a `vendor/` tree, a
+// node_modules tree kept in the tarball, or a bundler inlined library (the
+// `//#region node_modules/...` markers esbuild/rolldown emit). A schema/utility
+// library such as `@deepseek-ai/schemastery` uses `new Function("return " + src)`
+// to compile a *declared callback* into a function; that is a library parser,
+// not a malicious payload, and hard-failing every package that bundles it would
+// punish exactly the packages that declare their dependencies honestly.
+//
+// The exemption is deliberately narrow. Only `eval()` / `new Function()` sites
+// are affected (never vm, module._compile, process.binding, dangerous
+// subprocess commands, or base64-obfuscated code), the file must look vendored,
+// the result is WARN (never PASS), and `--strict-vendor` restores FAIL.
+const VENDOR_DIRECTORY = /(?:^|\/)((?:node_modules|vendor|vendored|third[-_]?party|thirdparty|deps))(?:\/|$)/i
+const VENDOR_LIBRARY_NAMES = new Set(['@deepseek-ai/schemastery', 'schemastery', 'ajv', 'lodash'])
+const VENDOR_LIBRARY_SIGNATURES = [
+  { name: '@deepseek-ai/schemastery', pattern: /Symbol\.for\(\s*['"]schemastery['"]\s*\)|__schemastery_(?:index|refs)__/ },
+  { name: 'ajv', pattern: /\bAjv\.prototype\b|\bclass\s+Ajv\b|\bfunction\s+Ajv\b|\bajv@\d+\.\d+\.\d+/ },
+  { name: 'lodash', pattern: /__lodash_hash_undefined__|\bLodashWrapper\b|\blodash@\d+\.\d+\.\d+/ },
+]
+const BUNDLED_VENDOR_REGION = /^[ \t]*(?:\/\/|\/\*)(?=[^\n]*(?:#region|\bregion\b|\.pnpm[\\/]))[^\n]*?\bnode_modules[\\/](?:\.pnpm[\\/])?((?:@[^/\s+]+[+/])?[^@/\s'"`]+)/i
+const BUNDLED_VENDOR_END = /^[ \t]*(?:\/\/|\/\*)\s*#?endregion\b/i
+const VENDORED_BASENAME = /^(?:schemastery|ajv|lodash)(?:[.-]|$)/i
+const VENDOR_EXEMPT_WHAT = new Set(['eval()', 'new Function()'])
+
+/** `@deepseek-ai+schemastery` (the `.pnpm` form) -> `@deepseek-ai/schemastery`. */
+function normalizeVendorPackage(token) {
+  if (!token) return null
+  const value = String(token).replace(/\\/g, '/')
+  if (value.startsWith('@') && !value.includes('/')) return value.replace('+', '/')
+  return value
+}
+
+function declaredVendorLibraries(manifest) {
+  const declared = new Set()
+  // devDependencies count: a bundle inlines a library that is only needed at
+  // build time, so that is exactly where a bundled dependency is declared.
+  for (const field of ['dependencies', 'devDependencies', 'optionalDependencies', 'peerDependencies']) {
+    const block = manifest?.[field]
+    if (!block || typeof block !== 'object') continue
+    for (const name of Object.keys(block)) if (VENDOR_LIBRARY_NAMES.has(name)) declared.add(name)
+  }
+  return declared
+}
+
+/**
+ * Line ranges of bundler-emitted `node_modules` regions. One bundle often inlines
+ * several libraries (the composer bundle starts with cosmokit, then schemastery),
+ * so the evidence for a finding is the region that contains its line, not the
+ * first region in the file.
+ */
+function bundlerRegionsOf(text) {
+  const lines = String(text).split('\n')
+  const regions = []
+  const open = []
+  for (let index = 0; index < lines.length; index += 1) {
+    const startMatch = BUNDLED_VENDOR_REGION.exec(lines[index])
+    if (startMatch) {
+      const library = normalizeVendorPackage(startMatch[1])
+      if (library) open.push({ start: index + 1, library })
+      continue
+    }
+    if (BUNDLED_VENDOR_END.test(lines[index]) && open.length > 0) {
+      regions.push({ ...open.pop(), end: index + 1 })
+    }
+  }
+  for (const region of open) regions.push({ ...region, end: lines.length })
+  return regions
+}
+
+/** The region/evidence that applies to one finding line. */
+function vendorEvidenceAt(evidence, line) {
+  if (!evidence?.regions) return evidence
+  const region = evidence.regions.find(item => line >= item.start && line <= item.end)
+  if (!region) return { ...evidence, regions: undefined }
+  return {
+    kind: evidence.kind,
+    library: region.library,
+    declared: region.declared,
+    reason: `bundled node_modules region for ${region.library}${region.declared ? ' (declared dependency)' : ''}`,
+  }
+}
+
+/** Own-file vendor evidence, or null. `library` is used only for reporting. */
+function vendorEvidenceOf(relative, text, declared) {
+  const normalized = normalizeRelative(relative)
+  const pathMatch = VENDOR_DIRECTORY.exec(normalized)
+  if (pathMatch) {
+    return { kind: 'path', library: 'vendored-path', reason: `vendored path (${pathMatch[0]})` }
+  }
+  const regions = bundlerRegionsOf(text).map(region => ({ ...region, declared: declared.has(region.library) }))
+  if (regions.length > 0) {
+    const first = regions[0]
+    return {
+      kind: 'bundle',
+      library: first.library,
+      declared: first.declared,
+      regions,
+      reason: `bundled node_modules region for ${first.library}${first.declared ? ' (declared dependency)' : ''}`,
+    }
+  }
+  for (const signature of VENDOR_LIBRARY_SIGNATURES) {
+    if (signature.pattern.test(text)) {
+      return { kind: 'library', library: signature.name, declared: declared.has(signature.name), reason: `library fingerprint for ${signature.name}` }
+    }
+  }
+  const basename = path.posix.basename(normalized)
+  if (VENDORED_BASENAME.test(basename)) {
+    return { kind: 'filename', library: basename.toLowerCase(), reason: `library-shaped file name (${basename})` }
+  }
+  return null
+}
+
+/**
+ * Map of normalized relative path -> vendor evidence for every scanned server
+ * source. A file outside `src/` also inherits a sibling's strong evidence in the
+ * same directory (bundled libraries are often split across chunks); a bare
+ * fingerprint is inherited only when the package declares that dependency.
+ */
+function vendorFilesFor(sources, manifest) {
+  const declared = declaredVendorLibraries(manifest)
+  const own = new Map()
+  const byDirectory = new Map()
+  for (const source of serverSources(sources)) {
+    const normalized = normalizeRelative(source.relative)
+    const evidence = vendorEvidenceOf(normalized, source.text, declared)
+    if (!evidence) continue
+    own.set(normalized, evidence)
+    const directory = path.posix.dirname(normalized)
+    if (!byDirectory.has(directory)) byDirectory.set(directory, [])
+    byDirectory.get(directory).push({ file: normalized, evidence })
+  }
+  const result = new Map(own)
+  for (const source of serverSources(sources)) {
+    const normalized = normalizeRelative(source.relative)
+    if (result.has(normalized)) continue
+    if (/(?:^|\/)src(?:\/|$)/.test(normalized)) continue
+    const directory = path.posix.dirname(normalized)
+    if (directory === '.') continue
+    const sibling = (byDirectory.get(directory) ?? []).find(item => item.file !== normalized)
+    if (!sibling) continue
+    if (sibling.evidence.kind === 'library' && !declared.has(sibling.evidence.library)) continue
+    result.set(normalized, {
+      kind: 'directory',
+      library: sibling.evidence.library,
+      reason: `${sibling.evidence.reason} in the same directory (${sibling.file})`,
+    })
+  }
+  return result
+}
+
 /** exec/execSync/spawn/... called directly or through a one-level alias. */
 function commandExecApiOf(callee, bindings) {
   if (!callee) return null
@@ -592,7 +744,8 @@ function dangerousCommandLabels(text) {
   return labels
 }
 
-export function checkDynamicExecution(manifest, sources, entry, kind = null) {
+export function checkDynamicExecution(manifest, sources, entry, kind = null, options = {}) {
+  const strictVendor = options.strictVendor === true
   if (kind === 'client') {
     return check({
       id: 'DSC-16', clause: 'C-16', layer: 'L0', result: 'NA', coverage: 'not-run', advisory: false,
@@ -622,9 +775,11 @@ export function checkDynamicExecution(manifest, sources, entry, kind = null) {
   const dynamic = []
   const subprocess = []
   const fileFacts = new Map()
+  const vendorFiles = vendorFilesFor(sources, manifest)
   for (const relative of closure.visited) {
     const parsed = parseModule(closure.byRelative.get(relative))
     if (parsed.error) continue
+    const vendor = vendorFiles.get(relative) ?? null
     let facts = fileFacts.get(relative)
     if (!facts) {
       facts = { base64Line: null, evalLike: false }
@@ -649,12 +804,16 @@ export function checkDynamicExecution(manifest, sources, entry, kind = null) {
       }
       if (node.type === 'CallExpression' && node.callee.type === 'Identifier' && node.callee.name === 'eval') {
         facts.evalLike = true
-        dynamic.push({ file: relative, line: lineOf(node), what: 'eval()', item: 'C-16.1' })
+        const line = lineOf(node)
+        dynamic.push({ file: relative, line, what: 'eval()', item: 'C-16.1', vendor: vendor ? vendorEvidenceAt(vendor, line) : null })
         return
       }
       if (isFunctionConstructor(node)) {
         facts.evalLike = true
-        if (!functionConstructorExempt(node, ancestors)) dynamic.push({ file: relative, line: lineOf(node), what: 'new Function()', item: 'C-16.1' })
+        if (!functionConstructorExempt(node, ancestors)) {
+          const line = lineOf(node)
+          dynamic.push({ file: relative, line, what: 'new Function()', item: 'C-16.1', vendor: vendor ? vendorEvidenceAt(vendor, line) : null })
+        }
         return
       }
       if (node.type === 'CallExpression') {
@@ -693,17 +852,35 @@ export function checkDynamicExecution(manifest, sources, entry, kind = null) {
       obfuscated.push({ file, line: facts.base64Line, what: 'base64-decoded payload in the same file as eval/new Function' })
     }
   }
-  const dynamicEvidence = dynamic.slice(0, 5).map(item => `${item.file}:${item.line}`)
+  // Vendor-aware downgrade: only eval()/new Function() in a vendored file, and
+  // only when --strict-vendor was not requested. Obfuscated, vm, _compile,
+  // process.binding and dangerous subprocess findings are never exempt.
+  const vendorExempt = strictVendor
+    ? []
+    : dynamic.filter(item => item.vendor && item.item === 'C-16.1' && VENDOR_EXEMPT_WHAT.has(item.what))
+  const blockingDynamic = dynamic.filter(item => !vendorExempt.includes(item))
+  const dynamicEvidence = blockingDynamic.slice(0, 5).map(item => `${item.file}:${item.line}`)
   const obfuscatedEvidence = obfuscated.slice(0, 5).map(item => `${item.file}:${item.line}`)
+  const vendorEvidence = vendorExempt.slice(0, 5).map(item => `${item.file}:${item.line}`)
   const subprocessEvidence = subprocess.slice(0, 5).map(item => `${item.file}:${item.line}`)
-  for (const item of dynamic.slice(0, 8)) {
-    details.push(detail(item.item, 'FAIL', `dynamic execution (code:dynamic): ${item.what} at ${item.file}:${item.line}`, [`${item.file}:${item.line}`]))
+  for (const item of blockingDynamic.slice(0, 8)) {
+    const vendorNote = item.vendor ? ` [vendor: ${item.vendor.reason}; ${strictVendor ? '--strict-vendor keeps FAIL' : 'not exempt'}]` : ''
+    const row = detail(item.item, 'FAIL', `dynamic execution (code:dynamic): ${item.what} at ${item.file}:${item.line}${vendorNote}`, [`${item.file}:${item.line}`])
+    if (item.vendor) row.vendor = true
+    details.push(row)
+  }
+  for (const item of vendorExempt.slice(0, 8)) {
+    const row = detail('C-16.1', 'WARN', `dynamic execution (code:dynamic): ${item.what} at ${item.file}:${item.line} [vendor: ${item.vendor.reason}; vendor-exempt → WARN, rerun with --strict-vendor to enforce FAIL]`, [`${item.file}:${item.line}`])
+    row.vendor = true
+    details.push(row)
   }
   for (const item of obfuscated.slice(0, 4)) {
-    details.push(detail('C-16.1', 'FAIL', `dynamic execution (code:obfuscated): ${item.what} at ${item.file}:${item.line}`, [`${item.file}:${item.line}`]))
+    const vendorNote = vendorFiles.has(item.file) ? ` [vendor: ${vendorFiles.get(item.file).reason}; obfuscated code is never exempt]` : ''
+    details.push(detail('C-16.1', 'FAIL', `dynamic execution (code:obfuscated): ${item.what} at ${item.file}:${item.line}${vendorNote}`, [`${item.file}:${item.line}`]))
   }
   for (const item of subprocess.slice(0, 8)) {
-    details.push(detail('C-16.3', 'WARN', `subprocess capability observed: ${item.what} at ${item.file}:${item.line}`, [`${item.file}:${item.line}`]))
+    const vendorNote = vendorFiles.has(item.file) ? ` [vendor: ${vendorFiles.get(item.file).reason}; subprocess findings are never exempt]` : ''
+    details.push(detail('C-16.3', 'WARN', `subprocess capability observed: ${item.what} at ${item.file}:${item.line}${vendorNote}`, [`${item.file}:${item.line}`]))
   }
   if (closure.packageImports.length > 0) {
     details.push(detail('C-16.4', 'NA', `not-run: ${closure.packageImports.length} package import(s) are outside the local closure (for example ${closure.packageImports[0].specifier})`, [`${closure.packageImports[0].file}:${closure.packageImports[0].line}`]))
@@ -712,19 +889,24 @@ export function checkDynamicExecution(manifest, sources, entry, kind = null) {
     details.push(detail('C-16.4', 'ERROR', `not-run: AST parse failed in ${error.file}:${error.line} (${error.message})`, [`${error.file}:${error.line}`]))
   }
   const coverage = closure.parseErrors.length > 0 || closure.packageImports.length > 0 || closure.unresolved.length > 0 ? 'partial' : 'full'
+  const vendorLibraries = [...new Set(vendorExempt.map(item => item.vendor.library))].join(', ')
   let result
   let reason = ''
-  if (dynamic.length > 0 || obfuscated.length > 0) {
+  if (blockingDynamic.length > 0 || obfuscated.length > 0) {
     result = 'FAIL'
-    reason = `${dynamic.length} dynamic-execution site(s) in the server entry closure (code:dynamic)`
+    reason = `${blockingDynamic.length} dynamic-execution site(s) in the server entry closure (code:dynamic)`
+    if (vendorExempt.length > 0) reason += `; ${vendorExempt.length} additional vendor-exempt site(s)`
     if (obfuscated.length > 0) reason += `; ${obfuscated.length} base64-obfuscated execution clue(s)`
     if (closure.parseErrors.length > 0) reason += `; ${closure.parseErrors.length} file(s) could not be parsed`
   } else if (closure.parseErrors.length > 0) {
     result = 'ERROR'
     reason = `AST parse failed in ${closure.parseErrors.length} closure file(s); DSC-16 not-run`
-  } else if (subprocess.length > 0) {
+  } else if (vendorExempt.length > 0 || subprocess.length > 0) {
     result = 'WARN'
-    reason = `${subprocess.length} subprocess site(s) in the server entry closure`
+    const parts = []
+    if (vendorExempt.length > 0) parts.push(`${vendorExempt.length} vendor-exempt dynamic-execution site(s) (vendor: ${vendorLibraries}; rerun with --strict-vendor to enforce FAIL)`)
+    if (subprocess.length > 0) parts.push(`${subprocess.length} subprocess site(s)`)
+    reason = `${parts.join('; ')} in the server entry closure`
   } else {
     result = 'PASS'
   }
@@ -737,7 +919,11 @@ export function checkDynamicExecution(manifest, sources, entry, kind = null) {
     coverage: result === 'ERROR' ? 'not-run' : coverage,
     reason,
     details,
-    evidence: dynamicEvidence.length > 0 ? dynamicEvidence : obfuscatedEvidence.length > 0 ? obfuscatedEvidence : subprocessEvidence.length > 0 ? subprocessEvidence : [...closure.visited].slice(0, 3),
+    evidence: dynamicEvidence.length > 0
+      ? dynamicEvidence
+      : obfuscatedEvidence.length > 0
+        ? obfuscatedEvidence
+        : vendorEvidence.length > 0 ? vendorEvidence : subprocessEvidence.length > 0 ? subprocessEvidence : [...closure.visited].slice(0, 3),
   })
 }
 
@@ -1584,7 +1770,7 @@ function unavailable(reason) {
 }
 
 /** Run all eight security checks. Never throws: a failure becomes not-run rows. */
-export function runSecurityChecks({ dir, manifest, sources = [], entry = null, kind = null } = {}) {
+export function runSecurityChecks({ dir, manifest, sources = [], entry = null, kind = null, strictVendor = false } = {}) {
   if (!manifest) return unavailable('manifest unavailable')
   const checks = []
   const run = (id, factory) => {
@@ -1605,7 +1791,7 @@ export function runSecurityChecks({ dir, manifest, sources = [], entry = null, k
     }
   }
   run('DSC-15', () => checkLifecycleScripts(manifest, dir))
-  run('DSC-16', () => checkDynamicExecution(manifest, sources, entry, kind))
+  run('DSC-16', () => checkDynamicExecution(manifest, sources, entry, kind, { strictVendor }))
   run('DSC-17', () => checkSensitiveFileReads(manifest, sources))
   run('DSC-18', () => checkEgressEndpoints(manifest, sources))
   run('DSC-19', () => checkOpaqueArtifacts(dir, sources))

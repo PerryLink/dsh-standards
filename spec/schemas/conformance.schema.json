@@ -406,6 +406,10 @@
             "type": "string"
           },
           "description": "Optional evidence references; the detail() helper emits [], but a few manually built details (for example the G4 detail) omit the key in 1.3.0."
+        },
+        "vendor": {
+          "type": "boolean",
+          "description": "Additive (1.6.6): true when the finding was classified as vendored/third-party code (DSC-16 C-16.1). A vendor finding is WARN by default and FAIL under --strict-vendor."
         }
       }
     },

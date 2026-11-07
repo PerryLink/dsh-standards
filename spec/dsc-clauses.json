@@ -185,7 +185,7 @@
       "advisory": false,
       "docs": "31-DS-C条款.md#c-16-动态执行",
       "parent": null,
-      "note": "security scope only; eval/Function/vm/_compile/process.binding can FAIL; bare child_process is WARN"
+      "note": "security scope only; eval/Function/vm/_compile/process.binding can FAIL; bare child_process is WARN; 1.6.6 vendor eval/Function is WARN (--strict-vendor restores FAIL)"
     },
     {
       "dsc": "DSC-17",

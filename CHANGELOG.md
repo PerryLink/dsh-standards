@@ -1,3 +1,16 @@
+## 1.6.6 — 2026-11-07
+
+### Fixed
+
+- DSC-16 vendor-aware：`vendor/`、`node_modules/`、`third_party/`、`deps/` 路径，打包器 `//#region node_modules/...` 区间（按命中行判定库名），`schemastery`/`ajv`/`lodash` 库指纹/库形文件名，或同目录（`src/` 外）强证据，现在把 `eval`/`new Function` 降为 WARN（detail 记 `C-16.1` + `vendor: true`），不再进入 `security.blocking`。
+- 新增 `--strict-vendor`（别名 `--no-vendor-exempt`）恢复 FAIL；默认行为对非 vendor 代码零变化。`vm.*`、`module._compile`、`process.binding`、危险子进程、base64+eval 永不豁免；`package.json` 依赖仅作佐证。
+- `dsh-composer-history@0.8.16`（`lib/index.js:295` 内联 schemastery）由 fail/exit 1 → warn/exit 0；`--strict-vendor` 仍 fail/exit 1。
+- conformance schema 的 `details[]` 新增加性 `vendor` 字段；31 号文 C-16、`CHANGELOG-RULES.md` 同步。
+
+### Verified
+
+- `npm test` 301/301；新增 3 个 fixture（bundle / vendor 路径 / 仅声明依赖的诱饵）与 2 个测试。
+
 ## 1.6.5 — 2026-11-07
 
 - 31 号文 C-17 环境变量枚举的判定句与实现对齐（单独 PASS，同闭包出站才 WARN）。

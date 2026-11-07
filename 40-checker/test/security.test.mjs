@@ -26,11 +26,11 @@ function declarationsOfFixture(name) {
   return checkCapabilities(manifest.manifest, sources, {})
 }
 
-function securityOfFixture(name) {
+function securityOfFixture(name, options = {}) {
   const dir = path.join(SECURITY_FIXTURES, name)
   const manifest = runManifestChecks(dir)
   const { sources } = readSourcesWithStats(dir)
-  const checks = runSecurityChecks({ dir, manifest: manifest.manifest, sources, entry: manifest.entry, kind: manifest.kind })
+  const checks = runSecurityChecks({ dir, manifest: manifest.manifest, sources, entry: manifest.entry, kind: manifest.kind, ...options })
   return new Map(checks.map(item => [item.id, item]))
 }
 
@@ -463,6 +463,56 @@ test('DSC-16: download-and-run subprocess commands FAIL; plain subprocess and im
   for (const name of ['sec16-subprocess-safe', 'sec16-import-only']) {
     assert.equal(securityOfFixture(name).get('DSC-16').result, 'WARN', name)
   }
+})
+
+test('DSC-16: a vendored eval/new Function is WARN, not blocking; --strict-vendor restores FAIL', () => {
+  const bundle = securityOfFixture('sec16-vendor-bundle').get('DSC-16')
+  assert.equal(bundle.result, 'WARN', bundle.reason)
+  const bundleDetail = bundle.details.find(item => item.item === 'C-16.1')
+  assert.equal(bundleDetail.result, 'WARN')
+  assert.equal(bundleDetail.vendor, true)
+  assert.match(bundleDetail.reason, /@deepseek-ai\/schemastery/)
+  assert.match(bundle.reason, /vendor-exempt/)
+  assert.match(bundle.reason, /--strict-vendor/)
+
+  const pathVendor = securityOfFixture('sec16-vendor-path').get('DSC-16')
+  assert.equal(pathVendor.result, 'WARN', pathVendor.reason)
+  assert.ok(pathVendor.details.some(item => item.item === 'C-16.1' && item.result === 'WARN' && item.vendor === true && /vendored path/.test(item.reason)), JSON.stringify(pathVendor.details))
+
+  const strict = securityOfFixture('sec16-vendor-bundle', { strictVendor: true }).get('DSC-16')
+  assert.equal(strict.result, 'FAIL')
+  const strictDetail = strict.details.find(item => item.item === 'C-16.1')
+  assert.equal(strictDetail.result, 'FAIL')
+  assert.equal(strictDetail.vendor, true)
+  assert.match(strictDetail.reason, /--strict-vendor keeps FAIL/)
+
+  // A declared vendor dependency alone is not evidence: first-party eval/Function
+  // (and the existing non-vendor fixture) still FAIL.
+  assert.equal(securityOfFixture('sec16-vendor-decoy').get('DSC-16').result, 'FAIL')
+  assert.equal(securityOfFixture('sec16-eval').get('DSC-16').result, 'FAIL')
+
+  // The downgraded finding lands in security.warn, never security.blocking.
+  const dir = path.join(SECURITY_FIXTURES, 'sec16-vendor-bundle')
+  const manifest = runManifestChecks(dir)
+  const { sources } = readSourcesWithStats(dir)
+  const checks = runSecurityChecks({ dir, manifest: manifest.manifest, sources, entry: manifest.entry, kind: manifest.kind })
+  const view = buildSecurityView(checks, 'security')
+  assert.deepEqual(view.blocking, [])
+  assert.ok(view.warn.includes('DSC-16'))
+})
+
+test('CLI: --strict-vendor / --no-vendor-exempt restore the DSC-16 FAIL; default stays WARN', () => {
+  const dir = path.join(SECURITY_FIXTURES, 'sec16-vendor-bundle')
+  const relaxed = runCli(dir, ['--scope', 'security', '--no-exec'])
+  assert.equal(relaxed.code, 0, relaxed.stderr)
+  assert.deepEqual(relaxed.report.security.blocking, [])
+  assert.ok(relaxed.report.security.warn.includes('DSC-16'))
+  const strict = runCli(dir, ['--scope', 'security', '--no-exec', '--strict-vendor'])
+  assert.equal(strict.code, 1, strict.stderr)
+  assert.ok(strict.report.security.blocking.includes('DSC-16'))
+  const alias = runCli(dir, ['--scope', 'security', '--no-exec', '--no-vendor-exempt'])
+  assert.equal(alias.code, 1, alias.stderr)
+  assert.ok(alias.report.security.blocking.includes('DSC-16'))
 })
 
 test('DSC-15: network download plus dynamic require FAILs; a literal require stays WARN', () => {

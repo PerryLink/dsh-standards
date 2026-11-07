@@ -57,7 +57,7 @@ dsh-standards check <package-dir> \
 | 项 | security scope 判定 | 触发 |
 |---|---|---|
 | `DSC-15` 生命周期脚本 | **blocking**（可 FAIL） | 安装期 `curl\|sh`、`base64 -d`、`node -e`、`sh -c`、`powershell -enc`、引用缺失脚本、写 `$HOME`/`/etc` |
-| `DSC-16` 动态执行 | **blocking**（可 FAIL） | `eval`/`new Function(非空)`/`vm`/`module._compile`/`process.binding` → FAIL；裸 `child_process` → WARN；静态危险子进程命令 1.6.2 起 FAIL |
+| `DSC-16` 动态执行 | **blocking**（可 FAIL） | `eval`/`new Function(非空)`/`vm`/`module._compile`/`process.binding` → FAIL；裸 `child_process` → WARN；静态危险子进程命令 1.6.2 起 FAIL；1.6.6 起 vendor/第三方文件内的 `eval`/`new Function` → WARN（`--strict-vendor` 恢复 FAIL） |
 | `DSC-17` 敏感文件 | **blocking**（可 FAIL） | 直接读 `~/.ssh`、`$DSH_HOME` credentials、`id_rsa`、`.aws`、`.npmrc`、`.netrc` 等；`.env` 只 WARN |
 | `DSC-18` 外联端点 | **advisory**（永不 FAIL） | 非 https、userinfo、公网裸 IP、webhook/paste/ngrok/onion、未披露端点 |
 | `DSC-19` 混淆/二进制 | **advisory** | 二进制 sha256、超长单行、大块 base64、高熵；只登记不判恶 |

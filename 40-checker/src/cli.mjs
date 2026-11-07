@@ -49,6 +49,9 @@ Options:
   --max-files <n>            source scan file budget (default: 400)
   --max-bytes <n>            source scan byte budget (default: 2000000)
   --no-exec                  skip L1-L3 entirely (reported as not-run/NA, never PASS)
+  --strict-vendor            DSC-16: do not downgrade eval/new Function in vendored/third-party
+                             files to WARN (alias: --no-vendor-exempt); the default keeps the
+                             historical FAIL for first-party code and exempts vendored files only
   --static-only              M1 mode: listing profile, only C-1/C-2/C-3/C-11/C-12/C-13; C-4..C-9 are out of scope
   --treat-as-plugin          run L1-L3 on a bundle's server entry (lib/index.js, index.js, lib/public-entry.js, src/index.ts)
   --entry-runtime require|server-entry  entry scope: require full G0-G3 (default) or accept server-entry proxy (not bundle)
@@ -90,6 +93,7 @@ function parseArgs(argv) {
     maxFiles: 400,
     maxBytes: 2_000_000,
     noExec: false,
+    strictVendor: false,
     staticOnly: false,
     treatAsPlugin: false,
     entryRuntime: 'require',
@@ -143,6 +147,8 @@ function parseArgs(argv) {
       case '--max-bytes': options.maxBytes = Number(value()); break
       case '--out': options.out = value(); break
       case '--no-exec': options.noExec = true; break
+      case '--strict-vendor': options.strictVendor = true; break
+      case '--no-vendor-exempt': options.strictVendor = true; break
       case '--static-only': options.staticOnly = true; break
       case '--treat-as-plugin': options.treatAsPlugin = true; break
       case '--entry-runtime': options.entryRuntime = value(); break
@@ -605,7 +611,7 @@ export async function main(argv = process.argv.slice(2)) {
   ]
   const declarationAdjusted = declarationChecks.map(item => (item.result === 'WARN' && ['DSC-11', 'DSC-13'].includes(item.id) ? { ...item, advisory: true } : item))
   const advisoryChecks = [checkImportTimeAdvisory(sources, entry?.relative, scan)]
-  const securityChecks = runSecurityChecks({ dir, manifest, sources, entry, kind })
+  const securityChecks = runSecurityChecks({ dir, manifest, sources, entry, kind, strictVendor: options.strictVendor })
 
   if (options.scope === 'entry' && options.entryRuntime === 'server-entry' && kind !== 'plugin') options.treatAsPlugin = true
   let runtimeKind = kind

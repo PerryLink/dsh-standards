@@ -513,7 +513,7 @@
   "C-16.1": {
     "title": "eval / new Function 属于 code:dynamic",
     "why": "它们绕过静态审阅，常与解码/混淆载荷组合出现。",
-    "fix": "不要用 eval/new Function；把需要的行为写成静态函数。空参 new Function(\"\") 探针不判定。",
+    "fix": "不要用 eval/new Function；把需要的行为写成静态函数。空参 new Function(\"\") 探针不判定。vendor/第三方文件内的命中只判 WARN，可用 --strict-vendor 复核。",
     "docs": "docs/security.md#4-files-subprocesses-and-dynamic-execution-dsc-15-dsc-16-dsc-17-dsc-19",
     "severityHint": "fail"
   },

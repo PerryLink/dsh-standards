@@ -875,15 +875,15 @@ export function apply(ctx: Context) {
 
 ### C-16 动态执行
 
-> **判定**：**blocking**（仅 `--scope security`）。动态执行默认不可审计；本项没有"声明后放行"的例外，命中即 FAIL。
+> **判定**：**blocking**（仅 `--scope security`）。动态执行默认不可审计；本项没有"声明后放行"的例外，非 vendor 命中即 FAIL；1.6.6 起 vendor 文件内的 `eval`/`new Function` 仅降为 WARN（不是 PASS，可用 `--strict-vendor` 恢复 FAIL）。
 
 **要求（祈使句）**：服务端入口闭包不得使用 `eval`、`new Function`（空参探针除外）、`vm.runIn*`/`vm.Script`/`vm.createContext`、`module._compile`、`process.binding`；不得直接 `require`/`import` `child_process` 绕过 `ctx.subprocess`。
 
-**判定方式**：L0 静态（DSC-16）。只扫服务端入口及其**本地相对 import 闭包**；`lib/client.js`/浏览器 bundle 不扫（避免把打包器探针当插件行为）；`new Function("")` / `new Function()` 空参探针豁免。1.6.1 对裸 `child_process` 只 WARN；1.6.2 起对静态可判为下载后执行/解码执行的危险命令升级 FAIL。
+**判定方式**：L0 静态（DSC-16）。只扫服务端入口及其**本地相对 import 闭包**；`lib/client.js`/浏览器 bundle 不扫（避免把打包器探针当插件行为）；`new Function("")` / `new Function()` 空参探针豁免。1.6.1 对裸 `child_process` 只 WARN；1.6.2 起对静态可判为下载后执行/解码执行的危险命令升级 FAIL；1.6.6 起 vendor/第三方文件内的 `eval`/`new Function` 降为 WARN（detail 记 `C-16.1` + `vendor: true` + 理由），默认可用 `--strict-vendor`（别名 `--no-vendor-exempt`）恢复 FAIL。
 
 | 子项 | 检查 | 结果 |
 |---|---|---|
-| C-16.1 | 闭包内 `eval`、`new Function(非空)`、`module._compile`、`process.binding`；1.6.2 起含静态可判的危险子进程命令（下载后执行/解码执行） | 命中 → FAIL |
+| C-16.1 | 闭包内 `eval`、`new Function(非空)`、`module._compile`、`process.binding`；1.6.2 起含静态可判的危险子进程命令（下载后执行/解码执行）；1.6.6 起 vendor 文件内的 `eval`/`new Function` 单独降级 | 非 vendor → FAIL；vendor → WARN（`vendor: true`；`--strict-vendor` 恢复 FAIL） |
 | C-16.2 | 闭包内 `vm.runIn*`、`vm.Script`、`vm.createContext` | 命中 → FAIL |
 | C-16.3 | 闭包内 `require('child_process')` / `import('node:child_process')` 等裸子进程入口；空参 `new Function("")`/`lib/client.js` 豁免 | 裸入口 → WARN（1.6.1 危险子进程命令也只 WARN；1.6.2 起改判 C-16.1 FAIL）；空参/client → 不计负 |
 | C-16.4 | 字符串拼接 `import()`、`Function(atob(...))`、运行时从远程取代码；package import/解析失败 | 静态不可判 → `not-run`/`partial`，不冒充 PASS |
@@ -893,11 +893,13 @@ export function apply(ctx: Context) {
 | 值 | 条件 |
 |---|---|
 | PASS | C-16.1/C-16.2/C-16.3 均无命中；C-16.4 的 package import/unresolved 只写 `coverage: partial`，不改 PASS |
-| WARN | 仅 C-16.3 命中（裸 `child_process`） |
-| FAIL | C-16.1 或 C-16.2 任一命中 |
+| WARN | 仅 C-16.3 命中（裸 `child_process`）；或仅 vendor 文件内的 C-16.1 命中（不进入 `security.blocking`；`--strict-vendor` 下仍 FAIL） |
+| FAIL | 非 vendor 文件的 C-16.1 或 C-16.2 任一命中；或任意文件的 base64 混淆执行（vendor 也不豁免） |
 | NA | 没有可扫描的源文件；或 `dsh.kind` 非 plugin/bundle |
 
 **误报与抑制**：打包进 bundle 的 ajv 会用 `new Function("")` 探 `allowsEval`（`dsh-budget/lib/client.js`、`dsh-library/lib/index.js`），空参豁免；浏览器 bundle 不扫。Babel/TS 解析失败记 `ERROR`/`not-run`，不判 PASS；AST 只认真实调用，不把 `typeof eval` 当执行。
+
+**vendor/第三方源码（1.6.6，`DSC-16` 专用）**：只有 `eval()` / `new Function()` 可降级，且文件须满足下列之一：路径含 `node_modules/`、`vendor/`、`third_party/`、`deps/`；有打包器 `//#region node_modules/...` 区间（按命中行所在区间判定库名）；有 `schemastery`/`ajv`/`lodash` 库指纹或库形文件名；或同目录（`src/` 外）有上述强证据。`package.json` 的 `dependencies`/`devDependencies` 含该库只作佐证，**单独不足以豁免**（防止以声明依赖换取 `eval` 放行）。`vm.*`、`module._compile`、`process.binding`、危险子进程命令、base64+eval 一律不豁免；降级结果为 WARN（永不 PASS），`--strict-vendor` 恢复 FAIL。该识别是启发式、可伪造，不构成"第三方代码安全"的证明。
 
 **与 DSC 的对应**：`DSC-16`。扩展 `C-11.2` 触发表：C-11.2 只认 `ctx.*`、裸 `fetch` 等文本，不认 `eval`/`vm`/node 内置模块；C-10.4 只覆盖 import 期 fs/子进程，不覆盖 eval。动态执行没有声明放行（checker 不读取 `code:dynamic` 之类的字段）。
 
