@@ -52,7 +52,9 @@ const FORBIDDEN = new Set(['advice', 'issuer', 'recordHash', 'verifyUrl', 'score
 const NOT_CLAIMED = ['official', 'certification', 'security-audit', 'endorsement', 'ordering', 'comparison', 'warranty']
 const CHECK_KEYS = new Set(['id', 'result', 'coverage'])
 const SCOPE_KEYS = new Set(['dsh', 'cordis', 'platform'])
-const CHECKED_BY_KEYS = new Set(['checker', 'command'])
+const CHECKED_BY_KEYS = new Set(['checker', 'command', 'securityCommand'])
+const SECURITY_KEYS = new Set(['state', 'checks', 'summary', 'command'])
+const SECURITY_STATES = new Set(['checked', 'partial', 'not-run'])
 const REPO_GIT_SHORTHAND = /^github:([^/]+\/[^/]+?)(?:\.git)?$/
 
 function usage() {
@@ -76,6 +78,8 @@ Options:
   --tarball-sha256 <hex>   explicit tarball sha256 (checked against --tarball)
   --report <file>          dsh-conformance/1 checker report; its checks are
                            reduced to {id,result,coverage} (no details)
+  --security-report <file> optional dsh-conformance/1 report from --scope security;
+                           adds a top-level security block (checks + counts)
   --checked-command <s>    command recorded in checkedBy.command
   --evidence-url <url>     optional https evidence URL (url + reportUrl)
   --evidence-file <file>   hash this file into evidence.sha256/reportSha256
@@ -129,7 +133,7 @@ function parseArgs(argv) {
     today: null, todayProvided: false, ttlDays: 90,
     name: null, version: null, packageDir: null,
     tarball: null, tarballSha256: null,
-    report: null, checkedCommand: null,
+    report: null, securityReport: null, checkedCommand: null,
     evidenceUrl: null, evidenceFile: null, evidenceSha256: null,
     checkerVersion: null, checkerSha: null,
     indexUrl: 'https://awesome-dsh-plugin.com/index.json',
@@ -155,6 +159,7 @@ function parseArgs(argv) {
     else if (arg === '--tarball') options.tarball = next()
     else if (arg === '--tarball-sha256') options.tarballSha256 = next().toLowerCase()
     else if (arg === '--report') options.report = next()
+    else if (arg === '--security-report') options.securityReport = next()
     else if (arg === '--checked-command') options.checkedCommand = next()
     else if (arg === '--evidence-url') options.evidenceUrl = next()
     else if (arg === '--evidence-file') options.evidenceFile = next()
@@ -285,6 +290,41 @@ function extractChecks(report, name, version) {
   })
 }
 
+function buildSecurity(report, name, version) {
+  if (!report) return null
+  if (!Array.isArray(report.checks)) throw new Error('--security-report checks must be an array')
+  if (report.subject && report.subject.name && report.subject.name !== name) {
+    throw new Error(`--security-report subject.name ${report.subject.name} does not match ${name}`)
+  }
+  if (report.subject && report.subject.version && report.subject.version !== version) {
+    throw new Error(`--security-report subject.version ${report.subject.version} does not match ${version}`)
+  }
+  const checks = report.checks.map(check => {
+    if (!check || typeof check !== 'object') throw new Error('--security-report checks must be objects')
+    if (typeof check.id !== 'string' || typeof check.result !== 'string' || typeof check.coverage !== 'string') {
+      throw new Error('--security-report checks need id/result/coverage')
+    }
+    return { id: check.id, result: check.result, coverage: check.coverage }
+  }).sort((a, b) => a.id.localeCompare(b.id))
+  const count = (predicate) => checks.filter(predicate).length
+  const checked = count(c => c.coverage !== 'not-run')
+  const total = checks.length
+  const state = checked === 0 ? 'not-run' : checked === total ? 'checked' : 'partial'
+  return {
+    state,
+    checks,
+    summary: {
+      total,
+      checked,
+      blocking: count(c => c.result === 'FAIL'),
+      warn: count(c => c.result === 'WARN'),
+      na: count(c => c.result === 'NA'),
+      notRun: count(c => c.coverage === 'not-run'),
+    },
+    command: 'dsh-standards check <package-dir> --scope security --json',
+  }
+}
+
 function summarizeNotChecked(audit, checks, hasReport) {
   const items = []
   const entry = audit?.levels?.entry && typeof audit.levels.entry === 'object' ? audit.levels.entry : {}
@@ -386,6 +426,8 @@ function entryFromAudit(audit, options, levelFile) {
 
   const report = options.report ? readJson(path.resolve(options.report), '--report') : null
   const checks = extractChecks(report, name, version)
+  const securityReport = options.securityReport ? readJson(path.resolve(options.securityReport), '--security-report') : null
+  const security = buildSecurity(securityReport, name, version)
 
   const auditLevels = audit.levels && typeof audit.levels === 'object' ? audit.levels : {}
   const levels = {
@@ -457,8 +499,9 @@ function entryFromAudit(audit, options, levelFile) {
       scope: inferScope(meta, audit),
       levels,
       checks,
+      ...(security ? { security } : {}),
       evidence,
-      checkedBy: { checker, command },
+      checkedBy: security ? { checker, command, securityCommand: security.command } : { checker, command },
       notChecked: summarizeNotChecked(audit, checks, report !== null),
       validity: { checkedAt, expiresAt, policy: `${options.ttlDays}d` },
       lifecycle: 'active',
@@ -623,6 +666,30 @@ function validateSidecar(sidecar) {
           throw new Error(`${key}: checkedBy.${field} is required`)
         }
       }
+    }
+    if (entry.security !== undefined) {
+      const sec = entry.security
+      if (!sec || typeof sec !== 'object' || Array.isArray(sec)) throw new Error(`${key}: security must be an object`)
+      for (const field of Object.keys(sec)) {
+        if (!SECURITY_KEYS.has(field)) throw new Error(`${key}: security.${field} is not part of the sidecar contract`)
+      }
+      if (!SECURITY_STATES.has(sec.state)) throw new Error(`${key}: security.state is invalid`)
+      if (!Array.isArray(sec.checks)) throw new Error(`${key}: security.checks must be an array`)
+      for (const check of sec.checks) {
+        if (!check || typeof check !== 'object') throw new Error(`${key}: security.checks must be objects`)
+        for (const field of Object.keys(check)) {
+          if (!CHECK_KEYS.has(field)) throw new Error(`${key}: security.checks.${field} is not part of the sidecar contract`)
+        }
+        for (const field of ['id', 'result', 'coverage']) {
+          if (typeof check[field] !== 'string' || check[field] === '') throw new Error(`${key}: security.checks.${field} is required`)
+        }
+      }
+      const summary = sec.summary
+      if (!summary || typeof summary !== 'object') throw new Error(`${key}: security.summary must be an object`)
+      for (const field of ['total', 'checked', 'blocking', 'warn', 'na', 'notRun']) {
+        if (!Number.isInteger(summary[field]) || summary[field] < 0) throw new Error(`${key}: security.summary.${field} is invalid`)
+      }
+      if (typeof sec.command !== 'string' || sec.command === '') throw new Error(`${key}: security.command is required`)
     }
     if (entry.notChecked !== undefined) {
       if (!Array.isArray(entry.notChecked)) throw new Error(`${key}: notChecked must be an array`)

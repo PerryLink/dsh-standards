@@ -118,13 +118,138 @@
           "coverage": "full"
         }
       ],
+      "security": {
+        "state": "partial",
+        "checks": [
+          {
+            "id": "DSC-01",
+            "result": "PASS",
+            "coverage": "full"
+          },
+          {
+            "id": "DSC-02",
+            "result": "PASS",
+            "coverage": "full"
+          },
+          {
+            "id": "DSC-03",
+            "result": "NA",
+            "coverage": "not-run"
+          },
+          {
+            "id": "DSC-04",
+            "result": "PASS",
+            "coverage": "partial"
+          },
+          {
+            "id": "DSC-05",
+            "result": "PASS",
+            "coverage": "partial"
+          },
+          {
+            "id": "DSC-06",
+            "result": "PASS",
+            "coverage": "partial"
+          },
+          {
+            "id": "DSC-07",
+            "result": "PASS",
+            "coverage": "partial"
+          },
+          {
+            "id": "DSC-08",
+            "result": "PASS",
+            "coverage": "partial"
+          },
+          {
+            "id": "DSC-09",
+            "result": "PASS",
+            "coverage": "partial"
+          },
+          {
+            "id": "DSC-10",
+            "result": "PASS",
+            "coverage": "full"
+          },
+          {
+            "id": "DSC-11",
+            "result": "WARN",
+            "coverage": "full"
+          },
+          {
+            "id": "DSC-12",
+            "result": "PASS",
+            "coverage": "full"
+          },
+          {
+            "id": "DSC-13",
+            "result": "WARN",
+            "coverage": "full"
+          },
+          {
+            "id": "DSC-14",
+            "result": "NA",
+            "coverage": "not-run"
+          },
+          {
+            "id": "DSC-15",
+            "result": "PASS",
+            "coverage": "full"
+          },
+          {
+            "id": "DSC-16",
+            "result": "PASS",
+            "coverage": "full"
+          },
+          {
+            "id": "DSC-17",
+            "result": "PASS",
+            "coverage": "partial"
+          },
+          {
+            "id": "DSC-18",
+            "result": "PASS",
+            "coverage": "full"
+          },
+          {
+            "id": "DSC-19",
+            "result": "PASS",
+            "coverage": "full"
+          },
+          {
+            "id": "DSC-20",
+            "result": "PASS",
+            "coverage": "full"
+          },
+          {
+            "id": "DSC-21",
+            "result": "PASS",
+            "coverage": "partial"
+          },
+          {
+            "id": "DSC-22",
+            "result": "NA",
+            "coverage": "not-run"
+          }
+        ],
+        "summary": {
+          "total": 22,
+          "checked": 19,
+          "blocking": 0,
+          "warn": 2,
+          "na": 3,
+          "notRun": 3
+        },
+        "command": "dsh-standards check <package-dir> --scope security --json"
+      },
       "evidence": {
         "sha256": "8a3a6f00d87f3438d96304a5bd1701326c86927a8507449fbf3b3b7e354b0b33",
         "reportSha256": "8a3a6f00d87f3438d96304a5bd1701326c86927a8507449fbf3b3b7e354b0b33"
       },
       "checkedBy": {
         "checker": "dsh-standards@1.6.6 (dsh-plugin-verify@0.1.0)",
-        "command": "dsh-levels <package-dir> --no-runtime --format json"
+        "command": "dsh-levels <package-dir> --no-runtime --format json",
+        "securityCommand": "dsh-standards check <package-dir> --scope security --json"
       },
       "notChecked": [
         "ENTRY:runtime (claim=static; not exercised)",
@@ -238,13 +363,138 @@
           "coverage": "full"
         }
       ],
+      "security": {
+        "state": "partial",
+        "checks": [
+          {
+            "id": "DSC-01",
+            "result": "PASS",
+            "coverage": "full"
+          },
+          {
+            "id": "DSC-02",
+            "result": "FAIL",
+            "coverage": "full"
+          },
+          {
+            "id": "DSC-03",
+            "result": "NA",
+            "coverage": "not-run"
+          },
+          {
+            "id": "DSC-04",
+            "result": "PASS",
+            "coverage": "partial"
+          },
+          {
+            "id": "DSC-05",
+            "result": "PASS",
+            "coverage": "partial"
+          },
+          {
+            "id": "DSC-06",
+            "result": "PASS",
+            "coverage": "partial"
+          },
+          {
+            "id": "DSC-07",
+            "result": "PASS",
+            "coverage": "partial"
+          },
+          {
+            "id": "DSC-08",
+            "result": "PASS",
+            "coverage": "partial"
+          },
+          {
+            "id": "DSC-09",
+            "result": "PASS",
+            "coverage": "partial"
+          },
+          {
+            "id": "DSC-10",
+            "result": "NA",
+            "coverage": "partial"
+          },
+          {
+            "id": "DSC-11",
+            "result": "WARN",
+            "coverage": "full"
+          },
+          {
+            "id": "DSC-12",
+            "result": "PASS",
+            "coverage": "full"
+          },
+          {
+            "id": "DSC-13",
+            "result": "WARN",
+            "coverage": "full"
+          },
+          {
+            "id": "DSC-14",
+            "result": "NA",
+            "coverage": "not-run"
+          },
+          {
+            "id": "DSC-15",
+            "result": "PASS",
+            "coverage": "full"
+          },
+          {
+            "id": "DSC-16",
+            "result": "WARN",
+            "coverage": "partial"
+          },
+          {
+            "id": "DSC-17",
+            "result": "WARN",
+            "coverage": "full"
+          },
+          {
+            "id": "DSC-18",
+            "result": "PASS",
+            "coverage": "full"
+          },
+          {
+            "id": "DSC-19",
+            "result": "PASS",
+            "coverage": "full"
+          },
+          {
+            "id": "DSC-20",
+            "result": "PASS",
+            "coverage": "full"
+          },
+          {
+            "id": "DSC-21",
+            "result": "PASS",
+            "coverage": "partial"
+          },
+          {
+            "id": "DSC-22",
+            "result": "NA",
+            "coverage": "not-run"
+          }
+        ],
+        "summary": {
+          "total": 22,
+          "checked": 19,
+          "blocking": 1,
+          "warn": 4,
+          "na": 4,
+          "notRun": 3
+        },
+        "command": "dsh-standards check <package-dir> --scope security --json"
+      },
       "evidence": {
         "sha256": "a65aa4975244351ce3468634b63f82763046dca801a07580725ac88314a83547",
         "reportSha256": "a65aa4975244351ce3468634b63f82763046dca801a07580725ac88314a83547"
       },
       "checkedBy": {
         "checker": "dsh-standards@1.6.6 (dsh-plugin-verify@0.1.0)",
-        "command": "dsh-levels <package-dir> --no-runtime --format json"
+        "command": "dsh-levels <package-dir> --no-runtime --format json",
+        "securityCommand": "dsh-standards check <package-dir> --scope security --json"
       },
       "notChecked": [
         "ENTRY:runtime (claim=static; not exercised)",
@@ -358,13 +608,138 @@
           "coverage": "full"
         }
       ],
+      "security": {
+        "state": "partial",
+        "checks": [
+          {
+            "id": "DSC-01",
+            "result": "PASS",
+            "coverage": "full"
+          },
+          {
+            "id": "DSC-02",
+            "result": "PASS",
+            "coverage": "full"
+          },
+          {
+            "id": "DSC-03",
+            "result": "NA",
+            "coverage": "not-run"
+          },
+          {
+            "id": "DSC-04",
+            "result": "PASS",
+            "coverage": "partial"
+          },
+          {
+            "id": "DSC-05",
+            "result": "PASS",
+            "coverage": "partial"
+          },
+          {
+            "id": "DSC-06",
+            "result": "PASS",
+            "coverage": "partial"
+          },
+          {
+            "id": "DSC-07",
+            "result": "PASS",
+            "coverage": "partial"
+          },
+          {
+            "id": "DSC-08",
+            "result": "PASS",
+            "coverage": "partial"
+          },
+          {
+            "id": "DSC-09",
+            "result": "PASS",
+            "coverage": "partial"
+          },
+          {
+            "id": "DSC-10",
+            "result": "PASS",
+            "coverage": "full"
+          },
+          {
+            "id": "DSC-11",
+            "result": "WARN",
+            "coverage": "full"
+          },
+          {
+            "id": "DSC-12",
+            "result": "PASS",
+            "coverage": "full"
+          },
+          {
+            "id": "DSC-13",
+            "result": "WARN",
+            "coverage": "full"
+          },
+          {
+            "id": "DSC-14",
+            "result": "NA",
+            "coverage": "not-run"
+          },
+          {
+            "id": "DSC-15",
+            "result": "PASS",
+            "coverage": "full"
+          },
+          {
+            "id": "DSC-16",
+            "result": "WARN",
+            "coverage": "partial"
+          },
+          {
+            "id": "DSC-17",
+            "result": "PASS",
+            "coverage": "partial"
+          },
+          {
+            "id": "DSC-18",
+            "result": "PASS",
+            "coverage": "full"
+          },
+          {
+            "id": "DSC-19",
+            "result": "WARN",
+            "coverage": "full"
+          },
+          {
+            "id": "DSC-20",
+            "result": "PASS",
+            "coverage": "full"
+          },
+          {
+            "id": "DSC-21",
+            "result": "PASS",
+            "coverage": "partial"
+          },
+          {
+            "id": "DSC-22",
+            "result": "NA",
+            "coverage": "not-run"
+          }
+        ],
+        "summary": {
+          "total": 22,
+          "checked": 19,
+          "blocking": 0,
+          "warn": 4,
+          "na": 3,
+          "notRun": 3
+        },
+        "command": "dsh-standards check <package-dir> --scope security --json"
+      },
       "evidence": {
         "sha256": "1b1fcbbe1103b2cb9891412232cb81628045d909d8d28c5c81fa516edccb17d7",
         "reportSha256": "1b1fcbbe1103b2cb9891412232cb81628045d909d8d28c5c81fa516edccb17d7"
       },
       "checkedBy": {
         "checker": "dsh-standards@1.6.6 (dsh-plugin-verify@0.1.0)",
-        "command": "dsh-levels <package-dir> --no-runtime --format json"
+        "command": "dsh-levels <package-dir> --no-runtime --format json",
+        "securityCommand": "dsh-standards check <package-dir> --scope security --json"
       },
       "notChecked": [
         "ENTRY:runtime (claim=static; not exercised)",
@@ -478,13 +853,138 @@
           "coverage": "full"
         }
       ],
+      "security": {
+        "state": "partial",
+        "checks": [
+          {
+            "id": "DSC-01",
+            "result": "PASS",
+            "coverage": "full"
+          },
+          {
+            "id": "DSC-02",
+            "result": "PASS",
+            "coverage": "full"
+          },
+          {
+            "id": "DSC-03",
+            "result": "NA",
+            "coverage": "not-run"
+          },
+          {
+            "id": "DSC-04",
+            "result": "PASS",
+            "coverage": "partial"
+          },
+          {
+            "id": "DSC-05",
+            "result": "PASS",
+            "coverage": "partial"
+          },
+          {
+            "id": "DSC-06",
+            "result": "PASS",
+            "coverage": "partial"
+          },
+          {
+            "id": "DSC-07",
+            "result": "PASS",
+            "coverage": "partial"
+          },
+          {
+            "id": "DSC-08",
+            "result": "PASS",
+            "coverage": "partial"
+          },
+          {
+            "id": "DSC-09",
+            "result": "PASS",
+            "coverage": "partial"
+          },
+          {
+            "id": "DSC-10",
+            "result": "PASS",
+            "coverage": "full"
+          },
+          {
+            "id": "DSC-11",
+            "result": "WARN",
+            "coverage": "full"
+          },
+          {
+            "id": "DSC-12",
+            "result": "PASS",
+            "coverage": "full"
+          },
+          {
+            "id": "DSC-13",
+            "result": "WARN",
+            "coverage": "full"
+          },
+          {
+            "id": "DSC-14",
+            "result": "NA",
+            "coverage": "not-run"
+          },
+          {
+            "id": "DSC-15",
+            "result": "PASS",
+            "coverage": "full"
+          },
+          {
+            "id": "DSC-16",
+            "result": "WARN",
+            "coverage": "partial"
+          },
+          {
+            "id": "DSC-17",
+            "result": "PASS",
+            "coverage": "partial"
+          },
+          {
+            "id": "DSC-18",
+            "result": "PASS",
+            "coverage": "full"
+          },
+          {
+            "id": "DSC-19",
+            "result": "WARN",
+            "coverage": "full"
+          },
+          {
+            "id": "DSC-20",
+            "result": "PASS",
+            "coverage": "full"
+          },
+          {
+            "id": "DSC-21",
+            "result": "PASS",
+            "coverage": "partial"
+          },
+          {
+            "id": "DSC-22",
+            "result": "NA",
+            "coverage": "not-run"
+          }
+        ],
+        "summary": {
+          "total": 22,
+          "checked": 19,
+          "blocking": 0,
+          "warn": 4,
+          "na": 3,
+          "notRun": 3
+        },
+        "command": "dsh-standards check <package-dir> --scope security --json"
+      },
       "evidence": {
         "sha256": "973a30566d71d9db0510d790b3b70775013ae8ec37e63f1bd65886117fc0e987",
         "reportSha256": "973a30566d71d9db0510d790b3b70775013ae8ec37e63f1bd65886117fc0e987"
       },
       "checkedBy": {
         "checker": "dsh-standards@1.6.6 (dsh-plugin-verify@0.1.0)",
-        "command": "dsh-levels <package-dir> --no-runtime --format json"
+        "command": "dsh-levels <package-dir> --no-runtime --format json",
+        "securityCommand": "dsh-standards check <package-dir> --scope security --json"
       },
       "notChecked": [
         "ENTRY:runtime (claim=static; not exercised)",
@@ -598,13 +1098,138 @@
           "coverage": "full"
         }
       ],
+      "security": {
+        "state": "partial",
+        "checks": [
+          {
+            "id": "DSC-01",
+            "result": "PASS",
+            "coverage": "full"
+          },
+          {
+            "id": "DSC-02",
+            "result": "PASS",
+            "coverage": "full"
+          },
+          {
+            "id": "DSC-03",
+            "result": "NA",
+            "coverage": "not-run"
+          },
+          {
+            "id": "DSC-04",
+            "result": "PASS",
+            "coverage": "partial"
+          },
+          {
+            "id": "DSC-05",
+            "result": "PASS",
+            "coverage": "partial"
+          },
+          {
+            "id": "DSC-06",
+            "result": "PASS",
+            "coverage": "partial"
+          },
+          {
+            "id": "DSC-07",
+            "result": "PASS",
+            "coverage": "partial"
+          },
+          {
+            "id": "DSC-08",
+            "result": "PASS",
+            "coverage": "partial"
+          },
+          {
+            "id": "DSC-09",
+            "result": "PASS",
+            "coverage": "partial"
+          },
+          {
+            "id": "DSC-10",
+            "result": "PASS",
+            "coverage": "full"
+          },
+          {
+            "id": "DSC-11",
+            "result": "WARN",
+            "coverage": "full"
+          },
+          {
+            "id": "DSC-12",
+            "result": "PASS",
+            "coverage": "full"
+          },
+          {
+            "id": "DSC-13",
+            "result": "WARN",
+            "coverage": "full"
+          },
+          {
+            "id": "DSC-14",
+            "result": "NA",
+            "coverage": "not-run"
+          },
+          {
+            "id": "DSC-15",
+            "result": "PASS",
+            "coverage": "full"
+          },
+          {
+            "id": "DSC-16",
+            "result": "WARN",
+            "coverage": "partial"
+          },
+          {
+            "id": "DSC-17",
+            "result": "WARN",
+            "coverage": "partial"
+          },
+          {
+            "id": "DSC-18",
+            "result": "PASS",
+            "coverage": "full"
+          },
+          {
+            "id": "DSC-19",
+            "result": "WARN",
+            "coverage": "full"
+          },
+          {
+            "id": "DSC-20",
+            "result": "PASS",
+            "coverage": "full"
+          },
+          {
+            "id": "DSC-21",
+            "result": "PASS",
+            "coverage": "partial"
+          },
+          {
+            "id": "DSC-22",
+            "result": "NA",
+            "coverage": "not-run"
+          }
+        ],
+        "summary": {
+          "total": 22,
+          "checked": 19,
+          "blocking": 0,
+          "warn": 5,
+          "na": 3,
+          "notRun": 3
+        },
+        "command": "dsh-standards check <package-dir> --scope security --json"
+      },
       "evidence": {
         "sha256": "14dab775a49b9fa4c1aca5208921c9e02659f0d25512172ffa7828d2d281162b",
         "reportSha256": "14dab775a49b9fa4c1aca5208921c9e02659f0d25512172ffa7828d2d281162b"
       },
       "checkedBy": {
         "checker": "dsh-standards@1.6.6 (dsh-plugin-verify@0.1.0)",
-        "command": "dsh-levels <package-dir> --no-runtime --format json"
+        "command": "dsh-levels <package-dir> --no-runtime --format json",
+        "securityCommand": "dsh-standards check <package-dir> --scope security --json"
       },
       "notChecked": [
         "ENTRY:runtime (claim=static; not exercised)",
@@ -718,13 +1343,138 @@
           "coverage": "full"
         }
       ],
+      "security": {
+        "state": "partial",
+        "checks": [
+          {
+            "id": "DSC-01",
+            "result": "PASS",
+            "coverage": "full"
+          },
+          {
+            "id": "DSC-02",
+            "result": "PASS",
+            "coverage": "full"
+          },
+          {
+            "id": "DSC-03",
+            "result": "NA",
+            "coverage": "not-run"
+          },
+          {
+            "id": "DSC-04",
+            "result": "PASS",
+            "coverage": "partial"
+          },
+          {
+            "id": "DSC-05",
+            "result": "PASS",
+            "coverage": "partial"
+          },
+          {
+            "id": "DSC-06",
+            "result": "PASS",
+            "coverage": "partial"
+          },
+          {
+            "id": "DSC-07",
+            "result": "PASS",
+            "coverage": "partial"
+          },
+          {
+            "id": "DSC-08",
+            "result": "PASS",
+            "coverage": "partial"
+          },
+          {
+            "id": "DSC-09",
+            "result": "PASS",
+            "coverage": "partial"
+          },
+          {
+            "id": "DSC-10",
+            "result": "WARN",
+            "coverage": "partial"
+          },
+          {
+            "id": "DSC-11",
+            "result": "WARN",
+            "coverage": "full"
+          },
+          {
+            "id": "DSC-12",
+            "result": "PASS",
+            "coverage": "full"
+          },
+          {
+            "id": "DSC-13",
+            "result": "WARN",
+            "coverage": "full"
+          },
+          {
+            "id": "DSC-14",
+            "result": "NA",
+            "coverage": "not-run"
+          },
+          {
+            "id": "DSC-15",
+            "result": "PASS",
+            "coverage": "full"
+          },
+          {
+            "id": "DSC-16",
+            "result": "WARN",
+            "coverage": "partial"
+          },
+          {
+            "id": "DSC-17",
+            "result": "PASS",
+            "coverage": "partial"
+          },
+          {
+            "id": "DSC-18",
+            "result": "PASS",
+            "coverage": "full"
+          },
+          {
+            "id": "DSC-19",
+            "result": "WARN",
+            "coverage": "full"
+          },
+          {
+            "id": "DSC-20",
+            "result": "PASS",
+            "coverage": "full"
+          },
+          {
+            "id": "DSC-21",
+            "result": "PASS",
+            "coverage": "partial"
+          },
+          {
+            "id": "DSC-22",
+            "result": "NA",
+            "coverage": "not-run"
+          }
+        ],
+        "summary": {
+          "total": 22,
+          "checked": 19,
+          "blocking": 0,
+          "warn": 5,
+          "na": 3,
+          "notRun": 3
+        },
+        "command": "dsh-standards check <package-dir> --scope security --json"
+      },
       "evidence": {
         "sha256": "cb37513857d8cc4c3ea51bee76bb6f5059900584a72e0ae4072600c2214e08f9",
         "reportSha256": "cb37513857d8cc4c3ea51bee76bb6f5059900584a72e0ae4072600c2214e08f9"
       },
       "checkedBy": {
         "checker": "dsh-standards@1.6.6 (dsh-plugin-verify@0.1.0)",
-        "command": "dsh-levels <package-dir> --no-runtime --format json"
+        "command": "dsh-levels <package-dir> --no-runtime --format json",
+        "securityCommand": "dsh-standards check <package-dir> --scope security --json"
       },
       "notChecked": [
         "ENTRY:runtime (claim=static; not exercised)",
@@ -838,13 +1588,138 @@
           "coverage": "full"
         }
       ],
+      "security": {
+        "state": "partial",
+        "checks": [
+          {
+            "id": "DSC-01",
+            "result": "PASS",
+            "coverage": "full"
+          },
+          {
+            "id": "DSC-02",
+            "result": "PASS",
+            "coverage": "full"
+          },
+          {
+            "id": "DSC-03",
+            "result": "NA",
+            "coverage": "not-run"
+          },
+          {
+            "id": "DSC-04",
+            "result": "PASS",
+            "coverage": "partial"
+          },
+          {
+            "id": "DSC-05",
+            "result": "PASS",
+            "coverage": "partial"
+          },
+          {
+            "id": "DSC-06",
+            "result": "PASS",
+            "coverage": "partial"
+          },
+          {
+            "id": "DSC-07",
+            "result": "PASS",
+            "coverage": "partial"
+          },
+          {
+            "id": "DSC-08",
+            "result": "PASS",
+            "coverage": "partial"
+          },
+          {
+            "id": "DSC-09",
+            "result": "PASS",
+            "coverage": "partial"
+          },
+          {
+            "id": "DSC-10",
+            "result": "WARN",
+            "coverage": "full"
+          },
+          {
+            "id": "DSC-11",
+            "result": "WARN",
+            "coverage": "full"
+          },
+          {
+            "id": "DSC-12",
+            "result": "PASS",
+            "coverage": "full"
+          },
+          {
+            "id": "DSC-13",
+            "result": "WARN",
+            "coverage": "full"
+          },
+          {
+            "id": "DSC-14",
+            "result": "NA",
+            "coverage": "not-run"
+          },
+          {
+            "id": "DSC-15",
+            "result": "PASS",
+            "coverage": "full"
+          },
+          {
+            "id": "DSC-16",
+            "result": "WARN",
+            "coverage": "partial"
+          },
+          {
+            "id": "DSC-17",
+            "result": "PASS",
+            "coverage": "partial"
+          },
+          {
+            "id": "DSC-18",
+            "result": "PASS",
+            "coverage": "partial"
+          },
+          {
+            "id": "DSC-19",
+            "result": "PASS",
+            "coverage": "full"
+          },
+          {
+            "id": "DSC-20",
+            "result": "PASS",
+            "coverage": "full"
+          },
+          {
+            "id": "DSC-21",
+            "result": "PASS",
+            "coverage": "partial"
+          },
+          {
+            "id": "DSC-22",
+            "result": "NA",
+            "coverage": "not-run"
+          }
+        ],
+        "summary": {
+          "total": 22,
+          "checked": 19,
+          "blocking": 0,
+          "warn": 4,
+          "na": 3,
+          "notRun": 3
+        },
+        "command": "dsh-standards check <package-dir> --scope security --json"
+      },
       "evidence": {
         "sha256": "d51a4ef40ead65112e67267ada4418d1f8ee941e5a65c3af4bd7869ca8ae164a",
         "reportSha256": "d51a4ef40ead65112e67267ada4418d1f8ee941e5a65c3af4bd7869ca8ae164a"
       },
       "checkedBy": {
         "checker": "dsh-standards@1.6.6 (dsh-plugin-verify@0.1.0)",
-        "command": "dsh-levels <package-dir> --no-runtime --format json"
+        "command": "dsh-levels <package-dir> --no-runtime --format json",
+        "securityCommand": "dsh-standards check <package-dir> --scope security --json"
       },
       "notChecked": [
         "ENTRY:runtime (claim=static; not exercised)",
@@ -958,13 +1833,138 @@
           "coverage": "full"
         }
       ],
+      "security": {
+        "state": "partial",
+        "checks": [
+          {
+            "id": "DSC-01",
+            "result": "PASS",
+            "coverage": "full"
+          },
+          {
+            "id": "DSC-02",
+            "result": "PASS",
+            "coverage": "full"
+          },
+          {
+            "id": "DSC-03",
+            "result": "NA",
+            "coverage": "not-run"
+          },
+          {
+            "id": "DSC-04",
+            "result": "PASS",
+            "coverage": "partial"
+          },
+          {
+            "id": "DSC-05",
+            "result": "PASS",
+            "coverage": "partial"
+          },
+          {
+            "id": "DSC-06",
+            "result": "PASS",
+            "coverage": "partial"
+          },
+          {
+            "id": "DSC-07",
+            "result": "PASS",
+            "coverage": "partial"
+          },
+          {
+            "id": "DSC-08",
+            "result": "PASS",
+            "coverage": "partial"
+          },
+          {
+            "id": "DSC-09",
+            "result": "PASS",
+            "coverage": "partial"
+          },
+          {
+            "id": "DSC-10",
+            "result": "PASS",
+            "coverage": "partial"
+          },
+          {
+            "id": "DSC-11",
+            "result": "WARN",
+            "coverage": "full"
+          },
+          {
+            "id": "DSC-12",
+            "result": "PASS",
+            "coverage": "full"
+          },
+          {
+            "id": "DSC-13",
+            "result": "WARN",
+            "coverage": "full"
+          },
+          {
+            "id": "DSC-14",
+            "result": "NA",
+            "coverage": "not-run"
+          },
+          {
+            "id": "DSC-15",
+            "result": "PASS",
+            "coverage": "full"
+          },
+          {
+            "id": "DSC-16",
+            "result": "PASS",
+            "coverage": "partial"
+          },
+          {
+            "id": "DSC-17",
+            "result": "PASS",
+            "coverage": "partial"
+          },
+          {
+            "id": "DSC-18",
+            "result": "PASS",
+            "coverage": "full"
+          },
+          {
+            "id": "DSC-19",
+            "result": "WARN",
+            "coverage": "full"
+          },
+          {
+            "id": "DSC-20",
+            "result": "PASS",
+            "coverage": "full"
+          },
+          {
+            "id": "DSC-21",
+            "result": "PASS",
+            "coverage": "partial"
+          },
+          {
+            "id": "DSC-22",
+            "result": "NA",
+            "coverage": "not-run"
+          }
+        ],
+        "summary": {
+          "total": 22,
+          "checked": 19,
+          "blocking": 0,
+          "warn": 3,
+          "na": 3,
+          "notRun": 3
+        },
+        "command": "dsh-standards check <package-dir> --scope security --json"
+      },
       "evidence": {
         "sha256": "4afc84805bc03fb71f87101c16d23ea17f2817f78b9b13263fa804bb3cc2344e",
         "reportSha256": "4afc84805bc03fb71f87101c16d23ea17f2817f78b9b13263fa804bb3cc2344e"
       },
       "checkedBy": {
         "checker": "dsh-standards@1.6.6 (dsh-plugin-verify@0.1.0)",
-        "command": "dsh-levels <package-dir> --no-runtime --format json"
+        "command": "dsh-levels <package-dir> --no-runtime --format json",
+        "securityCommand": "dsh-standards check <package-dir> --scope security --json"
       },
       "notChecked": [
         "ENTRY:runtime (claim=static; not exercised)",
@@ -1078,13 +2078,138 @@
           "coverage": "full"
         }
       ],
+      "security": {
+        "state": "partial",
+        "checks": [
+          {
+            "id": "DSC-01",
+            "result": "PASS",
+            "coverage": "full"
+          },
+          {
+            "id": "DSC-02",
+            "result": "PASS",
+            "coverage": "full"
+          },
+          {
+            "id": "DSC-03",
+            "result": "NA",
+            "coverage": "not-run"
+          },
+          {
+            "id": "DSC-04",
+            "result": "PASS",
+            "coverage": "partial"
+          },
+          {
+            "id": "DSC-05",
+            "result": "PASS",
+            "coverage": "partial"
+          },
+          {
+            "id": "DSC-06",
+            "result": "PASS",
+            "coverage": "partial"
+          },
+          {
+            "id": "DSC-07",
+            "result": "PASS",
+            "coverage": "partial"
+          },
+          {
+            "id": "DSC-08",
+            "result": "PASS",
+            "coverage": "partial"
+          },
+          {
+            "id": "DSC-09",
+            "result": "PASS",
+            "coverage": "partial"
+          },
+          {
+            "id": "DSC-10",
+            "result": "PASS",
+            "coverage": "partial"
+          },
+          {
+            "id": "DSC-11",
+            "result": "WARN",
+            "coverage": "full"
+          },
+          {
+            "id": "DSC-12",
+            "result": "PASS",
+            "coverage": "full"
+          },
+          {
+            "id": "DSC-13",
+            "result": "WARN",
+            "coverage": "full"
+          },
+          {
+            "id": "DSC-14",
+            "result": "NA",
+            "coverage": "not-run"
+          },
+          {
+            "id": "DSC-15",
+            "result": "PASS",
+            "coverage": "full"
+          },
+          {
+            "id": "DSC-16",
+            "result": "WARN",
+            "coverage": "partial"
+          },
+          {
+            "id": "DSC-17",
+            "result": "WARN",
+            "coverage": "partial"
+          },
+          {
+            "id": "DSC-18",
+            "result": "PASS",
+            "coverage": "partial"
+          },
+          {
+            "id": "DSC-19",
+            "result": "PASS",
+            "coverage": "full"
+          },
+          {
+            "id": "DSC-20",
+            "result": "PASS",
+            "coverage": "full"
+          },
+          {
+            "id": "DSC-21",
+            "result": "PASS",
+            "coverage": "partial"
+          },
+          {
+            "id": "DSC-22",
+            "result": "NA",
+            "coverage": "not-run"
+          }
+        ],
+        "summary": {
+          "total": 22,
+          "checked": 19,
+          "blocking": 0,
+          "warn": 4,
+          "na": 3,
+          "notRun": 3
+        },
+        "command": "dsh-standards check <package-dir> --scope security --json"
+      },
       "evidence": {
         "sha256": "0437b34ea36bcfc8d24a4ff218aeae04d8be7aad38a359f1e3e1e5d2040d3894",
         "reportSha256": "0437b34ea36bcfc8d24a4ff218aeae04d8be7aad38a359f1e3e1e5d2040d3894"
       },
       "checkedBy": {
         "checker": "dsh-standards@1.6.6 (dsh-plugin-verify@0.1.0)",
-        "command": "dsh-levels <package-dir> --no-runtime --format json"
+        "command": "dsh-levels <package-dir> --no-runtime --format json",
+        "securityCommand": "dsh-standards check <package-dir> --scope security --json"
       },
       "notChecked": [
         "ENTRY:runtime (claim=static; not exercised)",
@@ -1198,13 +2323,138 @@
           "coverage": "full"
         }
       ],
+      "security": {
+        "state": "partial",
+        "checks": [
+          {
+            "id": "DSC-01",
+            "result": "PASS",
+            "coverage": "full"
+          },
+          {
+            "id": "DSC-02",
+            "result": "PASS",
+            "coverage": "full"
+          },
+          {
+            "id": "DSC-03",
+            "result": "NA",
+            "coverage": "not-run"
+          },
+          {
+            "id": "DSC-04",
+            "result": "PASS",
+            "coverage": "partial"
+          },
+          {
+            "id": "DSC-05",
+            "result": "PASS",
+            "coverage": "partial"
+          },
+          {
+            "id": "DSC-06",
+            "result": "PASS",
+            "coverage": "partial"
+          },
+          {
+            "id": "DSC-07",
+            "result": "PASS",
+            "coverage": "partial"
+          },
+          {
+            "id": "DSC-08",
+            "result": "PASS",
+            "coverage": "partial"
+          },
+          {
+            "id": "DSC-09",
+            "result": "PASS",
+            "coverage": "partial"
+          },
+          {
+            "id": "DSC-10",
+            "result": "PASS",
+            "coverage": "partial"
+          },
+          {
+            "id": "DSC-11",
+            "result": "WARN",
+            "coverage": "full"
+          },
+          {
+            "id": "DSC-12",
+            "result": "PASS",
+            "coverage": "full"
+          },
+          {
+            "id": "DSC-13",
+            "result": "WARN",
+            "coverage": "full"
+          },
+          {
+            "id": "DSC-14",
+            "result": "NA",
+            "coverage": "not-run"
+          },
+          {
+            "id": "DSC-15",
+            "result": "PASS",
+            "coverage": "full"
+          },
+          {
+            "id": "DSC-16",
+            "result": "WARN",
+            "coverage": "partial"
+          },
+          {
+            "id": "DSC-17",
+            "result": "PASS",
+            "coverage": "partial"
+          },
+          {
+            "id": "DSC-18",
+            "result": "PASS",
+            "coverage": "partial"
+          },
+          {
+            "id": "DSC-19",
+            "result": "WARN",
+            "coverage": "full"
+          },
+          {
+            "id": "DSC-20",
+            "result": "PASS",
+            "coverage": "full"
+          },
+          {
+            "id": "DSC-21",
+            "result": "PASS",
+            "coverage": "partial"
+          },
+          {
+            "id": "DSC-22",
+            "result": "NA",
+            "coverage": "not-run"
+          }
+        ],
+        "summary": {
+          "total": 22,
+          "checked": 19,
+          "blocking": 0,
+          "warn": 4,
+          "na": 3,
+          "notRun": 3
+        },
+        "command": "dsh-standards check <package-dir> --scope security --json"
+      },
       "evidence": {
         "sha256": "48a457a16a9951b454994d58869f36467c1d38c4d0c61258a7b8cae5087b7671",
         "reportSha256": "48a457a16a9951b454994d58869f36467c1d38c4d0c61258a7b8cae5087b7671"
       },
       "checkedBy": {
         "checker": "dsh-standards@1.6.6 (dsh-plugin-verify@0.1.0)",
-        "command": "dsh-levels <package-dir> --no-runtime --format json"
+        "command": "dsh-levels <package-dir> --no-runtime --format json",
+        "securityCommand": "dsh-standards check <package-dir> --scope security --json"
       },
       "notChecked": [
         "ENTRY:runtime (claim=static; not exercised)",
@@ -1318,13 +2568,138 @@
           "coverage": "full"
         }
       ],
+      "security": {
+        "state": "partial",
+        "checks": [
+          {
+            "id": "DSC-01",
+            "result": "PASS",
+            "coverage": "full"
+          },
+          {
+            "id": "DSC-02",
+            "result": "PASS",
+            "coverage": "full"
+          },
+          {
+            "id": "DSC-03",
+            "result": "NA",
+            "coverage": "not-run"
+          },
+          {
+            "id": "DSC-04",
+            "result": "PASS",
+            "coverage": "partial"
+          },
+          {
+            "id": "DSC-05",
+            "result": "PASS",
+            "coverage": "partial"
+          },
+          {
+            "id": "DSC-06",
+            "result": "PASS",
+            "coverage": "partial"
+          },
+          {
+            "id": "DSC-07",
+            "result": "PASS",
+            "coverage": "partial"
+          },
+          {
+            "id": "DSC-08",
+            "result": "PASS",
+            "coverage": "partial"
+          },
+          {
+            "id": "DSC-09",
+            "result": "PASS",
+            "coverage": "partial"
+          },
+          {
+            "id": "DSC-10",
+            "result": "PASS",
+            "coverage": "full"
+          },
+          {
+            "id": "DSC-11",
+            "result": "WARN",
+            "coverage": "full"
+          },
+          {
+            "id": "DSC-12",
+            "result": "PASS",
+            "coverage": "full"
+          },
+          {
+            "id": "DSC-13",
+            "result": "WARN",
+            "coverage": "full"
+          },
+          {
+            "id": "DSC-14",
+            "result": "NA",
+            "coverage": "not-run"
+          },
+          {
+            "id": "DSC-15",
+            "result": "PASS",
+            "coverage": "full"
+          },
+          {
+            "id": "DSC-16",
+            "result": "WARN",
+            "coverage": "partial"
+          },
+          {
+            "id": "DSC-17",
+            "result": "PASS",
+            "coverage": "partial"
+          },
+          {
+            "id": "DSC-18",
+            "result": "PASS",
+            "coverage": "partial"
+          },
+          {
+            "id": "DSC-19",
+            "result": "PASS",
+            "coverage": "full"
+          },
+          {
+            "id": "DSC-20",
+            "result": "PASS",
+            "coverage": "full"
+          },
+          {
+            "id": "DSC-21",
+            "result": "PASS",
+            "coverage": "partial"
+          },
+          {
+            "id": "DSC-22",
+            "result": "NA",
+            "coverage": "not-run"
+          }
+        ],
+        "summary": {
+          "total": 22,
+          "checked": 19,
+          "blocking": 0,
+          "warn": 3,
+          "na": 3,
+          "notRun": 3
+        },
+        "command": "dsh-standards check <package-dir> --scope security --json"
+      },
       "evidence": {
         "sha256": "c921153db38facae8eb604a1492cd45288a4c51daa6abf63e6b4c9e133a6aeea",
         "reportSha256": "c921153db38facae8eb604a1492cd45288a4c51daa6abf63e6b4c9e133a6aeea"
       },
       "checkedBy": {
         "checker": "dsh-standards@1.6.6 (dsh-plugin-verify@0.1.0)",
-        "command": "dsh-levels <package-dir> --no-runtime --format json"
+        "command": "dsh-levels <package-dir> --no-runtime --format json",
+        "securityCommand": "dsh-standards check <package-dir> --scope security --json"
       },
       "notChecked": [
         "ENTRY:runtime (claim=static; not exercised)",
@@ -1438,13 +2813,138 @@
           "coverage": "full"
         }
       ],
+      "security": {
+        "state": "partial",
+        "checks": [
+          {
+            "id": "DSC-01",
+            "result": "PASS",
+            "coverage": "full"
+          },
+          {
+            "id": "DSC-02",
+            "result": "FAIL",
+            "coverage": "full"
+          },
+          {
+            "id": "DSC-03",
+            "result": "NA",
+            "coverage": "not-run"
+          },
+          {
+            "id": "DSC-04",
+            "result": "PASS",
+            "coverage": "partial"
+          },
+          {
+            "id": "DSC-05",
+            "result": "PASS",
+            "coverage": "partial"
+          },
+          {
+            "id": "DSC-06",
+            "result": "PASS",
+            "coverage": "partial"
+          },
+          {
+            "id": "DSC-07",
+            "result": "PASS",
+            "coverage": "partial"
+          },
+          {
+            "id": "DSC-08",
+            "result": "PASS",
+            "coverage": "partial"
+          },
+          {
+            "id": "DSC-09",
+            "result": "PASS",
+            "coverage": "partial"
+          },
+          {
+            "id": "DSC-10",
+            "result": "PASS",
+            "coverage": "full"
+          },
+          {
+            "id": "DSC-11",
+            "result": "WARN",
+            "coverage": "full"
+          },
+          {
+            "id": "DSC-12",
+            "result": "PASS",
+            "coverage": "full"
+          },
+          {
+            "id": "DSC-13",
+            "result": "WARN",
+            "coverage": "full"
+          },
+          {
+            "id": "DSC-14",
+            "result": "NA",
+            "coverage": "not-run"
+          },
+          {
+            "id": "DSC-15",
+            "result": "PASS",
+            "coverage": "full"
+          },
+          {
+            "id": "DSC-16",
+            "result": "WARN",
+            "coverage": "partial"
+          },
+          {
+            "id": "DSC-17",
+            "result": "PASS",
+            "coverage": "partial"
+          },
+          {
+            "id": "DSC-18",
+            "result": "PASS",
+            "coverage": "partial"
+          },
+          {
+            "id": "DSC-19",
+            "result": "PASS",
+            "coverage": "full"
+          },
+          {
+            "id": "DSC-20",
+            "result": "PASS",
+            "coverage": "full"
+          },
+          {
+            "id": "DSC-21",
+            "result": "PASS",
+            "coverage": "partial"
+          },
+          {
+            "id": "DSC-22",
+            "result": "NA",
+            "coverage": "not-run"
+          }
+        ],
+        "summary": {
+          "total": 22,
+          "checked": 19,
+          "blocking": 1,
+          "warn": 3,
+          "na": 3,
+          "notRun": 3
+        },
+        "command": "dsh-standards check <package-dir> --scope security --json"
+      },
       "evidence": {
         "sha256": "52b465618e9737961f42c4ef99122f317510b72a00555ed0384b425de686c621",
         "reportSha256": "52b465618e9737961f42c4ef99122f317510b72a00555ed0384b425de686c621"
       },
       "checkedBy": {
         "checker": "dsh-standards@1.6.6 (dsh-plugin-verify@0.1.0)",
-        "command": "dsh-levels <package-dir> --no-runtime --format json"
+        "command": "dsh-levels <package-dir> --no-runtime --format json",
+        "securityCommand": "dsh-standards check <package-dir> --scope security --json"
       },
       "notChecked": [
         "ENTRY:runtime (claim=static; not exercised)",
@@ -1558,13 +3058,138 @@
           "coverage": "full"
         }
       ],
+      "security": {
+        "state": "partial",
+        "checks": [
+          {
+            "id": "DSC-01",
+            "result": "PASS",
+            "coverage": "full"
+          },
+          {
+            "id": "DSC-02",
+            "result": "PASS",
+            "coverage": "full"
+          },
+          {
+            "id": "DSC-03",
+            "result": "NA",
+            "coverage": "not-run"
+          },
+          {
+            "id": "DSC-04",
+            "result": "PASS",
+            "coverage": "partial"
+          },
+          {
+            "id": "DSC-05",
+            "result": "PASS",
+            "coverage": "partial"
+          },
+          {
+            "id": "DSC-06",
+            "result": "PASS",
+            "coverage": "partial"
+          },
+          {
+            "id": "DSC-07",
+            "result": "PASS",
+            "coverage": "partial"
+          },
+          {
+            "id": "DSC-08",
+            "result": "PASS",
+            "coverage": "partial"
+          },
+          {
+            "id": "DSC-09",
+            "result": "PASS",
+            "coverage": "partial"
+          },
+          {
+            "id": "DSC-10",
+            "result": "PASS",
+            "coverage": "full"
+          },
+          {
+            "id": "DSC-11",
+            "result": "WARN",
+            "coverage": "full"
+          },
+          {
+            "id": "DSC-12",
+            "result": "WARN",
+            "coverage": "full"
+          },
+          {
+            "id": "DSC-13",
+            "result": "WARN",
+            "coverage": "full"
+          },
+          {
+            "id": "DSC-14",
+            "result": "NA",
+            "coverage": "not-run"
+          },
+          {
+            "id": "DSC-15",
+            "result": "PASS",
+            "coverage": "full"
+          },
+          {
+            "id": "DSC-16",
+            "result": "WARN",
+            "coverage": "partial"
+          },
+          {
+            "id": "DSC-17",
+            "result": "WARN",
+            "coverage": "partial"
+          },
+          {
+            "id": "DSC-18",
+            "result": "PASS",
+            "coverage": "partial"
+          },
+          {
+            "id": "DSC-19",
+            "result": "PASS",
+            "coverage": "full"
+          },
+          {
+            "id": "DSC-20",
+            "result": "PASS",
+            "coverage": "full"
+          },
+          {
+            "id": "DSC-21",
+            "result": "PASS",
+            "coverage": "partial"
+          },
+          {
+            "id": "DSC-22",
+            "result": "NA",
+            "coverage": "not-run"
+          }
+        ],
+        "summary": {
+          "total": 22,
+          "checked": 19,
+          "blocking": 0,
+          "warn": 5,
+          "na": 3,
+          "notRun": 3
+        },
+        "command": "dsh-standards check <package-dir> --scope security --json"
+      },
       "evidence": {
         "sha256": "223989da93296f15675cd9211f97d2b76dc2f26b4ec90b77de8985fc7bb33028",
         "reportSha256": "223989da93296f15675cd9211f97d2b76dc2f26b4ec90b77de8985fc7bb33028"
       },
       "checkedBy": {
         "checker": "dsh-standards@1.6.6 (dsh-plugin-verify@0.1.0)",
-        "command": "dsh-levels <package-dir> --no-runtime --format json"
+        "command": "dsh-levels <package-dir> --no-runtime --format json",
+        "securityCommand": "dsh-standards check <package-dir> --scope security --json"
       },
       "notChecked": [
         "ENTRY:runtime (claim=static; not exercised)",
@@ -1678,13 +3303,138 @@
           "coverage": "full"
         }
       ],
+      "security": {
+        "state": "partial",
+        "checks": [
+          {
+            "id": "DSC-01",
+            "result": "PASS",
+            "coverage": "full"
+          },
+          {
+            "id": "DSC-02",
+            "result": "FAIL",
+            "coverage": "full"
+          },
+          {
+            "id": "DSC-03",
+            "result": "NA",
+            "coverage": "not-run"
+          },
+          {
+            "id": "DSC-04",
+            "result": "PASS",
+            "coverage": "partial"
+          },
+          {
+            "id": "DSC-05",
+            "result": "PASS",
+            "coverage": "partial"
+          },
+          {
+            "id": "DSC-06",
+            "result": "PASS",
+            "coverage": "partial"
+          },
+          {
+            "id": "DSC-07",
+            "result": "PASS",
+            "coverage": "partial"
+          },
+          {
+            "id": "DSC-08",
+            "result": "PASS",
+            "coverage": "partial"
+          },
+          {
+            "id": "DSC-09",
+            "result": "PASS",
+            "coverage": "partial"
+          },
+          {
+            "id": "DSC-10",
+            "result": "PASS",
+            "coverage": "full"
+          },
+          {
+            "id": "DSC-11",
+            "result": "WARN",
+            "coverage": "full"
+          },
+          {
+            "id": "DSC-12",
+            "result": "PASS",
+            "coverage": "full"
+          },
+          {
+            "id": "DSC-13",
+            "result": "WARN",
+            "coverage": "full"
+          },
+          {
+            "id": "DSC-14",
+            "result": "NA",
+            "coverage": "not-run"
+          },
+          {
+            "id": "DSC-15",
+            "result": "PASS",
+            "coverage": "full"
+          },
+          {
+            "id": "DSC-16",
+            "result": "PASS",
+            "coverage": "partial"
+          },
+          {
+            "id": "DSC-17",
+            "result": "PASS",
+            "coverage": "partial"
+          },
+          {
+            "id": "DSC-18",
+            "result": "PASS",
+            "coverage": "full"
+          },
+          {
+            "id": "DSC-19",
+            "result": "WARN",
+            "coverage": "full"
+          },
+          {
+            "id": "DSC-20",
+            "result": "PASS",
+            "coverage": "full"
+          },
+          {
+            "id": "DSC-21",
+            "result": "PASS",
+            "coverage": "partial"
+          },
+          {
+            "id": "DSC-22",
+            "result": "NA",
+            "coverage": "not-run"
+          }
+        ],
+        "summary": {
+          "total": 22,
+          "checked": 19,
+          "blocking": 1,
+          "warn": 3,
+          "na": 3,
+          "notRun": 3
+        },
+        "command": "dsh-standards check <package-dir> --scope security --json"
+      },
       "evidence": {
         "sha256": "d64f95aea3cad2996e24f3479a281d179e3228037b661e7a35cead7e14a93fb8",
         "reportSha256": "d64f95aea3cad2996e24f3479a281d179e3228037b661e7a35cead7e14a93fb8"
       },
       "checkedBy": {
         "checker": "dsh-standards@1.6.6 (dsh-plugin-verify@0.1.0)",
-        "command": "dsh-levels <package-dir> --no-runtime --format json"
+        "command": "dsh-levels <package-dir> --no-runtime --format json",
+        "securityCommand": "dsh-standards check <package-dir> --scope security --json"
       },
       "notChecked": [
         "ENTRY:runtime (claim=static; not exercised)",
@@ -1798,13 +3548,138 @@
           "coverage": "full"
         }
       ],
+      "security": {
+        "state": "partial",
+        "checks": [
+          {
+            "id": "DSC-01",
+            "result": "PASS",
+            "coverage": "full"
+          },
+          {
+            "id": "DSC-02",
+            "result": "FAIL",
+            "coverage": "full"
+          },
+          {
+            "id": "DSC-03",
+            "result": "NA",
+            "coverage": "not-run"
+          },
+          {
+            "id": "DSC-04",
+            "result": "PASS",
+            "coverage": "partial"
+          },
+          {
+            "id": "DSC-05",
+            "result": "PASS",
+            "coverage": "partial"
+          },
+          {
+            "id": "DSC-06",
+            "result": "PASS",
+            "coverage": "partial"
+          },
+          {
+            "id": "DSC-07",
+            "result": "PASS",
+            "coverage": "partial"
+          },
+          {
+            "id": "DSC-08",
+            "result": "PASS",
+            "coverage": "partial"
+          },
+          {
+            "id": "DSC-09",
+            "result": "PASS",
+            "coverage": "partial"
+          },
+          {
+            "id": "DSC-10",
+            "result": "PASS",
+            "coverage": "full"
+          },
+          {
+            "id": "DSC-11",
+            "result": "WARN",
+            "coverage": "full"
+          },
+          {
+            "id": "DSC-12",
+            "result": "PASS",
+            "coverage": "full"
+          },
+          {
+            "id": "DSC-13",
+            "result": "WARN",
+            "coverage": "full"
+          },
+          {
+            "id": "DSC-14",
+            "result": "NA",
+            "coverage": "not-run"
+          },
+          {
+            "id": "DSC-15",
+            "result": "PASS",
+            "coverage": "full"
+          },
+          {
+            "id": "DSC-16",
+            "result": "PASS",
+            "coverage": "partial"
+          },
+          {
+            "id": "DSC-17",
+            "result": "PASS",
+            "coverage": "full"
+          },
+          {
+            "id": "DSC-18",
+            "result": "PASS",
+            "coverage": "full"
+          },
+          {
+            "id": "DSC-19",
+            "result": "PASS",
+            "coverage": "full"
+          },
+          {
+            "id": "DSC-20",
+            "result": "PASS",
+            "coverage": "full"
+          },
+          {
+            "id": "DSC-21",
+            "result": "PASS",
+            "coverage": "partial"
+          },
+          {
+            "id": "DSC-22",
+            "result": "NA",
+            "coverage": "not-run"
+          }
+        ],
+        "summary": {
+          "total": 22,
+          "checked": 19,
+          "blocking": 1,
+          "warn": 2,
+          "na": 3,
+          "notRun": 3
+        },
+        "command": "dsh-standards check <package-dir> --scope security --json"
+      },
       "evidence": {
         "sha256": "91208897340d16594346d8b43dc2ca9addc85296b89a04b31afc934d5b28464f",
         "reportSha256": "91208897340d16594346d8b43dc2ca9addc85296b89a04b31afc934d5b28464f"
       },
       "checkedBy": {
         "checker": "dsh-standards@1.6.6 (dsh-plugin-verify@0.1.0)",
-        "command": "dsh-levels <package-dir> --no-runtime --format json"
+        "command": "dsh-levels <package-dir> --no-runtime --format json",
+        "securityCommand": "dsh-standards check <package-dir> --scope security --json"
       },
       "notChecked": [
         "ENTRY:runtime (claim=static; not exercised)",
@@ -1918,13 +3793,138 @@
           "coverage": "full"
         }
       ],
+      "security": {
+        "state": "partial",
+        "checks": [
+          {
+            "id": "DSC-01",
+            "result": "PASS",
+            "coverage": "full"
+          },
+          {
+            "id": "DSC-02",
+            "result": "PASS",
+            "coverage": "full"
+          },
+          {
+            "id": "DSC-03",
+            "result": "NA",
+            "coverage": "not-run"
+          },
+          {
+            "id": "DSC-04",
+            "result": "PASS",
+            "coverage": "partial"
+          },
+          {
+            "id": "DSC-05",
+            "result": "PASS",
+            "coverage": "partial"
+          },
+          {
+            "id": "DSC-06",
+            "result": "PASS",
+            "coverage": "partial"
+          },
+          {
+            "id": "DSC-07",
+            "result": "PASS",
+            "coverage": "partial"
+          },
+          {
+            "id": "DSC-08",
+            "result": "PASS",
+            "coverage": "partial"
+          },
+          {
+            "id": "DSC-09",
+            "result": "PASS",
+            "coverage": "partial"
+          },
+          {
+            "id": "DSC-10",
+            "result": "PASS",
+            "coverage": "full"
+          },
+          {
+            "id": "DSC-11",
+            "result": "WARN",
+            "coverage": "full"
+          },
+          {
+            "id": "DSC-12",
+            "result": "PASS",
+            "coverage": "full"
+          },
+          {
+            "id": "DSC-13",
+            "result": "WARN",
+            "coverage": "full"
+          },
+          {
+            "id": "DSC-14",
+            "result": "NA",
+            "coverage": "not-run"
+          },
+          {
+            "id": "DSC-15",
+            "result": "PASS",
+            "coverage": "full"
+          },
+          {
+            "id": "DSC-16",
+            "result": "PASS",
+            "coverage": "partial"
+          },
+          {
+            "id": "DSC-17",
+            "result": "PASS",
+            "coverage": "partial"
+          },
+          {
+            "id": "DSC-18",
+            "result": "PASS",
+            "coverage": "full"
+          },
+          {
+            "id": "DSC-19",
+            "result": "PASS",
+            "coverage": "full"
+          },
+          {
+            "id": "DSC-20",
+            "result": "PASS",
+            "coverage": "full"
+          },
+          {
+            "id": "DSC-21",
+            "result": "PASS",
+            "coverage": "partial"
+          },
+          {
+            "id": "DSC-22",
+            "result": "NA",
+            "coverage": "not-run"
+          }
+        ],
+        "summary": {
+          "total": 22,
+          "checked": 19,
+          "blocking": 0,
+          "warn": 2,
+          "na": 3,
+          "notRun": 3
+        },
+        "command": "dsh-standards check <package-dir> --scope security --json"
+      },
       "evidence": {
         "sha256": "89683a85c5e30e8044bff6174a883ed531a80567a79fbb3e525f74438fa5e595",
         "reportSha256": "89683a85c5e30e8044bff6174a883ed531a80567a79fbb3e525f74438fa5e595"
       },
       "checkedBy": {
         "checker": "dsh-standards@1.6.6 (dsh-plugin-verify@0.1.0)",
-        "command": "dsh-levels <package-dir> --no-runtime --format json"
+        "command": "dsh-levels <package-dir> --no-runtime --format json",
+        "securityCommand": "dsh-standards check <package-dir> --scope security --json"
       },
       "notChecked": [
         "ENTRY:runtime (claim=static; not exercised)",
@@ -2038,13 +4038,138 @@
           "coverage": "full"
         }
       ],
+      "security": {
+        "state": "partial",
+        "checks": [
+          {
+            "id": "DSC-01",
+            "result": "PASS",
+            "coverage": "full"
+          },
+          {
+            "id": "DSC-02",
+            "result": "FAIL",
+            "coverage": "full"
+          },
+          {
+            "id": "DSC-03",
+            "result": "NA",
+            "coverage": "not-run"
+          },
+          {
+            "id": "DSC-04",
+            "result": "PASS",
+            "coverage": "partial"
+          },
+          {
+            "id": "DSC-05",
+            "result": "PASS",
+            "coverage": "partial"
+          },
+          {
+            "id": "DSC-06",
+            "result": "PASS",
+            "coverage": "partial"
+          },
+          {
+            "id": "DSC-07",
+            "result": "PASS",
+            "coverage": "partial"
+          },
+          {
+            "id": "DSC-08",
+            "result": "PASS",
+            "coverage": "partial"
+          },
+          {
+            "id": "DSC-09",
+            "result": "PASS",
+            "coverage": "partial"
+          },
+          {
+            "id": "DSC-10",
+            "result": "PASS",
+            "coverage": "full"
+          },
+          {
+            "id": "DSC-11",
+            "result": "WARN",
+            "coverage": "full"
+          },
+          {
+            "id": "DSC-12",
+            "result": "WARN",
+            "coverage": "full"
+          },
+          {
+            "id": "DSC-13",
+            "result": "WARN",
+            "coverage": "full"
+          },
+          {
+            "id": "DSC-14",
+            "result": "NA",
+            "coverage": "not-run"
+          },
+          {
+            "id": "DSC-15",
+            "result": "PASS",
+            "coverage": "full"
+          },
+          {
+            "id": "DSC-16",
+            "result": "PASS",
+            "coverage": "partial"
+          },
+          {
+            "id": "DSC-17",
+            "result": "PASS",
+            "coverage": "partial"
+          },
+          {
+            "id": "DSC-18",
+            "result": "PASS",
+            "coverage": "partial"
+          },
+          {
+            "id": "DSC-19",
+            "result": "WARN",
+            "coverage": "full"
+          },
+          {
+            "id": "DSC-20",
+            "result": "PASS",
+            "coverage": "full"
+          },
+          {
+            "id": "DSC-21",
+            "result": "PASS",
+            "coverage": "partial"
+          },
+          {
+            "id": "DSC-22",
+            "result": "NA",
+            "coverage": "not-run"
+          }
+        ],
+        "summary": {
+          "total": 22,
+          "checked": 19,
+          "blocking": 1,
+          "warn": 4,
+          "na": 3,
+          "notRun": 3
+        },
+        "command": "dsh-standards check <package-dir> --scope security --json"
+      },
       "evidence": {
         "sha256": "fc07cfd7540bfd8b06c85f76a445b2ed0d3735f75ca669ea5dab4434ce96e8ce",
         "reportSha256": "fc07cfd7540bfd8b06c85f76a445b2ed0d3735f75ca669ea5dab4434ce96e8ce"
       },
       "checkedBy": {
         "checker": "dsh-standards@1.6.6 (dsh-plugin-verify@0.1.0)",
-        "command": "dsh-levels <package-dir> --no-runtime --format json"
+        "command": "dsh-levels <package-dir> --no-runtime --format json",
+        "securityCommand": "dsh-standards check <package-dir> --scope security --json"
       },
       "notChecked": [
         "ENTRY:runtime (claim=static; not exercised)",
@@ -2158,13 +4283,138 @@
           "coverage": "full"
         }
       ],
+      "security": {
+        "state": "partial",
+        "checks": [
+          {
+            "id": "DSC-01",
+            "result": "PASS",
+            "coverage": "full"
+          },
+          {
+            "id": "DSC-02",
+            "result": "FAIL",
+            "coverage": "full"
+          },
+          {
+            "id": "DSC-03",
+            "result": "NA",
+            "coverage": "not-run"
+          },
+          {
+            "id": "DSC-04",
+            "result": "PASS",
+            "coverage": "partial"
+          },
+          {
+            "id": "DSC-05",
+            "result": "PASS",
+            "coverage": "partial"
+          },
+          {
+            "id": "DSC-06",
+            "result": "PASS",
+            "coverage": "partial"
+          },
+          {
+            "id": "DSC-07",
+            "result": "PASS",
+            "coverage": "partial"
+          },
+          {
+            "id": "DSC-08",
+            "result": "PASS",
+            "coverage": "partial"
+          },
+          {
+            "id": "DSC-09",
+            "result": "PASS",
+            "coverage": "partial"
+          },
+          {
+            "id": "DSC-10",
+            "result": "PASS",
+            "coverage": "full"
+          },
+          {
+            "id": "DSC-11",
+            "result": "WARN",
+            "coverage": "full"
+          },
+          {
+            "id": "DSC-12",
+            "result": "PASS",
+            "coverage": "full"
+          },
+          {
+            "id": "DSC-13",
+            "result": "WARN",
+            "coverage": "full"
+          },
+          {
+            "id": "DSC-14",
+            "result": "NA",
+            "coverage": "not-run"
+          },
+          {
+            "id": "DSC-15",
+            "result": "WARN",
+            "coverage": "full"
+          },
+          {
+            "id": "DSC-16",
+            "result": "PASS",
+            "coverage": "partial"
+          },
+          {
+            "id": "DSC-17",
+            "result": "PASS",
+            "coverage": "full"
+          },
+          {
+            "id": "DSC-18",
+            "result": "PASS",
+            "coverage": "full"
+          },
+          {
+            "id": "DSC-19",
+            "result": "PASS",
+            "coverage": "full"
+          },
+          {
+            "id": "DSC-20",
+            "result": "PASS",
+            "coverage": "full"
+          },
+          {
+            "id": "DSC-21",
+            "result": "PASS",
+            "coverage": "partial"
+          },
+          {
+            "id": "DSC-22",
+            "result": "NA",
+            "coverage": "not-run"
+          }
+        ],
+        "summary": {
+          "total": 22,
+          "checked": 19,
+          "blocking": 1,
+          "warn": 3,
+          "na": 3,
+          "notRun": 3
+        },
+        "command": "dsh-standards check <package-dir> --scope security --json"
+      },
       "evidence": {
         "sha256": "a145deb8b2792ba3fb4f4e2a461d394ac5b9bdddd82ec1d0f99941b912075ec0",
         "reportSha256": "a145deb8b2792ba3fb4f4e2a461d394ac5b9bdddd82ec1d0f99941b912075ec0"
       },
       "checkedBy": {
         "checker": "dsh-standards@1.6.6 (dsh-plugin-verify@0.1.0)",
-        "command": "dsh-levels <package-dir> --no-runtime --format json"
+        "command": "dsh-levels <package-dir> --no-runtime --format json",
+        "securityCommand": "dsh-standards check <package-dir> --scope security --json"
       },
       "notChecked": [
         "ENTRY:runtime (claim=static; not exercised)",
@@ -2278,13 +4528,138 @@
           "coverage": "full"
         }
       ],
+      "security": {
+        "state": "partial",
+        "checks": [
+          {
+            "id": "DSC-01",
+            "result": "PASS",
+            "coverage": "full"
+          },
+          {
+            "id": "DSC-02",
+            "result": "PASS",
+            "coverage": "full"
+          },
+          {
+            "id": "DSC-03",
+            "result": "NA",
+            "coverage": "not-run"
+          },
+          {
+            "id": "DSC-04",
+            "result": "PASS",
+            "coverage": "partial"
+          },
+          {
+            "id": "DSC-05",
+            "result": "PASS",
+            "coverage": "partial"
+          },
+          {
+            "id": "DSC-06",
+            "result": "PASS",
+            "coverage": "partial"
+          },
+          {
+            "id": "DSC-07",
+            "result": "PASS",
+            "coverage": "partial"
+          },
+          {
+            "id": "DSC-08",
+            "result": "PASS",
+            "coverage": "partial"
+          },
+          {
+            "id": "DSC-09",
+            "result": "PASS",
+            "coverage": "partial"
+          },
+          {
+            "id": "DSC-10",
+            "result": "PASS",
+            "coverage": "partial"
+          },
+          {
+            "id": "DSC-11",
+            "result": "WARN",
+            "coverage": "full"
+          },
+          {
+            "id": "DSC-12",
+            "result": "PASS",
+            "coverage": "full"
+          },
+          {
+            "id": "DSC-13",
+            "result": "WARN",
+            "coverage": "full"
+          },
+          {
+            "id": "DSC-14",
+            "result": "NA",
+            "coverage": "not-run"
+          },
+          {
+            "id": "DSC-15",
+            "result": "WARN",
+            "coverage": "full"
+          },
+          {
+            "id": "DSC-16",
+            "result": "WARN",
+            "coverage": "partial"
+          },
+          {
+            "id": "DSC-17",
+            "result": "PASS",
+            "coverage": "partial"
+          },
+          {
+            "id": "DSC-18",
+            "result": "PASS",
+            "coverage": "partial"
+          },
+          {
+            "id": "DSC-19",
+            "result": "PASS",
+            "coverage": "full"
+          },
+          {
+            "id": "DSC-20",
+            "result": "PASS",
+            "coverage": "full"
+          },
+          {
+            "id": "DSC-21",
+            "result": "PASS",
+            "coverage": "partial"
+          },
+          {
+            "id": "DSC-22",
+            "result": "NA",
+            "coverage": "not-run"
+          }
+        ],
+        "summary": {
+          "total": 22,
+          "checked": 19,
+          "blocking": 0,
+          "warn": 4,
+          "na": 3,
+          "notRun": 3
+        },
+        "command": "dsh-standards check <package-dir> --scope security --json"
+      },
       "evidence": {
         "sha256": "c1beacea04c3d3c35553ec6ca11d42a73a35390f5122c1f85952205653b2db40",
         "reportSha256": "c1beacea04c3d3c35553ec6ca11d42a73a35390f5122c1f85952205653b2db40"
       },
       "checkedBy": {
         "checker": "dsh-standards@1.6.6 (dsh-plugin-verify@0.1.0)",
-        "command": "dsh-levels <package-dir> --no-runtime --format json"
+        "command": "dsh-levels <package-dir> --no-runtime --format json",
+        "securityCommand": "dsh-standards check <package-dir> --scope security --json"
       },
       "notChecked": [
         "ENTRY:runtime (claim=static; not exercised)",
@@ -2398,13 +4773,138 @@
           "coverage": "full"
         }
       ],
+      "security": {
+        "state": "partial",
+        "checks": [
+          {
+            "id": "DSC-01",
+            "result": "PASS",
+            "coverage": "full"
+          },
+          {
+            "id": "DSC-02",
+            "result": "FAIL",
+            "coverage": "full"
+          },
+          {
+            "id": "DSC-03",
+            "result": "NA",
+            "coverage": "not-run"
+          },
+          {
+            "id": "DSC-04",
+            "result": "PASS",
+            "coverage": "partial"
+          },
+          {
+            "id": "DSC-05",
+            "result": "PASS",
+            "coverage": "partial"
+          },
+          {
+            "id": "DSC-06",
+            "result": "PASS",
+            "coverage": "partial"
+          },
+          {
+            "id": "DSC-07",
+            "result": "PASS",
+            "coverage": "partial"
+          },
+          {
+            "id": "DSC-08",
+            "result": "PASS",
+            "coverage": "partial"
+          },
+          {
+            "id": "DSC-09",
+            "result": "PASS",
+            "coverage": "partial"
+          },
+          {
+            "id": "DSC-10",
+            "result": "PASS",
+            "coverage": "full"
+          },
+          {
+            "id": "DSC-11",
+            "result": "WARN",
+            "coverage": "full"
+          },
+          {
+            "id": "DSC-12",
+            "result": "PASS",
+            "coverage": "full"
+          },
+          {
+            "id": "DSC-13",
+            "result": "WARN",
+            "coverage": "full"
+          },
+          {
+            "id": "DSC-14",
+            "result": "NA",
+            "coverage": "not-run"
+          },
+          {
+            "id": "DSC-15",
+            "result": "PASS",
+            "coverage": "full"
+          },
+          {
+            "id": "DSC-16",
+            "result": "WARN",
+            "coverage": "partial"
+          },
+          {
+            "id": "DSC-17",
+            "result": "PASS",
+            "coverage": "partial"
+          },
+          {
+            "id": "DSC-18",
+            "result": "PASS",
+            "coverage": "full"
+          },
+          {
+            "id": "DSC-19",
+            "result": "PASS",
+            "coverage": "full"
+          },
+          {
+            "id": "DSC-20",
+            "result": "PASS",
+            "coverage": "full"
+          },
+          {
+            "id": "DSC-21",
+            "result": "PASS",
+            "coverage": "partial"
+          },
+          {
+            "id": "DSC-22",
+            "result": "NA",
+            "coverage": "not-run"
+          }
+        ],
+        "summary": {
+          "total": 22,
+          "checked": 19,
+          "blocking": 1,
+          "warn": 3,
+          "na": 3,
+          "notRun": 3
+        },
+        "command": "dsh-standards check <package-dir> --scope security --json"
+      },
       "evidence": {
         "sha256": "6d438c21c8c388dbd5dea03f3f4fb2a522e41ee45d193bd7e30c76ddaa394697",
         "reportSha256": "6d438c21c8c388dbd5dea03f3f4fb2a522e41ee45d193bd7e30c76ddaa394697"
       },
       "checkedBy": {
         "checker": "dsh-standards@1.6.6 (dsh-plugin-verify@0.1.0)",
-        "command": "dsh-levels <package-dir> --no-runtime --format json"
+        "command": "dsh-levels <package-dir> --no-runtime --format json",
+        "securityCommand": "dsh-standards check <package-dir> --scope security --json"
       },
       "notChecked": [
         "ENTRY:runtime (claim=static; not exercised)",

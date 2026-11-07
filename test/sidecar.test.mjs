@@ -372,6 +372,13 @@ test('publish/sidecar.json: 20 real dsh packages carry every additive field and 
     assert.equal(entry.levels.flow.state, 'not-run')
     assert.equal(entry.levels.boost.state, 'not-measured')
 
+    assert.ok(entry.security, `${key} security block`)
+    assert.ok(['checked', 'partial', 'not-run'].includes(entry.security.state), `${key} security.state`)
+    assert.equal(entry.security.checks.length, 22)
+    assert.equal(entry.security.summary.total, 22)
+    assert.equal(entry.security.summary.checked + entry.security.summary.notRun, 22)
+    assert.match(entry.checkedBy.securityCommand, /--scope security/)
+
     assert.match(entry.evidence.reportSha256, /^[0-9a-f]{64}$/)
     assert.equal(entry.evidence.reportUrl, undefined)
     assert.match(entry.checkedBy.checker, /^dsh-standards@1\.6\.6/)
@@ -465,4 +472,31 @@ test('build-offline-kit: a missing market-contract fails loudly instead of shipp
   })
   assert.equal(result.status, 3)
   assert.match(result.stderr, /market-contract not found/)
+})
+test('build-sidecar: --security-report adds an additive security block', (t) => {
+  const dir = tempDir(t)
+  const packageDir = path.join(dir, 'plugin')
+  writeJson(path.join(packageDir, 'package.json'), { name: '@acme/sec', version: '1.0.0', license: 'MIT' })
+  const tarball = path.join(dir, 'sec.tgz')
+  fs.writeFileSync(tarball, 'fake tarball\n')
+  const audit = writeJson(path.join(dir, 'audit.json'), auditFixture({ name: '@acme/sec', version: '1.0.0', dir: packageDir }))
+  const report = writeJson(path.join(dir, 'report.json'), reportFixture('@acme/sec', '1.0.0', [
+    { id: 'DSC-01', result: 'PASS', coverage: 'full' },
+  ]))
+  const security = writeJson(path.join(dir, 'security.json'), reportFixture('@acme/sec', '1.0.0', [
+    { id: 'DSC-15', result: 'PASS', coverage: 'full' },
+    { id: 'DSC-16', result: 'WARN', coverage: 'full' },
+    { id: 'DSC-17', result: 'NA', coverage: 'not-run' },
+  ]))
+  const out = path.join(dir, 'out.json')
+  mustRun(SIDECAR, buildArgs(dir, {
+    name: '@acme/sec', version: '1.0.0', packageDir, tarball, audit, report, out,
+    extra: ['--security-report', security],
+  }))
+  const entry = JSON.parse(fs.readFileSync(out, 'utf8')).entries['@acme/sec@1.0.0']
+  assert.equal(entry.security.state, 'partial')
+  assert.equal(entry.security.checks.length, 3)
+  assert.deepEqual(entry.security.summary, { total: 3, checked: 2, blocking: 0, warn: 1, na: 1, notRun: 1 })
+  assert.equal(entry.checkedBy.securityCommand, 'dsh-standards check <package-dir> --scope security --json')
+  assert.equal(entry.checks.length, 1)
 })
