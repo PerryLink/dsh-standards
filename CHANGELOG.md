@@ -1,3 +1,21 @@
+## 1.6.8 — 2026-11-07
+
+### Added
+
+- `conformance.schema.json`：`subject.source`（`package`/`registry`/`unknown`，可选加性）与 `checks[].howToEnable` 显式放行；`subject` 仍 `additionalProperties:false`，其余未知键照旧被拒。registry 报告（`dsh.plugin.json`，1.6.7 起输出 `source=registry`）现在可整份通过 schema。
+- 离线包 `publish/dsh-standards-offline-1.6.8.tgz`：1001037 B，64 文件，sha256 `2265d0cfb81d6e93a92cd3b10919d8d83f9d6ffd795f2cbedc701f8808f9e59d`；内层 npm tarball `dsh-standards-1.6.8.tgz`（911,278 B，sha256 `1e50195619cfe59caf5b0c26b82038d9556a07336038e5a2f18a9944ac55cbf1`）。
+
+### Changed
+
+- `publish/sidecar.json` 50 条按 1.6.7 代码重建（`checker=1.6.7`，sha `da6eeac`）：每包 ENTRY + security 两份报告，均显式 `--host-version 0.2.1-rc.5`，使 C-2 有判定而非 NA（不传时 1.6.7 默认把 C-2.1/C-2.2 记 NA/partial，实测 50/50）。50 个 tarball sha256 与 1.6.6 侧车逐条一致。
+- C-2 相对 1.6.6 侧车：0 条 NA；ENTRY 口径 34 PASS / 16 WARN（1.6.6 侧车那 14 项是 ds-c 口径，7 条 C-2.1 FAIL 在 ENTRY 语义下记 WARN，security 块仍记 16 FAIL）；`dsh-session-superagent@0.10.4` 由 WARN→PASS（显式 host 0.2.1-rc.5 命中其声明；旧构建的占位默认 0.2.2-alpha.2 不命中）。
+
+### Verified
+
+- `npm test` 313/313。
+- 102 份报告（50 ENTRY + 50 security + 2 registry）对 1.6.8 schema 全部 VALID；`source=sidebar`、未知 subject 键均被拒。
+- `unshare -rn` 内 `npm install --offline` 离线包内 tarball，`dsh-levels 40-checker/fixtures/good --format json` exit 0、ENTRY `recognized`/`static`。
+
 ## 1.6.7 — 2026-11-07
 
 ### Added

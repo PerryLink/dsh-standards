@@ -110,6 +110,7 @@
     },
     "subject": {
       "type": "object",
+      "description": "What was scanned. `source` is additive (1.6.8): it names the input layout, and only a registry layout (`dsh.plugin.json`, no package.json) emits it today. It stays optional so reports produced before 1.6.7 still validate.",
       "additionalProperties": false,
       "required": [
         "mode",
@@ -169,6 +170,14 @@
         "path": {
           "type": "string",
           "minLength": 1
+        },
+        "source": {
+          "enum": [
+            "package",
+            "registry",
+            "unknown"
+          ],
+          "description": "Additive (1.6.8): input layout that produced this report. `registry` = a sidebar-style registry tree read through --registry-dir or auto-detected dsh.plugin.json (no package.json); `package` = the ordinary package.json path; `unknown` is reserved for inputs that declare neither. Optional: builds before 1.6.7 omit it, so consumers must not require it, and subject remains additionalProperties:false for every other key."
         }
       }
     },
@@ -377,6 +386,10 @@
         "advisory": {
           "type": "boolean",
           "description": "True when the check is reported but never moves the verdict."
+        },
+        "howToEnable": {
+          "type": "string",
+          "description": "Additive (1.6.7): the command/flag that would let an NA or partial check run. Optional; omitted when the check already ran in full. Without it a registry report (DSC-01 partial, no package.json) would be rejected by additionalProperties:false."
         }
       }
     },

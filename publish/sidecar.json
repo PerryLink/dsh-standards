@@ -7,8 +7,8 @@
   },
   "checker": {
     "name": "dsh-standards",
-    "version": "1.6.6",
-    "sha": "0fb3c5fde8509b9641d961cb2d0fe04c2e0f6fec"
+    "version": "1.6.7",
+    "sha": "da6eeac72318fceca264abee9b1b818b02643953"
   },
   "notClaimed": [
     "official",
@@ -243,11 +243,11 @@
         "command": "dsh-standards check <package-dir> --scope security --json"
       },
       "evidence": {
-        "sha256": "8a3a6f00d87f3438d96304a5bd1701326c86927a8507449fbf3b3b7e354b0b33",
-        "reportSha256": "8a3a6f00d87f3438d96304a5bd1701326c86927a8507449fbf3b3b7e354b0b33"
+        "sha256": "69835e5d106ace52027fa85621b733293dd79af5f856609ae57684b61256d1d2",
+        "reportSha256": "69835e5d106ace52027fa85621b733293dd79af5f856609ae57684b61256d1d2"
       },
       "checkedBy": {
-        "checker": "dsh-standards@1.6.6 (dsh-plugin-verify@0.1.0)",
+        "checker": "dsh-standards@1.6.7 (dsh-plugin-verify@0.1.0)",
         "command": "dsh-levels <package-dir> --no-runtime --format json",
         "securityCommand": "dsh-standards check <package-dir> --scope security --json"
       },
@@ -299,7 +299,7 @@
         },
         {
           "id": "DSC-02",
-          "result": "FAIL",
+          "result": "WARN",
           "coverage": "full"
         },
         {
@@ -488,11 +488,11 @@
         "command": "dsh-standards check <package-dir> --scope security --json"
       },
       "evidence": {
-        "sha256": "a65aa4975244351ce3468634b63f82763046dca801a07580725ac88314a83547",
-        "reportSha256": "a65aa4975244351ce3468634b63f82763046dca801a07580725ac88314a83547"
+        "sha256": "8454149260d3d406fbc6be944e9806d3ec692906becbe62dab9816ce3fb25aef",
+        "reportSha256": "8454149260d3d406fbc6be944e9806d3ec692906becbe62dab9816ce3fb25aef"
       },
       "checkedBy": {
-        "checker": "dsh-standards@1.6.6 (dsh-plugin-verify@0.1.0)",
+        "checker": "dsh-standards@1.6.7 (dsh-plugin-verify@0.1.0)",
         "command": "dsh-levels <package-dir> --no-runtime --format json",
         "securityCommand": "dsh-standards check <package-dir> --scope security --json"
       },
@@ -733,11 +733,11 @@
         "command": "dsh-standards check <package-dir> --scope security --json"
       },
       "evidence": {
-        "sha256": "1b1fcbbe1103b2cb9891412232cb81628045d909d8d28c5c81fa516edccb17d7",
-        "reportSha256": "1b1fcbbe1103b2cb9891412232cb81628045d909d8d28c5c81fa516edccb17d7"
+        "sha256": "f950caf609b4ce8448e7043eec8e767fb20052e66390eb4367f24ea67f682fc2",
+        "reportSha256": "f950caf609b4ce8448e7043eec8e767fb20052e66390eb4367f24ea67f682fc2"
       },
       "checkedBy": {
-        "checker": "dsh-standards@1.6.6 (dsh-plugin-verify@0.1.0)",
+        "checker": "dsh-standards@1.6.7 (dsh-plugin-verify@0.1.0)",
         "command": "dsh-levels <package-dir> --no-runtime --format json",
         "securityCommand": "dsh-standards check <package-dir> --scope security --json"
       },
@@ -978,11 +978,11 @@
         "command": "dsh-standards check <package-dir> --scope security --json"
       },
       "evidence": {
-        "sha256": "973a30566d71d9db0510d790b3b70775013ae8ec37e63f1bd65886117fc0e987",
-        "reportSha256": "973a30566d71d9db0510d790b3b70775013ae8ec37e63f1bd65886117fc0e987"
+        "sha256": "ce6172e2ef959d2e5b74740d855141557e00c84026c74940e9a72174cbb30963",
+        "reportSha256": "ce6172e2ef959d2e5b74740d855141557e00c84026c74940e9a72174cbb30963"
       },
       "checkedBy": {
-        "checker": "dsh-standards@1.6.6 (dsh-plugin-verify@0.1.0)",
+        "checker": "dsh-standards@1.6.7 (dsh-plugin-verify@0.1.0)",
         "command": "dsh-levels <package-dir> --no-runtime --format json",
         "securityCommand": "dsh-standards check <package-dir> --scope security --json"
       },
@@ -1223,11 +1223,11 @@
         "command": "dsh-standards check <package-dir> --scope security --json"
       },
       "evidence": {
-        "sha256": "49685453d018b017003fdb2bd29e6759ada620aa5315218f7f22086ec1547ef7",
-        "reportSha256": "49685453d018b017003fdb2bd29e6759ada620aa5315218f7f22086ec1547ef7"
+        "sha256": "3e82c2972dcf53741dfcbec51f875fd63864e8bcae5f060404bda03e6f57d529",
+        "reportSha256": "3e82c2972dcf53741dfcbec51f875fd63864e8bcae5f060404bda03e6f57d529"
       },
       "checkedBy": {
-        "checker": "dsh-standards@1.6.6 (dsh-plugin-verify@0.1.0)",
+        "checker": "dsh-standards@1.6.7 (dsh-plugin-verify@0.1.0)",
         "command": "dsh-levels <package-dir> --no-runtime --format json",
         "securityCommand": "dsh-standards check <package-dir> --scope security --json"
       },
@@ -1468,11 +1468,11 @@
         "command": "dsh-standards check <package-dir> --scope security --json"
       },
       "evidence": {
-        "sha256": "359740830347e47fa79b63152cb254a4290680b7657b0450e8f5e3c1710b3319",
-        "reportSha256": "359740830347e47fa79b63152cb254a4290680b7657b0450e8f5e3c1710b3319"
+        "sha256": "8b84780ff74dcf204a2a5a68870720000381ad3763d5d3aed5cac1c8532e9ba9",
+        "reportSha256": "8b84780ff74dcf204a2a5a68870720000381ad3763d5d3aed5cac1c8532e9ba9"
       },
       "checkedBy": {
-        "checker": "dsh-standards@1.6.6 (dsh-plugin-verify@0.1.0)",
+        "checker": "dsh-standards@1.6.7 (dsh-plugin-verify@0.1.0)",
         "command": "dsh-levels <package-dir> --no-runtime --format json",
         "securityCommand": "dsh-standards check <package-dir> --scope security --json"
       },
@@ -1713,11 +1713,11 @@
         "command": "dsh-standards check <package-dir> --scope security --json"
       },
       "evidence": {
-        "sha256": "14dab775a49b9fa4c1aca5208921c9e02659f0d25512172ffa7828d2d281162b",
-        "reportSha256": "14dab775a49b9fa4c1aca5208921c9e02659f0d25512172ffa7828d2d281162b"
+        "sha256": "4f5e74c3da311352c604a54aa2a2d8b668f4792ebf9ade1541ab2dc45c9215ad",
+        "reportSha256": "4f5e74c3da311352c604a54aa2a2d8b668f4792ebf9ade1541ab2dc45c9215ad"
       },
       "checkedBy": {
-        "checker": "dsh-standards@1.6.6 (dsh-plugin-verify@0.1.0)",
+        "checker": "dsh-standards@1.6.7 (dsh-plugin-verify@0.1.0)",
         "command": "dsh-levels <package-dir> --no-runtime --format json",
         "securityCommand": "dsh-standards check <package-dir> --scope security --json"
       },
@@ -1958,11 +1958,11 @@
         "command": "dsh-standards check <package-dir> --scope security --json"
       },
       "evidence": {
-        "sha256": "c53ea0bc3ea2372a6fe9acb71ac576c5e5e01e9c503ec626e8c17de455eab267",
-        "reportSha256": "c53ea0bc3ea2372a6fe9acb71ac576c5e5e01e9c503ec626e8c17de455eab267"
+        "sha256": "a1f3e5a022cd5a6e2e341a6fba81522760589edf955840a4a6b39efc17a68e13",
+        "reportSha256": "a1f3e5a022cd5a6e2e341a6fba81522760589edf955840a4a6b39efc17a68e13"
       },
       "checkedBy": {
-        "checker": "dsh-standards@1.6.6 (dsh-plugin-verify@0.1.0)",
+        "checker": "dsh-standards@1.6.7 (dsh-plugin-verify@0.1.0)",
         "command": "dsh-levels <package-dir> --no-runtime --format json",
         "securityCommand": "dsh-standards check <package-dir> --scope security --json"
       },
@@ -2203,11 +2203,11 @@
         "command": "dsh-standards check <package-dir> --scope security --json"
       },
       "evidence": {
-        "sha256": "b9d6768ea55b09f73b7cc7a3802955889e2a2fd2576b4bd7c648e2056a098738",
-        "reportSha256": "b9d6768ea55b09f73b7cc7a3802955889e2a2fd2576b4bd7c648e2056a098738"
+        "sha256": "ddf2f37c1afd54dcdfb52d5406e591ec37a4f4fdab4b434e16172bdebf93e667",
+        "reportSha256": "ddf2f37c1afd54dcdfb52d5406e591ec37a4f4fdab4b434e16172bdebf93e667"
       },
       "checkedBy": {
-        "checker": "dsh-standards@1.6.6 (dsh-plugin-verify@0.1.0)",
+        "checker": "dsh-standards@1.6.7 (dsh-plugin-verify@0.1.0)",
         "command": "dsh-levels <package-dir> --no-runtime --format json",
         "securityCommand": "dsh-standards check <package-dir> --scope security --json"
       },
@@ -2448,11 +2448,11 @@
         "command": "dsh-standards check <package-dir> --scope security --json"
       },
       "evidence": {
-        "sha256": "fdff17644dc0d2a30bf43fbcfbbf79c211ef0625e4f60c887f3c1961c02eb8f8",
-        "reportSha256": "fdff17644dc0d2a30bf43fbcfbbf79c211ef0625e4f60c887f3c1961c02eb8f8"
+        "sha256": "45f08aad9a822d2db7e3357724f30c06c29e8c31afef24635fc46f9498b17340",
+        "reportSha256": "45f08aad9a822d2db7e3357724f30c06c29e8c31afef24635fc46f9498b17340"
       },
       "checkedBy": {
-        "checker": "dsh-standards@1.6.6 (dsh-plugin-verify@0.1.0)",
+        "checker": "dsh-standards@1.6.7 (dsh-plugin-verify@0.1.0)",
         "command": "dsh-levels <package-dir> --no-runtime --format json",
         "securityCommand": "dsh-standards check <package-dir> --scope security --json"
       },
@@ -2693,11 +2693,11 @@
         "command": "dsh-standards check <package-dir> --scope security --json"
       },
       "evidence": {
-        "sha256": "cb37513857d8cc4c3ea51bee76bb6f5059900584a72e0ae4072600c2214e08f9",
-        "reportSha256": "cb37513857d8cc4c3ea51bee76bb6f5059900584a72e0ae4072600c2214e08f9"
+        "sha256": "4b5a277c8eb995463b9f8d4c3fcb811b76acf9946eab684156426b0c292942d4",
+        "reportSha256": "4b5a277c8eb995463b9f8d4c3fcb811b76acf9946eab684156426b0c292942d4"
       },
       "checkedBy": {
-        "checker": "dsh-standards@1.6.6 (dsh-plugin-verify@0.1.0)",
+        "checker": "dsh-standards@1.6.7 (dsh-plugin-verify@0.1.0)",
         "command": "dsh-levels <package-dir> --no-runtime --format json",
         "securityCommand": "dsh-standards check <package-dir> --scope security --json"
       },
@@ -2938,11 +2938,11 @@
         "command": "dsh-standards check <package-dir> --scope security --json"
       },
       "evidence": {
-        "sha256": "b2fffaeb639a7c0cb0387631efeb6b4d3a872a73147b14d5ed64fda3f4c5ddfe",
-        "reportSha256": "b2fffaeb639a7c0cb0387631efeb6b4d3a872a73147b14d5ed64fda3f4c5ddfe"
+        "sha256": "746a74ae9761a428d1a92c85b2565344e126776bad7f1a0fcf52d2d0dfa2cb96",
+        "reportSha256": "746a74ae9761a428d1a92c85b2565344e126776bad7f1a0fcf52d2d0dfa2cb96"
       },
       "checkedBy": {
-        "checker": "dsh-standards@1.6.6 (dsh-plugin-verify@0.1.0)",
+        "checker": "dsh-standards@1.6.7 (dsh-plugin-verify@0.1.0)",
         "command": "dsh-levels <package-dir> --no-runtime --format json",
         "securityCommand": "dsh-standards check <package-dir> --scope security --json"
       },
@@ -3183,11 +3183,11 @@
         "command": "dsh-standards check <package-dir> --scope security --json"
       },
       "evidence": {
-        "sha256": "37fd098651abb4123e1d68e9ee9bdd1e4c1ea8e2f3f2888a88378b774c54cbca",
-        "reportSha256": "37fd098651abb4123e1d68e9ee9bdd1e4c1ea8e2f3f2888a88378b774c54cbca"
+        "sha256": "30eaa8c8003098c25902abd2b91d38ec0064ee90c03d6f27cf220050543403fc",
+        "reportSha256": "30eaa8c8003098c25902abd2b91d38ec0064ee90c03d6f27cf220050543403fc"
       },
       "checkedBy": {
-        "checker": "dsh-standards@1.6.6 (dsh-plugin-verify@0.1.0)",
+        "checker": "dsh-standards@1.6.7 (dsh-plugin-verify@0.1.0)",
         "command": "dsh-levels <package-dir> --no-runtime --format json",
         "securityCommand": "dsh-standards check <package-dir> --scope security --json"
       },
@@ -3428,11 +3428,11 @@
         "command": "dsh-standards check <package-dir> --scope security --json"
       },
       "evidence": {
-        "sha256": "84abfb63cba168702794e8b21c2e6e74cb9929a3e49407abb06b7bd039588d97",
-        "reportSha256": "84abfb63cba168702794e8b21c2e6e74cb9929a3e49407abb06b7bd039588d97"
+        "sha256": "3998adf78c85545f977c4617db8f6606450683bb08540a5bd215ce734a4e9afc",
+        "reportSha256": "3998adf78c85545f977c4617db8f6606450683bb08540a5bd215ce734a4e9afc"
       },
       "checkedBy": {
-        "checker": "dsh-standards@1.6.6 (dsh-plugin-verify@0.1.0)",
+        "checker": "dsh-standards@1.6.7 (dsh-plugin-verify@0.1.0)",
         "command": "dsh-levels <package-dir> --no-runtime --format json",
         "securityCommand": "dsh-standards check <package-dir> --scope security --json"
       },
@@ -3673,11 +3673,11 @@
         "command": "dsh-standards check <package-dir> --scope security --json"
       },
       "evidence": {
-        "sha256": "d51a4ef40ead65112e67267ada4418d1f8ee941e5a65c3af4bd7869ca8ae164a",
-        "reportSha256": "d51a4ef40ead65112e67267ada4418d1f8ee941e5a65c3af4bd7869ca8ae164a"
+        "sha256": "51783c0cb211cdd73276a663ede702d6c3e7e8d38bf0b5a2f8bc6a3b5acd4563",
+        "reportSha256": "51783c0cb211cdd73276a663ede702d6c3e7e8d38bf0b5a2f8bc6a3b5acd4563"
       },
       "checkedBy": {
-        "checker": "dsh-standards@1.6.6 (dsh-plugin-verify@0.1.0)",
+        "checker": "dsh-standards@1.6.7 (dsh-plugin-verify@0.1.0)",
         "command": "dsh-levels <package-dir> --no-runtime --format json",
         "securityCommand": "dsh-standards check <package-dir> --scope security --json"
       },
@@ -3918,11 +3918,11 @@
         "command": "dsh-standards check <package-dir> --scope security --json"
       },
       "evidence": {
-        "sha256": "4afc84805bc03fb71f87101c16d23ea17f2817f78b9b13263fa804bb3cc2344e",
-        "reportSha256": "4afc84805bc03fb71f87101c16d23ea17f2817f78b9b13263fa804bb3cc2344e"
+        "sha256": "22179b9f442269fbd10fb8f35019148d52aba30527b4619a5d8f2865858832a6",
+        "reportSha256": "22179b9f442269fbd10fb8f35019148d52aba30527b4619a5d8f2865858832a6"
       },
       "checkedBy": {
-        "checker": "dsh-standards@1.6.6 (dsh-plugin-verify@0.1.0)",
+        "checker": "dsh-standards@1.6.7 (dsh-plugin-verify@0.1.0)",
         "command": "dsh-levels <package-dir> --no-runtime --format json",
         "securityCommand": "dsh-standards check <package-dir> --scope security --json"
       },
@@ -4163,11 +4163,11 @@
         "command": "dsh-standards check <package-dir> --scope security --json"
       },
       "evidence": {
-        "sha256": "c69376abd2776783a5ac9759557d245b80b99c16ebd8b70038b383932749950f",
-        "reportSha256": "c69376abd2776783a5ac9759557d245b80b99c16ebd8b70038b383932749950f"
+        "sha256": "1e4dba92c6d6266324f796ddad9ac4af51513651d614ef10206ab00459fd07b0",
+        "reportSha256": "1e4dba92c6d6266324f796ddad9ac4af51513651d614ef10206ab00459fd07b0"
       },
       "checkedBy": {
-        "checker": "dsh-standards@1.6.6 (dsh-plugin-verify@0.1.0)",
+        "checker": "dsh-standards@1.6.7 (dsh-plugin-verify@0.1.0)",
         "command": "dsh-levels <package-dir> --no-runtime --format json",
         "securityCommand": "dsh-standards check <package-dir> --scope security --json"
       },
@@ -4408,11 +4408,11 @@
         "command": "dsh-standards check <package-dir> --scope security --json"
       },
       "evidence": {
-        "sha256": "33119cb6a4ef5d4b99828388972b9e7ac0e46e482d9f536c465f818d622c6548",
-        "reportSha256": "33119cb6a4ef5d4b99828388972b9e7ac0e46e482d9f536c465f818d622c6548"
+        "sha256": "48eee141cba5e19baf0f28ac13f08d29d688b108282c92c96f05965c96932ea6",
+        "reportSha256": "48eee141cba5e19baf0f28ac13f08d29d688b108282c92c96f05965c96932ea6"
       },
       "checkedBy": {
-        "checker": "dsh-standards@1.6.6 (dsh-plugin-verify@0.1.0)",
+        "checker": "dsh-standards@1.6.7 (dsh-plugin-verify@0.1.0)",
         "command": "dsh-levels <package-dir> --no-runtime --format json",
         "securityCommand": "dsh-standards check <package-dir> --scope security --json"
       },
@@ -4653,11 +4653,11 @@
         "command": "dsh-standards check <package-dir> --scope security --json"
       },
       "evidence": {
-        "sha256": "c8c08377ab0a84b99f8649a08237efe95d6ae33061760c3287bd87e23163b103",
-        "reportSha256": "c8c08377ab0a84b99f8649a08237efe95d6ae33061760c3287bd87e23163b103"
+        "sha256": "5f0c772c6f5ff9b4ee914b9f797c0670c53af7ec7855374af94cc8960fbb31d9",
+        "reportSha256": "5f0c772c6f5ff9b4ee914b9f797c0670c53af7ec7855374af94cc8960fbb31d9"
       },
       "checkedBy": {
-        "checker": "dsh-standards@1.6.6 (dsh-plugin-verify@0.1.0)",
+        "checker": "dsh-standards@1.6.7 (dsh-plugin-verify@0.1.0)",
         "command": "dsh-levels <package-dir> --no-runtime --format json",
         "securityCommand": "dsh-standards check <package-dir> --scope security --json"
       },
@@ -4898,11 +4898,11 @@
         "command": "dsh-standards check <package-dir> --scope security --json"
       },
       "evidence": {
-        "sha256": "0437b34ea36bcfc8d24a4ff218aeae04d8be7aad38a359f1e3e1e5d2040d3894",
-        "reportSha256": "0437b34ea36bcfc8d24a4ff218aeae04d8be7aad38a359f1e3e1e5d2040d3894"
+        "sha256": "c349fcf6d1d81d0808e7717c4789469ffdbc7a04ecf80db530a36b2d505e2249",
+        "reportSha256": "c349fcf6d1d81d0808e7717c4789469ffdbc7a04ecf80db530a36b2d505e2249"
       },
       "checkedBy": {
-        "checker": "dsh-standards@1.6.6 (dsh-plugin-verify@0.1.0)",
+        "checker": "dsh-standards@1.6.7 (dsh-plugin-verify@0.1.0)",
         "command": "dsh-levels <package-dir> --no-runtime --format json",
         "securityCommand": "dsh-standards check <package-dir> --scope security --json"
       },
@@ -5143,11 +5143,11 @@
         "command": "dsh-standards check <package-dir> --scope security --json"
       },
       "evidence": {
-        "sha256": "56d1d1979d64ec3e5a0322cdd3941210153b3e92497db8b3e6e0aac72fe2ba3c",
-        "reportSha256": "56d1d1979d64ec3e5a0322cdd3941210153b3e92497db8b3e6e0aac72fe2ba3c"
+        "sha256": "444fe22619f6da96d4c4655fd7b278023f57da5913ba36039623a004680064b6",
+        "reportSha256": "444fe22619f6da96d4c4655fd7b278023f57da5913ba36039623a004680064b6"
       },
       "checkedBy": {
-        "checker": "dsh-standards@1.6.6 (dsh-plugin-verify@0.1.0)",
+        "checker": "dsh-standards@1.6.7 (dsh-plugin-verify@0.1.0)",
         "command": "dsh-levels <package-dir> --no-runtime --format json",
         "securityCommand": "dsh-standards check <package-dir> --scope security --json"
       },
@@ -5388,11 +5388,11 @@
         "command": "dsh-standards check <package-dir> --scope security --json"
       },
       "evidence": {
-        "sha256": "0643eeade04c239dde3406d176683de70a6a2fc3ac7b55831351ed03f3dd97ea",
-        "reportSha256": "0643eeade04c239dde3406d176683de70a6a2fc3ac7b55831351ed03f3dd97ea"
+        "sha256": "54e46322e98aee976d2ee89b24ec3d3fd912f515b7e6735308061a9eb8169e88",
+        "reportSha256": "54e46322e98aee976d2ee89b24ec3d3fd912f515b7e6735308061a9eb8169e88"
       },
       "checkedBy": {
-        "checker": "dsh-standards@1.6.6 (dsh-plugin-verify@0.1.0)",
+        "checker": "dsh-standards@1.6.7 (dsh-plugin-verify@0.1.0)",
         "command": "dsh-levels <package-dir> --no-runtime --format json",
         "securityCommand": "dsh-standards check <package-dir> --scope security --json"
       },
@@ -5633,11 +5633,11 @@
         "command": "dsh-standards check <package-dir> --scope security --json"
       },
       "evidence": {
-        "sha256": "6515c460471de32bacb9140c3a5ca7b658a215db23ec599c608559877fb3ce80",
-        "reportSha256": "6515c460471de32bacb9140c3a5ca7b658a215db23ec599c608559877fb3ce80"
+        "sha256": "50797173e6e2a28e0b229b4f1ff468ba1a233f75558f4a094faa67fe49b5a93f",
+        "reportSha256": "50797173e6e2a28e0b229b4f1ff468ba1a233f75558f4a094faa67fe49b5a93f"
       },
       "checkedBy": {
-        "checker": "dsh-standards@1.6.6 (dsh-plugin-verify@0.1.0)",
+        "checker": "dsh-standards@1.6.7 (dsh-plugin-verify@0.1.0)",
         "command": "dsh-levels <package-dir> --no-runtime --format json",
         "securityCommand": "dsh-standards check <package-dir> --scope security --json"
       },
@@ -5878,11 +5878,11 @@
         "command": "dsh-standards check <package-dir> --scope security --json"
       },
       "evidence": {
-        "sha256": "9ebd57a043a1d0d9fc012d8327dbc2cb1a67f46d7a00b8688f7df762dd79cb44",
-        "reportSha256": "9ebd57a043a1d0d9fc012d8327dbc2cb1a67f46d7a00b8688f7df762dd79cb44"
+        "sha256": "22cc4707cf11140ed5b9d3b00c98f28e5c32a7dbe1de3d640b3a40963a12916f",
+        "reportSha256": "22cc4707cf11140ed5b9d3b00c98f28e5c32a7dbe1de3d640b3a40963a12916f"
       },
       "checkedBy": {
-        "checker": "dsh-standards@1.6.6 (dsh-plugin-verify@0.1.0)",
+        "checker": "dsh-standards@1.6.7 (dsh-plugin-verify@0.1.0)",
         "command": "dsh-levels <package-dir> --no-runtime --format json",
         "securityCommand": "dsh-standards check <package-dir> --scope security --json"
       },
@@ -6123,11 +6123,11 @@
         "command": "dsh-standards check <package-dir> --scope security --json"
       },
       "evidence": {
-        "sha256": "48a457a16a9951b454994d58869f36467c1d38c4d0c61258a7b8cae5087b7671",
-        "reportSha256": "48a457a16a9951b454994d58869f36467c1d38c4d0c61258a7b8cae5087b7671"
+        "sha256": "8a4da6c4203066f31d3cfbfb760eb1abcab9cb324ea4cfcf9602ab3e2c18c2ce",
+        "reportSha256": "8a4da6c4203066f31d3cfbfb760eb1abcab9cb324ea4cfcf9602ab3e2c18c2ce"
       },
       "checkedBy": {
-        "checker": "dsh-standards@1.6.6 (dsh-plugin-verify@0.1.0)",
+        "checker": "dsh-standards@1.6.7 (dsh-plugin-verify@0.1.0)",
         "command": "dsh-levels <package-dir> --no-runtime --format json",
         "securityCommand": "dsh-standards check <package-dir> --scope security --json"
       },
@@ -6368,11 +6368,11 @@
         "command": "dsh-standards check <package-dir> --scope security --json"
       },
       "evidence": {
-        "sha256": "8a8a93219378b8fc6f14616380fd1c8f8e0abb454c6706f94b2d220ba0b71fc2",
-        "reportSha256": "8a8a93219378b8fc6f14616380fd1c8f8e0abb454c6706f94b2d220ba0b71fc2"
+        "sha256": "c5b2f1ddb74aaa0161636e065596d761ca6f393c053a1c1c32a2991ae3d5de8d",
+        "reportSha256": "c5b2f1ddb74aaa0161636e065596d761ca6f393c053a1c1c32a2991ae3d5de8d"
       },
       "checkedBy": {
-        "checker": "dsh-standards@1.6.6 (dsh-plugin-verify@0.1.0)",
+        "checker": "dsh-standards@1.6.7 (dsh-plugin-verify@0.1.0)",
         "command": "dsh-levels <package-dir> --no-runtime --format json",
         "securityCommand": "dsh-standards check <package-dir> --scope security --json"
       },
@@ -6613,11 +6613,11 @@
         "command": "dsh-standards check <package-dir> --scope security --json"
       },
       "evidence": {
-        "sha256": "c921153db38facae8eb604a1492cd45288a4c51daa6abf63e6b4c9e133a6aeea",
-        "reportSha256": "c921153db38facae8eb604a1492cd45288a4c51daa6abf63e6b4c9e133a6aeea"
+        "sha256": "c935373554ddcaa3db0965f18060c3f0ee91d77cd5187d7606e7863936e6a5b6",
+        "reportSha256": "c935373554ddcaa3db0965f18060c3f0ee91d77cd5187d7606e7863936e6a5b6"
       },
       "checkedBy": {
-        "checker": "dsh-standards@1.6.6 (dsh-plugin-verify@0.1.0)",
+        "checker": "dsh-standards@1.6.7 (dsh-plugin-verify@0.1.0)",
         "command": "dsh-levels <package-dir> --no-runtime --format json",
         "securityCommand": "dsh-standards check <package-dir> --scope security --json"
       },
@@ -6858,11 +6858,11 @@
         "command": "dsh-standards check <package-dir> --scope security --json"
       },
       "evidence": {
-        "sha256": "b8fd30e76285286bbb4b6fc55937ff24dfba432580682a32a7e2f921e1a5e5d9",
-        "reportSha256": "b8fd30e76285286bbb4b6fc55937ff24dfba432580682a32a7e2f921e1a5e5d9"
+        "sha256": "ba3bfbf0c515c9e85dd1718cc381017e1883d96d34dc50767cbad8dac6e10e04",
+        "reportSha256": "ba3bfbf0c515c9e85dd1718cc381017e1883d96d34dc50767cbad8dac6e10e04"
       },
       "checkedBy": {
-        "checker": "dsh-standards@1.6.6 (dsh-plugin-verify@0.1.0)",
+        "checker": "dsh-standards@1.6.7 (dsh-plugin-verify@0.1.0)",
         "command": "dsh-levels <package-dir> --no-runtime --format json",
         "securityCommand": "dsh-standards check <package-dir> --scope security --json"
       },
@@ -7103,11 +7103,11 @@
         "command": "dsh-standards check <package-dir> --scope security --json"
       },
       "evidence": {
-        "sha256": "8e33b44707cb305371823733032b084cb62e3c3e9dade6b4274bf58ba22d419b",
-        "reportSha256": "8e33b44707cb305371823733032b084cb62e3c3e9dade6b4274bf58ba22d419b"
+        "sha256": "0d7610895af66a2e4ca7824f965d0d80b74f8cce255065b039be4eb2db5f0a90",
+        "reportSha256": "0d7610895af66a2e4ca7824f965d0d80b74f8cce255065b039be4eb2db5f0a90"
       },
       "checkedBy": {
-        "checker": "dsh-standards@1.6.6 (dsh-plugin-verify@0.1.0)",
+        "checker": "dsh-standards@1.6.7 (dsh-plugin-verify@0.1.0)",
         "command": "dsh-levels <package-dir> --no-runtime --format json",
         "securityCommand": "dsh-standards check <package-dir> --scope security --json"
       },
@@ -7348,11 +7348,11 @@
         "command": "dsh-standards check <package-dir> --scope security --json"
       },
       "evidence": {
-        "sha256": "1aaed75cd25c6480db2c5c37fae3ee174abc4001e36d970c5c402006c7c96868",
-        "reportSha256": "1aaed75cd25c6480db2c5c37fae3ee174abc4001e36d970c5c402006c7c96868"
+        "sha256": "254119b35e03e099ee3cccc616699c2eb6dcf9999326b7c2f4e66fb31eefaa85",
+        "reportSha256": "254119b35e03e099ee3cccc616699c2eb6dcf9999326b7c2f4e66fb31eefaa85"
       },
       "checkedBy": {
-        "checker": "dsh-standards@1.6.6 (dsh-plugin-verify@0.1.0)",
+        "checker": "dsh-standards@1.6.7 (dsh-plugin-verify@0.1.0)",
         "command": "dsh-levels <package-dir> --no-runtime --format json",
         "securityCommand": "dsh-standards check <package-dir> --scope security --json"
       },
@@ -7404,7 +7404,7 @@
         },
         {
           "id": "DSC-02",
-          "result": "FAIL",
+          "result": "WARN",
           "coverage": "full"
         },
         {
@@ -7593,11 +7593,11 @@
         "command": "dsh-standards check <package-dir> --scope security --json"
       },
       "evidence": {
-        "sha256": "52b465618e9737961f42c4ef99122f317510b72a00555ed0384b425de686c621",
-        "reportSha256": "52b465618e9737961f42c4ef99122f317510b72a00555ed0384b425de686c621"
+        "sha256": "44269ae088b3c7d0fa32a033c3c488fe5cec19b1e0816eaa91fe94c7850a8f4a",
+        "reportSha256": "44269ae088b3c7d0fa32a033c3c488fe5cec19b1e0816eaa91fe94c7850a8f4a"
       },
       "checkedBy": {
-        "checker": "dsh-standards@1.6.6 (dsh-plugin-verify@0.1.0)",
+        "checker": "dsh-standards@1.6.7 (dsh-plugin-verify@0.1.0)",
         "command": "dsh-levels <package-dir> --no-runtime --format json",
         "securityCommand": "dsh-standards check <package-dir> --scope security --json"
       },
@@ -7838,11 +7838,11 @@
         "command": "dsh-standards check <package-dir> --scope security --json"
       },
       "evidence": {
-        "sha256": "b2467ba322d4dc1336ef022fc35a4429d6b41e5be125b12fef727d818a4ddd6b",
-        "reportSha256": "b2467ba322d4dc1336ef022fc35a4429d6b41e5be125b12fef727d818a4ddd6b"
+        "sha256": "2f4322b0ce8ddd225610d9f39896e4b31851b35a353f99c789ad2a43bd2bf437",
+        "reportSha256": "2f4322b0ce8ddd225610d9f39896e4b31851b35a353f99c789ad2a43bd2bf437"
       },
       "checkedBy": {
-        "checker": "dsh-standards@1.6.6 (dsh-plugin-verify@0.1.0)",
+        "checker": "dsh-standards@1.6.7 (dsh-plugin-verify@0.1.0)",
         "command": "dsh-levels <package-dir> --no-runtime --format json",
         "securityCommand": "dsh-standards check <package-dir> --scope security --json"
       },
@@ -8083,11 +8083,11 @@
         "command": "dsh-standards check <package-dir> --scope security --json"
       },
       "evidence": {
-        "sha256": "1ccefd1cf3e597168395a9739c83b79c18a14b28fe305b216fdbe8b770c83be2",
-        "reportSha256": "1ccefd1cf3e597168395a9739c83b79c18a14b28fe305b216fdbe8b770c83be2"
+        "sha256": "7ad44119db96e5a66d1cbed533720007763c38767fd9d45156f00a37a754d5a0",
+        "reportSha256": "7ad44119db96e5a66d1cbed533720007763c38767fd9d45156f00a37a754d5a0"
       },
       "checkedBy": {
-        "checker": "dsh-standards@1.6.6 (dsh-plugin-verify@0.1.0)",
+        "checker": "dsh-standards@1.6.7 (dsh-plugin-verify@0.1.0)",
         "command": "dsh-levels <package-dir> --no-runtime --format json",
         "securityCommand": "dsh-standards check <package-dir> --scope security --json"
       },
@@ -8328,11 +8328,11 @@
         "command": "dsh-standards check <package-dir> --scope security --json"
       },
       "evidence": {
-        "sha256": "223989da93296f15675cd9211f97d2b76dc2f26b4ec90b77de8985fc7bb33028",
-        "reportSha256": "223989da93296f15675cd9211f97d2b76dc2f26b4ec90b77de8985fc7bb33028"
+        "sha256": "1b5bc72c920cad5e6ea713fbeb518c7576c37cf7c7bf2ac7d9a7f466e4680154",
+        "reportSha256": "1b5bc72c920cad5e6ea713fbeb518c7576c37cf7c7bf2ac7d9a7f466e4680154"
       },
       "checkedBy": {
-        "checker": "dsh-standards@1.6.6 (dsh-plugin-verify@0.1.0)",
+        "checker": "dsh-standards@1.6.7 (dsh-plugin-verify@0.1.0)",
         "command": "dsh-levels <package-dir> --no-runtime --format json",
         "securityCommand": "dsh-standards check <package-dir> --scope security --json"
       },
@@ -8573,11 +8573,11 @@
         "command": "dsh-standards check <package-dir> --scope security --json"
       },
       "evidence": {
-        "sha256": "c8c6ada862859e81ea2b03c3055602e763f1bc940ac70abfc0764ca4b4982c8e",
-        "reportSha256": "c8c6ada862859e81ea2b03c3055602e763f1bc940ac70abfc0764ca4b4982c8e"
+        "sha256": "5b261674fb1df2babdf53d3e5ef155bcbb0e54ec7e153604d2612fde5845abe9",
+        "reportSha256": "5b261674fb1df2babdf53d3e5ef155bcbb0e54ec7e153604d2612fde5845abe9"
       },
       "checkedBy": {
-        "checker": "dsh-standards@1.6.6 (dsh-plugin-verify@0.1.0)",
+        "checker": "dsh-standards@1.6.7 (dsh-plugin-verify@0.1.0)",
         "command": "dsh-levels <package-dir> --no-runtime --format json",
         "securityCommand": "dsh-standards check <package-dir> --scope security --json"
       },
@@ -8629,7 +8629,7 @@
         },
         {
           "id": "DSC-02",
-          "result": "WARN",
+          "result": "PASS",
           "coverage": "full"
         },
         {
@@ -8703,7 +8703,7 @@
           },
           {
             "id": "DSC-02",
-            "result": "FAIL",
+            "result": "PASS",
             "coverage": "full"
           },
           {
@@ -8810,7 +8810,7 @@
         "summary": {
           "total": 22,
           "checked": 19,
-          "blocking": 1,
+          "blocking": 0,
           "warn": 5,
           "na": 3,
           "notRun": 3
@@ -8818,11 +8818,11 @@
         "command": "dsh-standards check <package-dir> --scope security --json"
       },
       "evidence": {
-        "sha256": "b20aa6e1cfdeaccff563b2b971064e152e48809ccb55001225638a7610cd9233",
-        "reportSha256": "b20aa6e1cfdeaccff563b2b971064e152e48809ccb55001225638a7610cd9233"
+        "sha256": "b72018f63a3d759bcf8aba37c4ef3ca716187b6dda1b3b694ba2b83d21b9e3f0",
+        "reportSha256": "b72018f63a3d759bcf8aba37c4ef3ca716187b6dda1b3b694ba2b83d21b9e3f0"
       },
       "checkedBy": {
-        "checker": "dsh-standards@1.6.6 (dsh-plugin-verify@0.1.0)",
+        "checker": "dsh-standards@1.6.7 (dsh-plugin-verify@0.1.0)",
         "command": "dsh-levels <package-dir> --no-runtime --format json",
         "securityCommand": "dsh-standards check <package-dir> --scope security --json"
       },
@@ -8874,7 +8874,7 @@
         },
         {
           "id": "DSC-02",
-          "result": "FAIL",
+          "result": "WARN",
           "coverage": "full"
         },
         {
@@ -9063,11 +9063,11 @@
         "command": "dsh-standards check <package-dir> --scope security --json"
       },
       "evidence": {
-        "sha256": "d64f95aea3cad2996e24f3479a281d179e3228037b661e7a35cead7e14a93fb8",
-        "reportSha256": "d64f95aea3cad2996e24f3479a281d179e3228037b661e7a35cead7e14a93fb8"
+        "sha256": "034c99bc9248b842d285e0ac3a2352eebfc855611bd205032aaa0893861707f1",
+        "reportSha256": "034c99bc9248b842d285e0ac3a2352eebfc855611bd205032aaa0893861707f1"
       },
       "checkedBy": {
-        "checker": "dsh-standards@1.6.6 (dsh-plugin-verify@0.1.0)",
+        "checker": "dsh-standards@1.6.7 (dsh-plugin-verify@0.1.0)",
         "command": "dsh-levels <package-dir> --no-runtime --format json",
         "securityCommand": "dsh-standards check <package-dir> --scope security --json"
       },
@@ -9119,7 +9119,7 @@
         },
         {
           "id": "DSC-02",
-          "result": "FAIL",
+          "result": "WARN",
           "coverage": "full"
         },
         {
@@ -9308,11 +9308,11 @@
         "command": "dsh-standards check <package-dir> --scope security --json"
       },
       "evidence": {
-        "sha256": "91208897340d16594346d8b43dc2ca9addc85296b89a04b31afc934d5b28464f",
-        "reportSha256": "91208897340d16594346d8b43dc2ca9addc85296b89a04b31afc934d5b28464f"
+        "sha256": "ed3fa8846dbf738542f0be9513b5592eba95b48bf0ad430bcc211560bf6141c5",
+        "reportSha256": "ed3fa8846dbf738542f0be9513b5592eba95b48bf0ad430bcc211560bf6141c5"
       },
       "checkedBy": {
-        "checker": "dsh-standards@1.6.6 (dsh-plugin-verify@0.1.0)",
+        "checker": "dsh-standards@1.6.7 (dsh-plugin-verify@0.1.0)",
         "command": "dsh-levels <package-dir> --no-runtime --format json",
         "securityCommand": "dsh-standards check <package-dir> --scope security --json"
       },
@@ -9553,11 +9553,11 @@
         "command": "dsh-standards check <package-dir> --scope security --json"
       },
       "evidence": {
-        "sha256": "89683a85c5e30e8044bff6174a883ed531a80567a79fbb3e525f74438fa5e595",
-        "reportSha256": "89683a85c5e30e8044bff6174a883ed531a80567a79fbb3e525f74438fa5e595"
+        "sha256": "ee2c6d72bd89586b6f42a6c8122f8f7e4a7851bfb110c739fb4a59f713a3971c",
+        "reportSha256": "ee2c6d72bd89586b6f42a6c8122f8f7e4a7851bfb110c739fb4a59f713a3971c"
       },
       "checkedBy": {
-        "checker": "dsh-standards@1.6.6 (dsh-plugin-verify@0.1.0)",
+        "checker": "dsh-standards@1.6.7 (dsh-plugin-verify@0.1.0)",
         "command": "dsh-levels <package-dir> --no-runtime --format json",
         "securityCommand": "dsh-standards check <package-dir> --scope security --json"
       },
@@ -9609,7 +9609,7 @@
         },
         {
           "id": "DSC-02",
-          "result": "FAIL",
+          "result": "WARN",
           "coverage": "full"
         },
         {
@@ -9798,11 +9798,11 @@
         "command": "dsh-standards check <package-dir> --scope security --json"
       },
       "evidence": {
-        "sha256": "fc07cfd7540bfd8b06c85f76a445b2ed0d3735f75ca669ea5dab4434ce96e8ce",
-        "reportSha256": "fc07cfd7540bfd8b06c85f76a445b2ed0d3735f75ca669ea5dab4434ce96e8ce"
+        "sha256": "f16aa00cccd6607d36c3a8dce1655c1bd444c4dc48b87d4d5580330e702d41c2",
+        "reportSha256": "f16aa00cccd6607d36c3a8dce1655c1bd444c4dc48b87d4d5580330e702d41c2"
       },
       "checkedBy": {
-        "checker": "dsh-standards@1.6.6 (dsh-plugin-verify@0.1.0)",
+        "checker": "dsh-standards@1.6.7 (dsh-plugin-verify@0.1.0)",
         "command": "dsh-levels <package-dir> --no-runtime --format json",
         "securityCommand": "dsh-standards check <package-dir> --scope security --json"
       },
@@ -10043,11 +10043,11 @@
         "command": "dsh-standards check <package-dir> --scope security --json"
       },
       "evidence": {
-        "sha256": "01cfd8057b56683b4c4b6bea2adc7af1f8b7b8bea9b21f3802c5f2b8b87dc9df",
-        "reportSha256": "01cfd8057b56683b4c4b6bea2adc7af1f8b7b8bea9b21f3802c5f2b8b87dc9df"
+        "sha256": "ae7fed7ad0f0048557d7af7803228cd1d4426dc862ab1fd21c76436648ba85c6",
+        "reportSha256": "ae7fed7ad0f0048557d7af7803228cd1d4426dc862ab1fd21c76436648ba85c6"
       },
       "checkedBy": {
-        "checker": "dsh-standards@1.6.6 (dsh-plugin-verify@0.1.0)",
+        "checker": "dsh-standards@1.6.7 (dsh-plugin-verify@0.1.0)",
         "command": "dsh-levels <package-dir> --no-runtime --format json",
         "securityCommand": "dsh-standards check <package-dir> --scope security --json"
       },
@@ -10288,11 +10288,11 @@
         "command": "dsh-standards check <package-dir> --scope security --json"
       },
       "evidence": {
-        "sha256": "925fddb5d28ef24e0335f0bbc68683a7ee308bfcd74f1eff38a9773364a6e7b2",
-        "reportSha256": "925fddb5d28ef24e0335f0bbc68683a7ee308bfcd74f1eff38a9773364a6e7b2"
+        "sha256": "159fa9655cff68855a3dc00467085dc879da7fffbd1aac125bed49818ee403ac",
+        "reportSha256": "159fa9655cff68855a3dc00467085dc879da7fffbd1aac125bed49818ee403ac"
       },
       "checkedBy": {
-        "checker": "dsh-standards@1.6.6 (dsh-plugin-verify@0.1.0)",
+        "checker": "dsh-standards@1.6.7 (dsh-plugin-verify@0.1.0)",
         "command": "dsh-levels <package-dir> --no-runtime --format json",
         "securityCommand": "dsh-standards check <package-dir> --scope security --json"
       },
@@ -10344,7 +10344,7 @@
         },
         {
           "id": "DSC-02",
-          "result": "FAIL",
+          "result": "WARN",
           "coverage": "full"
         },
         {
@@ -10533,11 +10533,11 @@
         "command": "dsh-standards check <package-dir> --scope security --json"
       },
       "evidence": {
-        "sha256": "a145deb8b2792ba3fb4f4e2a461d394ac5b9bdddd82ec1d0f99941b912075ec0",
-        "reportSha256": "a145deb8b2792ba3fb4f4e2a461d394ac5b9bdddd82ec1d0f99941b912075ec0"
+        "sha256": "45fbc77fb957182250bd3de93ef62f895943d2a668e598363a24fb9c007796b2",
+        "reportSha256": "45fbc77fb957182250bd3de93ef62f895943d2a668e598363a24fb9c007796b2"
       },
       "checkedBy": {
-        "checker": "dsh-standards@1.6.6 (dsh-plugin-verify@0.1.0)",
+        "checker": "dsh-standards@1.6.7 (dsh-plugin-verify@0.1.0)",
         "command": "dsh-levels <package-dir> --no-runtime --format json",
         "securityCommand": "dsh-standards check <package-dir> --scope security --json"
       },
@@ -10778,11 +10778,11 @@
         "command": "dsh-standards check <package-dir> --scope security --json"
       },
       "evidence": {
-        "sha256": "792dffbc206994e8a31cf92181541481103e9d48d81697ab4fce2366f8149b9c",
-        "reportSha256": "792dffbc206994e8a31cf92181541481103e9d48d81697ab4fce2366f8149b9c"
+        "sha256": "5a042ce9ae700da1b156fa1a75aa67da61c44e8eba880fbf965656d416ef114c",
+        "reportSha256": "5a042ce9ae700da1b156fa1a75aa67da61c44e8eba880fbf965656d416ef114c"
       },
       "checkedBy": {
-        "checker": "dsh-standards@1.6.6 (dsh-plugin-verify@0.1.0)",
+        "checker": "dsh-standards@1.6.7 (dsh-plugin-verify@0.1.0)",
         "command": "dsh-levels <package-dir> --no-runtime --format json",
         "securityCommand": "dsh-standards check <package-dir> --scope security --json"
       },
@@ -11023,11 +11023,11 @@
         "command": "dsh-standards check <package-dir> --scope security --json"
       },
       "evidence": {
-        "sha256": "c1beacea04c3d3c35553ec6ca11d42a73a35390f5122c1f85952205653b2db40",
-        "reportSha256": "c1beacea04c3d3c35553ec6ca11d42a73a35390f5122c1f85952205653b2db40"
+        "sha256": "5b8fffe231a2c5f56e96180c360427b5c3ccb460f4c433f2b4b598ab24480798",
+        "reportSha256": "5b8fffe231a2c5f56e96180c360427b5c3ccb460f4c433f2b4b598ab24480798"
       },
       "checkedBy": {
-        "checker": "dsh-standards@1.6.6 (dsh-plugin-verify@0.1.0)",
+        "checker": "dsh-standards@1.6.7 (dsh-plugin-verify@0.1.0)",
         "command": "dsh-levels <package-dir> --no-runtime --format json",
         "securityCommand": "dsh-standards check <package-dir> --scope security --json"
       },
@@ -11268,11 +11268,11 @@
         "command": "dsh-standards check <package-dir> --scope security --json"
       },
       "evidence": {
-        "sha256": "7f984d270e73ef05b36035d29b5339afd335c8182038944da61e7afe8d5755c8",
-        "reportSha256": "7f984d270e73ef05b36035d29b5339afd335c8182038944da61e7afe8d5755c8"
+        "sha256": "b7945d60a35446d55c5658de8191217d984c8ce19d19ed67b78ad8d719265988",
+        "reportSha256": "b7945d60a35446d55c5658de8191217d984c8ce19d19ed67b78ad8d719265988"
       },
       "checkedBy": {
-        "checker": "dsh-standards@1.6.6 (dsh-plugin-verify@0.1.0)",
+        "checker": "dsh-standards@1.6.7 (dsh-plugin-verify@0.1.0)",
         "command": "dsh-levels <package-dir> --no-runtime --format json",
         "securityCommand": "dsh-standards check <package-dir> --scope security --json"
       },
@@ -11513,11 +11513,11 @@
         "command": "dsh-standards check <package-dir> --scope security --json"
       },
       "evidence": {
-        "sha256": "563979e3f9210740e664b99c40396888f4f58e6044bd722e3080c1e07b52b2d1",
-        "reportSha256": "563979e3f9210740e664b99c40396888f4f58e6044bd722e3080c1e07b52b2d1"
+        "sha256": "41bc40c00da8d0f9f3a6848c9f5e15c0a29abf05630be0bbda76e855ec57a7cb",
+        "reportSha256": "41bc40c00da8d0f9f3a6848c9f5e15c0a29abf05630be0bbda76e855ec57a7cb"
       },
       "checkedBy": {
-        "checker": "dsh-standards@1.6.6 (dsh-plugin-verify@0.1.0)",
+        "checker": "dsh-standards@1.6.7 (dsh-plugin-verify@0.1.0)",
         "command": "dsh-levels <package-dir> --no-runtime --format json",
         "securityCommand": "dsh-standards check <package-dir> --scope security --json"
       },
@@ -11758,11 +11758,11 @@
         "command": "dsh-standards check <package-dir> --scope security --json"
       },
       "evidence": {
-        "sha256": "5418035fca53f3b601633394315bf43e21bf76847624f3fa94ee34a213a1513b",
-        "reportSha256": "5418035fca53f3b601633394315bf43e21bf76847624f3fa94ee34a213a1513b"
+        "sha256": "c89c1a8f35982e4befcd279f27b3692aa6c311e0058d0476c811a32ebdfe5843",
+        "reportSha256": "c89c1a8f35982e4befcd279f27b3692aa6c311e0058d0476c811a32ebdfe5843"
       },
       "checkedBy": {
-        "checker": "dsh-standards@1.6.6 (dsh-plugin-verify@0.1.0)",
+        "checker": "dsh-standards@1.6.7 (dsh-plugin-verify@0.1.0)",
         "command": "dsh-levels <package-dir> --no-runtime --format json",
         "securityCommand": "dsh-standards check <package-dir> --scope security --json"
       },
@@ -11814,7 +11814,7 @@
         },
         {
           "id": "DSC-02",
-          "result": "FAIL",
+          "result": "WARN",
           "coverage": "full"
         },
         {
@@ -12003,11 +12003,11 @@
         "command": "dsh-standards check <package-dir> --scope security --json"
       },
       "evidence": {
-        "sha256": "6d438c21c8c388dbd5dea03f3f4fb2a522e41ee45d193bd7e30c76ddaa394697",
-        "reportSha256": "6d438c21c8c388dbd5dea03f3f4fb2a522e41ee45d193bd7e30c76ddaa394697"
+        "sha256": "2662154ab7d751fcbc3bb6c476854e9f278a2497e91efedff286d1033aae637a",
+        "reportSha256": "2662154ab7d751fcbc3bb6c476854e9f278a2497e91efedff286d1033aae637a"
       },
       "checkedBy": {
-        "checker": "dsh-standards@1.6.6 (dsh-plugin-verify@0.1.0)",
+        "checker": "dsh-standards@1.6.7 (dsh-plugin-verify@0.1.0)",
         "command": "dsh-levels <package-dir> --no-runtime --format json",
         "securityCommand": "dsh-standards check <package-dir> --scope security --json"
       },
@@ -12248,11 +12248,11 @@
         "command": "dsh-standards check <package-dir> --scope security --json"
       },
       "evidence": {
-        "sha256": "95132d5231ece01d4227b72262040546b881eec00e524d8c06e9fd07dc0289db",
-        "reportSha256": "95132d5231ece01d4227b72262040546b881eec00e524d8c06e9fd07dc0289db"
+        "sha256": "f5146cae3eea053bb25e33a1a4508bdabfbf1c114fcc0444e379c0fdf1e0f444",
+        "reportSha256": "f5146cae3eea053bb25e33a1a4508bdabfbf1c114fcc0444e379c0fdf1e0f444"
       },
       "checkedBy": {
-        "checker": "dsh-standards@1.6.6 (dsh-plugin-verify@0.1.0)",
+        "checker": "dsh-standards@1.6.7 (dsh-plugin-verify@0.1.0)",
         "command": "dsh-levels <package-dir> --no-runtime --format json",
         "securityCommand": "dsh-standards check <package-dir> --scope security --json"
       },
