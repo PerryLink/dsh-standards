@@ -4,6 +4,7 @@ import path from 'node:path'
 import { fileURLToPath } from 'node:url'
 import { runManifestChecks, DEFAULT_RUNTIME_VERSION } from './manifest.mjs'
 import { checkCapabilities, checkCredentials, checkImportTimeAdvisory, checkLabels } from './declarations.mjs'
+import { parseVersion } from './semver.mjs'
 import { runSecurityChecks } from './security.mjs'
 import { runRuntimeChecks } from './runtime.mjs'
 import { runStaticBundleChecks } from './bundle-static.mjs'
@@ -40,6 +41,10 @@ Options:
   --runtime [path|auto]      built @deepseek-ai/cordis lib/index.js (or its package dir); bare or
                              'auto' resolves from the installed dsh; enables real L1-L3
   --runtime-version <v>      dsh runtime version used for C-2 (default: host via \`dsh --version\`, else ${DEFAULT_RUNTIME_VERSION})
+  --host-version <v>         explicit host dsh version for C-2 (skips \`dsh --version\`; when neither is
+                             available the anchor is source=default, suspect=true and C-2 is NA/partial)
+  --registry-dir <dir>       read a dsh registry layout (dsh.plugin.json) instead of package.json;
+                             a <dir> that only has dsh.plugin.json is auto-detected
   --cordis-version <v>       cordis version recorded in the anchor (default: ${DEFAULT_CORDIS})
   --commit <sha>             harness commit recorded in the anchor (default: ${DEFAULT_COMMIT.slice(0, 12)})
   --install-spec <spec>      recommended install spec for C-3 (listing/install check)
@@ -84,6 +89,8 @@ function parseArgs(argv) {
     profile: null,
     runtime: null,
     runtimeVersion: null,
+    hostVersion: null,
+    registryDir: null,
     cordisVersion: DEFAULT_CORDIS,
     commit: DEFAULT_COMMIT,
     installSpec: null,
@@ -137,6 +144,8 @@ function parseArgs(argv) {
         break
       }
       case '--runtime-version': options.runtimeVersion = value(); break
+      case '--host-version': options.hostVersion = value(); break
+      case '--registry-dir': options.registryDir = value(); break
       case '--cordis-version': options.cordisVersion = value(); break
       case '--commit': options.commit = value(); break
       case '--install-spec': options.installSpec = value(); break
@@ -180,6 +189,12 @@ function parseArgs(argv) {
   if (!Number.isFinite(options.timeoutMs) || options.timeoutMs < 100 || options.timeoutMs > 120_000) throw new Error('--timeout must be between 100 and 120000 ms')
   if (!Number.isInteger(options.maxFiles) || options.maxFiles < 1 || options.maxFiles > 200_000) throw new Error('--max-files must be an integer between 1 and 200000')
   if (!Number.isInteger(options.maxBytes) || options.maxBytes < 1000 || options.maxBytes > 2_000_000_000) throw new Error('--max-bytes must be an integer between 1000 and 2000000000')
+  if (options.hostVersion !== null) {
+    const normalized = String(options.hostVersion).trim().replace(/^v/, '')
+    if (normalized === '' || parseVersion(normalized) === null) throw new Error('--host-version must be an exact semver version')
+    options.hostVersion = normalized
+  }
+  if (options.registryDir !== null && String(options.registryDir).trim() === '') throw new Error('--registry-dir needs a directory')
   if (options.target === null) options.target = '.'
   return options
 }
@@ -492,8 +507,9 @@ export function detectHostRuntime({ bin = process.env.DSH_BIN || (process.platfo
 /**
  * Resolve what `anchor.dsh` means:
  *   cli       the caller passed --runtime-version; suspect when it differs from the host
- *   host      no flag: the host version is the anchor, so it cannot be suspect
- *   fallback  dsh unavailable: keep the constant, flagged as not host-derived
+ *   host      the host version is known (--host-version or a successful `dsh --version`)
+ *   default   no host version is available: the constant is only a placeholder, so
+ *             `suspect` is true and C-2 must be reported as not judged (NA/partial)
  */
 export function resolveRuntimeAnchor(requestedVersion = null, hostVersion = null) {
   if (typeof requestedVersion === 'string' && requestedVersion.trim() !== '') {
@@ -508,7 +524,7 @@ export function resolveRuntimeAnchor(requestedVersion = null, hostVersion = null
   if (typeof hostVersion === 'string' && hostVersion !== '') {
     return { dsh: hostVersion, runtimeSource: 'host', hostVersion, suspect: false }
   }
-  return { dsh: DEFAULT_RUNTIME_VERSION, runtimeSource: 'fallback', hostVersion: null, suspect: false }
+  return { dsh: DEFAULT_RUNTIME_VERSION, runtimeSource: 'default', hostVersion: null, suspect: true }
 }
 
 /** The five optional declaration surfaces, counted but never scored. */
@@ -537,6 +553,53 @@ function anchorOf(options, runtimeInfo, runtimePath) {
   }
 }
 
+/**
+ * `howToEnable` is normally derived by report.mjs from the check id alone. A
+ * check can know a better answer (e.g. C-2 needs a host version), so copy the
+ * check-level hint onto its bucket/notChecked rows. This is additive: the
+ * verdict never reads it.
+ */
+export function applyCheckHowToEnable(report) {
+  const byId = new Map((report?.checks ?? [])
+    .filter(item => typeof item?.howToEnable === 'string' && item.howToEnable !== '')
+    .map(item => [item.id, item.howToEnable]))
+  if (byId.size === 0) return report
+  const rows = [
+    ...(report.notChecked ?? []),
+    ...(report.buckets?.notChecked ?? []),
+    ...(report.buckets?.partial ?? []),
+  ]
+  for (const row of rows) {
+    if (byId.has(row.id)) row.howToEnable = byId.get(row.id)
+  }
+  return report
+}
+
+/**
+ * When the anchor is the unchecked-in default, C-2 compatibility was not
+ * judged. Keep the check at NA/partial and say, in the report itself, how to
+ * supply a host version. Never turn the placeholder into a FAIL.
+ */
+export function annotateUnknownHostCompatibility(report, runtimeInfo) {
+  if (runtimeInfo?.runtimeSource !== 'default') return report
+  const howToEnable = 'pass --host-version <v> (or run `check --allow-host-probe`); without a host version C-2.1/C-2.2 stay NA and compatibility is not judged'
+  const note = 'C-2 compatibility not judged: 未指定 host 版本，兼容性未判定 (pass --host-version <v> or --allow-host-probe)'
+  const compat = (report.checks ?? []).find(item => item.id === 'DSC-02')
+  if (compat) {
+    compat.coverage = 'partial'
+    compat.howToEnable = howToEnable
+  }
+  for (const row of [...(report.notChecked ?? []), ...(report.buckets?.notChecked ?? []), ...(report.buckets?.partial ?? [])]) {
+    if (row.id !== 'DSC-02') continue
+    row.coverage = 'partial'
+    row.howToEnable = howToEnable
+  }
+  if (report.conclusion && !String(report.conclusion.reason ?? '').includes('兼容性未判定')) {
+    report.conclusion.reason = [report.conclusion.reason, note].filter(Boolean).join('; ')
+  }
+  return report
+}
+
 export async function main(argv = process.argv.slice(2)) {
   let options
   try {
@@ -549,7 +612,7 @@ export async function main(argv = process.argv.slice(2)) {
   if (options.help) { process.stdout.write(usage()); return 0 }
   if (options.version) { process.stdout.write(`${VERSION}\n`); return 0 }
 
-  const dir = path.resolve(options.target)
+  const dir = path.resolve(options.registryDir ?? options.target)
   let stat
   try { stat = fs.statSync(dir) } catch {
     process.stderr.write(`dsh-plugin-verify: target not found: ${dir}\n`)
@@ -559,13 +622,28 @@ export async function main(argv = process.argv.slice(2)) {
     process.stderr.write(`dsh-plugin-verify: target must be a package directory (tarball support is not in the MVP): ${dir}\n`)
     return 3
   }
-  if (!fs.existsSync(path.join(dir, 'package.json'))) {
-    process.stderr.write(`dsh-plugin-verify: not a package directory (no package.json): ${dir}\n`)
+  const hasPackageJson = fs.existsSync(path.join(dir, 'package.json'))
+  const hasRegistryManifest = fs.existsSync(path.join(dir, 'dsh.plugin.json'))
+  if (!hasPackageJson && !hasRegistryManifest) {
+    process.stderr.write(`dsh-plugin-verify: not a package directory (no package.json or dsh.plugin.json): ${dir}\n`)
     return 3
   }
+  if (options.registryDir !== null && !hasRegistryManifest) {
+    process.stderr.write(`dsh-plugin-verify: --registry-dir has no dsh.plugin.json: ${dir}\n`)
+    return 3
+  }
+  // A sidebar-style `registry/` output has only dsh.plugin.json. Auto-detect it,
+  // and let --registry-dir force that mode even when a package.json is present.
+  const registryMode = options.registryDir !== null || (!hasPackageJson && hasRegistryManifest)
 
-  const host = detectHostRuntime()
+  // --host-version is an explicit anchor and skips PATH probing entirely.
+  // Otherwise the legacy best-effort `dsh --version` probe still runs; when it
+  // fails the anchor is the default constant, suspect=true, and C-2 is NA.
+  const host = options.hostVersion !== null
+    ? { version: options.hostVersion, bin: '--host-version', error: null }
+    : detectHostRuntime()
   const runtimeInfo = resolveRuntimeAnchor(options.runtimeVersion, host.version)
+  const compatibilityKnown = runtimeInfo.runtimeSource !== 'default'
 
   // `--runtime auto` / `--host auto` resolve from the installed dsh. A value
   // that still cannot be resolved is a usage error: silently skipping the run
@@ -586,7 +664,9 @@ export async function main(argv = process.argv.slice(2)) {
     return 3
   }
 
-  const { manifest, kind, kindInferred, entry, patch, g4, checks: manifestChecks } = runManifestChecks(dir, {
+  const { manifest, manifestSource, kind, kindInferred, entry, patch, g4, checks: manifestChecks } = runManifestChecks(dir, {
+    registry: registryMode,
+    compatibilityKnown,
     runtimeVersion: runtimeInfo.dsh,
     installSpec: options.installSpec,
     marketIndex: options.marketIndex,
@@ -752,6 +832,9 @@ export async function main(argv = process.argv.slice(2)) {
     name: manifest?.name ?? null,
     version: manifest?.version ?? null,
     path: dir,
+    // Additive: a registry layout (dsh.plugin.json, no package.json) is a
+    // different input contract from an npm package directory.
+    ...(manifestSource === 'registry' ? { source: 'registry' } : {}),
   }
   const report = buildReport({
     subject,
@@ -769,6 +852,8 @@ export async function main(argv = process.argv.slice(2)) {
     runtimeChecks: runtimeSummary,
     securityChecks,
   })
+  applyCheckHowToEnable(report)
+  annotateUnknownHostCompatibility(report, runtimeInfo)
   // An explicitly requested runtime/host run that could not produce a result
   // is not a clean static pass: the caller asked for execution, so say the run
   // is incomplete. A static report (no flag) is unaffected.

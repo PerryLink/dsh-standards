@@ -11,6 +11,11 @@ const PACKAGE_NAME = /^(?:@[a-z0-9][a-z0-9._~-]*\/)?[a-z0-9][a-z0-9._~-]*$/
 const PACKAGE_NAME_MAX_LENGTH = 214
 const EXACT_VERSION = /^\d+\.\d+\.\d+(?:-[0-9A-Za-z.-]+)?(?:\+[0-9A-Za-z.-]+)?$/
 const COMMIT = /^[0-9a-f]{40}$/
+// A dsh registry id is `<owner>/<name>` (the sidebar uses
+// `dsh-external/dsh-better-sidebar`); it is not required to be an npm name.
+const REGISTRY_ID = /^[a-z0-9][a-z0-9._~-]*(?:\/[a-z0-9][a-z0-9._~-]*)?$/
+const UNKNOWN_HOST_HOW = 'pass --host-version <v> (or run `check --allow-host-probe`); without a host version C-2.1/C-2.2 stay NA and compatibility is not judged'
+const UNKNOWN_HOST_REASON = '未指定 host 版本（host version not specified），兼容性未判定（compatibility not judged）；C-2.1/C-2.2 are NA, not FAIL/PASS'
 
 export const DEFAULT_RUNTIME_VERSION = '0.2.2-alpha.2'
 
@@ -157,96 +162,168 @@ function analyzePatch(dir, manifest) {
   return { present: true, files, problems, rows, enabledPluginManagerTools }
 }
 
-function supplyChain(dir, manifest) {
+function supplyChain(dir, manifest, { registry = false, packageJsonAvailable = true } = {}) {
   const details = []
+  const label = registry ? 'dsh.plugin.json' : 'package.json'
+  if (registry && !packageJsonAvailable) {
+    details.push(detail('C-3.3', 'NA', 'registry layout has no package.json; dependency provenance is not judged', [`${label}#dependencies`]))
+    details.push(detail('C-3.4', 'NA', 'registry layout has no package.json scripts; install-time scripts are not judged', [`${label}#scripts`]))
+    return details
+  }
   const dependencies = isObject(manifest.dependencies) ? manifest.dependencies : {}
   const peers = isObject(manifest.peerDependencies) ? manifest.peerDependencies : {}
   const all = { ...dependencies, ...peers }
   for (const [name, value] of Object.entries(all)) {
     if (typeof value !== 'string') continue
     if (/^(?:workspace|file|link|portal):/i.test(value)) {
-      details.push(detail('C-3.3', 'WARN', `non-registry dependency ${name}: ${value}`, [`package.json#dependencies.${name}`]))
+      details.push(detail('C-3.3', 'WARN', `non-registry dependency ${name}: ${value}`, [`${label}#dependencies.${name}`]))
       continue
     }
     if (/^(?:git\+|git@|github:|gitlab:|bitbucket:|gist:|https?:)/i.test(value)) {
       if (!/#[0-9a-f]{40}$/.test(value) && !/^https?:\/\/[^#]+\.(?:tgz|tar\.gz)/i.test(value)) {
-        details.push(detail('C-3.3', 'WARN', `non-registry dependency ${name} is not pinned to a commit: ${value}`, [`package.json#dependencies.${name}`]))
+        details.push(detail('C-3.3', 'WARN', `non-registry dependency ${name} is not pinned to a commit: ${value}`, [`${label}#dependencies.${name}`]))
       }
     }
   }
   const scripts = isObject(manifest.scripts) ? manifest.scripts : {}
   for (const name of ['preinstall', 'install', 'postinstall', 'prepare']) {
     if (typeof scripts[name] === 'string') {
-      details.push(detail('C-3.4', 'WARN', `install-time build script present: scripts.${name}`, [`package.json#scripts.${name}`]))
+      details.push(detail('C-3.4', 'WARN', `install-time build script present: scripts.${name}`, [`${label}#scripts.${name}`]))
     }
   }
   return details
 }
 
 /**
+ * A `dsh.plugin.json` registry layout is not an npm package: it has no
+ * package.json, and its fields are `id`/`main`/`client.main`/`engines.dsh`
+ * instead of `name`/`exports`/`dsh.client`. Normalize it into the shape the
+ * existing checks understand, and let the registry-specific branches below
+ * downgrade package.json-only fields to NA instead of inventing them.
+ */
+export function normalizeRegistryManifest(raw, packageJson = null) {
+  const value = isObject(raw) ? raw : {}
+  const pkg = isObject(packageJson) ? packageJson : {}
+  const pkgDsh = isObject(pkg.dsh) ? pkg.dsh : null
+  const client = isObject(value.client)
+    ? value.client
+    : isObject(pkgDsh?.client) ? pkgDsh.client : null
+  const main = typeof value.main === 'string' && value.main.trim() !== ''
+    ? value.main
+    : typeof pkg.main === 'string' && pkg.main.trim() !== '' ? pkg.main : null
+  const clientMain = typeof client?.main === 'string' && client.main.trim() !== '' ? client.main : null
+  const exportsField = value.exports !== undefined
+    ? value.exports
+    : {
+        ...(main ? { '.': main } : {}),
+        ...(clientMain ? { './client': clientMain } : {}),
+      }
+  const dsh = isObject(value.dsh) ? { ...value.dsh } : {}
+  if (typeof dsh.kind !== 'string' || dsh.kind === '') dsh.kind = 'plugin'
+  if (client) dsh.client = { ...client }
+  const capabilities = Array.isArray(value.capabilities)
+    ? value.capabilities
+    : isObject(value.contributes) && Array.isArray(value.contributes.capabilities)
+      ? value.contributes.capabilities
+      : Array.isArray(pkgDsh?.capabilities) ? pkgDsh.capabilities : undefined
+  if (capabilities) dsh.capabilities = capabilities
+  if (Array.isArray(pkgDsh?.labels) && dsh.labels === undefined) dsh.labels = pkgDsh.labels
+  return {
+    name: typeof value.name === 'string' && value.name.trim() !== '' ? value.name : value.id ?? pkg.name,
+    version: value.version ?? pkg.version,
+    main,
+    exports: exportsField,
+    engines: value.engines ?? pkg.engines,
+    peerDependencies: value.peerDependencies ?? pkg.peerDependencies,
+    license: value.license ?? pkg.license,
+    repository: value.repository ?? value.repo ?? pkg.repository,
+    dependencies: value.dependencies ?? pkg.dependencies,
+    scripts: value.scripts ?? pkg.scripts,
+    private: value.private ?? pkg.private,
+    workspaces: value.workspaces ?? pkg.workspaces,
+    type: value.type ?? pkg.type,
+    dsh,
+  }
+}
+
+/**
  * @param {string} dir
- * @param {{runtimeVersion?: string, installSpec?: string, marketIndex?: string, pluginName?: string}} options
+ * @param {{runtimeVersion?: string, installSpec?: string, marketIndex?: string, pluginName?: string, registry?: boolean, compatibilityKnown?: boolean}} options
  */
 export function runManifestChecks(dir, options = {}) {
   const runtimeVersion = options.runtimeVersion ?? DEFAULT_RUNTIME_VERSION
-  const parsed = readJsonMaybe(path.join(dir, 'package.json'))
+  const compatibilityKnown = options.compatibilityKnown !== false
+  const packagePath = path.join(dir, 'package.json')
+  const registryPath = path.join(dir, 'dsh.plugin.json')
+  const packageJsonAvailable = isFile(packagePath)
+  const registryMode = options.registry === true || (!packageJsonAvailable && isFile(registryPath))
+  const manifestPath = registryMode ? registryPath : packagePath
+  const manifestLabel = registryMode ? 'dsh.plugin.json' : 'package.json'
+  const parsed = readJsonMaybe(manifestPath)
   if (parsed.error) {
+    const source = registryMode ? 'dsh.plugin.json' : 'package.json'
     return {
       manifest: null,
+      manifestSource: registryMode ? 'registry' : 'package',
+      manifestPath,
       kind: 'unknown',
       entry: null,
       patch: null,
       g4: { hasClient: false, ok: true, result: 'NA', reason: 'manifest unavailable' },
       checks: [
-        check({ id: 'DSC-01', clause: 'C-1', layer: 'L0', result: 'FAIL', reason: `package.json is missing or invalid: ${parsed.error.message}`, details: [detail('C-1.1', 'FAIL', parsed.error.message)], evidence: ['package.json'] }),
+        check({ id: 'DSC-01', clause: 'C-1', layer: 'L0', result: 'FAIL', reason: `${source} is missing or invalid: ${parsed.error.message}`, details: [detail('C-1.1', 'FAIL', parsed.error.message)], evidence: [source] }),
         check({ id: 'DSC-02', clause: 'C-2', layer: 'L0', result: 'ERROR', coverage: 'not-run', reason: 'manifest unavailable' }),
         check({ id: 'DSC-03', clause: 'C-3', layer: 'L0', result: 'NA', reason: 'manifest unavailable' }),
       ],
     }
   }
-  const manifest = parsed.value
+  const packageJsonValue = packageJsonAvailable ? readJsonMaybe(packagePath).value : null
+  const manifest = registryMode ? normalizeRegistryManifest(parsed.value, packageJsonValue) : parsed.value
   const entry = resolveEntry(dir, manifest)
   const kindInfo = inferKind(manifest, entry.exists)
   const kind = kindInfo.kind
   const patch = analyzePatch(dir, manifest)
   const g4 = checkClientShape(manifest, dir)
+  const packageFieldsJudged = !registryMode || packageJsonAvailable
 
   const manifestDetails = []
   const name = manifest.name
-  if (typeof name !== 'string' || name.trim() === '' || name.length > PACKAGE_NAME_MAX_LENGTH || !PACKAGE_NAME.test(name)) {
-    manifestDetails.push(detail('C-1.1', 'FAIL', 'name must be a valid npm package name', ['package.json#name']))
+  const validName = typeof name === 'string' && name.trim() !== '' && name.length <= PACKAGE_NAME_MAX_LENGTH
+    && (PACKAGE_NAME.test(name) || (registryMode && REGISTRY_ID.test(name)))
+  if (!validName) {
+    manifestDetails.push(detail('C-1.1', 'FAIL', registryMode ? 'id must be a valid registry plugin id (<owner>/<name>)' : 'name must be a valid npm package name', [`${manifestLabel}#${registryMode ? 'id' : 'name'}`]))
   } else {
     manifestDetails.push(detail('C-1.1', 'PASS', `name=${name}`))
   }
   if (typeof manifest.version !== 'string' || !EXACT_VERSION.test(manifest.version)) {
-    manifestDetails.push(detail('C-1.1', 'FAIL', 'version must be an exact SemVer version', ['package.json#version']))
+    manifestDetails.push(detail('C-1.1', 'FAIL', 'version must be an exact SemVer version', [`${manifestLabel}#version`]))
   } else {
     manifestDetails.push(detail('C-1.1', 'PASS', `version=${manifest.version}`))
   }
   if (entry.escape) {
-    manifestDetails.push(detail('C-1.2', 'FAIL', `entry escapes the package: ${entry.target}`, ['package.json#exports']))
+    manifestDetails.push(detail('C-1.2', 'FAIL', `entry escapes the package: ${entry.target}`, [`${manifestLabel}#exports`]))
   } else if (entry.declaredMissing) {
     // A declared entry that is absent is a packaging defect. A build hint only
     // explains it; it does not make the package loadable from the tarball.
     const hint = entry.buildHint
       ? ` (build hint: ${entry.sourceEntry ?? 'build script'}; publish the built file)`
       : ''
-    manifestDetails.push(detail('C-1.2', 'FAIL', `exports["."] points to a missing file: ${entry.target}${hint}`, ['package.json#exports']))
+    manifestDetails.push(detail('C-1.2', 'FAIL', `exports["."] points to a missing file: ${entry.target}${hint}`, [`${manifestLabel}#exports`]))
   } else if (entry.exists) {
     manifestDetails.push(detail('C-1.2', 'PASS', `entry resolves via ${entry.source}: ${entry.relative}`, [entry.relative]))
   } else if (entry.buildHint) {
-    manifestDetails.push(detail('C-1.2', 'WARN', `entry not present in checkout; source/build hint exists (${entry.sourceEntry ?? 'build script'})`, ['package.json#scripts']))
+    manifestDetails.push(detail('C-1.2', 'WARN', `entry not present in checkout; source/build hint exists (${entry.sourceEntry ?? 'build script'})`, [`${manifestLabel}#scripts`]))
   } else if (kind === 'bundle' && patch.present) {
     // 2026-11-04: a bundle that ships only a cordis.patch.yml has no runtime entry
     // by design (dsh.bundle.patch is the carrier). Report NA, not WARN, so the
     // mandatory coverage is not charged for something the package never claimed.
     manifestDetails.push(detail('C-1.2', 'NA', 'patch-only bundle; no runtime entry by design', patch.files.map(f => f.relative)))
   } else if (kind === 'bundle' || kind === 'client') {
-    manifestDetails.push(detail('C-1.2', 'WARN', `no runtime entry; ${kind} packages may be patch/client only`, ['package.json#exports']))
+    manifestDetails.push(detail('C-1.2', 'WARN', `no runtime entry; ${kind} packages may be patch/client only`, [`${manifestLabel}#exports`]))
   } else if (Array.isArray(manifest.workspaces) || (manifest.workspaces && typeof manifest.workspaces === 'object')) {
-    manifestDetails.push(detail('C-1.2', 'NA', 'workspace root; run the checker on a package subdirectory', ['package.json#workspaces']))
+    manifestDetails.push(detail('C-1.2', 'NA', 'workspace root; run the checker on a package subdirectory', [`${manifestLabel}#workspaces`]))
   } else {
-    manifestDetails.push(detail('C-1.2', 'FAIL', 'no resolvable runtime entry', ['package.json#exports', 'package.json#main']))
+    manifestDetails.push(detail('C-1.2', 'FAIL', 'no resolvable runtime entry', [`${manifestLabel}#exports`, `${manifestLabel}#main`]))
   }
 
   // Declared `exports` subpaths and `main` must point at files that ship with
@@ -273,10 +350,10 @@ export function runManifestChecks(dir, options = {}) {
   }
   for (const item of exportTargets(manifest.exports)) {
     if (item.label === 'exports["."]') continue // resolveEntry() already judged the root export
-    noteTarget(item.label, item.target, 'package.json#exports')
+    noteTarget(item.label, item.target, `${manifestLabel}#exports`)
   }
   if (typeof manifest.main === 'string' && manifest.main.trim() !== '') {
-    noteTarget('main', manifest.main, 'package.json#main', { allowBare: true })
+    noteTarget('main', manifest.main, `${manifestLabel}#main`, { allowBare: true })
   }
   manifestDetails.push(...missingTargetDetails.slice(0, 8))
   const shape = checkExportShape(entry, kind)
@@ -289,36 +366,66 @@ export function runManifestChecks(dir, options = {}) {
     manifestDetails.push(detail('C-1.4', 'PASS', `bundle patch present (${patch.files.length} file(s))`, patch.files.map(file => file.relative)))
   }
   if (typeof manifest.license !== 'string' || manifest.license.trim() === '') {
-    manifestDetails.push(detail('C-1.5', 'WARN', 'license is missing', ['package.json#license']))
+    if (!packageFieldsJudged) {
+      manifestDetails.push(detail('C-1.5', 'NA', 'registry layout has no package.json and dsh.plugin.json declares no license; license not judged', [`${manifestLabel}#license`]))
+    } else {
+      manifestDetails.push(detail('C-1.5', 'WARN', 'license is missing', [`${manifestLabel}#license`]))
+    }
   } else {
     manifestDetails.push(detail('C-1.5', 'PASS', `license=${manifest.license}`))
   }
   if (manifest.private === true) {
-    manifestDetails.push(detail('C-1.6', 'NA', 'private:true; not publishable to a registry', ['package.json#private']))
+    manifestDetails.push(detail('C-1.6', 'NA', 'private:true; not publishable to a registry', [`${manifestLabel}#private`]))
+  } else if (!packageFieldsJudged) {
+    manifestDetails.push(detail('C-1.6', 'NA', 'registry layout has no package.json; private/publishability is not judged', [`${manifestLabel}#private`]))
   }
   const manifestResult = worst(manifestDetails.map(item => item.result))
-  const manifestCheck = check({
-    id: 'DSC-01',
-    clause: 'C-1',
-    layer: 'L0',
-    result: manifestResult,
-    reason: manifestDetails.filter(item => item.result !== 'PASS' && item.result !== 'NA').map(item => `${item.item}: ${item.reason}`).join(' | '),
-    details: manifestDetails,
-    evidence: ['package.json'],
-  })
+  const manifestNaReasons = registryMode
+    ? manifestDetails.filter(item => item.result === 'NA').map(item => `${item.item}: ${item.reason}`)
+    : []
+  const manifestCheck = {
+    ...check({
+      id: 'DSC-01',
+      clause: 'C-1',
+      layer: 'L0',
+      result: manifestResult,
+      coverage: packageFieldsJudged ? 'full' : 'partial',
+      reason: [
+        manifestDetails.filter(item => item.result !== 'PASS' && item.result !== 'NA').map(item => `${item.item}: ${item.reason}`).join(' | '),
+        ...manifestNaReasons,
+      ].filter(Boolean).join(' | '),
+      details: manifestDetails,
+      evidence: [manifestLabel],
+    }),
+    ...(packageFieldsJudged ? {} : {
+      howToEnable: 'run against the npm package directory (package.json) to judge license/dependencies/scripts; a registry layout only carries dsh.plugin.json fields',
+    }),
+  }
 
   const compatDetails = []
   const engines = isObject(manifest.engines) ? manifest.engines : {}
   const dshEngine = engines.dsh
   const peers = isObject(manifest.peerDependencies) ? manifest.peerDependencies : {}
   const dshPeers = Object.entries(peers).filter(([peer]) => peer === '@deepseek-ai/dsh' || peer.startsWith('@deepseek-ai/dsh-'))
-  if (typeof dshEngine === 'string') {
+  const compatEvidence = [`${manifestLabel}#engines.dsh`, `${manifestLabel}#peerDependencies`]
+  if (!compatibilityKnown) {
+    // The fallback constant is not a host. Never turn it into a C-2 FAIL:
+    // record the declared ranges as NA/partial and point at the flag that
+    // would make the verdict possible.
+    const declared = typeof dshEngine === 'string'
+      ? `engines.dsh=${dshEngine}`
+      : dshPeers.length > 0
+        ? `dsh peer range(s)=${dshPeers.map(([peer, range]) => `${peer}:${range}`).join(', ')}`
+        : 'no engines.dsh or @deepseek-ai/dsh* peer range declared'
+    compatDetails.push(detail('C-2.1', 'NA', `${UNKNOWN_HOST_REASON}; declaration recorded (${declared}) but validity is not judged`, compatEvidence))
+    compatDetails.push(detail('C-2.2', 'NA', `${UNKNOWN_HOST_REASON}; runtime compatibility is not judged`, compatEvidence))
+  } else if (typeof dshEngine === 'string') {
     if (dshEngine.startsWith('workspace:')) {
-      compatDetails.push(detail('C-2.3', 'FAIL', 'engines.dsh must not be a workspace: range', ['package.json#engines.dsh']))
+      compatDetails.push(detail('C-2.3', 'FAIL', 'engines.dsh must not be a workspace: range', [`${manifestLabel}#engines.dsh`]))
     } else if (!validRange(dshEngine)) {
-      compatDetails.push(detail('C-2.1', 'FAIL', `engines.dsh is not a SemVer range: ${dshEngine}`, ['package.json#engines.dsh']))
+      compatDetails.push(detail('C-2.1', 'FAIL', `engines.dsh is not a SemVer range: ${dshEngine}`, [`${manifestLabel}#engines.dsh`]))
     } else if (!satisfies(runtimeVersion, dshEngine)) {
-      compatDetails.push(detail('C-2.2', 'FAIL', `engines.dsh ${dshEngine} is valid but does not satisfy runtime ${runtimeVersion}`, ['package.json#engines.dsh']))
+      compatDetails.push(detail('C-2.2', 'FAIL', `engines.dsh ${dshEngine} is valid but does not satisfy runtime ${runtimeVersion}`, [`${manifestLabel}#engines.dsh`]))
     } else {
       compatDetails.push(detail('C-2.1', 'PASS', `engines.dsh=${dshEngine}`))
       compatDetails.push(detail('C-2.2', 'PASS', `runtime ${runtimeVersion} satisfies ${dshEngine}`))
@@ -326,7 +433,7 @@ export function runManifestChecks(dir, options = {}) {
     for (const [peer, rangeValue] of dshPeers) {
       if (typeof rangeValue !== 'string' || rangeValue.startsWith('workspace:')) continue
       if (validRange(rangeValue) && !satisfies(runtimeVersion, rangeValue)) {
-        compatDetails.push(detail('C-2.4', 'WARN', `peer ${peer} range ${rangeValue} conflicts with engines.dsh`, [`package.json#peerDependencies.${peer}`]))
+        compatDetails.push(detail('C-2.4', 'WARN', `peer ${peer} range ${rangeValue} conflicts with engines.dsh`, [`${manifestLabel}#peerDependencies.${peer}`]))
       }
     }
   } else if (dshPeers.length > 0) {
@@ -334,18 +441,18 @@ export function runManifestChecks(dir, options = {}) {
     let unsatisfied = false
     for (const [peer, rangeValue] of dshPeers) {
       if (typeof rangeValue !== 'string') {
-        compatDetails.push(detail('C-2.1', 'FAIL', `peer ${peer} must be a string range`, [`package.json#peerDependencies.${peer}`]))
+        compatDetails.push(detail('C-2.1', 'FAIL', `peer ${peer} must be a string range`, [`${manifestLabel}#peerDependencies.${peer}`]))
         invalid = true
         continue
       }
       const effective = /^workspace:(?:\^|~|\*)$/.test(rangeValue) ? runtimeVersion : rangeValue
       if (!validRange(effective)) {
-        compatDetails.push(detail('C-2.1', 'FAIL', `peer ${peer} is not a SemVer range: ${rangeValue}`, [`package.json#peerDependencies.${peer}`]))
+        compatDetails.push(detail('C-2.1', 'FAIL', `peer ${peer} is not a SemVer range: ${rangeValue}`, [`${manifestLabel}#peerDependencies.${peer}`]))
         invalid = true
       } else if (!satisfies(runtimeVersion, effective)) {
         // A syntactically valid range that does not cover this runtime is a
         // compatibility finding (C-2.2), never an invalid declaration (C-2.1).
-        compatDetails.push(detail('C-2.2', 'FAIL', `peer ${peer} range ${rangeValue} is valid but does not satisfy runtime ${runtimeVersion}`, [`package.json#peerDependencies.${peer}`]))
+        compatDetails.push(detail('C-2.2', 'FAIL', `peer ${peer} range ${rangeValue} is valid but does not satisfy runtime ${runtimeVersion}`, [`${manifestLabel}#peerDependencies.${peer}`]))
         unsatisfied = true
       }
     }
@@ -358,20 +465,26 @@ export function runManifestChecks(dir, options = {}) {
       compatDetails.push(detail('C-2.2', 'PASS', `runtime ${runtimeVersion} satisfies the dsh peer range(s)`))
     }
   } else {
-    compatDetails.push(detail('C-2.1', 'FAIL', 'neither engines.dsh nor a @deepseek-ai/dsh* peer range is declared', ['package.json#engines', 'package.json#peerDependencies']))
+    compatDetails.push(detail('C-2.1', 'FAIL', 'neither engines.dsh nor a @deepseek-ai/dsh* peer range is declared', [`${manifestLabel}#engines`, `${manifestLabel}#peerDependencies`]))
   }
   const compatResult = worst(compatDetails.map(item => item.result))
-  const compatCheck = check({
-    id: 'DSC-02',
-    clause: 'C-2',
-    layer: 'L0',
-    result: compatResult,
-    reason: compatDetails.filter(item => item.result !== 'PASS' && item.result !== 'NA').map(item => `${item.item}: ${item.reason}`).join(' | '),
-    details: compatDetails,
-    evidence: ['package.json#engines', 'package.json#peerDependencies'],
-  })
+  const compatCheck = {
+    ...check({
+      id: 'DSC-02',
+      clause: 'C-2',
+      layer: 'L0',
+      result: compatResult,
+      coverage: compatibilityKnown ? 'full' : 'partial',
+      reason: compatibilityKnown
+        ? compatDetails.filter(item => item.result !== 'PASS' && item.result !== 'NA').map(item => `${item.item}: ${item.reason}`).join(' | ')
+        : UNKNOWN_HOST_REASON,
+      details: compatDetails,
+      evidence: [manifestLabel === 'dsh.plugin.json' ? 'dsh.plugin.json#engines' : 'package.json#engines', `${manifestLabel}#peerDependencies`],
+    }),
+    ...(compatibilityKnown ? {} : { howToEnable: UNKNOWN_HOST_HOW }),
+  }
 
-  const supplyDetails = supplyChain(dir, manifest)
+  const supplyDetails = supplyChain(dir, manifest, { registry: registryMode, packageJsonAvailable })
   const installDetails = [...supplyDetails]
   let installResult = 'NA'
   let installReason = 'install spec not supplied (package profile)'
@@ -393,6 +506,12 @@ export function runManifestChecks(dir, options = {}) {
     installResult = worst([market.result, ...supplyDetails.map(item => item.result)])
     installReason = market.reason || (installResult === 'WARN' ? 'market entry is pinned but supply-chain warnings remain' : '')
   }
+  if (registryMode && !packageJsonAvailable && installResult !== 'FAIL') {
+    // C-3.3/C-3.4 need package.json. Do not let a pinned --install-spec turn
+    // that missing input into a clean C-3 PASS.
+    installResult = 'NA'
+    installReason = 'registry layout has no package.json; dependency/lifecycle checks are NA (install-spec shape alone is not a C-3 pass)'
+  }
   const installCheck = check({
     id: 'DSC-03',
     clause: 'C-3',
@@ -401,10 +520,20 @@ export function runManifestChecks(dir, options = {}) {
     coverage: installResult === 'NA' ? 'not-run' : 'full',
     reason: installReason,
     details: installDetails,
-    evidence: ['package.json#dependencies', 'package.json#scripts', options.marketIndex ?? '--install-spec'],
+    evidence: [`${manifestLabel}#dependencies`, `${manifestLabel}#scripts`, options.marketIndex ?? '--install-spec'],
   })
 
-  return { manifest, kind, kindInferred: kindInfo.inferred, entry, patch, g4, checks: [manifestCheck, compatCheck, installCheck] }
+  return {
+    manifest,
+    manifestSource: registryMode ? 'registry' : 'package',
+    manifestPath,
+    kind,
+    kindInferred: kindInfo.inferred,
+    entry,
+    patch,
+    g4,
+    checks: [manifestCheck, compatCheck, installCheck],
+  }
 }
 
 export function checkMarketEntry(indexPath, pluginName) {

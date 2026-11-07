@@ -39,6 +39,7 @@ const VALUE_FLAGS = new Set([
   '--scope', '--profile', '--runtime', '--runtime-version', '--cordis-version', '--commit',
   '--install-spec', '--market-index', '--plugin-name', '--timeout', '--host', '--base',
   '--web', '--bare', '--entry-runtime', '--entry-claim', '--max-files', '--max-bytes',
+  '--registry-dir',
 ])
 
 export function checkUsage() {
@@ -54,6 +55,7 @@ Options:
   --html <file>          write a single-file HTML report (inline CSS, no assets)
   --host-version <v>     host dsh version for the anchor (default: $DSH_HOST_VERSION)
   --allow-host-probe     resolve the \`dsh\` JS entry and run \`node <entry> --version\`
+  --registry-dir <dir>   read a dsh registry layout (dsh.plugin.json) instead of package.json
   --help                 show this help
 
 Safety:
@@ -349,6 +351,10 @@ function safetyBanner(report) {
   }
   if (!safety.hostVersionKnown) {
     lines.push(`> host 版本未知：anchor.dsh=\`${anchor.dsh ?? '?'}\` 是默认值（source=${anchor.runtimeSource ?? 'default'}, suspect=${anchor.suspect ?? true}）。用 \`--host-version\`、\`DSH_HOST_VERSION\` 或 \`--allow-host-probe\` 指定宿主版本。`)
+    // An explicit --runtime-version still judges C-2, even without a host.
+    if (!safety.runtimeVersionExplicit && anchor.runtimeSource !== 'host') {
+      lines.push('> C-2.1/C-2.2 兼容性未判定（NA/partial）：未指定 host 版本，不能把默认常量当成真实宿主。')
+    }
   } else {
     lines.push(`> host 版本 \`${anchor.dsh}\`（来源：${anchor.hostVersionSource ?? 'host'}）；anchor.source=${anchor.runtimeSource ?? 'host'}。`)
   }
@@ -382,7 +388,10 @@ export function runCheck(argv = process.argv.slice(2)) {
     hostInfo = resolveHostVersion({ hostVersion: options.hostVersion, allowHostProbe: options.allowHostProbe })
     const forwarded = [...safety.args, ...options.passthrough]
     if (hostInfo.version && !hasFlag(options.passthrough, '--runtime-version')) {
-      forwarded.push('--runtime-version', hostInfo.version)
+      // Pass the host anchor as --host-version so the checker's own headline
+      // and anchor source already say `host`; applyHostAnchor then only fills
+      // in the author-facing provenance fields.
+      forwarded.push('--host-version', hostInfo.version)
     }
     result = invokeChecker(options, forwarded)
   } catch (error) {

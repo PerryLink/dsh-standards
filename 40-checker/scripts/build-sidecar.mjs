@@ -20,6 +20,10 @@
  *   evidence             url/sha256 kept for compatibility; reportUrl/
  *                        reportSha256 are the same values under the new names
  *   checkedBy            {checker, command} that produced the audit
+ *   security             optional {state, checks, summary, command} from
+ *                        `--security-report`; state is derived from the 22
+ *                        coverage values, never hand-set. It is not a security
+ *                        audit and must not be rendered as one.
  *   notChecked           short honest list of what the run did not exercise
  *
  * Deliberately absent: advice (author view), issuer / recordHash / verifyUrl
@@ -55,6 +59,9 @@ const SCOPE_KEYS = new Set(['dsh', 'cordis', 'platform'])
 const CHECKED_BY_KEYS = new Set(['checker', 'command', 'securityCommand'])
 const SECURITY_KEYS = new Set(['state', 'checks', 'summary', 'command'])
 const SECURITY_STATES = new Set(['checked', 'partial', 'not-run'])
+const SECURITY_RESULTS = new Set(['PASS', 'WARN', 'FAIL', 'NA'])
+const SECURITY_COVERAGE = new Set(['full', 'partial', 'not-run'])
+const SECURITY_SUMMARY_KEYS = new Set(['total', 'checked', 'blocking', 'warn', 'na', 'notRun'])
 const REPO_GIT_SHORTHAND = /^github:([^/]+\/[^/]+?)(?:\.git)?$/
 
 function usage() {
@@ -675,6 +682,8 @@ function validateSidecar(sidecar) {
       }
       if (!SECURITY_STATES.has(sec.state)) throw new Error(`${key}: security.state is invalid`)
       if (!Array.isArray(sec.checks)) throw new Error(`${key}: security.checks must be an array`)
+      const securityIds = new Set()
+      const securityCounts = { total: sec.checks.length, checked: 0, blocking: 0, warn: 0, na: 0, notRun: 0 }
       for (const check of sec.checks) {
         if (!check || typeof check !== 'object') throw new Error(`${key}: security.checks must be objects`)
         for (const field of Object.keys(check)) {
@@ -683,12 +692,29 @@ function validateSidecar(sidecar) {
         for (const field of ['id', 'result', 'coverage']) {
           if (typeof check[field] !== 'string' || check[field] === '') throw new Error(`${key}: security.checks.${field} is required`)
         }
+        if (!SECURITY_RESULTS.has(check.result)) throw new Error(`${key}: security ${check.id} result must be PASS/WARN/FAIL/NA`)
+        if (!SECURITY_COVERAGE.has(check.coverage)) throw new Error(`${key}: security ${check.id} coverage must be full/partial/not-run`)
+        if (securityIds.has(check.id)) throw new Error(`${key}: duplicate security check id ${check.id}`)
+        securityIds.add(check.id)
+        if (check.coverage === 'not-run') securityCounts.notRun += 1
+        else securityCounts.checked += 1
+        if (check.result === 'FAIL') securityCounts.blocking += 1
+        if (check.result === 'WARN') securityCounts.warn += 1
+        if (check.result === 'NA') securityCounts.na += 1
       }
       const summary = sec.summary
       if (!summary || typeof summary !== 'object') throw new Error(`${key}: security.summary must be an object`)
+      for (const field of Object.keys(summary)) {
+        if (!SECURITY_SUMMARY_KEYS.has(field)) throw new Error(`${key}: security.summary.${field} is not part of the sidecar contract`)
+      }
       for (const field of ['total', 'checked', 'blocking', 'warn', 'na', 'notRun']) {
         if (!Number.isInteger(summary[field]) || summary[field] < 0) throw new Error(`${key}: security.summary.${field} is invalid`)
+        if (summary[field] !== securityCounts[field]) throw new Error(`${key}: security.summary.${field} must equal ${securityCounts[field]} derived from checks`)
       }
+      const expectedState = securityCounts.checked === 0
+        ? 'not-run'
+        : securityCounts.checked === securityCounts.total ? 'checked' : 'partial'
+      if (sec.state !== expectedState) throw new Error(`${key}: security.state must be ${expectedState} for the recorded coverage`)
       if (typeof sec.command !== 'string' || sec.command === '') throw new Error(`${key}: security.command is required`)
     }
     if (entry.notChecked !== undefined) {

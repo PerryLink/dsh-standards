@@ -82,6 +82,15 @@ export function richEntry(name, version, expiresAt, lifecycle = 'active', overri
       { id: 'DSC-02', result: 'WARN', coverage: 'full' },
       { id: 'DSC-03', result: 'NA', coverage: 'not-run' },
     ],
+    security: {
+      state: 'partial',
+      checks: [
+        { id: 'DSC-15', result: 'PASS', coverage: 'full' },
+        { id: 'DSC-16', result: 'NA', coverage: 'not-run' },
+      ],
+      summary: { total: 2, checked: 1, blocking: 0, warn: 0, na: 1, notRun: 1 },
+      command: 'dsh-standards check <package-dir> --scope security --json',
+    },
     evidence: {},
     checkedBy: { checker: CHECKER, command: COMMAND },
     notChecked: ['ENTRY:runtime (claim=static; not exercised)'],

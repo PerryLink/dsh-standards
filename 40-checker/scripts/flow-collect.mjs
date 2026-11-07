@@ -48,8 +48,19 @@ const HERE = path.dirname(fileURLToPath(import.meta.url))
 const STD = path.resolve(HERE, '..', '..')
 const JOURNEY_STATIC = path.join(HERE, 'journey.mjs')
 const JOURNEY_RUNTIME = path.join(HERE, 'journey-runtime.mjs')
-const NPM = process.platform === 'win32' ? 'npm.cmd' : 'npm'
 const GIT = process.platform === 'win32' ? 'git.exe' : 'git'
+
+/**
+ * npm's Windows launcher is `npm.cmd`. Since Node 18.20/20.12 a direct
+ * spawnSync('npm.cmd', ...) without a shell fails with EINVAL (the
+ * CVE-2024-27980 mitigation). Go through the shell, which uses `cmd.exe /c`
+ * under the hood; Linux stays a direct spawn. Exported so the platform choice
+ * is testable without running npm.
+ */
+export function npmPackInvocation(platform = process.platform, args = ['pack', '--ignore-scripts', '--json']) {
+  if (platform === 'win32') return { command: 'npm.cmd', args, shell: true }
+  return { command: 'npm', args, shell: false }
+}
 
 const STATIC_CHECK_IDS = {
   J1: 'J1.install', J2: 'J2.toggle', J3: 'J3.config', J4: 'J4.first-run',
@@ -147,11 +158,11 @@ function quoteCommand(command) {
   return command.map(part => (/^[A-Za-z0-9_./:@=+-]+$/.test(part) ? part : `'${String(part).replace(/'/g, "'\\''")}'`)).join(' ')
 }
 
-function run(command, args, { cwd, env, timeout = 120_000 } = {}) {
+function run(command, args, { cwd, env, timeout = 120_000, shell = false } = {}) {
   const startedAt = nowIso()
   const t0 = Date.now()
   const result = spawnSync(command, args, {
-    cwd, env, encoding: 'utf8', timeout, maxBuffer: 16 * 1024 * 1024, killSignal: 'SIGKILL',
+    cwd, env, encoding: 'utf8', timeout, maxBuffer: 16 * 1024 * 1024, killSignal: 'SIGKILL', shell,
   })
   const endedAt = nowIso()
   return {
@@ -539,7 +550,8 @@ async function main() {
 
 function packSubject(copy, tmpRoot, childEnv, timeout) {
   const destination = fs.mkdtempSync(path.join(tmpRoot, 'pack-'))
-  const runResult = run(NPM, ['pack', '--ignore-scripts', '--json', '--pack-destination', destination], { cwd: copy, env: childEnv(), timeout })
+  const invocation = npmPackInvocation(process.platform, ['pack', '--ignore-scripts', '--json', '--pack-destination', destination])
+  const runResult = run(invocation.command, invocation.args, { cwd: copy, env: childEnv(), timeout, shell: invocation.shell })
   if (runResult.exitCode !== 0) {
     throw new Error(`npm pack failed (exit ${runResult.exitCode}): ${tailLines(runResult.stderrText, 10)}`)
   }
@@ -613,7 +625,13 @@ function collectHints(journeyId, checks, hints, outDir, logDir, toEvidencePath) 
   }
 }
 
-main().catch(error => {
-  console.error(`flow-collect: ${error.message}`)
-  process.exitCode = 3
-})
+// Run only when executed as a CLI. Importing the module (for
+// npmPackInvocation in tests) must not start a collection.
+const invokedAsScript = typeof process.argv[1] === 'string'
+  && ['flow-collect.mjs', 'dsh-flow-collect.mjs', 'dsh-flow-collect'].includes(path.basename(process.argv[1]))
+if (invokedAsScript) {
+  main().catch(error => {
+    console.error(`flow-collect: ${error.message}`)
+    process.exitCode = 3
+  })
+}

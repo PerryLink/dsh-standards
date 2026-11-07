@@ -1,3 +1,18 @@
+## 1.6.7 — 2026-11-07
+
+### Added
+
+- `check --host-version`：显式指定宿主版本；未知时 C-2.1/C-2.2 记 NA/partial + howToEnable，不再误报 FAIL。
+- `--registry-dir`：读取 sidebar 形态的 `registry/`（`dsh.plugin.json`），输出 `subject.source=registry`，缺 package.json 的检查记 NA。
+- Windows：`flow-collect` 用 `npm.cmd + shell` 调 npm pack，修 `EINVAL`。
+- sidecar 扩到 50 条；security 块正式化（state/checks/summary/command，partial ≠ 安全审计）。
+- 离线包 `dsh-standards-offline-1.6.6.tgz`（992,962 B，64 文件）。
+
+### Verified
+
+- `npm test` 313/313。
+- sidebar 0.30.1 / TUI 0.19.0 默认 entry static：exit 1/blocking 1 → exit 0/blocking 0；显式 `--host-version 0.2.1-rc.5` 仍报真实 C-2.2 FAIL。
+
 ## 1.6.6 — 2026-11-07
 
 ### Fixed

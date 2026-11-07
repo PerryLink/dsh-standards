@@ -16,7 +16,8 @@ const SIDECAR = path.join(REPO, '40-checker', 'scripts', 'build-sidecar.mjs')
 const KIT = path.join(REPO, '40-checker', 'scripts', 'build-offline-kit.mjs')
 const TODAY = '2026-11-06'
 const EXPIRES = '2027-02-04'
-const PUBLISH_ENTRIES = 20
+const PUBLISH_ENTRIES = 50
+const SECURITY_COMMAND = 'dsh-standards check <package-dir> --scope security --json'
 
 function tempDir(t) {
   const directory = fs.mkdtempSync(path.join(os.tmpdir(), 'dsh-sidecar-test-'))
@@ -270,6 +271,8 @@ test('build-sidecar: expiry/withdrawal win and keep the additive fields', (t) =>
     assert.equal(document.entries[key].title, `${document.entries[key].subject.name} title`)
     assert.equal(document.entries[key].checks.length, 3)
     assert.ok(document.entries[key].notChecked.length > 0)
+    // Expiry/withdrawal changes only lifecycle; the security block survives untouched.
+    assert.deepEqual(document.entries[key].security, richEntry('@acme/x', '1.0.0', '2027-01-01').security)
   }
 
   // Append-only means a mistakenly rotated-empty list must not revive it.
@@ -308,7 +311,7 @@ test('build-sidecar: expiry is strict and duplicate builds are deduped byte for 
   assert.equal(JSON.parse(fs.readFileSync(path.join(dir, 'edge-out.json'), 'utf8')).entries['@acme/edge@1.0.0'].lifecycle, 'active')
 })
 
-test('publish/sidecar.json: 20 real dsh packages carry every additive field and no claims', (t) => {
+test('publish/sidecar.json: 50 real dsh packages carry every additive field and no claims', (t) => {
   const sidecar = readPublishSidecar(REPO)
   assert.equal(sidecar.schema, SCHEMA)
   assert.deepEqual(sidecar.notClaimed, NOT_CLAIMED)
@@ -373,11 +376,36 @@ test('publish/sidecar.json: 20 real dsh packages carry every additive field and 
     assert.equal(entry.levels.boost.state, 'not-measured')
 
     assert.ok(entry.security, `${key} security block`)
-    assert.ok(['checked', 'partial', 'not-run'].includes(entry.security.state), `${key} security.state`)
-    assert.equal(entry.security.checks.length, 22)
-    assert.equal(entry.security.summary.total, 22)
-    assert.equal(entry.security.summary.checked + entry.security.summary.notRun, 22)
-    assert.match(entry.checkedBy.securityCommand, /--scope security/)
+    const security = entry.security
+    assert.deepEqual(Object.keys(security).sort(), ['checks', 'command', 'state', 'summary'], `${key} security keys`)
+    assert.ok(['checked', 'partial', 'not-run'].includes(security.state), `${key} security.state`)
+    assert.equal(security.checks.length, 22)
+    assert.equal(security.summary.total, 22)
+    assert.equal(security.summary.checked + security.summary.notRun, 22)
+    assert.equal(security.command, SECURITY_COMMAND)
+    assert.equal(entry.checkedBy.securityCommand, SECURITY_COMMAND)
+    // The block is a faithful reduction of the 22 security checks: counts and
+    // state are derived, never manually adjusted, and a WARN/FAIL is not hidden.
+    const securityIds = []
+    const securitySummary = { total: security.checks.length, checked: 0, blocking: 0, warn: 0, na: 0, notRun: 0 }
+    for (const check of security.checks) {
+      assert.deepEqual(Object.keys(check).sort(), ['coverage', 'id', 'result'])
+      assert.ok(['PASS', 'WARN', 'FAIL', 'NA'].includes(check.result), `${key} security ${check.id} result`)
+      assert.ok(['full', 'partial', 'not-run'].includes(check.coverage), `${key} security ${check.id} coverage`)
+      securityIds.push(check.id)
+      if (check.coverage !== 'not-run') securitySummary.checked += 1
+      else securitySummary.notRun += 1
+      if (check.result === 'FAIL') securitySummary.blocking += 1
+      if (check.result === 'WARN') securitySummary.warn += 1
+      if (check.result === 'NA') securitySummary.na += 1
+    }
+    assert.deepEqual(securityIds, [...securityIds].sort(), `${key} security checks are sorted by id`)
+    assert.equal(new Set(securityIds).size, 22, `${key} security check ids are unique`)
+    assert.deepEqual(security.summary, securitySummary, `${key} security.summary is derived from checks`)
+    const expectedSecurityState = securitySummary.checked === 0
+      ? 'not-run'
+      : securitySummary.checked === securitySummary.total ? 'checked' : 'partial'
+    assert.equal(security.state, expectedSecurityState, `${key} security.state matches coverage`)
 
     assert.match(entry.evidence.reportSha256, /^[0-9a-f]{64}$/)
     assert.equal(entry.evidence.reportUrl, undefined)
@@ -401,10 +429,20 @@ test('publish/sidecar.json: 20 real dsh packages carry every additive field and 
   const withdrawals = JSON.parse(fs.readFileSync(path.join(REPO, 'publish', 'withdrawals.json'), 'utf8'))
   assert.equal(withdrawals.schema, 'dsh-market-withdrawals/1')
   assert.ok(Array.isArray(withdrawals.withdrawals))
+  for (const record of withdrawals.withdrawals) {
+    assert.equal(typeof record.name, 'string')
+    assert.ok(record.name.length > 0)
+    assert.ok(!('version' in record) || nonEmpty(record.version), 'withdrawal.version must be omitted or non-empty')
+    if ('date' in record) assert.match(record.date, /^\d{4}-\d{2}-\d{2}$/)
+  }
 
   const size = fs.statSync(path.join(REPO, 'publish', 'sidecar.json')).size
-  assert.ok(size > 10_000 && size < 200_000, `sidecar size ${size} bytes is outside the expected range`)
+  assert.ok(size > 40_000 && size < 500_000, `sidecar size ${size} bytes is outside the expected range`)
 })
+
+function nonEmpty(value) {
+  return typeof value === 'string' && value.length > 0
+}
 
 test('build-offline-kit: content manifest, npm tarball and market-contract are inside one tgz', (t) => {
   const dir = tempDir(t)
@@ -499,4 +537,48 @@ test('build-sidecar: --security-report adds an additive security block', (t) => 
   assert.deepEqual(entry.security.summary, { total: 3, checked: 2, blocking: 0, warn: 1, na: 1, notRun: 1 })
   assert.equal(entry.checkedBy.securityCommand, 'dsh-standards check <package-dir> --scope security --json')
   assert.equal(entry.checks.length, 1)
+})
+
+test('build-sidecar: security.state is derived from coverage and never claims an audit', (t) => {
+  const dir = tempDir(t)
+  const packageDir = path.join(dir, 'plugin')
+  writeJson(path.join(packageDir, 'package.json'), { name: '@acme/secstate', version: '1.0.0', license: 'MIT' })
+  const tarball = path.join(dir, 'secstate.tgz')
+  fs.writeFileSync(tarball, 'fake tarball\n')
+  const audit = writeJson(path.join(dir, 'audit.json'), auditFixture({ name: '@acme/secstate', version: '1.0.0', dir: packageDir }))
+  const report = writeJson(path.join(dir, 'report.json'), reportFixture('@acme/secstate', '1.0.0', [
+    { id: 'DSC-01', result: 'PASS', coverage: 'full' },
+  ]))
+  const cases = [
+    {
+      expected: 'checked',
+      checks: [
+        { id: 'DSC-15', result: 'PASS', coverage: 'full' },
+        { id: 'DSC-16', result: 'FAIL', coverage: 'full' },
+      ],
+    },
+    {
+      expected: 'not-run',
+      checks: [
+        { id: 'DSC-15', result: 'NA', coverage: 'not-run' },
+        { id: 'DSC-16', result: 'NA', coverage: 'not-run' },
+      ],
+    },
+  ]
+  for (const testCase of cases) {
+    const security = writeJson(path.join(dir, `${testCase.expected}-security.json`), reportFixture('@acme/secstate', '1.0.0', testCase.checks))
+    const out = path.join(dir, `${testCase.expected}-out.json`)
+    mustRun(SIDECAR, buildArgs(dir, {
+      name: '@acme/secstate', version: '1.0.0', packageDir, tarball, audit, report, out,
+      extra: ['--security-report', security],
+    }))
+    const entry = JSON.parse(fs.readFileSync(out, 'utf8')).entries['@acme/secstate@1.0.0']
+    assert.equal(entry.security.state, testCase.expected)
+    assert.equal(entry.security.summary.total, testCase.checks.length)
+    assert.equal(entry.security.summary.checked + entry.security.summary.notRun, testCase.checks.length)
+    assert.equal(entry.security.summary.blocking, testCase.checks.filter(check => check.result === 'FAIL').length)
+    assert.equal(entry.security.command, SECURITY_COMMAND)
+    // A FAIL result is preserved, never rewritten into PASS or treated as an audit verdict.
+    assert.deepEqual(entry.security.checks.map(check => check.result).sort(), testCase.checks.map(check => check.result).sort())
+  }
 })

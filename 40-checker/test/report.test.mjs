@@ -130,9 +130,10 @@ test('runtime anchor follows an explicit version and is suspect when the host di
   assert.equal(hostDefault.runtimeSource, 'host')
   assert.equal(hostDefault.dsh, '0.2.1-rc.5')
   assert.equal(hostDefault.suspect, false)
-  const fallback = resolveRuntimeAnchor(null, null)
-  assert.equal(fallback.runtimeSource, 'fallback')
-  assert.ok(fallback.dsh.length > 0)
+  const unknown = resolveRuntimeAnchor(null, null)
+  assert.equal(unknown.runtimeSource, 'default')
+  assert.ok(unknown.dsh.length > 0)
+  assert.equal(unknown.suspect, true, 'a default constant is not a host: it must be marked suspect')
 })
 
 test('C-2.3 counts as checked once C-2.2 was evaluated', () => {
@@ -147,16 +148,22 @@ test('C-2.3 counts as checked once C-2.2 was evaluated', () => {
   assert.equal(summary.pass, false)
 })
 
-test('checker: the default anchor is host-derived and records the source', () => {
+test('checker: the default anchor is host-derived or an explicit suspect default', () => {
   const run = spawnSync(process.execPath, [CHECKER, GOOD, '--scope', 'entry', '--entry-claim', 'static', '--no-exec', '--format', 'json'], {
     encoding: 'utf8', timeout: 60_000,
   })
   assert.equal(run.status, 0, run.stderr)
   const report = JSON.parse(run.stdout)
-  assert.ok(['host', 'fallback'].includes(report.anchor.runtimeSource))
+  assert.ok(['host', 'default'].includes(report.anchor.runtimeSource))
   assert.ok(Object.hasOwn(report.anchor, 'hostVersion'))
   assert.equal(typeof report.anchor.suspect, 'boolean')
-  if (report.anchor.runtimeSource === 'host') assert.equal(report.anchor.dsh, report.anchor.hostVersion)
+  if (report.anchor.runtimeSource === 'host') {
+    assert.equal(report.anchor.dsh, report.anchor.hostVersion)
+    assert.equal(report.anchor.suspect, false)
+  } else {
+    assert.equal(report.anchor.suspect, true)
+    assert.equal(report.checks.find(item => item.id === 'DSC-02').result, 'NA')
+  }
   assert.equal(report.coverage.entryBlocking.pass, false, 'C-3.x were not checked, so the blocking gate cannot pass')
 })
 
