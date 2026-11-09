@@ -42,6 +42,12 @@ DSH 插件的采用深度分三层，每层一个问题、一套证据状态，*
 | 2 | **DSH-FLOW 顺畅规范** | 用户能否安装、配置、使用、恢复、升级、卸载而不出意外？ | draft；fixture 上 J1/J2/J4/J6 **12 PASS**；J3/J7 fixture runtime；J5/J8 static preflight；10 个真实包 **78 PASS / 4 FAIL / 2 blocked / 66 not-run** |
 | 3 | **DSH-BOOST 加速实践** | 插件是否用 Cordis 原语（effect、inject、volatile、事件、seam、job、有界并行）让开发和使用可测量地更省？ | draft；LEV-1–8 **8/8 measured**（loader / context / provider-capture / synthetic timer；非生产基线） |
 
+### 上游与使用（事实，2026-11）
+
+- **dsh-plugin-hub** —— 版本感知的 npm 元数据校验已合入 main（[`4f3a560`](https://github.com/dshplugin/dsh-plugin-hub/commit/4f3a560)，2026-11-09）。范围仅安装侧的 npm 元数据（包/版本存在性、`repository` 回链）；不运行 ENTRY，也不构成对任何插件的背书。
+- **使用量**（npm registry，2026-11）：`dsh-plugin-guide` ≈12.6k/月、`dsh-standards` ≈4.4k/月、`dsh-plugin-start` ≈1.65k/月。下载量不是独立用户数，也不构成排名、认证或安全结论。
+- **工具链**：`dsh-plugin-guide`（指南 / skill）、`dsh-plugin-start`（生成器，产物自带检查与 advisory CI）、`dsh-check-action`（只读 ENTRY 的 Action）、`dsh-plugin-spec`（条款原文）、`dsh-primer`（旧版开发 skill / CLI）。
+
 仓里就三样东西：`40-checker/`（DS-C 一致性检查器与全部证据脚本）、`bin/`（两个公开入口 `dsh-standards` 与 `dsh-levels`），以及 `spec/` 与 `31`–`35` 号规范正文。工具只读目标包，不改被检对象；结论只认证据，`not-run`、`NA`、`static` 都不会被写成 PASS。
 
 npm 上的旧占位 `dsh-standards@0.0.3` 只是名字预留，这条 1.x 线取代了它（当前 `1.6.x`）；两个 bin 分别叫 `dsh-standards` 与 `dsh-levels`。

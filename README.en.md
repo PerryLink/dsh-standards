@@ -48,6 +48,12 @@ The old npm reservation `dsh-standards@0.0.3` only held the name; this 1.x line 
 
 Fixed anchor, recorded in `spec/levels.json` and in every report: `repo=deepseek-ai/deepseek-harness`, `commit=ce7073d51254`, `dsh=0.2.2-alpha.2`, `cordis=4.0.6-alpha.1`. Pass a different runtime version explicitly and the report records which ruler you measured with.
 
+### Upstream and usage (facts, 2026-11)
+
+- **dsh-plugin-hub** — a version-aware npm metadata check is on main ([`4f3a560`](https://github.com/dshplugin/dsh-plugin-hub/commit/4f3a560), 2026-11-09). Scope: install-time npm metadata only (package/version existence and the `repository` back-link); it does not run ENTRY and is not an endorsement of any plugin.
+- **Usage** (npm registry, 2026-11): `dsh-plugin-guide` ~12.6k/month, `dsh-standards` ~4.4k/month, `dsh-plugin-start` ~1.65k/month. Downloads are not unique users and are not a ranking, certification, or security claim.
+- **Toolchain**: `dsh-plugin-guide` (guide / skill), `dsh-plugin-start` (scaffolder with the check and an advisory CI snippet in its output), `dsh-check-action` (read-only ENTRY Action), `dsh-plugin-spec` (clause text), `dsh-primer` (older development skill / CLI).
+
 ### Current hard numbers
 
 - 18 packages, entry static: **18/18 recognized, 0 clean**;
