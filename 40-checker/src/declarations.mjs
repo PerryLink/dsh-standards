@@ -615,7 +615,6 @@ export function checkCapabilities(manifest, sources, patch) {
     for (const id of caps.list) {
       if (!CAPABILITIES.has(id)) details.push(detail('C-11.1', 'FAIL', `unknown capability id: ${id}`, ['package.json#dsh.capabilities']))
     }
-    if (caps.list.length === 0) details.push(detail('C-11.1', 'WARN', 'dsh.capabilities is empty', ['package.json#dsh.capabilities']))
   }
 
   const triggered = new Map()

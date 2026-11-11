@@ -1,3 +1,14 @@
+## 1.6.9 — 2026-11-08
+
+### Fixed
+
+- C-11.1 no longer emits a WARN when `dsh.capabilities` is a declared empty array. The clause only warns on a missing field; an empty array is the explicit "uses none" declaration, and C-11.2 still fails when a static trigger is observed but not declared. A freshly generated `dsh-plugin-start` skeleton now passes static ENTRY with hygiene 0.
+
+### Verified
+
+- `npm test`: 313 passed / 1 skipped / 0 failed.
+- Generated `dsh-plugin-start` skeleton: local check exits 0, `blocking 0`, `hygiene 0`, no advice.
+
 ## 1.6.8 — 2026-11-07
 
 ### Added
