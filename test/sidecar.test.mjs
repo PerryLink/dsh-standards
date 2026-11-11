@@ -242,6 +242,28 @@ test('build-sidecar: legacy entries survive a lifecycle refresh unchanged (addit
   assert.equal(fs.readFileSync(out, 'utf8'), before)
 })
 
+test('build-sidecar: a lifecycle refresh preserves the checker metadata', (t) => {
+  const dir = tempDir(t)
+  const prev = writeJson(path.join(dir, 'sidecar.json'), sidecarDocument({
+    '@acme/keep@1.0.0': richEntry('@acme/keep', '1.0.0', '2027-01-01'),
+  }))
+  const withdrawals = writeJson(path.join(dir, 'withdrawals.json'), { schema: 'dsh-market-withdrawals/1', withdrawals: [] })
+  const out = path.join(dir, 'out.json')
+
+  mustRun(SIDECAR, ['--prev', prev, '--withdrawals', withdrawals, '--out', out, '--today', TODAY])
+  assert.deepEqual(JSON.parse(fs.readFileSync(out, 'utf8')).checker, {
+    name: 'dsh-standards', version: '1.3.0', sha: CHECKER_SHA,
+  })
+
+  mustRun(SIDECAR, [
+    '--prev', prev, '--withdrawals', withdrawals, '--out', out, '--today', TODAY,
+    '--checker-version', '9.9.9', '--checker-sha', 'b'.repeat(40),
+  ])
+  assert.deepEqual(JSON.parse(fs.readFileSync(out, 'utf8')).checker, {
+    name: 'dsh-standards', version: '9.9.9', sha: 'b'.repeat(40),
+  })
+})
+
 test('build-sidecar: expiry/withdrawal win and keep the additive fields', (t) => {
   const dir = tempDir(t)
   const prev = writeJson(path.join(dir, 'sidecar.json'), sidecarDocument({
@@ -316,9 +338,10 @@ test('publish/sidecar.json: 50 real dsh packages carry every additive field and 
   assert.equal(sidecar.schema, SCHEMA)
   assert.deepEqual(sidecar.notClaimed, NOT_CLAIMED)
   assert.equal(sidecar.checker.name, 'dsh-standards')
-  // The lifecycle refresh rewrites checker.version from package.json without
-  // re-running checks, so do not pin a patch number here; the 50 entries below
-  // still assert the provenance of the checks themselves.
+  // checker.version records the build that produced the checks; a lifecycle
+  // refresh must preserve it (see the --prev test above). The consistency
+  // assertion below pins it to the entries' checkedBy provenance instead of
+  // hardcoding a patch number.
   assert.match(sidecar.checker.version, /^\d+\.\d+\.\d+(?:[-+][0-9A-Za-z.-]+)?$/)
   assert.ok(sidecar.checker.sha === null || /^[0-9a-f]{40}$/.test(sidecar.checker.sha))
   assert.equal(sidecar.index.format, 1)
@@ -329,6 +352,17 @@ test('publish/sidecar.json: 50 real dsh packages carry every additive field and 
   const keys = Object.keys(sidecar.entries)
   assert.equal(keys.length, PUBLISH_ENTRIES)
   assert.deepEqual(keys, [...keys].sort())
+
+  const checkedByVersions = new Set()
+  for (const key of keys) {
+    const match = /^dsh-standards@([^\s(]+)/.exec(sidecar.entries[key].checkedBy?.checker ?? '')
+    if (match) checkedByVersions.add(match[1])
+  }
+  assert.ok(checkedByVersions.size > 0, 'real entries must carry checkedBy provenance')
+  assert.ok(
+    checkedByVersions.has(sidecar.checker.version),
+    `sidecar.checker.version ${sidecar.checker.version} is not among the entry checker versions (${[...checkedByVersions].join(', ')})`,
+  )
 
   const names = new Set()
   const shas = new Set()

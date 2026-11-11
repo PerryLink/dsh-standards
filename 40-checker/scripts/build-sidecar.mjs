@@ -757,9 +757,16 @@ function main() {
   if (!generatedAt) throw new Error('no --prev and no --levels generatedAt')
 
   const checkerPkg = readPackageMeta(ROOT)
-  const checkerVersion = options.checkerVersion ?? checkerPkg.version
+  // A pure --prev refresh only recomputes lifecycle; it must not overwrite the
+  // checker metadata that records which build produced the checks. Explicit
+  // --checker-version/--checker-sha still win, and --levels rebuilds use the
+  // current package version because they add freshly produced checks.
+  const prevChecker = prev && !options.levels && prev.checker && typeof prev.checker === 'object' ? prev.checker : null
+  const checkerVersion = options.checkerVersion
+    ?? (typeof prevChecker?.version === 'string' && prevChecker.version !== '' ? prevChecker.version : checkerPkg.version)
   if (typeof checkerVersion !== 'string' || checkerVersion === '') throw new Error('cannot determine checker version')
-  const checkerSha = options.checkerSha ?? gitHead()
+  const checkerSha = options.checkerSha
+    ?? (prevChecker && Object.hasOwn(prevChecker, 'sha') ? prevChecker.sha : gitHead())
   if (checkerSha !== null && !HEX40.test(checkerSha)) throw new Error('--checker-sha must be 40 hex chars')
   try {
     const parsed = new URL(options.indexUrl)

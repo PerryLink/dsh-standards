@@ -7,8 +7,8 @@
   },
   "checker": {
     "name": "dsh-standards",
-    "version": "1.6.8",
-    "sha": "a6d5c013113bab74208c42a88c7bfe680f7c8afd"
+    "version": "1.6.7",
+    "sha": "da6eeac72318fceca264abee9b1b818b02643953"
   },
   "notClaimed": [
     "official",
