@@ -25,6 +25,7 @@ import os from 'node:os'
 import path from 'node:path'
 import crypto from 'node:crypto'
 import { spawnSync } from 'node:child_process'
+import { npmPackInvocation } from '../src/npm-command.mjs'
 import { fileURLToPath } from 'node:url'
 
 const HERE = path.dirname(fileURLToPath(import.meta.url))
@@ -131,7 +132,9 @@ function findTarball(root, explicit, version) {
     if (fs.existsSync(candidate)) return { file: candidate, temporary: false }
   }
   const packDir = fs.mkdtempSync(path.join(os.tmpdir(), 'dsh-standards-pack-'))
-  const run = spawnSync('npm', ['pack', '--ignore-scripts', '--pack-destination', packDir], {
+  const invocation = npmPackInvocation(process.platform, ['pack', '--ignore-scripts', '--pack-destination', packDir])
+  const run = spawnSync(invocation.command, invocation.args, {
+    shell: invocation.shell,
     cwd: root,
     encoding: 'utf8',
   })

@@ -1,23 +1,36 @@
 import test from 'node:test'
 import assert from 'node:assert/strict'
-import { npmPackInvocation } from '../scripts/flow-collect.mjs'
+import { npmPackInvocation } from '../src/npm-command.mjs'
+import { npmPackInvocation as collectorInvocation } from '../scripts/flow-collect.mjs'
 
-test('flow-collect npm pack: win32 routes npm.cmd through a shell', () => {
+const CMD = process.env.ComSpec || 'cmd.exe'
+
+test('npm pack on win32 routes npm.cmd through cmd.exe /c, not a bare .cmd spawn', () => {
   const invocation = npmPackInvocation('win32', ['pack', '--json', '--pack-destination', 'C:\\tmp with space'])
-  assert.equal(invocation.command, 'npm.cmd')
-  assert.equal(invocation.shell, true, 'a bare npm.cmd spawn is EINVAL on Windows; shell:true uses cmd.exe /c')
-  assert.deepEqual(invocation.args, ['pack', '--json', '--pack-destination', 'C:\\tmp with space'])
+  assert.equal(invocation.command, CMD)
+  assert.deepEqual(invocation.args, [
+    '/d', '/s', '/c', 'npm.cmd', 'pack', '--json', '--pack-destination', 'C:\\tmp with space',
+  ])
+  assert.equal(invocation.shell, false, 'shell:true would emit DEP0190; cmd.exe /c keeps args separate')
 })
 
-test('flow-collect npm pack: linux keeps the direct npm spawn', () => {
+test('npm pack on linux keeps the direct npm spawn', () => {
   const invocation = npmPackInvocation('linux', ['pack', '--ignore-scripts', '--json'])
   assert.equal(invocation.command, 'npm')
-  assert.equal(invocation.shell, false)
   assert.deepEqual(invocation.args, ['pack', '--ignore-scripts', '--json'])
+  assert.equal(invocation.shell, false)
 })
 
-test('flow-collect npm pack: darwin behaves like linux', () => {
+test('npm pack on darwin behaves like linux', () => {
   const invocation = npmPackInvocation('darwin', ['pack'])
   assert.equal(invocation.command, 'npm')
+  assert.deepEqual(invocation.args, ['pack'])
   assert.equal(invocation.shell, false)
+})
+
+test('flow-collect re-exports the shared npm invocation', () => {
+  assert.deepEqual(
+    collectorInvocation('win32', ['pack', '--json']),
+    npmPackInvocation('win32', ['pack', '--json']),
+  )
 })

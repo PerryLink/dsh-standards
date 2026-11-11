@@ -28,6 +28,7 @@ import fs from 'node:fs'
 import os from 'node:os'
 import path from 'node:path'
 import { spawnSync } from 'node:child_process'
+import { npmPackInvocation } from './npm-command.mjs'
 import { signEvidence } from './signature.mjs'
 
 // Signing helpers live in signature.mjs; re-exported here so callers that
@@ -167,8 +168,6 @@ export function treeSha256(dir, { exclude = [] } = {}) {
   return { hash: sha256Value(rows.join('\n')), files: rows.length, bytes }
 }
 
-const NPM = process.platform === 'win32' ? 'npm.cmd' : 'npm'
-
 function subjectFields(subject) {
   if (!isPlainObject(subject)) return null
   return {
@@ -193,7 +192,9 @@ export function recomputeSubject(dir, { exclude = [], timeoutMs = 120_000 } = {}
   const tree = treeSha256(root, { exclude })
   const destination = fs.mkdtempSync(path.join(os.tmpdir(), 'dsh-subject-'))
   try {
-    const run = spawnSync(NPM, ['pack', '--ignore-scripts', '--json', '--pack-destination', destination], {
+    const invocation = npmPackInvocation(process.platform, ['pack', '--ignore-scripts', '--json', '--pack-destination', destination])
+    const run = spawnSync(invocation.command, invocation.args, {
+      shell: invocation.shell,
       cwd: root, encoding: 'utf8', timeout: timeoutMs, maxBuffer: 16 * 1024 * 1024,
     })
     if (run.error) throw new Error(`npm pack failed to start: ${run.error.message}`)

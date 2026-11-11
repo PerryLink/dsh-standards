@@ -40,6 +40,7 @@ import {
   sha256File, sha256Value, treeSha256, validateFlowEvidence,
 } from '../src/flow-evidence.mjs'
 import { sanitizedEnv } from '../src/sandbox-env.mjs'
+import { npmCommand } from '../src/npm-command.mjs'
 import {
   assertNoCredentialEnv, buildSandboxPlan, runInProcessTree, sandboxArgv,
 } from '../src/sandbox-run.mjs'
@@ -51,15 +52,15 @@ const JOURNEY_RUNTIME = path.join(HERE, 'journey-runtime.mjs')
 const GIT = process.platform === 'win32' ? 'git.exe' : 'git'
 
 /**
- * npm's Windows launcher is `npm.cmd`. Since Node 18.20/20.12 a direct
+ * npm's Windows launcher is `npm.cmd`. Since Node 18.20/20.12 a bare
  * spawnSync('npm.cmd', ...) without a shell fails with EINVAL (the
- * CVE-2024-27980 mitigation). Go through the shell, which uses `cmd.exe /c`
- * under the hood; Linux stays a direct spawn. Exported so the platform choice
- * is testable without running npm.
+ * CVE-2024-27980 mitigation). `npm-command.mjs` routes Windows through
+ * `cmd.exe /d /s /c`, which also avoids the shell:true DEP0190 warning; POSIX
+ * keeps a direct spawn. Exported so the platform choice is testable without
+ * running npm.
  */
 export function npmPackInvocation(platform = process.platform, args = ['pack', '--ignore-scripts', '--json']) {
-  if (platform === 'win32') return { command: 'npm.cmd', args, shell: true }
-  return { command: 'npm', args, shell: false }
+  return npmCommand(platform, args)
 }
 
 const STATIC_CHECK_IDS = {
