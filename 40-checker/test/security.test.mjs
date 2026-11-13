@@ -545,6 +545,42 @@ test('DSC-11 C-11.2: ctx.credentials triggers credentials:read without a spuriou
   assert.equal(declarationsOfFixture('sec11-cred-list').result, 'PASS')
 })
 
+/** DSC-11 C-11.5 varies by capability, not by whole-fixture result. */
+function capabilityFindings(source, capabilities) {
+  return checkCapabilities(
+    { dsh: { capabilities } },
+    [{ relative: 'index.mjs', text: source }],
+    {},
+  ).details.filter(item => item.item === 'C-11.5')
+}
+
+test('DSC-11 C-11.5: node:fs reads/writes are observation evidence, not over-declaration', () => {
+  const direct = capabilityFindings(
+    "import fs from 'node:fs'; fs.readFileSync('a'); fs.writeFileSync('b', '');",
+    ['fs:read', 'fs:write'],
+  )
+  assert.deepEqual(direct, [])
+
+  // Reading through ctx.fs no longer "observes" a declared write capability.
+  const readOnly = capabilityFindings('ctx.fs.readText(x)', ['fs:write'])
+  assert.equal(readOnly.length, 1)
+  assert.match(readOnly[0].reason, /fs:write/)
+
+  const writeOnly = capabilityFindings('ctx.fs.writeText(x)', ['fs:write'])
+  assert.deepEqual(writeOnly, [])
+})
+
+test('DSC-11 C-11.5: an unobservable surface is not-run, not a permanent WARN', () => {
+  const provider = capabilityFindings('ctx.credentials.resolve()', ['credentials:provider'])
+  assert.equal(provider.length, 1)
+  assert.equal(provider[0].result, 'NA')
+
+  const noSources = checkCapabilities({ dsh: { capabilities: ['fs:read'] } }, [], {})
+    .details.filter(item => item.item === 'C-11.5')
+  assert.equal(noSources.length, 1)
+  assert.equal(noSources[0].result, 'NA')
+})
+
 test('CLI: healed credential, command and install fixtures are blocking in security scope', () => {
   for (const [name, id] of [['sec17-home-env', 'DSC-17'], ['sec16-exec-curl', 'DSC-16'], ['sec15-install-dynamic', 'DSC-15']]) {
     const run = runCli(path.join(SECURITY_FIXTURES, name), ['--scope', 'security', '--no-exec'])

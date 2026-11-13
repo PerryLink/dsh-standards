@@ -662,7 +662,7 @@ export function apply(ctx: Context) {
 | C-11.2 | **字段存在时**，高信号触发必须申报（映射见下表） | 字段存在且漏报 → FAIL；字段缺失 → 不评估，C-11 整体 WARN（过渡期） |
 | C-11.3 | bundle patch 不得启用 `@deepseek-ai/dsh-plugin-manager/tools` | 启用 → FAIL |
 | C-11.4 | 源码/配置中 `danger-full-access` 的 AST 字符串字面量；注释、等值比较、文档字符串不算（见下） | 真实授权/命令上下文或未知上下文 → WARN |
-| C-11.5 | 声明了但实测没有对应触发 | WARN（过度声明是安全的，但会误导） |
+| C-11.5 | 声明了但静态未观测到对应触发 | WARN（**不等于未使用/过度声明**：`node:fs`、动态调用、扫描截断不在触发面内；无源码或无观测面记 NA） |
 
 **C-11.2 触发映射**：
 
@@ -686,7 +686,7 @@ export function apply(ctx: Context) {
 | 值 | 条件 |
 |---|---|
 | PASS | C-11.1 字段存在/合法；C-11.2 无漏报；C-11.3 未启用；C-11.4 无命中 |
-| WARN | 字段缺失（过渡期，C-11.2 不评估）；C-11.4 命中；C-11.5 过度声明；触发信号不确定（动态调用） |
+| WARN | 字段缺失（过渡期，C-11.2 不评估）；C-11.4 命中；C-11.5 静态未观测（不等于过度声明）；触发信号不确定（动态调用） |
 | ERROR | AST 解析失败导致 C-11.4 not-run（coverage=not-run，不冒充 PASS） |
 | FAIL | 非法 ID；字段存在但 C-11.2 漏报；C-11.3 启用 |
 | NA | `dsh.kind` 非 plugin/bundle |
@@ -716,7 +716,7 @@ export function apply(ctx: Context) {
 }
 ```
 
-**建议分级**：DS-C 强制（C-11.1～C-11.3）；C-11.4/C-11.5 为 WARN。
+**建议分级**：DS-C 强制（C-11.1～C-11.3）；C-11.4/C-11.5 为 WARN；C-11.5 在无源码或该能力无静态观测面时记 NA（not-run），不记 WARN。
 
 **边界说明**：`dsh.capabilities` **不是权限门控**。宿主不读它，也没有运行时沙箱；它只是"装载期声明 + UI 披露"。一个插件完全可以声明 `[]` 然后裸 `import node:fs`，C-11 抓不到。这是 D5 的已知边界，必须在徽章文案里写明"非安全审计"。
 
@@ -1360,8 +1360,8 @@ E 路的 MVP 13 项（L0-1/2/3 + L1-1/3/4/5 + L2-1/2/4 + L3-1/3/5）只覆盖 C-
 
 | ID | 触发信号（静态可判） | 说明 |
 |---|---|---|
-| `fs:read` | `ctx.fs` 的读方法 | 读文件 |
-| `fs:write` | `ctx.fs` 的写方法 | 写文件 |
+| `fs:read` | `ctx.fs` 读方法（`readText`/`streamText`/`readBytes`/`readByteRange`/`listDir`/`stat`/`lstat`）；直接 `node:fs` 读调用仅作 C-11.5 观测证据 | 读文件（含绕过 `ctx.fs` 的直接 `node:fs`） |
+| `fs:write` | `ctx.fs` 写方法（`writeText`/`editText`/`patchText`/`deleteFile`/`moveFile`）；直接 `node:fs` 写调用仅作 C-11.5 观测证据 | 写文件（含绕过 `ctx.fs` 的直接 `node:fs`） |
 | `shell` | `ctx.shell`/`ctx.bash` | 执行 shell |
 | `subprocess` | `ctx.subprocess` | 子进程/PTY |
 | `network:egress` | `ctx.web`/裸 `fetch` | 出站网络 |

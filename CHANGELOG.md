@@ -1,3 +1,10 @@
+## 1.6.10 — 2026-11-13
+
+### Fixed
+
+- **C-11.5 no longer calls a static blind spot "over-declaration".** The clause fired for plugins that declare `fs:read`/`fs:write` and use `node:fs` directly, because the only trigger was `ctx.fs`; the remediation even told authors to delete a declaration they were really using. Direct `node:fs` reads/writes are now observation evidence (only for C-11.5 — they never produce a new C-11.2 FAIL), and `ctx.fs` reads/writes are observed separately instead of `fs:write` borrowing `fs:read`'s hit.
+- **C-11.5 records `NA` instead of `WARN` when nothing can be observed**: no source files were scanned, or the capability has no static observation surface in this checker version (`credentials:provider`). Wording across `31-DS-C条款.md`, `60-权限与标注规范.md`, `spec/dsc-clauses.json` and `spec/remediation.json` now says "静态未观测（不等于未使用）" and no longer advises deleting a real declaration.
+
 ## 1.6.9 — 2026-11-08
 
 ### Fixed
@@ -269,6 +276,13 @@
 - 检查器：`exports["."]` 指向缺失文件时不再回退到 `main`。
 
 # Changelog
+
+## 1.6.10 — 2026-11-13
+
+### Fixed
+
+- **C-11.5 no longer calls a static blind spot "over-declaration".** The clause fired for plugins that declare `fs:read`/`fs:write` and use `node:fs` directly, because the only trigger was `ctx.fs`; the remediation even told authors to delete a declaration they were really using. Direct `node:fs` reads/writes are now observation evidence (only for C-11.5 — they never produce a new C-11.2 FAIL), and `ctx.fs` reads/writes are observed separately instead of `fs:write` borrowing `fs:read`'s hit.
+- **C-11.5 records `NA` instead of `WARN` when nothing can be observed**: no source files were scanned, or the capability has no static observation surface in this checker version (`credentials:provider`). Wording across `31-DS-C条款.md`, `60-权限与标注规范.md`, `spec/dsc-clauses.json` and `spec/remediation.json` now says "静态未观测（不等于未使用）" and no longer advises deleting a real declaration.
 
 ## 2026-11-04 — 0.2.2-alpha.3 baseline in the three-level docs
 

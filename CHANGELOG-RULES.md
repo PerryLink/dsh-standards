@@ -47,6 +47,7 @@
 **落点（TODO: impl）**：新增 `40-checker/scripts/rules-changelog-check.mjs`，在 `.github/workflows/governance.yml` 的 checks job 里、与 `clause-map.mjs` / `stale-check.mjs` 同级加一步。**本轮不动 `40-checker/`**，所以现在 CI 还不会拦——契约先立，脚本随 P1-4 落地。
 
 **方向性校验**：`CHANGELOG.md` 的每个版本头都要在本文件「影响版本」出现 ≥1 次；缺则 warn（历史版本无规则变更的可显式记「无规则变更」）。反例正是本表的 1.0.5 / 1.0.6 / 1.0.7 / 1.1.0：它们**没有 git tag、也不在 npm**（见 §3），只有 `CHANGELOG.md` 文本与 commit 可查。
+| 2026-11-13 | `C-11.5` / `DSC-11` | `声明了但实测没有触发 → 一律 WARN（过度声明）` → `声明了但静态未观测到 → WARN（不等于未使用）；node:fs 的读/写调用纳入观测证据；无源码、无观测面、扫描截断记 NA/not-run` | `node:fs` 插件的 C-11.5 假阳性消失；只读 `ctx.fs` 却声明 `fs:write` 会出现新的 C-11.5 WARN（读/写改为独立观测）；`credentials:provider` 不再永远 WARN；`fs:write` 不再借用 `fs:read` 代理 | 1.6.10 | 是 |
 
 ## 3 版本可得性（读表前先看这一行）
 
