@@ -336,9 +336,9 @@
     "severityHint": "warn"
   },
   "C-11.5": {
-    "title": "声明了能力但实测没触发",
-    "why": "过度声明会误导用户，也会让权限面看起来比实际大。",
-    "fix": "删掉未使用的 capability，或补上实际调用；动态触发无法静态确认时在 README 说明。",
+    "title": "声明了能力但静态未观测到",
+    "why": "静态触发面看不到该能力，可能是确实没用，也可能是通过 node:fs、动态调用或扫描截断走到了触发面之外。它不等于过度声明。",
+    "fix": "先确认实现是否经由 node:fs/动态路径使用该能力；确实不用再删，仍在用就在 README 说明「为什么声明了但静态看不到」。不要为了消掉这条 WARN 而删掉真实使用的声明。",
     "docs": "docs/entry.md#capability-triggers",
     "severityHint": "warn"
   },

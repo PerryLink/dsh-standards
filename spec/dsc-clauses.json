@@ -726,7 +726,7 @@
     {
       "dsc": "DSC-11",
       "clause": "C-11.5",
-      "title": "声明了但无触发（过度声明）",
+      "title": "声明了但静态未观测（不等于未使用）",
       "layer": "L0",
       "mandatory": false,
       "advisory": false,

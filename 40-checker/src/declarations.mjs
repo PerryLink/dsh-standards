@@ -35,6 +35,37 @@ const TRIGGERS = [
   { cap: 'network:egress', pattern: /ctx\.web\b|\bfetch\s*\(/g },
 ]
 
+// C-11.5 observation evidence (NOT C-11.2 triggers). The coarse `ctx.fs` trigger
+// cannot see direct `node:fs` use, and it cannot tell reads from writes: a plugin
+// that declares fs:read/fs:write and reads/writes through node:fs was told its
+// declaration was "over-declared" (#5). These patterns only suppress that false
+// positive; they never produce a new FAIL.
+const FS_CTX_READ = /ctx\.fs\.(?:readText|streamText|readBytes|readByteRange|listDir|stat|lstat)\s*\(/g
+const FS_CTX_WRITE = /ctx\.fs\.(?:writeText|editText|patchText|deleteFile|moveFile)\s*\(/g
+const NODE_FS_IMPORT = /(?:from\s*['"](?:node:)?fs(?:\/promises)?['"]|require\(\s*['"](?:node:)?fs(?:\/promises)?['"])/g
+const NODE_FS_READ = /\b(?:readFileSync|readFile|createReadStream|readdirSync|readdir|statSync|stat|lstatSync|lstat|existsSync|accessSync|access|readlinkSync|readlink|realpathSync|realpath)\s*\(/g
+const NODE_FS_WRITE = /\b(?:writeFileSync|writeFile|appendFileSync|appendFile|createWriteStream|mkdirSync|mkdir|rmSync|rm|rmdirSync|rmdir|unlinkSync|unlink|renameSync|rename|copyFileSync|copyFile|chmodSync|chmod|symlinkSync|symlink|truncateSync|truncate|writeSync)\s*\(/g
+
+// Capabilities with no static observation surface in this checker version. C-11.5
+// is reported as not-run for them instead of a permanent, misleading WARN.
+const NO_OBSERVATION_SURFACE = new Set(['credentials:provider'])
+
+/** Per-capability observation evidence for C-11.5 (never used by C-11.2). */
+function observationEvidence(sources) {
+  const out = new Map()
+  const add = (cap, hits) => {
+    if (hits.length > 0) out.set(cap, [...(out.get(cap) ?? []), ...hits])
+  }
+  add('fs:read', regexHits(sources, FS_CTX_READ))
+  add('fs:write', regexHits(sources, FS_CTX_WRITE))
+  for (const source of sources) {
+    if (regexHits([source], NODE_FS_IMPORT).length === 0) continue
+    add('fs:read', regexHits([source], NODE_FS_READ))
+    add('fs:write', regexHits([source], NODE_FS_WRITE))
+  }
+  return out
+}
+
 function capabilityList(manifest) {
   const value = manifest?.dsh?.capabilities
   if (value === undefined) return { defined: false, list: [], error: null }
@@ -622,6 +653,7 @@ export function checkCapabilities(manifest, sources, patch) {
     const hits = regexHits(sources, trigger.pattern)
     if (hits.length > 0) triggered.set(trigger.cap, hits)
   }
+  const observedEvidence = observationEvidence(sources)
   if (!caps.defined) {
     for (const [cap, hits] of triggered) {
       details.push(detail('C-11.2', 'WARN', `trigger for ${cap} observed but dsh.capabilities is absent`, hitEvidence(hits)))
@@ -637,9 +669,20 @@ export function checkCapabilities(manifest, sources, patch) {
         details.push(detail('C-11.2', 'FAIL', `static trigger ${cap} is not declared in dsh.capabilities`, hitEvidence(hits)))
       }
     }
-    for (const cap of caps.list) {
-      const observed = triggered.has(cap) || (cap === 'fs:write' && triggered.has('fs:read'))
-      if (!observed) details.push(detail('C-11.5', 'WARN', `declared capability ${cap} was not observed statically`, ['package.json#dsh.capabilities']))
+    if (sources.length === 0) {
+      details.push(detail('C-11.5', 'NA', 'not-run: no source files were scanned, so no capability can be observed', []))
+    } else {
+      for (const cap of caps.list) {
+        if (NO_OBSERVATION_SURFACE.has(cap)) {
+          details.push(detail('C-11.5', 'NA', `not-run: no static observation surface for ${cap} in this checker version`, []))
+          continue
+        }
+        // `fs:write` used to be "observed" by any `ctx.fs` use; that let a
+        // read-only plugin declare a write capability and pass. Read and write
+        // are now observed independently (ctx.fs method + direct node:fs).
+        const observed = triggered.has(cap) || observedEvidence.has(cap)
+        if (!observed) details.push(detail('C-11.5', 'WARN', `declared capability ${cap} was not observed statically (this is not proof it is unused: node:fs, dynamic calls and scan truncation are outside the trigger surface)`, ['package.json#dsh.capabilities']))
+      }
     }
   }
 
