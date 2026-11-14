@@ -8,9 +8,9 @@ produced 17 row artifacts (17/17 jobs success) plus the synthesized blocked row
 **14 client-bearing rows `client-module-loaded`**, **4/4 web-app rows loaded**,
 2 host-gate rejections (`telemetry`, `verification`), 1 shell-only row without a
 client export (`qiushi`), and 1 blocked row (`YuJunZhiXue__dsh-purge`: its
-upstream repository was deleted, so nothing could be installed). The 18th
-client-bearing row is the blocked fixture: the coverage is **14/18 measured
-client rows + 1 blocked**, not a green 15/15.
+upstream repository was deleted, so nothing could be installed). The 15th
+client-bearing row is the blocked fixture: the measured coverage is **14/15
+client-bearing rows (14/18 ENTRY rows) + 1 blocked**, not a green 15/15.
 
 This is the `-r2` re-run of `../webruntime-rc3-20261114/` (A13, the first run).
 The historical `../webruntime/` (alpha.2, 2026-10-31) is untouched and remains
