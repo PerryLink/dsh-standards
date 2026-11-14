@@ -44,7 +44,7 @@ DSH adoption depth has three levels, each with its own question and evidence voc
 
 Three things live here: `40-checker/` (the DS-C conformance checker plus every evidence script), `bin/` (two public entry points, `dsh-standards` and `dsh-levels`), and `spec/` with the canonical clause text in the numbered `31`–`35` documents. The tools only read the target package and never modify what they inspect; the verdict only accepts evidence, so `not-run`, `NA`, and `static` are never written up as PASS.
 
-The old npm reservation `dsh-standards@0.0.3` only held the name; this 1.x line replaces it (currently `1.6.12`), and the two bins are `dsh-standards` and `dsh-levels`.
+The old npm reservation `dsh-standards@0.0.3` only held the name; this 1.x line replaces it (currently `1.7.0`), and the two bins are `dsh-standards` and `dsh-levels`.
 
 The anchor is recorded in every report, not in `spec/levels.json` (the checker resolves it at run time: CLI flag, then host probe, then the built-in default): `repo=deepseek-ai/deepseek-harness`, `commit=38a6a5c965aa`, `dsh=0.2.2-rc.3`, `cordis=4.1.0`. Pass a different runtime version explicitly and the report records which ruler you measured with.
 

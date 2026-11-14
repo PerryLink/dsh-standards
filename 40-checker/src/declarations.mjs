@@ -10,7 +10,7 @@ import { validateCommitments, validateDisclosure } from './permissions.mjs'
 export const CAPABILITIES = new Set([
   'fs:read', 'fs:write', 'shell', 'subprocess', 'network:egress', 'network:ingress',
   'credentials:read', 'credentials:list', 'credentials:provider', 'llm:adapter',
-  'sessions:read', 'system-prompt:write', 'tools:register', 'remote:expose', 'plugin:install',
+  'sessions:read', 'sessions:write', 'system-prompt:write', 'tools:register', 'remote:expose', 'plugin:install',
 ])
 
 // Reserved capability IDs (2026-11-14, P1-6): names the current standard version
@@ -50,6 +50,7 @@ const TRIGGERS = [
   { cap: 'credentials:list', pattern: /\.listRecords\s*\(/g },
   { cap: 'credentials:read', pattern: /ctx\.credentials\b/g },
   { cap: 'sessions:read', pattern: /ctx\.(?:sessions|sessionQuery)\b/g },
+  { cap: 'sessions:write', pattern: /\bsession\.append\s*\(/g },
   { cap: 'shell', pattern: /ctx\.(?:shell|bash)\b/g },
   { cap: 'subprocess', pattern: /ctx\.subprocess\b/g },
   { cap: 'fs:read', pattern: /ctx\.fs\b/g },

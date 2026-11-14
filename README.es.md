@@ -44,7 +44,7 @@ La profundidad de adopción de DSH tiene tres niveles, cada uno con su pregunta 
 
 Aquí viven tres cosas: `40-checker/` (el verificador DS-C y todos los scripts de evidencia), `bin/` (dos puntos de entrada públicos, `dsh-standards` y `dsh-levels`) y `spec/` junto con el texto normativo de los documentos numerados `31`–`35`. Las herramientas solo leen el paquete objetivo y nunca modifican lo que inspeccionan; el veredicto solo acepta evidencia, así que `not-run`, `NA` y `static` jamás se escriben como PASS.
 
-La antigua reserva de npm `dsh-standards@0.0.3` solo ocupaba el nombre; esta línea 1.x la sustituye (hoy `1.6.12`) y los dos bins son `dsh-standards` y `dsh-levels`.
+La antigua reserva de npm `dsh-standards@0.0.3` solo ocupaba el nombre; esta línea 1.x la sustituye (hoy `1.7.0`) y los dos bins son `dsh-standards` y `dsh-levels`.
 
 El ancla se registra en cada informe, no en `spec/levels.json` (el checker la resuelve en tiempo de ejecución: flag de CLI, luego sondeo del host y por último la constante incorporada): `repo=deepseek-ai/deepseek-harness`, `commit=38a6a5c965aa`, `dsh=0.2.2-rc.3`, `cordis=4.1.0`. Si pasas otra versión de runtime, el informe deja constancia de con qué regla mediste.
 

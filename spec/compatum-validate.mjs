@@ -395,8 +395,8 @@ function checkRegistry(schema) {
   const effects = schema?.$defs?.capabilityEffects?.const;
   const idEnum = schema?.$defs?.capability?.properties?.id?.enum;
 
-  if (!Array.isArray(registry) || registry.length !== 15) {
-    errors.push({ path: '$.$defs.capabilityRegistry', message: 'must contain exactly 15 IDs' });
+  if (!Array.isArray(registry) || registry.length !== 16) {
+    errors.push({ path: '$.$defs.capabilityRegistry', message: 'must contain exactly 16 IDs' });
   } else if (new Set(registry).size !== registry.length) {
     errors.push({ path: '$.$defs.capabilityRegistry', message: 'must not contain duplicate IDs' });
   }

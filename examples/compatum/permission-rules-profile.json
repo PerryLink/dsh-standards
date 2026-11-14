@@ -1,0 +1,97 @@
+{
+  "$schema": "../../spec/compatum.schema.json",
+  "schema": "compatum/1",
+  "name": "dsh-permission-rules",
+  "version": "0.8.0",
+  "capabilities": [
+    {
+      "id": "fs:read",
+      "effect": "read",
+      "scope": "workspace",
+      "targets": [
+        "workspace"
+      ],
+      "reversible": true,
+      "approval": "none",
+      "reason": "Reads rule files and workspace paths to evaluate permission decisions."
+    },
+    {
+      "id": "fs:write",
+      "effect": "write",
+      "scope": "workspace",
+      "targets": [
+        "workspace"
+      ],
+      "reversible": true,
+      "approval": "once",
+      "reason": "Persists the local rule file and its backups."
+    },
+    {
+      "id": "network:egress",
+      "effect": "network",
+      "scope": "remote",
+      "targets": [
+        "api.github.com"
+      ],
+      "reversible": true,
+      "approval": "once",
+      "reason": "Fetches rule-schema metadata from one pinned release endpoint."
+    },
+    {
+      "id": "sessions:write",
+      "effect": "write",
+      "scope": "user",
+      "targets": [
+        "$DSH_HOME/sessions"
+      ],
+      "reversible": false,
+      "approval": "once",
+      "reason": "Appends permission-decision audit events to the current session log; appended events remain after uninstall."
+    }
+  ],
+  "requires": {
+    "portable": "1.0",
+    "dsh": ">=0.2.2-0 <0.3.0",
+    "node": "^22.19.0 || >=24.9.0",
+    "platform": [
+      "linux",
+      "darwin",
+      "win32"
+    ],
+    "install": {
+      "unit": "bundle",
+      "entry": "dsh.bundle.patch",
+      "activation": "hot-reload",
+      "data": "$DSH_HOME/dsh-permission-rules",
+      "uninstall": {
+        "stops": true,
+        "removesCode": true,
+        "removesData": false,
+        "residue": [
+          "permission audit events already appended to session logs"
+        ]
+      }
+    }
+  },
+  "evidence": [
+    {
+      "schema": "compatum-evidence/1",
+      "level": "declared",
+      "subject": {
+        "repo": "https://github.com/PerryLink/dsh-permission-rules",
+        "version": "0.8.0",
+        "commit": "a387d9d"
+      },
+      "host": {
+        "name": "dsh",
+        "version": "0.2.2-rc.3"
+      },
+      "checker": "author@0.8.0",
+      "result": "NOT-RUN",
+      "scope": "capability",
+      "checkedAt": "2026-11-14T13:30:00Z",
+      "reportPath": "examples/compatum/permission-rules-profile.json",
+      "stale": false
+    }
+  ]
+}

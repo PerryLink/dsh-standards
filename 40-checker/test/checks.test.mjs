@@ -47,6 +47,18 @@ test('good fixture declarations are consistent', () => {
   assert.equal(labels.result, 'PASS', labels.reason)
 })
 
+test('DSC-11: session.append requires sessions:write, not sessions:read', () => {
+  const sources = [{ relative: 'index.mjs', text: "agent.session.append('permissionRules/decision', { decision: 'allow' })\n" }]
+  const declared = checkCapabilities({ dsh: { capabilities: ['sessions:write'] } }, sources)
+  assert.equal(declared.result, 'PASS', declared.reason)
+  const undeclared = checkCapabilities({ dsh: { capabilities: ['sessions:read'] } }, sources)
+  assert.equal(undeclared.result, 'FAIL', undeclared.reason)
+  assert.ok(
+    undeclared.details.some((detail) => detail.item === 'C-11.2' && /sessions:write/.test(detail.reason)),
+    JSON.stringify(undeclared.details),
+  )
+})
+
 test('bad fixture rejects official label and unknown capability', () => {
   const result = runManifestChecks(bad)
   const sources = readSources(bad)

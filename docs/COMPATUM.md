@@ -90,7 +90,7 @@ wrapper below only shows the embedding.
 
 ### 3.1 `capabilities[]`
 
-An array of objects. `id` is required and MUST come from the 15-ID closed set
+An array of objects. `id` is required and MUST come from the 16-ID closed set
 in [`60-权限与标注规范.md` §2.2](../60-权限与标注规范.md); `effect`, `scope`,
 `targets`, `reversible`, `approval`, `hostOnly`, and `reason` MAY qualify it,
 using registry defaults when absent. Aliases (`listen`, `exec`, `process`) MUST
@@ -134,11 +134,12 @@ canonical JSON (RFC 8785 JCS) of the record body, excluding the hash field.
 ### 3.4 Machine-readable artifacts
 
 - [`spec/compatum.schema.json`](../spec/compatum.schema.json) — JSON Schema
-  2020-12 for one `compatum/1` block, including the 15-ID registry, the alias
+  2020-12 for one `compatum/1` block, including the 16-ID registry, the alias
   map (`listen`, `exec`, `process`), the effect map, `requires.install`, and the
   evidence record.
 - [`examples/compatum/`](../examples/compatum/) — `plugin-min.json`,
-  `plugin-full.json`, and `mcp-profile.json`; all three validate.
+  `plugin-full.json`, `mcp-profile.json`, and `permission-rules-profile.json`;
+  all four validate.
 - [`spec/compatum-validate.mjs`](../spec/compatum-validate.mjs) — zero-dependency
   validator. It checks the schema plus rules JSON Schema cannot express
   (duplicate IDs, aliases, effect consistency, historical evidence on a version
@@ -147,7 +148,7 @@ canonical JSON (RFC 8785 JCS) of the record body, excluding the hash field.
 
 ## 4. Relationship to HCB and dsh-standards
 
-**dsh-standards** is the normative source for the 15 capability IDs, the
+**dsh-standards** is the normative source for the 16 capability IDs, the
 `dsh-levels/1` evidence vocabulary and expiry (90/180/365 days), and the
 checker. Compatum/1 does not redefine those; it adds a host-neutral envelope and
 compatibility requirements, and `dsh-standards` wins where they differ for a DSH

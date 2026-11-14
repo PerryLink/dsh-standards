@@ -683,6 +683,7 @@ export function apply(ctx: Context) {
 | `@Remote` / `@RemoteScope` | `remote:expose` |
 | `ctx.credentials.listRecords` | `credentials:list` |
 | `ctx.sessions` / `sessionQuery` | `sessions:read` |
+| `agent.session.append` / `session.append` | `sessions:write` |
 | `ctx.shell` / `ctx.bash` | `shell` |
 | `ctx.subprocess` | `subprocess` |
 | `ctx.fs` 读方法 / 写方法 | `fs:read` / `fs:write` |
@@ -1363,7 +1364,7 @@ E 路的 MVP 13 项（L0-1/2/3 + L1-1/3/4/5 + L2-1/2/4 + L3-1/3/5）只覆盖 C-
 
 ## 八、附录 B · 字段与词汇
 
-### 8.1 `dsh.capabilities` 最小闭集（15 项判定 + 16 项保留）
+### 8.1 `dsh.capabilities` 最小闭集（16 项判定 + 16 项保留）
 
 | ID | 触发信号（静态可判） | 说明 |
 |---|---|---|
@@ -1378,6 +1379,7 @@ E 路的 MVP 13 项（L0-1/2/3 + L1-1/3/4/5 + L2-1/2/4 + L3-1/3/5）只覆盖 C-
 | `credentials:provider` | 实现 credentials seam / 读 backing file | 凭据提供方 |
 | `llm:adapter` | `ctx.llm` 注册 adapter | 模型 adapter |
 | `sessions:read` | `ctx.sessions`/`sessionQuery` | 读会话内容 |
+| `sessions:write` | `session.append`（如 `agent.session.append`） | 写会话日志（追加/改写） |
 | `system-prompt:write` | `ctx.systemPrompt` 注册 section/context/投影 | 改系统提示 |
 | `tools:register` | `ctx.tools.register` | 注册工具 |
 | `remote:expose` | `@Remote`/`@RemoteScope` | 对外 Remote 方法 |

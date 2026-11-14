@@ -1,3 +1,24 @@
+## 1.7.0 — 2026-11-14
+
+### Added
+
+- **`sessions:write` (issue #8).** The capability registry now has **16 IDs**: `sessions:write` sits after `sessions:read` with effect `write`, so a plugin that appends to a session log can declare that instead of overloading `sessions:read`. `sessions:read` semantics are unchanged.
+  - Compatum: `spec/compatum.schema.json` updates `$defs.capabilityRegistry`, `$defs.capabilityEffects`, the `capabilities[].id` enum, the per-ID effect rule, `capabilities.maxItems`, and the `$comment` (15→16); `spec/compatum-validate.mjs` now enforces exactly 16 IDs.
+  - Checker: `40-checker/src/declarations.mjs` adds `sessions:write` to the judged set and maps `session.append(...)` (e.g. `agent.session.append`) to it for C-11.2, with C-11.5 observation from the same trigger; `40-checker/test/checks.test.mjs` covers declared PASS and undeclared FAIL.
+- **`examples/compatum/permission-rules-profile.json`** — the `dsh-permission-rules` capability shape (`fs:read`, `fs:write`, `network:egress`, `sessions:write`), declared/NOT-RUN. All four Compatum examples validate.
+- Docs 31 §8.1 / 60 §2.2 / 81 / 00-index / spec README / `docs/COMPATUM.md` / `spec/remediation.json` now say 16 IDs and list the new trigger.
+
+### Changed
+
+- Version 1.7.0 (`package.json` + five READMEs).
+
+### Verified
+
+- `node spec/compatum-validate.mjs`: registry 16 IDs, 3 aliases, 16 effects; self-test 5/5 negative cases rejected; **4/4 examples valid** (the three existing examples still pass).
+- Independent Python `jsonschema` 4.10.3: Draft 2020-12 metaschema OK; **4/4 examples** pass with `FormatChecker`.
+- `DSH_GUIDE_DOCS=<fresh dsh-plugin-guide>/docs npm test`: 323 tests, 322 pass, 1 skipped, 0 failed. The default sibling guide checkout at `audit-2026-11-03/own/dsh-plugin-guide` is stale and fails the docs-anchor test; pointing `DSH_GUIDE_DOCS` at the current guide makes it green. The failure is pre-existing and unrelated to this change.
+- Not verified here: no npm publish (local + `main` only), no runtime/host run for the new example.
+
 ## 1.6.12 — 2026-11-14
 
 ### Added

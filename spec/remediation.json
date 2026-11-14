@@ -310,7 +310,7 @@
   "C-11.1": {
     "title": "capabilities 必须是闭集内的字符串数组",
     "why": "未知 ID/非数组无法被市场/UI 解析，等于没声明。",
-    "fix": "用 \"capabilities\": [\"fs:read\", \"tools:register\"]；只从 15 个闭集 ID 里取，不要空数组占位。",
+    "fix": "用 \"capabilities\": [\"fs:read\", \"tools:register\"]；只从 16 个闭集 ID 里取，不要空数组占位。",
     "docs": "docs/entry.md#capability-triggers",
     "severityHint": "fail"
   },

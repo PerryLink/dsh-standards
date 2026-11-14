@@ -33,7 +33,7 @@
     },
     "capabilities": {
       "type": "array",
-      "maxItems": 15,
+      "maxItems": 16,
       "items": {
         "$ref": "#/$defs/capability"
       },
@@ -51,7 +51,7 @@
       "description": "At least one record is required so that 'no evidence' is written down rather than inferred. Failures remain evidence and MUST NOT be deleted."
     }
   },
-  "$comment": "The machine-readable 15-ID registry, alias map, and effect map live in $defs.capabilityRegistry, $defs.capabilityAliases, and $defs.capabilityEffects. Aliases are accepted only by a checker, never by this schema.",
+  "$comment": "The machine-readable 16-ID registry, alias map, and effect map live in $defs.capabilityRegistry, $defs.capabilityAliases, and $defs.capabilityEffects. Aliases are accepted only by a checker, never by this schema.",
   "$defs": {
     "name": {
       "type": "string",
@@ -86,6 +86,7 @@
         "credentials:provider",
         "llm:adapter",
         "sessions:read",
+        "sessions:write",
         "system-prompt:write",
         "tools:register",
         "remote:expose",
@@ -112,6 +113,7 @@
         "credentials:provider": "credential",
         "llm:adapter": "control",
         "sessions:read": "read",
+        "sessions:write": "write",
         "system-prompt:write": "write",
         "tools:register": "control",
         "remote:expose": "control",
@@ -148,6 +150,7 @@
             "credentials:provider",
             "llm:adapter",
             "sessions:read",
+            "sessions:write",
             "system-prompt:write",
             "tools:register",
             "remote:expose",
@@ -429,6 +432,25 @@
             "properties": {
               "effect": {
                 "const": "read"
+              }
+            }
+          }
+        },
+        {
+          "if": {
+            "required": [
+              "id"
+            ],
+            "properties": {
+              "id": {
+                "const": "sessions:write"
+              }
+            }
+          },
+          "then": {
+            "properties": {
+              "effect": {
+                "const": "write"
               }
             }
           }
