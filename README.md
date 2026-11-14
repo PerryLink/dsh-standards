@@ -42,6 +42,8 @@ DSH 插件的采用深度分三层，每层一个问题、一套证据状态，*
 | 2 | **DSH-FLOW 顺畅规范** | 用户能否安装、配置、使用、恢复、升级、卸载而不出意外？ | draft；fixture 上 J1/J2/J4/J6 **12 PASS**；J3/J7 fixture runtime；J5/J8 static preflight；10 个真实包 **78 PASS / 4 FAIL / 2 blocked / 66 not-run** |
 | 3 | **DSH-BOOST 加速实践** | 插件是否用 Cordis 原语（effect、inject、volatile、事件、seam、job、有界并行）让开发和使用可测量地更省？ | draft；LEV-1–8 **8/8 measured**（loader / context / provider-capture / synthetic timer；非生产基线） |
 
+**Compatum/1 (draft)** —— 面向插件清单的兼容性 / 能力 / 证据 profile（`capabilities[]` / `requires` / `evidence[]`），非官方标准。文本见 [docs/COMPATUM.md](docs/COMPATUM.md)，公开 RFC 见 [issue](https://github.com/PerryLink/dsh-standards/issues)。
+
 ### 上游与使用（事实，2026-11）
 
 - **dsh-plugin-hub** —— 版本感知的 npm 元数据校验已合入 main（[`4f3a560`](https://github.com/dshplugin/dsh-plugin-hub/commit/4f3a560)，2026-11-09）。范围仅安装侧的 npm 元数据（包/版本存在性、`repository` 回链）；不运行 ENTRY，也不构成对任何插件的背书。
