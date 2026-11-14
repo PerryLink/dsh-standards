@@ -9,6 +9,14 @@ permissions:
   contents: read
   id-token: write
 
+# A manual `npm publish` outside CI and this tag run can race into
+# `E409 Cannot publish over previously staged version` (1.6.11 did). Keep
+# workflow runs serialized per ref and skip the publish when the version is
+# already served; a re-run of a red tag run is then safe.
+concurrency:
+  group: publish-${{ github.ref }}
+  cancel-in-progress: false
+
 jobs:
   publish:
     runs-on: ubuntu-latest
@@ -22,7 +30,19 @@ jobs:
         run: npm install --ignore-scripts --no-audit --no-fund
       - name: Test
         run: npm test
+      - name: Skip an already-published version
+        id: published
+        run: |
+          name=$(node -p "require('./package.json').name")
+          version=$(node -p "require('./package.json').version")
+          if npm view "$name@$version" version --registry=https://registry.npmjs.org/ >/dev/null 2>&1; then
+            echo "already=true" >> "$GITHUB_OUTPUT"
+            echo "$name@$version is already on npm; skipping publish."
+          else
+            echo "already=false" >> "$GITHUB_OUTPUT"
+          fi
       - name: Publish with provenance
+        if: steps.published.outputs.already != 'true'
         run: npm publish --provenance --access public
         env:
           NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}

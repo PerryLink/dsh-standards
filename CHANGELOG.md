@@ -1,3 +1,26 @@
+## 1.6.12 — 2026-11-14
+
+### Added
+
+- **Reserved capability IDs (P1-6, 2026-11-14 rc3 audit).** `31-DS-C条款.md` §8.1 and `60-权限与标注规范.md` §2.2 now carry a reserved-id table for DSH `0.2.2-rc.3` host seams the standard does not judge yet: `computer:control`, `browser:control`, `mcp:manage`, `mcp:resources`, `ssh:connect`, `terminal:control`, `sandbox:override`, `approval:override`, `authorization:delegate`, `remote-access:use`, `session-log:egress`, alongside the pre-existing `mcp:client`, `browser`, `webhook:rule`, `theme:ui`, `client:ui`. The checker accepts reserved ids in C-11.1 (declaring one is never an "unknown capability id" FAIL) and reports C-11.5 as `NA` (not-run) for them; the C-11.2 FAIL surface is **unchanged** — a reserved id never satisfies a judged trigger (e.g. declaring `computer:control` does not cover a `ctx.shell` trigger). `spec/dsc-clauses.json` C-11.1 wording follows.
+- **`40-checker/scripts/repo-anchor-check.mjs`** — mechanical re-take of every `REPO/<path>:<line>` evidence anchor against a read-only host checkout at a pinned commit: it proves the file exists, every referenced line is in range, and (for single-line anchors) points at a non-blank line, and prints the current line so the semantic match can be reviewed. 2026-11-14 run at `38a6a5c9`: **368 anchors across 31/32/33/35/60/93 → 0 drift, 0 warnings** after fixing three `docs/tool-catalog.md:9` anchors to `:8` (they pointed at a blank line). Evidence summary: `docs/repo-anchors-rc3-2026-11-14.md`.
+- **rc3 runtime evidence landed (P0-4).** `40-checker/results/entry/18/fullbase-rc3-20261114/` (18 raw `dsh-entry18-fullbase/1` rows + `summary.json` + `REPORT.md`) and `40-checker/results/webruntime-rc3-20261114/` (18 row dirs + `REPORT.md`), downloaded from runs `43560480242` / `43560484422` by `40-checker/scripts/land-runtime-artifacts.mjs`. The 2026-10-31 alpha.2 evidence directories are untouched. ENTRY: 10 verified / 7 partial / 1 error (the `YuJunZhiXue/dsh-purge` fixture is not cloneable from CI). Web: 14/15 client-bearing rows `client-module-loaded`, 4/4 web-app rows, 2 host-gate rejects, 1 install failure (same fixture), so the run-level denominator gate is red. `40-checker/results/entry/18/RUNTIME.md`, `SUPPORTED.md` (new `checker 1.6.12` column, evidence anchor A13, A12 marked historical) and the counts paragraph were updated. The rc3 cell is **`partial`**, not `runtime`: the run was produced by the 1.6.11-era tree, attribution relies on the evidence being committed at the v1.6.12 release commit, and web 15/15 coverage was not reached.
+
+### Changed
+
+- `SUPPORTED.md`: counts re-derived at 2026-11-14 14:40 (398 legacy static results: `anchor.dsh=0.2.2-alpha.2` 241, no anchor 157; A12's 243/155 kept as the 05:23 snapshot, difference noted) and the matrix gained the `checker 1.6.12` column; §3 not-run conditions and §8 known limits updated to stop claiming rc.3 was never run.
+
+### Fixed
+
+- `.github/workflows/publish.yml`: skip an already-published version before `npm publish` and add a `concurrency` group, so a manual publish and a tag-triggered publish cannot race into `E409 Cannot publish over previously staged version` (the 1.6.11 red run). A re-run of a red tag run is now safe.
+
+### Verified
+
+- `npm test`: 322 tests, 321 pass, 1 skipped, 0 failed (Node 24).
+- `node 40-checker/scripts/repo-anchor-check.mjs --host /home/yy/deepseek-harness`: 368 anchors, 0 drift, 0 warnings at `38a6a5c9`.
+- `40-checker/scripts/land-runtime-artifacts.mjs` round-trips both GitHub Actions artifact zips into the committed directories; `REPORT.md` numbers match `summary.json` / each `probe.json`.
+- Not verified: web denominator 15/15 — blocked by the private fixture and recorded as such instead of being papered over.
+
 ## 1.6.11 — 2026-11-14
 
 ### Changed

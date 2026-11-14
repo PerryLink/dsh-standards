@@ -1,0 +1,7 @@
+{
+  "name": "qiushi-dsh-evidence-audit",
+  "version": "0.1.0",
+  "hasClientExport": false,
+  "clientExport": null,
+  "declaresDshClient": false
+}

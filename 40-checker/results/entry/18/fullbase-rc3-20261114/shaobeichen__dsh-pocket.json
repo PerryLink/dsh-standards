@@ -1,0 +1,96 @@
+{
+  "schema": "dsh-entry18-fullbase/1",
+  "id": "shaobeichen__dsh-pocket",
+  "name": "dsh-pocket",
+  "version": "2.12.0",
+  "source": "github",
+  "spec": "shaobeichen/dsh-pocket",
+  "profile": "base",
+  "base": {
+    "layer": "dsh-base/cordis.patch.yml",
+    "webLayer": false,
+    "webLayerPath": null
+  },
+  "environment": "github-actions",
+  "dshVersion": "0.2.2-rc.3",
+  "dshVersionExpected": "0.2.2-rc.3",
+  "host": {
+    "packageRoot": "/opt/hostedtoolcache/node/24.22.2/x64/lib/node_modules/@deepseek-ai/dsh",
+    "depsRoot": "/opt/hostedtoolcache/node/24.22.2/x64/lib/node_modules/@deepseek-ai/dsh/node_modules",
+    "appBoot": "/opt/hostedtoolcache/node/24.22.2/x64/lib/node_modules/@deepseek-ai/dsh/node_modules/@deepseek-ai/dsh-app-boot/lib/index.js",
+    "basePatch": "/opt/hostedtoolcache/node/24.22.2/x64/lib/node_modules/@deepseek-ai/dsh/node_modules/@deepseek-ai/dsh-base/cordis.patch.yml",
+    "webPatch": null
+  },
+  "startedAt": "2026-11-14T05:15:34.333Z",
+  "finishedAt": "2026-11-14T05:15:37.718Z",
+  "elapsedMs": 3385,
+  "fixture": "published-tarball",
+  "artifact": {
+    "requested": "shaobeichen/dsh-pocket",
+    "resolved": "published-tarball",
+    "reason": "published tarball repository matches shaobeichen/dsh-pocket",
+    "manifestName": "dsh-pocket",
+    "manifestVersion": "2.12.0",
+    "versionMatches": true,
+    "nameMatches": true,
+    "publishedRepository": "git+https://github.com/shaobeichen/dsh-pocket.git",
+    "tarball": "dsh-pocket-2.12.0.tgz",
+    "repository": null
+  },
+  "installScripts": "skipped",
+  "installCommand": "npm install --omit=dev --ignore-scripts --legacy-peer-deps --no-package-lock --no-audit --no-fund",
+  "manifestRewrite": "removed devDependencies+scripts",
+  "install": {
+    "command": "npm install --omit=dev --ignore-scripts --legacy-peer-deps --no-package-lock --no-audit --no-fund",
+    "status": "ok",
+    "elapsedMs": 1010,
+    "scripts": "skipped"
+  },
+  "status": "partial",
+  "verdict": "partial",
+  "g3State": "partial",
+  "g3Rows": 1,
+  "g3Active": 0,
+  "compatibility": "admit",
+  "exitCode": 2,
+  "smoke": {
+    "schema": "dsh-bundle-smoke/1",
+    "package": "dsh-pocket",
+    "version": "2.12.0",
+    "g0": {
+      "patchFiles": 1,
+      "parsed": true
+    },
+    "g1": {
+      "rows": 100,
+      "targetRows": 1,
+      "warnings": []
+    },
+    "g2": {
+      "compatibility": "admit"
+    },
+    "g3": {
+      "state": "partial",
+      "rows": [
+        {
+          "id": "include:dsh-pocket",
+          "state": 0,
+          "disabled": false
+        }
+      ],
+      "active": 0
+    },
+    "g4": {
+      "hasClient": true,
+      "clientExport": true,
+      "rootRows": [
+        {
+          "id": "dsh-pocket",
+          "name": "dsh-pocket"
+        }
+      ],
+      "ok": true
+    }
+  },
+  "error": null
+}

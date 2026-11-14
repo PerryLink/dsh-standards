@@ -617,6 +617,36 @@ test('DSC-11 C-11.5: a truncated source scan is NA/partial, never an over-declar
   assert.equal(untruncated.coverage, 'full')
 })
 
+test('DSC-11 C-11.1/C-11.5: reserved capability ids are accepted but not judged', () => {
+  const declared = checkCapabilities(
+    { dsh: { capabilities: ['computer:control', 'session-log:egress'] } },
+    [{ relative: 'index.mjs', text: 'export const x = 1\n' }],
+    {},
+  )
+  assert.ok(
+    !declared.details.some(item => item.item === 'C-11.1' && item.result === 'FAIL'),
+    JSON.stringify(declared.details),
+  )
+  const rows = declared.details.filter(item => item.item === 'C-11.5')
+  assert.equal(rows.length, 2, JSON.stringify(declared.details))
+  for (const row of rows) {
+    assert.equal(row.result, 'NA')
+    assert.match(row.reason, /reserved capability/)
+  }
+
+  // Unknown ids are still FAIL: the reserved table does not open the namespace.
+  const unknown = checkCapabilities({ dsh: { capabilities: ['not:a-real-capability'] } }, [], {})
+  assert.ok(unknown.details.some(item => item.item === 'C-11.1' && item.result === 'FAIL'))
+
+  // C-11.2 stays closed over the judged set: a reserved id never satisfies a trigger.
+  const trigger = checkCapabilities(
+    { dsh: { capabilities: ['computer:control'] } },
+    [{ relative: 'index.mjs', text: 'ctx.shell.exec("x")\n' }],
+    {},
+  )
+  assert.ok(trigger.details.some(item => item.item === 'C-11.2' && item.result === 'FAIL' && /shell/.test(item.reason)), JSON.stringify(trigger.details))
+})
+
 test('CLI: --max-files truncation is plumbed into C-11.5 as NA/partial', (t) => {
   const dir = fs.mkdtempSync(path.join(os.tmpdir(), 'dsh-truncated-scan-'))
   t.after(() => fs.rmSync(dir, { recursive: true, force: true }))

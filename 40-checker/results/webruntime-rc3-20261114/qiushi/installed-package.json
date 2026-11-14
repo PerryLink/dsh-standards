@@ -1,0 +1,84 @@
+{
+  "name": "qiushi-dsh-evidence-audit",
+  "version": "0.1.0",
+  "packageManager": "pnpm@11.19.0",
+  "description": "Observe-only hash-chained evidence receipts for DeepSeek Harness",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/030611/qiushi-dsh-evidence-audit.git"
+  },
+  "type": "module",
+  "main": "lib/index.js",
+  "types": "lib/types/index.d.ts",
+  "sideEffects": false,
+  "publishConfig": {
+    "access": "public"
+  },
+  "exports": {
+    ".": {
+      "types": "./lib/types/index.d.ts",
+      "default": "./lib/index.js"
+    },
+    "./cordis.patch.yml": "./cordis.patch.yml",
+    "./dsh.plugin.json": "./dsh.plugin.json",
+    "./dsh.plugin.schema.json": "./docs/dsh.plugin.schema.json",
+    "./package.json": "./package.json"
+  },
+  "files": [
+    "lib/index.js",
+    "lib/types/**/*.d.ts",
+    "cordis.patch.yml",
+    "dsh.plugin.json",
+    "docs/dsh.plugin.schema.json",
+    "README.md",
+    "README.zh-CN.md",
+    "LICENSE"
+  ],
+  "scripts": {
+    "build": "tsc -p tsconfig.build.json && tsdown",
+    "prebuild": "node scripts/clean-build.mjs",
+    "prepare": "pnpm run build",
+    "pretest": "pnpm run build",
+    "publint": "publint",
+    "test": "vitest run",
+    "test:built": "node scripts/built-smoke.mjs",
+    "test:npm-dry-run": "npm publish --dry-run --json --access public --registry=https://registry.npmjs.org/ > .npm-dry-run.json && node scripts/npm-dry-run-smoke.mjs",
+    "test:npm-pack": "npm pack --dry-run --json > .npm-dry-run.json && node scripts/npm-dry-run-smoke.mjs",
+    "test:tarball": "node scripts/tarball-smoke.mjs",
+    "test:upstream": "node scripts/upstream-smoke.mjs",
+    "typecheck": "tsc -p tsconfig.json --noEmit"
+  },
+  "engines": {
+    "node": "^22.19.0 || >=24.0.0"
+  },
+  "keywords": [
+    "deepseek-harness",
+    "dsh-plugin",
+    "audit",
+    "evidence",
+    "jsonl"
+  ],
+  "license": "MIT",
+  "dsh": {
+    "bundle": {
+      "patch": "./cordis.patch.yml"
+    }
+  },
+  "peerDependencies": {
+    "@deepseek-ai/cordis": "4.0.1"
+  },
+  "dependencies": {
+    "@deepseek-ai/schemastery": "3.18.1"
+  },
+  "devDependencies": {
+    "@deepseek-ai/cordis": "4.0.1",
+    "@deepseek-ai/cordis-plugin-include": "1.0.6",
+    "@types/js-yaml": "4.0.9",
+    "@types/node": "^24.0.0",
+    "js-yaml": "4.1.1",
+    "publint": "^0.3.23",
+    "tsdown": "0.22.2",
+    "typescript": "^5.9.2",
+    "vitest": "^3.2.4"
+  }
+}

@@ -13,6 +13,27 @@ export const CAPABILITIES = new Set([
   'sessions:read', 'system-prompt:write', 'tools:register', 'remote:expose', 'plugin:install',
 ])
 
+// Reserved capability IDs (2026-11-14, P1-6): names the current standard version
+// accepts but does not judge. They cover DSH 0.2.2-rc.3 host seams whose static
+// observation surface / FAIL policy is not settled yet. C-11.1 accepts them
+// (declaring one is never an "unknown capability id" FAIL), C-11.2 never maps a
+// trigger to them (the FAIL surface stays exactly the judged set above), and
+// C-11.5 reports not-run instead of an over-declaration WARN.
+//
+// Contract: removing an id is a breaking standard change; promoting one into
+// CAPABILITIES requires a C-11.2 trigger, an observation surface (or a
+// deliberate NO_OBSERVATION_SURFACE entry) and tests.
+export const RESERVED_CAPABILITIES = new Set([
+  // pre-existing reserved vocabulary (kept for compatibility).
+  'mcp:client', 'browser', 'webhook:rule', 'theme:ui', 'client:ui',
+  // rc3 seams that had no declarable id before this version.
+  'computer:control', 'browser:control', 'mcp:manage', 'mcp:resources',
+  'ssh:connect', 'terminal:control', 'sandbox:override', 'approval:override',
+  'authorization:delegate', 'remote-access:use', 'session-log:egress',
+])
+
+export const KNOWN_CAPABILITIES = new Set([...CAPABILITIES, ...RESERVED_CAPABILITIES])
+
 export const LABELS = new Set([
   'prompt-modification', 'red-team', 'third-party-model-provider', 'remote-access', 'mirror',
 ])
@@ -655,7 +676,8 @@ export function checkCapabilities(manifest, sources, patch, scan = null) {
     details.push(detail('C-11.1', 'WARN', 'dsh.capabilities is not declared (transitional WARN; host does not read it yet)', ['package.json#dsh.capabilities']))
   } else if (!caps.error) {
     for (const id of caps.list) {
-      if (!CAPABILITIES.has(id)) details.push(detail('C-11.1', 'FAIL', `unknown capability id: ${id}`, ['package.json#dsh.capabilities']))
+      // Reserved ids are accepted but not judged (see RESERVED_CAPABILITIES).
+      if (!KNOWN_CAPABILITIES.has(id)) details.push(detail('C-11.1', 'FAIL', `unknown capability id: ${id}`, ['package.json#dsh.capabilities']))
     }
   }
 
@@ -686,6 +708,10 @@ export function checkCapabilities(manifest, sources, patch, scan = null) {
         : 'not-run: no source files were scanned, so no capability can be observed', []))
     } else {
       for (const cap of caps.list) {
+        if (RESERVED_CAPABILITIES.has(cap)) {
+          details.push(detail('C-11.5', 'NA', `not-run: reserved capability ${cap} is accepted but not judged in this standard version (no static observation surface / policy defined)`, []))
+          continue
+        }
         if (NO_OBSERVATION_SURFACE.has(cap)) {
           details.push(detail('C-11.5', 'NA', `not-run: no static observation surface for ${cap} in this checker version`, []))
           continue

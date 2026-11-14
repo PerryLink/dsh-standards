@@ -1,0 +1,7 @@
+{
+  "name": "dsh-ui-auth",
+  "version": "0.7.1",
+  "hasClientExport": true,
+  "clientExport": "./lib/client.js",
+  "declaresDshClient": true
+}

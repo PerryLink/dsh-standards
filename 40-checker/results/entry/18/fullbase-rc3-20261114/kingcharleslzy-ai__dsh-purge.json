@@ -1,0 +1,145 @@
+{
+  "schema": "dsh-entry18-fullbase/1",
+  "id": "kingcharleslzy-ai__dsh-purge",
+  "name": "dsh-purge-community",
+  "version": "1.6.67",
+  "source": "github",
+  "spec": "kingcharleslzy-ai/dsh-purge",
+  "profile": "base",
+  "base": {
+    "layer": "dsh-base/cordis.patch.yml",
+    "webLayer": false,
+    "webLayerPath": null
+  },
+  "environment": "github-actions",
+  "dshVersion": "0.2.2-rc.3",
+  "dshVersionExpected": "0.2.2-rc.3",
+  "host": {
+    "packageRoot": "/opt/hostedtoolcache/node/24.22.2/x64/lib/node_modules/@deepseek-ai/dsh",
+    "depsRoot": "/opt/hostedtoolcache/node/24.22.2/x64/lib/node_modules/@deepseek-ai/dsh/node_modules",
+    "appBoot": "/opt/hostedtoolcache/node/24.22.2/x64/lib/node_modules/@deepseek-ai/dsh/node_modules/@deepseek-ai/dsh-app-boot/lib/index.js",
+    "basePatch": "/opt/hostedtoolcache/node/24.22.2/x64/lib/node_modules/@deepseek-ai/dsh/node_modules/@deepseek-ai/dsh-base/cordis.patch.yml",
+    "webPatch": null
+  },
+  "startedAt": "2026-11-14T05:14:48.857Z",
+  "finishedAt": "2026-11-14T05:14:51.825Z",
+  "elapsedMs": 2968,
+  "fixture": "git-clone",
+  "artifact": {
+    "requested": "kingcharleslzy-ai/dsh-purge",
+    "resolved": "git-clone",
+    "reason": "no published npm tarball at dsh-purge-community@1.6.67",
+    "manifestName": "dsh-purge-community",
+    "manifestVersion": "1.7.14",
+    "versionMatches": false,
+    "nameMatches": true,
+    "publishedRepository": null,
+    "tarball": null,
+    "repository": "https://github.com/kingcharleslzy-ai/dsh-purge.git"
+  },
+  "installScripts": "skipped",
+  "installCommand": "npm install --omit=dev --ignore-scripts --legacy-peer-deps --no-package-lock --no-audit --no-fund",
+  "manifestRewrite": "removed devDependencies+scripts",
+  "install": {
+    "command": "npm install --omit=dev --ignore-scripts --legacy-peer-deps --no-package-lock --no-audit --no-fund",
+    "status": "ok",
+    "elapsedMs": 323,
+    "scripts": "skipped"
+  },
+  "status": "partial",
+  "verdict": "partial",
+  "g3State": "partial",
+  "g3Rows": 5,
+  "g3Active": 4,
+  "compatibility": "admit",
+  "exitCode": 2,
+  "smoke": {
+    "schema": "dsh-bundle-smoke/1",
+    "package": "dsh-purge-community",
+    "version": "1.7.14",
+    "g0": {
+      "patchFiles": 1,
+      "parsed": true
+    },
+    "g1": {
+      "rows": 104,
+      "targetRows": 5,
+      "warnings": [
+        "patch: entry \"redteam-store\" not found",
+        "patch: entry \"redteam-ui\" not found",
+        "patch: entry \"redteam-mode\" not found",
+        "patch: entry \"redteam-mode-store\" not found",
+        "patch: entry \"redteam-mode-ui\" not found"
+      ]
+    },
+    "g2": {
+      "compatibility": "admit"
+    },
+    "g3": {
+      "state": "partial",
+      "rows": [
+        {
+          "id": "include:dsh-purge",
+          "state": 2,
+          "disabled": false
+        },
+        {
+          "id": "include:dsh-purge-redteam",
+          "state": 2,
+          "disabled": false
+        },
+        {
+          "id": "include:dsh-purge-presets",
+          "state": 2,
+          "disabled": false
+        },
+        {
+          "id": "include:dsh-purge-redteam-store",
+          "state": 2,
+          "disabled": false
+        },
+        {
+          "id": "include:dsh-purge-redteam-ui",
+          "state": 0,
+          "disabled": false
+        }
+      ],
+      "active": 4
+    },
+    "g4": {
+      "hasClient": true,
+      "clientExport": true,
+      "rootRows": [
+        {
+          "id": "dsh-purge",
+          "name": "dsh-purge-community",
+          "inject": [
+            "systemPrompt",
+            "tools"
+          ],
+          "config": {
+            "enabled": true,
+            "excludePresets": [],
+            "autoApplyOnStart": false,
+            "autoUpdateOnStart": false,
+            "autoRevertOnMissing": false,
+            "injectOnce": false,
+            "stripMnemon": true,
+            "verbose": false,
+            "postPrompt": "",
+            "postPromptOrder": 5100,
+            "autoRetry": true,
+            "retryMax": 3,
+            "autoContinue": false,
+            "continueMax": 3,
+            "continueText": "继续",
+            "capabilityProtocol": true,
+            "hooksDenyBypass": true
+          }
+        }
+      ],
+      "ok": true
+    }
+  },
+  "error": null
+}

@@ -1,0 +1,21 @@
+{
+  "schema": "dsh-web-probe/1",
+  "ok": false,
+  "expected": [],
+  "bootGraph": "missing",
+  "bootIds": [],
+  "loadedEntries": [],
+  "consoleErrors": [],
+  "pageErrors": [],
+  "failedRequests": [],
+  "screenshot": "/home/runner/work/dsh-standards/dsh-standards/40-checker/results/webruntime/YuJunZhiXue__dsh-purge/shot.png",
+  "elapsedMs": 0,
+  "error": "probe did not run (boot or install failed)",
+  "id": "YuJunZhiXue__dsh-purge",
+  "pkg": "dsh-purge",
+  "webapp": false,
+  "login": false,
+  "hasClient": false,
+  "clientClaim": false,
+  "skipped": "no ./client export"
+}

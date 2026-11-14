@@ -153,7 +153,7 @@ export function apply(ctx: Context, config: ReturnType<typeof Config>) {
 
 **证据锚点**：
 - `REPO/packages/core/agent-loop/README.md:164`：prefix reuse 要求逐字节相同；改一个 retained tool definition 就从第一个变化 token 起失效。
-- `REPO/docs/tool-catalog.md:9`：tool schema **不是静态可知**的；只能 boot 后读 `ctx.tools.schemas()`。
+- `REPO/docs/tool-catalog.md:8`：tool schema **不是静态可知**的；只能 boot 后读 `ctx.tools.schemas()`。
 - `REPO/packages/core/system-prompt/src/index.ts:589-609`：`refreshContext()` 不重跑 section provider/waterfall。
 - `REPO/packages/core/system-prompt/src/index.ts:78-90,177-189`：runtime context 与 CONTEXT_ORDERS 的语义。
 - `REPO/packages/core/agent-loop/tests/request-cache.e2e.ts`：真实 API 的 cache 命中 e2e。
@@ -709,7 +709,7 @@ outcome: null             # 废止 | 继续有效 | 升为 DS-R
 | 3 | `REPO/packages/core/agent-loop/src/index.ts:296` | `.default().volatile()` 模范 | 已核验 |
 | 4 | `REPO/vendor/cordis/src/fiber.ts:783-819` | update/veto | 已核验 |
 | 5 | `REPO/packages/core/agent-loop/README.md:164` | KV cache 前缀 | 已核验 |
-| 6 | `REPO/docs/tool-catalog.md:9` | schema 不可静态知 | 已核验 |
+| 6 | `REPO/docs/tool-catalog.md:8` | schema 不可静态知 | 已核验 |
 | 7 | `REPO/packages/core/system-prompt/src/index.ts:78-90,177-189,589-609` | runtime context/refreshContext | 已核验 |
 | 8 | `REPO/packages/core/agent-loop/tests/request-cache.e2e.ts` | cache 命中 e2e | 已核验（存在） |
 | 9 | `REPO/docs/capability-seams.md:733,741,743,748` | shell/fs/subagents/jobs 缝 | 已核验 |

@@ -1,0 +1,45 @@
+{
+  "schema": "dsh-entry18-fullbase/1",
+  "id": "YuJunZhiXue__dsh-purge",
+  "name": "dsh-purge",
+  "version": "1.1.85",
+  "source": "github",
+  "spec": "YuJunZhiXue/dsh-purge",
+  "profile": "base",
+  "base": {
+    "layer": "dsh-base/cordis.patch.yml",
+    "webLayer": false,
+    "webLayerPath": null
+  },
+  "environment": "github-actions",
+  "dshVersion": "0.2.2-rc.3",
+  "dshVersionExpected": "0.2.2-rc.3",
+  "host": {
+    "packageRoot": "/opt/hostedtoolcache/node/24.22.2/x64/lib/node_modules/@deepseek-ai/dsh",
+    "depsRoot": "/opt/hostedtoolcache/node/24.22.2/x64/lib/node_modules/@deepseek-ai/dsh/node_modules",
+    "appBoot": "/opt/hostedtoolcache/node/24.22.2/x64/lib/node_modules/@deepseek-ai/dsh/node_modules/@deepseek-ai/dsh-app-boot/lib/index.js",
+    "basePatch": "/opt/hostedtoolcache/node/24.22.2/x64/lib/node_modules/@deepseek-ai/dsh/node_modules/@deepseek-ai/dsh-base/cordis.patch.yml",
+    "webPatch": null
+  },
+  "startedAt": "2026-11-14T05:14:23.820Z",
+  "finishedAt": "2026-11-14T05:14:24.408Z",
+  "elapsedMs": 588,
+  "fixture": "none",
+  "artifact": null,
+  "installScripts": "skipped",
+  "installCommand": "npm install --omit=dev --ignore-scripts --legacy-peer-deps --no-package-lock --no-audit --no-fund",
+  "manifestRewrite": "none",
+  "install": null,
+  "status": "error",
+  "verdict": "error",
+  "g3State": null,
+  "g3Rows": null,
+  "g3Active": null,
+  "compatibility": null,
+  "exitCode": null,
+  "smoke": null,
+  "error": {
+    "stage": "fixture",
+    "message": "git clone YuJunZhiXue/dsh-purge failed: Cloning into '/tmp/dsh-entry18-farm-2526/plugins/YuJunZhiXue__dsh-purge'...\nfatal: could not read Username for 'https://github.com': No such device or address"
+  }
+}

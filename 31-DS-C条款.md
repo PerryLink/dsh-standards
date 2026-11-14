@@ -665,11 +665,11 @@ export function apply(ctx: Context) {
 
 | 子项 | 检查 | 结果 |
 |---|---|---|
-| C-11.1 | `dsh.capabilities` 是字符串数组，每个 ID 在 §8.1 闭集内 | 非法 ID → FAIL；字段缺失 → WARN |
+| C-11.1 | `dsh.capabilities` 是字符串数组，每个 ID 在 §8.1 判定闭集或保留表内 | 非法 ID → FAIL；保留 ID → 接受（不 FAIL），C-11.5 记 NA；字段缺失 → WARN |
 | C-11.2 | **字段存在时**，高信号触发必须申报（映射见下表） | 字段存在且漏报 → FAIL；字段缺失 → 不评估，C-11 整体 WARN（过渡期） |
 | C-11.3 | bundle patch 不得启用 `@deepseek-ai/dsh-plugin-manager/tools` | 启用 → FAIL |
 | C-11.4 | 源码/配置中 `danger-full-access` 的 AST 字符串字面量；注释、等值比较、文档字符串不算（见下） | 真实授权/命令上下文或未知上下文 → WARN |
-| C-11.5 | 声明了但静态未观测到对应触发 | WARN（**不等于未使用/过度声明**：`node:fs` 的读/写调用已作为观测证据；动态调用仍不在触发面内）。**NA（not-run）**：无源码、该能力无静态观测面（`credentials:provider`）、或**扫描截断**（`coverage=partial`，reason 记 `source scan truncated …`）——截断是覆盖缺口，不是过度声明 |
+| C-11.5 | 声明了但静态未观测到对应触发 | WARN（**不等于未使用/过度声明**：`node:fs` 的读/写调用已作为观测证据；动态调用仍不在触发面内）。**NA（not-run）**：无源码、该能力无静态观测面（`credentials:provider`）、**保留 ID**（本版不判定）、或**扫描截断**（`coverage=partial`，reason 记 `source scan truncated …`）——截断是覆盖缺口，不是过度声明 |
 
 **C-11.2 触发映射**：
 
@@ -1353,7 +1353,7 @@ E 路的 MVP 13 项（L0-1/2/3 + L1-1/3/4/5 + L2-1/2/4 + L3-1/3/5）只覆盖 C-
 | 53 | `REPO/AGENTS.md:133,136,140` | 注册即 effect/waterfall/缝三层 | 已核验 |
 | 54 | `REPO/docs/capability-seams.md:733,741,743,748` | shell/fs/subagents/jobs 缝 | 已核验 |
 | 55 | `REPO/packages/core/agent-loop/README.md:164` | KV cache 前缀 | 已核验 |
-| 56 | `REPO/docs/tool-catalog.md:9` | schema 不可静态知 | 已核验 |
+| 56 | `REPO/docs/tool-catalog.md:8` | schema 不可静态知 | 已核验 |
 | 57 | `REPO/packages/boot/app-boot/src/config-schema/projector.ts:124-134` | volatile containment | 已核验 |
 | 58 | `REPO/packages/core/agent-loop/src/index.ts:292,296` | inject/volatile 模范 | 已核验 |
 | 59 | `10-输入/生态调研报告.md:36-59,91,171,264` | 生态实例/数字 | 输入（未重抓） |
@@ -1363,7 +1363,7 @@ E 路的 MVP 13 项（L0-1/2/3 + L1-1/3/4/5 + L2-1/2/4 + L3-1/3/5）只覆盖 C-
 
 ## 八、附录 B · 字段与词汇
 
-### 8.1 `dsh.capabilities` 最小闭集（15 项）
+### 8.1 `dsh.capabilities` 最小闭集（15 项判定 + 16 项保留）
 
 | ID | 触发信号（静态可判） | 说明 |
 |---|---|---|
@@ -1383,7 +1383,26 @@ E 路的 MVP 13 项（L0-1/2/3 + L1-1/3/4/5 + L2-1/2/4 + L3-1/3/5）只覆盖 C-
 | `remote:expose` | `@Remote`/`@RemoteScope` | 对外 Remote 方法 |
 | `plugin:install` | `ctx.pluginManager.installBundle/removeBundle` | 自安装/卸载插件 |
 
-保留（T4 可扩展，本版不参与判定）：`mcp:client`、`browser`、`webhook:rule`、`theme:ui`、`client:ui`。
+**保留 ID（本版不参与判定，允许声明）**：以下 ID 在 DSH 0.2.2-rc.3 宿主里有对应 seam，但本版的静态触发映射 / FAIL 策略未定。C-11.1 **接受**保留 ID（不记非法），C-11.5 对它们记 **NA（not-run）** 而不是 WARN；C-11.2 的 FAIL 面**不扩大**——保留 ID 不能替代任何判定闭集里的 ID（例如声明 `computer:control` 不等于声明 `shell`）。保留表的增删是标准的破坏性变更；把某项升入判定闭集，必须同时补 C-11.2 触发映射、观测面与测试。
+
+| 保留 ID | rc3 宿主 seam（`super(ctx, '<name>')`） | 说明 |
+|---|---|---|
+| `mcp:client` | `mcpManager`（客户端侧） | MCP 客户端连接 |
+| `mcp:manage` | `mcpManager`（注册/管理） | 管理 MCP server 配置 |
+| `mcp:resources` | `mcpResources` | MCP 资源访问 |
+| `browser` | `browserUse`（粗粒度保留名） | 浏览器自动化 |
+| `browser:control` | `browserUse` | 浏览器控制（细化名） |
+| `computer:control` | `computerUse`、`cuaAccess` | 桌面 / computer-use 控制 |
+| `ssh:connect` | `ssh` | SSH 连接 |
+| `terminal:control` | `terminals`、`webTerminals`、`terminalController` | 终端控制 |
+| `sandbox:override` | `sandbox`、`sandboxPolicy` | 放宽 / 改写沙箱策略 |
+| `approval:override` | `approval` | 审批 / 放行覆盖 |
+| `authorization:delegate` | `authorization` | 授权委托 |
+| `remote-access:use` | `remoteAccess` | 宿主远程访问 |
+| `session-log:egress` | `sessionLogDeepSeek` | 会话日志外发 |
+| `webhook:rule` | Webhook 规则面 | 保留（原有） |
+| `theme:ui` | 主题 / UI 面 | 保留（原有） |
+| `client:ui` | Client UI 面 | 保留（原有） |
 
 ### 8.2 `dsh.labels` 最小闭集（5 项）
 

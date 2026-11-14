@@ -1,0 +1,108 @@
+{
+  "schema": "dsh-entry18-fullbase/1",
+  "id": "ysr666__dsh-vision-router",
+  "name": "dsh-vision-router",
+  "version": "3.1.0",
+  "source": "github",
+  "spec": "ysr666/dsh-vision-router",
+  "profile": "base",
+  "base": {
+    "layer": "dsh-base/cordis.patch.yml",
+    "webLayer": false,
+    "webLayerPath": null
+  },
+  "environment": "github-actions",
+  "dshVersion": "0.2.2-rc.3",
+  "dshVersionExpected": "0.2.2-rc.3",
+  "host": {
+    "packageRoot": "/opt/hostedtoolcache/node/24.22.2/x64/lib/node_modules/@deepseek-ai/dsh",
+    "depsRoot": "/opt/hostedtoolcache/node/24.22.2/x64/lib/node_modules/@deepseek-ai/dsh/node_modules",
+    "appBoot": "/opt/hostedtoolcache/node/24.22.2/x64/lib/node_modules/@deepseek-ai/dsh/node_modules/@deepseek-ai/dsh-app-boot/lib/index.js",
+    "basePatch": "/opt/hostedtoolcache/node/24.22.2/x64/lib/node_modules/@deepseek-ai/dsh/node_modules/@deepseek-ai/dsh-base/cordis.patch.yml",
+    "webPatch": null
+  },
+  "startedAt": "2026-11-14T05:16:07.242Z",
+  "finishedAt": "2026-11-14T05:16:14.410Z",
+  "elapsedMs": 7168,
+  "fixture": "published-tarball",
+  "artifact": {
+    "requested": "ysr666/dsh-vision-router",
+    "resolved": "published-tarball",
+    "reason": "published tarball repository matches ysr666/dsh-vision-router",
+    "manifestName": "dsh-vision-router",
+    "manifestVersion": "3.1.0",
+    "versionMatches": true,
+    "nameMatches": true,
+    "publishedRepository": "git+https://github.com/ysr666/dsh-vision-router.git",
+    "tarball": "dsh-vision-router-3.1.0.tgz",
+    "repository": null
+  },
+  "installScripts": "skipped",
+  "installCommand": "npm install --omit=dev --ignore-scripts --legacy-peer-deps --no-package-lock --no-audit --no-fund",
+  "manifestRewrite": "removed devDependencies+scripts",
+  "install": {
+    "command": "npm install --omit=dev --ignore-scripts --legacy-peer-deps --no-package-lock --no-audit --no-fund",
+    "status": "ok",
+    "elapsedMs": 3915,
+    "scripts": "skipped"
+  },
+  "status": "partial",
+  "verdict": "partial",
+  "g3State": "partial",
+  "g3Rows": 2,
+  "g3Active": 1,
+  "compatibility": "admit",
+  "exitCode": 2,
+  "smoke": {
+    "schema": "dsh-bundle-smoke/1",
+    "package": "dsh-vision-router",
+    "version": "3.1.0",
+    "g0": {
+      "patchFiles": 1,
+      "parsed": true
+    },
+    "g1": {
+      "rows": 101,
+      "targetRows": 2,
+      "warnings": [
+        "patch: entry \"modules\" not found",
+        "patch: entry \"connection\" not found"
+      ]
+    },
+    "g2": {
+      "compatibility": "admit"
+    },
+    "g3": {
+      "state": "partial",
+      "rows": [
+        {
+          "id": "include:vision-router-web-connection-ready",
+          "state": 0,
+          "disabled": false
+        },
+        {
+          "id": "include:vision-router",
+          "state": 2,
+          "disabled": false
+        }
+      ],
+      "active": 1
+    },
+    "g4": {
+      "hasClient": true,
+      "clientExport": true,
+      "rootRows": [
+        {
+          "id": "vision-router",
+          "name": "dsh-vision-router",
+          "config": {
+            "progressiveTools": false
+          },
+          "disabled": false
+        }
+      ],
+      "ok": true
+    }
+  },
+  "error": null
+}

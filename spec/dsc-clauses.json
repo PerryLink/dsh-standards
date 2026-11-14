@@ -686,7 +686,7 @@
     {
       "dsc": "DSC-11",
       "clause": "C-11.1",
-      "title": "dsh.capabilities 为闭集内字符串数组",
+      "title": "dsh.capabilities 为判定闭集或保留表内字符串数组",
       "layer": "L0",
       "mandatory": true,
       "advisory": false,
