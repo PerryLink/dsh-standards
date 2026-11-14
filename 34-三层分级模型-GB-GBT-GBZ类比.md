@@ -173,10 +173,10 @@ DSH 插件生态里，“合格”至少有三层含义，而且它们不是同�
 
 ### 10.1 六条边界事实
 
-| # | 机制 | 宿主实际做什么 | 插件能做什么 / 宿主不做什么 | 证据锚（宿主 0.2.2-rc.1） |
+| # | 机制 | 宿主实际做什么 | 插件能做什么 / 宿主不做什么 | 证据锚（rc3 `38a6a5c9` 复核 2026-11-14；宿主 `0.2.2-rc.3`，行号抽检） |
 |---|---|---|---|---|
 | 1 | 同进程加载 | 插件入口在宿主 Node 进程里 `import`；`apply()` 与宿主同权限；安装页只有静态 trust 文案，没有加载期信任提示 | 可 `import node:fs` / `node:child_process`，裸 `fetch`，读写同用户可及的任何文件；无运行时沙箱 | `packages/boot/plugin-manager`、`vendor/loader`；`packages/client/ui-plugin-manager/src/client/locales.ts:386` |
-| 2 | capabilities | `dsh.capabilities` 是本标准新增字段；宿主 `DshManifest` 只声明 `manifestVersion`/`bundle`/`profile`/`client`，**不读、不校验、不门控** | 声明 `[]` 后仍可做任何事；漏报/造假不会被宿主拒绝 | `packages/util/package-manifest/src/types.ts:31-40` |
+| 2 | capabilities | `dsh.capabilities` 是本标准新增字段；宿主 `DshManifest` 只声明 `manifestVersion`/`bundle`/`profile`/`client`，**不读、不校验、不门控** | 声明 `[]` 后仍可做任何事；漏报/造假不会被宿主拒绝 | `packages/util/package-manifest/src/types.ts:32-41` |
 | 3 | sandbox | 只约束**子进程**的文件写；网络与进程可见性"不在词汇内"；读访问不限制；源码自陈 "is not containment" | 插件自己的 `node:fs`/`fetch`/`spawn` 绕过 seam；子进程网络也不被拦 | `packages/sandbox/src/index.ts:27-28`；`cordis-host-runner/sandbox.ts:7`；`packages/fs/fs-sandbox/src/index.ts:10-16` |
 | 4 | approval | 只有 `tools/pre-execute` 的 `ask` 与 sandbox 升级会审批；工具实现自身不强制；审批者无身份校验 | 插件注册的工具可直接 `allow`；插件自己的 fetch/fs/spawn 不经过审批；`installBundle` 的 `@Remote` 路径无审批 | `packages/core/tools/src/pipeline.ts:449`；`packages/sandbox/src/escalation.ts:172`；`plugin-manager/src/index.ts:872` |
 | 5 | `!!js` 配置 | bundle patch 的 YAML 自定义 tag 经 `new Function` 求值；配置在**加载期**变成可执行代码 | 一个看似声明式的 patch 字段即可执行任意表达式；静态扫描代码闭包看不到它 | `packages/boot/app-boot/src/index.ts:561`；loader `config/utils` |

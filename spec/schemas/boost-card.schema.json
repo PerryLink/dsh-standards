@@ -29,7 +29,7 @@
     "host": {
       "type": "string",
       "minLength": 1,
-      "description": "DSH / Cordis / Node versions and the platform, for example \"dsh 0.2.2-alpha.3 / cordis 4.0.6-alpha.2 / node 24.9 / linux-x64\"."
+      "description": "DSH / Cordis / Node versions and the platform, for example \"dsh 0.2.2-rc.3 / cordis 4.1.0 / node 24.9 / linux-x64\"."
     },
     "method": {
       "type": "string",
@@ -90,7 +90,7 @@
   "examples": [
     {
       "subject": "@acme/dsh-hello@0.1.0",
-      "host": "dsh 0.2.2-alpha.3 / cordis 4.0.6-alpha.2 / node 24.9 / linux-x64",
+      "host": "dsh 0.2.2-rc.3 / cordis 4.1.0 / node 24.9 / linux-x64",
       "method": "single run: startup, reload, and tokens per turn; nonce arm as negative control",
       "scope": "LEV-6 stable prefix / assembly - hello example tool and prompt declarations",
       "command": "node bench/hello.mjs",

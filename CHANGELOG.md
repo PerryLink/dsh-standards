@@ -1,3 +1,29 @@
+## 1.6.11 — 2026-11-14
+
+### Changed
+
+- **Anchors and default values move to DSH `0.2.2-rc.3`** (`dsh-v0.2.2-rc.3` = `38a6a5c9…`, 2026-11-13): `spec/reference-suite.json` → `dsh=0.2.2-rc.3` / `cordis=4.1.0` / `node >=24.9.0` (suite `1.1.0`, expected results unchanged; `limits` says the 11 expectations are still alpha.2-era evidence), five READMEs, `31-DS-C条款.md` §1.5/§3.3, `35` §7, `SUPPORTED.md`, `publish/*.example.json`, `spec/examples/*`, `spec/schemas/*` examples and `examples/plugin-template/package.json` now carry rc.3 / vendored cordis `4.1.0` (upstream `4.0.0-rc.11`) / `38a6a5c9…` / Node `>=24.9.0`. `0.2.2-alpha.2` + `4.0.6-alpha.1` + `ce7073d…` are kept only as dated historical anchors. **Only reports and examples that do not pass an explicit anchor are affected; committed `40-checker/results/**` keep their alpha.2 anchor and are stale for rc.3.**
+- Runtime evidence CI re-pinned to rc.3: `entry18-runtime.yml` (install line, title, `--expected-dsh-version`) together with `40-checker/samples/entry18.json#targetDshVersion` (the pair must move together or `entry18-ci.mjs` throws), plus `web-runtime.yml`/`web-smoke.yml`/`lev6-capture.yml` `DSH_VERSION` and `40-checker/.github/workflows/plugin-verify.yml --runtime-version`. No rc.3 runtime result is committed yet, so `SUPPORTED.md` keeps `not-run` and says so.
+- Node 22 jobs in `cross-platform.yml`, `governance.yml`, `round-robin.yml`, `surveillance.yml` and `40-checker/.github/workflows/plugin-verify.yml` moved to Node 24, matching `engines.node >=24.9.0`.
+- `publish/README.md` + `index.example.json`: labels now use the `spec/levels.json` vocabulary (`dsh-flow:manual`, `dsh-boost:measured`, `dsh-entry:blocked`); `draft` / `lev7` / `unavailable` are documented as not emitted. `level-labels.example.json` shows a coherent rc.3 example (status `not-run` because no rc.3 evidence exists, asOf 2026-11-14).
+- `SUPPORTED.md`: A7 now says the real host is `0.2.2-rc.3`; matrix gained `0.2.2-rc.2`/`0.2.2-rc.3` rows (all `not-run`/`NA`); counts re-checked at rc3 (243 alpha.2 anchors, 155 without anchor, 0 rc.2/rc.3; new A12).
+
+### Fixed
+
+- `31-DS-C条款.md`: §1.5 five-part anchor and §3.3 report example are rc.3; the 2026-10-30 alpha.2 anchor is fenced off as history; the C-2 three-value table now matches the checker (`peer-only` + satisfied → PASS with a weaker "peer substitute" note, no longer WARN); REPO line anchors re-taken at rc3 (`plugin-manager/src/index.ts` 873→969, `tools.ts` 108→109/149→150, `package-manifest/src/types.ts` `dsh` :28 and `DshManifest` :32-41, `cordis-host-runner/sandbox.ts` 8→7, `vendor/README.md` 19→15, `install-spec.ts` 69-92→70-93 and 94-95→131, `plugin-market-index/src/index.ts` ranges +3~4); `ctx.root.fiber.await()` keeps a future-only note (still valid in rc3).
+- `35-三层开发建议与验收清单.md`: new §7.1 rc.3 baseline; the alpha.3 table is demoted to a dated §7.2 history; the "npm default semver ignores prereleases" claim is corrected (`>=0.2.2-0 <0.3.0` already includes `0.2.2-rc.*`).
+- `93-开发建议-入门.md`: client example no longer uses the removed `@deepseek-ai/dsh-client-runtime` (and explains `dsh.client.inject` is informational, `external` is the module-table field); `--runtime-version` examples → `0.2.2-rc.3`; `engines.dsh` example → `>=0.2.2-0 <0.3.0`.
+- `32-DS-R条款.md`: evidence anchors for `practices.md` moved to the rc3 path `skills/dsh-doc/references/practices.md` (same line, now marked "rc3 重取"); `20-研究底稿/B-…` only gained a dated history note, no row changes.
+- `spec/schemas/conformance.schema.json`: `runtimeSource` enum drops `fallback` (the code only emits `cli`/`host`/`default`); description now states `suspect` is true for `default`.
+- `40-checker/README.md` / `docs/coverage.md`: examples use rc.3, `--cordis-version 4.1.0`, and the anchor fallback is described as `default` (not `fallback`).
+
+### Verified
+
+- `npm test` (`node 40-checker/test/*.mjs test/*.mjs`): 321 tests, 320 pass, 1 skipped, 0 failed.
+- `spec/examples/boost-card.example.json` `recordHash` and `spec/examples/flow-evidence.example.json` `chain.evidenceHash` recomputed after the anchor edits (spec-contract tests green).
+- Checker default constants (`DEFAULT_RUNTIME_VERSION` / `DEFAULT_CORDIS` / `DEFAULT_COMMIT`) are `0.2.2-rc.3` / `4.1.0` / `38a6a5c9…` in this version (changed in the same release alongside the checker work); the README default tables match them.
+- Not verified here: rc.3 runtime re-runs and the sidecar rebuild (evidence work owned by the checker changes), so `SUPPORTED.md` keeps every rc.3 cell `not-run`.
+
 ## 1.6.10 — 2026-11-13
 
 ### Fixed

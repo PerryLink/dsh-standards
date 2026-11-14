@@ -9,6 +9,8 @@ import fs from 'node:fs'
 import path from 'node:path'
 import { spawnSync } from 'node:child_process'
 import { fileURLToPath } from 'node:url'
+import { DEFAULT_RUNTIME_VERSION } from '../src/manifest.mjs'
+import { DEFAULT_CORDIS } from '../src/cli.mjs'
 
 const HERE = path.dirname(fileURLToPath(import.meta.url))
 const ROOT = path.resolve(HERE, '..', '..')
@@ -31,7 +33,9 @@ function main() {
   }
   const result = {
     runner: `dsh-plugin-verify@0.1.0 (${process.platform}/${process.arch}, node ${process.version})`,
-    anchor: { dsh: '0.2.2-alpha.2', cordis: '4.0.6-alpha.1' },
+    // The known answers are only comparable between runs that share this
+    // anchor; rc.3 / cordis 4.1.0 is the current released baseline.
+    anchor: { dsh: DEFAULT_RUNTIME_VERSION, cordis: DEFAULT_CORDIS },
     results: {
       good: { status: run(path.join(ROOT, '40-checker/fixtures/good')), artifact: 'fixtures/good' },
       'bad-manifest': { status: run(path.join(ROOT, '40-checker/fixtures/bad-manifest')), artifact: 'fixtures/bad-manifest' },

@@ -4,7 +4,8 @@ import path from 'node:path'
 import { spawnSync } from 'node:child_process'
 import { fileURLToPath } from 'node:url'
 import { buildReport, formatText, summarizeBlocking } from '../src/report.mjs'
-import { detectHostRuntime, resolveRuntimeAnchor } from '../src/cli.mjs'
+import { DEFAULT_COMMIT, DEFAULT_CORDIS, detectHostRuntime, resolveRuntimeAnchor } from '../src/cli.mjs'
+import { DEFAULT_RUNTIME_VERSION } from '../src/manifest.mjs'
 
 const HERE = path.dirname(fileURLToPath(import.meta.url))
 const GOOD = path.join(HERE, '..', 'fixtures', 'good')
@@ -134,6 +135,26 @@ test('runtime anchor follows an explicit version and is suspect when the host di
   assert.equal(unknown.runtimeSource, 'default')
   assert.ok(unknown.dsh.length > 0)
   assert.equal(unknown.suspect, true, 'a default constant is not a host: it must be marked suspect')
+})
+
+test('the default anchor is the released rc.3 baseline, not the alpha.2 one', () => {
+  assert.equal(DEFAULT_RUNTIME_VERSION, '0.2.2-rc.3')
+  assert.equal(DEFAULT_CORDIS, '4.1.0')
+  assert.equal(DEFAULT_COMMIT, '38a6a5c965aa99ab525161efb7cc5cf1fe62fced')
+
+  const fallback = resolveRuntimeAnchor(null, null)
+  assert.equal(fallback.dsh, DEFAULT_RUNTIME_VERSION)
+  assert.equal(fallback.runtimeSource, 'default')
+  assert.equal(fallback.suspect, true)
+
+  const help = spawnSync(process.execPath, [CHECKER, '--help'], { encoding: 'utf8', timeout: 60_000 })
+  assert.equal(help.status, 0, help.stderr)
+  assert.match(help.stdout, /dsh 0\.2\.2-rc\.3/)
+  assert.match(help.stdout, /cordis 4\.1\.0/)
+  assert.match(help.stdout, /commit 38a6a5c965aa99ab525161efb7cc5cf1fe62fced/)
+  assert.match(help.stdout, /else 0\.2\.2-rc\.3\)/)
+  assert.match(help.stdout, /cordis version recorded in the anchor \(default: 4\.1\.0\)/)
+  assert.match(help.stdout, /harness commit recorded in the anchor \(default: 38a6a5c965aa\)/)
 })
 
 test('C-2.3 counts as checked once C-2.2 was evaluated', () => {

@@ -10,7 +10,7 @@ jobs:
       - uses: actions/checkout@v4
       - uses: actions/setup-node@v4
         with:
-          node-version: 22
+          node-version: 24
       - name: unit tests
         run: node --test
       - name: good fixture (static-only M1; expect 0)
@@ -48,7 +48,7 @@ jobs:
       - uses: actions/checkout@v4
       - uses: actions/setup-node@v4
         with:
-          node-version: 22
+          node-version: 24
       - name: build host farm (requires a DSH checkout at DSH_HOST)
         env:
           DSH_HOST: ${{ vars.DSH_HOST }}
@@ -62,7 +62,7 @@ jobs:
           node bin/dsh-plugin-verify.mjs /tmp/farm/plugins/bundle \
             --treat-as-plugin \
             --runtime "$DSH_HOST/vendor/cordis/lib/index.js" \
-            --runtime-version 0.2.2-alpha.2 \
+            --runtime-version 0.2.2-rc.3 \
             --format json --out /tmp/l1.json
       - uses: actions/upload-artifact@v4
         with:

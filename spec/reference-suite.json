@@ -1,11 +1,13 @@
 {
   "schema": "dsh-reference-suite/1",
-  "version": "1.0.0",
-  "updatedAt": "2026-11-02",
+  "version": "1.1.0",
+  "updatedAt": "2026-11-14",
   "anchors": {
-    "dsh": "0.2.2-alpha.2",
-    "cordis": "4.0.6-alpha.1",
-    "node": ">=20",
+    "dsh": "0.2.2-rc.3",
+    "dshCommit": "38a6a5c965aa99ab525161efb7cc5cf1fe62fced",
+    "cordis": "4.1.0",
+    "cordisUpstream": "4.0.0-rc.11",
+    "node": ">=24.9.0",
     "platform": "linux-x64 (primary), win32-x64 (secondary)"
   },
   "changeRules": [
@@ -30,6 +32,7 @@
   "limits": [
     "This is a reference suite, not a certified reference material.",
     "Synthetic fixtures prove a parser/checker path, not ecosystem behavior.",
-    "The 18-package batch is static recognition plus base-only runtime; it is not 18/18 production."
+    "The 18-package batch is static recognition plus base-only runtime; it is not 18/18 production.",
+    "1.1.0 anchor change (2026-11-14): anchors moved to dsh 0.2.2-rc.3 / vendored cordis 4.1.0 (upstream 4.0.0-rc.11) / node >=24.9.0. The 11 expected results are unchanged, but they were frozen under the 0.2.2-alpha.2 / cordis 4.0.6-alpha.1 anchors and have not been re-run at the rc.3 anchors yet; asOf 2026-11-14, 0 committed results carry an rc.3 anchor, so this suite describes the rc.3 ruler, not rc.3-verified evidence."
   ]
 }

@@ -4,7 +4,8 @@
 
 > **版本**：v1.0.0-rc.1（T1 定稿候选，待工作组确认）
 > **日期**：2026-10-31
-> **依据**：`01-项目纲领.md`、`03-可行性与条款草案.md`、`20-研究底稿/F-GBZ级Cordis效能实践.md`、`20-研究底稿/E-一致性检查器可行性.md`、`10-输入/源码取证索引.md`，以及 `deepseek-harness` 源码实测（commit `ce7073d51254c26cd63b22a60835b8f948deb447`）。
+> **依据**：`01-项目纲领.md`、`03-可行性与条款草案.md`、`20-研究底稿/F-GBZ级Cordis效能实践.md`、`20-研究底稿/E-一致性检查器可行性.md`、`10-输入/源码取证索引.md`，以及 `deepseek-harness` 源码实测（历史 commit `ce7073d51254c26cd63b22a60835b8f948deb447`，2026-10-30）。
+> **rc3 锚注（2026-11-14）**：现行五元锚改 `dsh=0.2.2-rc.3` / `cordis=4.1.0` / commit `38a6a5c9…` / upstream `4.0.0-rc.11` / Node `>=24.9.0`；DS-G 的实践/判定语义未变，`resolveConfig`/`ctx.root` 在 rc3 仍有效。
 > **覆盖条款**：G-1 ～ G-10 + 16 个陷阱（T1～T16）。
 > **已知未完成项**：
 > 1. DS-G 是**登记制**，不是强制门禁；本文件定义实践、判定方式、登记模板与复审出口，不提供自动发证。
@@ -50,7 +51,7 @@ DS-G 指导级回答：**这个插件用足 Cordis 了吗？更快、更好吗�
 
 ### 1.4 版本锚与复审
 
-五元锚同 DS-C：`(repo, commit, scanner, dsh, cordis)`；本 commit `dsh=0.2.2-alpha.2`、`cordis=4.0.6-alpha.1`（上游基线 `4.0.0-rc.11`，`REPO/vendor/README.md:19`）。
+五元锚同 DS-C：`(repo, commit, scanner, dsh, cordis)`；rc3（2026-11-14 复核）为 `dsh=0.2.2-rc.3`、`cordis=4.1.0`（上游基线 `4.0.0-rc.11`，`REPO/vendor/README.md:15`）。2026-10-30 的 `dsh=0.2.2-alpha.2`/`cordis=4.0.6-alpha.1` 降为历史锚。
 
 - **复审周期 3 个月**；到期未复审 → `expired`。
 - 复审输入：新锚、采用者证据、收益数据、反例、API 变更。
@@ -637,8 +638,8 @@ subject:
   commit: "<40hex>"
 anchor:
   scanner: "dsh-plugin-verify@0.1.0"
-  dsh: "0.2.2-alpha.2"
-  cordis: "4.0.6-alpha.1"
+  dsh: "0.2.2-rc.3"
+  cordis: "4.1.0"
 evidence:
   - "src/index.ts:42-58"
   - "benchmarks/volatile-change.md#before-after"

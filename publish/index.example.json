@@ -14,11 +14,11 @@
       "dsh-entry:unavailable": {
         "title": "ENTRY unavailable"
       },
-      "dsh-flow:draft": {
-        "title": "FLOW draft; J1 only"
+      "dsh-flow:manual": {
+        "title": "FLOW manual; J1 install/remove recorded"
       },
-      "dsh-boost:lev7": {
-        "title": "BOOST LEV-7 reference only"
+      "dsh-boost:measured": {
+        "title": "BOOST measured; LEV evidence card exists"
       }
     },
     "sortKeys": {}
@@ -43,7 +43,7 @@
             "type": "npm"
           },
           "engines": {
-            "dsh": ">=0.2.2-alpha.2 <0.3.0"
+            "dsh": ">=0.2.2-0 <0.3.0"
           }
         }
       ]

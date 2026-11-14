@@ -14,8 +14,12 @@ import { readSourcesWithStats } from './util.mjs'
 import { buildReport, writeReport } from './report.mjs'
 
 const VERSION = '0.1.0'
-const DEFAULT_COMMIT = 'ce7073d51254c26cd63b22a60835b8f948deb447'
-const DEFAULT_CORDIS = '4.0.6-alpha.1'
+// The released anchor the standards are calibrated against (DSH 0.2.2-rc.3,
+// released 2026-11-13, tag dsh-v0.2.2-rc.3). These are recorded in every report
+// when the caller does not pass --commit/--cordis-version; use --host-version
+// to judge C-2 against the actually installed host.
+export const DEFAULT_COMMIT = '38a6a5c965aa99ab525161efb7cc5cf1fe62fced'
+export const DEFAULT_CORDIS = '4.1.0'
 const HOST_RUNTIME_TIMEOUT_MS = 5000
 
 function binName() {
@@ -27,6 +31,10 @@ function binName() {
 function usage() {
   const bin = binName()
   return `${process.env.DSH_CHECKER_BRAND || 'dsh-plugin-verify ' + VERSION} — DS-C conformance checker (MVP)
+
+Anchor defaults (recorded in every report): dsh ${DEFAULT_RUNTIME_VERSION} · cordis ${DEFAULT_CORDIS} · commit ${DEFAULT_COMMIT}
+Without --host-version or a working \`dsh --version\`, anchor.dsh is this placeholder
+(source=default, suspect=true) and C-2.1/C-2.2 are NA — not PASS and not FAIL.
 
 Usage:
   ${bin} check [dir] [--json] [--html <file>]  author-facing report (Markdown by default)
@@ -681,7 +689,7 @@ export async function main(argv = process.argv.slice(2)) {
     scan = read.scan
   } catch { sources = [] }
   const declarationChecks = manifest ? [
-    checkCapabilities(manifest, sources, patch),
+    checkCapabilities(manifest, sources, patch, scan),
     checkCredentials(manifest, sources),
     checkLabels(manifest, sources),
   ] : [

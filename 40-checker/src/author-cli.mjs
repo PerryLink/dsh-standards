@@ -67,7 +67,7 @@ Safety:
 
 Any other flag is forwarded to the checker, e.g.:
   --scope entry --entry-claim static --no-exec
-  --runtime-version 0.2.2-rc.1
+  --runtime-version 0.2.2-rc.3
   --market-index index.json --plugin-name @scope/name
 
 Exit codes (same as the checker):

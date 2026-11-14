@@ -44,9 +44,9 @@ DSH adoption depth has three levels, each with its own question and evidence voc
 
 Three things live here: `40-checker/` (the DS-C conformance checker plus every evidence script), `bin/` (two public entry points, `dsh-standards` and `dsh-levels`), and `spec/` with the canonical clause text in the numbered `31`–`35` documents. The tools only read the target package and never modify what they inspect; the verdict only accepts evidence, so `not-run`, `NA`, and `static` are never written up as PASS.
 
-The old npm reservation `dsh-standards@0.0.3` only held the name; this 1.x line replaces it (currently `1.1.2`), and the two bins are `dsh-standards` and `dsh-levels`.
+The old npm reservation `dsh-standards@0.0.3` only held the name; this 1.x line replaces it (currently `1.6.11`), and the two bins are `dsh-standards` and `dsh-levels`.
 
-Fixed anchor, recorded in `spec/levels.json` and in every report: `repo=deepseek-ai/deepseek-harness`, `commit=ce7073d51254`, `dsh=0.2.2-alpha.2`, `cordis=4.0.6-alpha.1`. Pass a different runtime version explicitly and the report records which ruler you measured with.
+The anchor is recorded in every report, not in `spec/levels.json` (the checker resolves it at run time: CLI flag, then host probe, then the built-in default): `repo=deepseek-ai/deepseek-harness`, `commit=38a6a5c965aa`, `dsh=0.2.2-rc.3`, `cordis=4.1.0`. Pass a different runtime version explicitly and the report records which ruler you measured with.
 
 ### Upstream and usage (facts, 2026-11)
 
@@ -203,9 +203,9 @@ The eight you will actually use:
 | `--scope` | `ds-c` | check scope: `mvp` / `ds-c` / `entry` |
 | `--profile` | `package` | evaluation profile: `package` / `listing` / `both` |
 | `--runtime` | — | path to a built `@deepseek-ai/cordis` `lib/index.js`; enables L1–L3 |
-| `--runtime-version` | `0.2.2-alpha.2` | dsh runtime version recorded in the anchor and used by C-2 |
-| `--cordis-version` | `4.0.6-alpha.1` | cordis version recorded in the anchor |
-| `--commit` | `ce7073d51254` | harness commit recorded in the anchor |
+| `--runtime-version` | `0.2.2-rc.3` | dsh runtime version recorded in the anchor and used by C-2 (built-in fallback; `check` prefers the host version) |
+| `--cordis-version` | `4.1.0` | cordis version recorded in the anchor |
+| `--commit` | `38a6a5c965aa` | harness commit recorded in the anchor |
 | `--install-spec` | — | recommended install spec for C-3 |
 | `--market-index` | — | format-1 market index JSON; turns on listing mode |
 | `--plugin-name` | — | plugin name inside the market index |

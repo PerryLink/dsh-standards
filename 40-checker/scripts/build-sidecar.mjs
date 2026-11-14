@@ -13,8 +13,15 @@
  * Entry fields are a superset of the original `dsh-market-sidecar/1` shape
  * (subject/levels/evidence/validity/lifecycle/selfAssessed are unchanged):
  *   title/repo/license   from the published package.json, null when absent
- *   scope                {dsh, cordis, platform} from dsh.engines / npm engines
- *                        / peerDependencies, falling back to the audit anchor
+ *   scope                {dsh, cordis, platform} from the package's OWN
+ *                        declarations (dsh.engines / npm engines / cordis
+ *                        peerDependencies+dependencies); null when the package
+ *                        declares nothing. A check anchor is never copied in:
+ *                        "checked at 0.2.2-rc.3" is not "requires 0.2.2-rc.3".
+ *   anchor               {dsh, cordis, commit, source, suspect}: the five-element
+ *                        anchor the audit actually ran under (from
+ *                        audit.checker.anchor), kept separate from scope so a
+ *                        reader can tell what was checked and what was declared.
  *   checks               checker results as {id,result,coverage} only; detailed
  *                        reasons stay in the report, never in the sidecar
  *   evidence             url/sha256 kept for compatibility; reportUrl/
@@ -56,6 +63,8 @@ const FORBIDDEN = new Set(['advice', 'issuer', 'recordHash', 'verifyUrl', 'score
 const NOT_CLAIMED = ['official', 'certification', 'security-audit', 'endorsement', 'ordering', 'comparison', 'warranty']
 const CHECK_KEYS = new Set(['id', 'result', 'coverage'])
 const SCOPE_KEYS = new Set(['dsh', 'cordis', 'platform'])
+const ANCHOR_KEYS = new Set(['dsh', 'cordis', 'commit', 'source', 'suspect'])
+const ANCHOR_SOURCES = new Set(['cli', 'host', 'default'])
 const CHECKED_BY_KEYS = new Set(['checker', 'command', 'securityCommand'])
 const SECURITY_KEYS = new Set(['state', 'checks', 'summary', 'command'])
 const SECURITY_STATES = new Set(['checked', 'partial', 'not-run'])
@@ -260,17 +269,41 @@ function platformFromPackage(meta) {
   return [os.join('/'), cpu.join('/')].filter(Boolean).join('-')
 }
 
-function inferScope(meta, audit) {
-  const anchor = audit?.checker?.anchor && typeof audit.checker.anchor === 'object' ? audit.checker.anchor : {}
+/**
+ * `scope` answers "what does this package declare it runs on?" — it is built
+ * only from the package's own manifest fields. A missing declaration stays
+ * null; the checker's own anchor must never be presented as a package
+ * requirement (that made 28 of 50 entries claim a 0.2.2-rc.3 range they never
+ * wrote, and leaked the old 4.0.6-alpha.1 default into 14 cordis scopes).
+ */
+function inferScope(meta) {
   const dshEngines = meta?.dsh?.engines && typeof meta.dsh.engines === 'object' ? meta.dsh.engines : {}
   const engines = meta?.engines && typeof meta.engines === 'object' ? meta.engines : {}
   const peer = meta?.peerDependencies && typeof meta.peerDependencies === 'object' ? meta.peerDependencies : {}
   const deps = meta?.dependencies && typeof meta.dependencies === 'object' ? meta.dependencies : {}
   return {
-    dsh: firstString(dshEngines.dsh, engines.dsh, anchor.dsh),
-    cordis: firstString(dshEngines.cordis, engines.cordis, peer['@deepseek-ai/cordis'], deps['@deepseek-ai/cordis'], anchor.cordis),
+    dsh: firstString(dshEngines.dsh, engines.dsh),
+    cordis: firstString(dshEngines.cordis, engines.cordis, peer['@deepseek-ai/cordis'], deps['@deepseek-ai/cordis']),
     platform: platformFromPackage(meta),
   }
+}
+
+/**
+ * `anchor` answers "what did the checks run against?" — it is copied from the
+ * level audit, never from the package manifest and never defaulted here. A
+ * missing audit anchor stays absent; a partial one keeps null axes. `source`
+ * and `suspect` are the checker's runtimeSource three-state semantics.
+ */
+function inferAnchor(audit) {
+  const raw = audit?.checker?.anchor
+  if (!raw || typeof raw !== 'object' || Array.isArray(raw)) return null
+  const dsh = firstString(raw.dsh)
+  const cordis = firstString(raw.cordis)
+  const commit = firstString(raw.commit)
+  const source = firstString(raw.runtimeSource)
+  const suspect = typeof raw.suspect === 'boolean' ? raw.suspect : null
+  if (dsh === null && cordis === null && commit === null) return null
+  return { dsh, cordis, commit, source, suspect }
 }
 
 function extractChecks(report, name, version) {
@@ -495,6 +528,7 @@ function entryFromAudit(audit, options, levelFile) {
   const command = firstString(options.checkedCommand) ?? (levels.entry.claim === 'runtime'
     ? 'dsh-levels <package-dir> --format json'
     : 'dsh-levels <package-dir> --no-runtime --format json')
+  const anchor = inferAnchor(audit)
 
   return {
     key: `${name}@${version}`,
@@ -503,7 +537,8 @@ function entryFromAudit(audit, options, levelFile) {
       title: firstLine(meta.description),
       repo: normalizeRepo(meta.repository),
       license: normalizeLicense(meta.license),
-      scope: inferScope(meta, audit),
+      scope: inferScope(meta),
+      ...(anchor ? { anchor } : {}),
       levels,
       checks,
       ...(security ? { security } : {}),
@@ -645,6 +680,33 @@ function validateSidecar(sidecar) {
           throw new Error(`${key}: scope.${field} must be a non-empty string or null`)
         }
       }
+    }
+    // Optional and additive: entries produced before the scope/anchor split have
+    // no anchor. When present it records the check anchor, never a requirement.
+    if (entry.anchor !== undefined) {
+      if (!entry.anchor || typeof entry.anchor !== 'object' || Array.isArray(entry.anchor)) {
+        throw new Error(`${key}: anchor must be an object`)
+      }
+      for (const field of Object.keys(entry.anchor)) {
+        if (!ANCHOR_KEYS.has(field)) throw new Error(`${key}: anchor.${field} is not part of the sidecar contract`)
+      }
+      for (const field of ['dsh', 'cordis', 'commit']) {
+        const value = entry.anchor[field]
+        if (value !== null && value !== undefined && (typeof value !== 'string' || value === '')) {
+          throw new Error(`${key}: anchor.${field} must be a non-empty string or null`)
+        }
+      }
+      if (entry.anchor.commit !== undefined && entry.anchor.commit !== null && !HEX40.test(String(entry.anchor.commit))) {
+        throw new Error(`${key}: anchor.commit must be 40 hex chars or null`)
+      }
+      if (entry.anchor.source !== undefined && entry.anchor.source !== null && !ANCHOR_SOURCES.has(entry.anchor.source)) {
+        throw new Error(`${key}: anchor.source must be cli, host, default or null`)
+      }
+      if (entry.anchor.suspect !== undefined && entry.anchor.suspect !== null && typeof entry.anchor.suspect !== 'boolean') {
+        throw new Error(`${key}: anchor.suspect must be boolean or null`)
+      }
+      const recorded = ['dsh', 'cordis', 'commit'].filter(field => entry.anchor[field] !== null && entry.anchor[field] !== undefined)
+      if (recorded.length === 0) throw new Error(`${key}: anchor must record at least one of dsh/cordis/commit`)
     }
     if (entry.checks !== undefined) {
       if (!Array.isArray(entry.checks)) throw new Error(`${key}: checks must be an array`)

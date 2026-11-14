@@ -65,6 +65,9 @@ function auditFixture({ name, version, dir, generatedAt = '2026-11-06T01:02:03.0
         dsh: '0.2.1-rc.5',
         cordis: '4.0.6-alpha.1',
         runtime: null,
+        runtimeSource: 'host',
+        hostVersion: '0.2.1-rc.5',
+        suspect: false,
       },
       coverage: { mandatory: 5, pass: 2, warn: 1, fail: 0, na: 2, notRun: 2, error: 0 },
     },
@@ -146,6 +149,13 @@ test('build-sidecar: the additive entry shape is derived from audit, report and 
         repo: 'https://github.com/acme/x',
         license: 'MIT',
         scope: { dsh: '>=0.2.0-rc.1 <0.3.0-0', cordis: '^4.0.6-alpha.1', platform: 'web' },
+        anchor: {
+          dsh: '0.2.1-rc.5',
+          cordis: '4.0.6-alpha.1',
+          commit: 'd'.repeat(40),
+          source: 'host',
+          suspect: false,
+        },
         levels: {
           entry: { state: 'recognized', claim: 'static' },
           flow: { state: 'not-run' },
@@ -195,11 +205,44 @@ test('build-sidecar: absent package metadata stays null instead of being invente
   assert.equal(entry.title, null)
   assert.equal(entry.repo, null)
   assert.equal(entry.license, null)
-  assert.deepEqual(entry.scope, { dsh: '0.2.1-rc.5', cordis: '4.0.6-alpha.1', platform: null })
+  // The package declares no range. The audit anchor (0.2.1-rc.5) must not be
+  // copied into scope: "checked at X" is not "requires X".
+  assert.deepEqual(entry.scope, { dsh: null, cordis: null, platform: null })
+  assert.deepEqual(entry.anchor, {
+    dsh: '0.2.1-rc.5',
+    cordis: '4.0.6-alpha.1',
+    commit: 'd'.repeat(40),
+    source: 'host',
+    suspect: false,
+  })
   assert.deepEqual(entry.checks, [])
   assert.ok(entry.notChecked.includes('ENTRY:checks (no --report; checker results unavailable)'))
   assert.ok(entry.notChecked.includes('ENTRY:runtime (claim=static; not exercised)'))
   assert.equal(entry.checkedBy.checker, CHECKER)
+})
+
+test('build-sidecar: scope keeps package declarations when the audit anchor differs', (t) => {
+  const dir = tempDir(t)
+  const packageDir = path.join(dir, 'plugin')
+  writeJson(path.join(packageDir, 'package.json'), {
+    name: '@acme/declared',
+    version: '3.0.0',
+    engines: { dsh: '>=0.2.0-rc.1 <0.3.0-0' },
+    dependencies: { '@deepseek-ai/cordis': '^4.0.6-alpha.1' },
+  })
+  const tarball = path.join(dir, 'declared.tgz')
+  fs.writeFileSync(tarball, 'fake tarball\n')
+  const audit = writeJson(path.join(dir, 'audit.json'), auditFixture({ name: '@acme/declared', version: '3.0.0', dir: packageDir }))
+  const out = path.join(dir, 'out.json')
+  mustRun(SIDECAR, buildArgs(dir, { name: '@acme/declared', version: '3.0.0', packageDir, tarball, audit, out }))
+
+  const entry = JSON.parse(fs.readFileSync(out, 'utf8')).entries['@acme/declared@3.0.0']
+  // The package's own ranges survive verbatim; the anchor is recorded apart.
+  assert.deepEqual(entry.scope, { dsh: '>=0.2.0-rc.1 <0.3.0-0', cordis: '^4.0.6-alpha.1', platform: null })
+  assert.equal(entry.anchor.dsh, '0.2.1-rc.5')
+  assert.equal(entry.anchor.commit, 'd'.repeat(40))
+  assert.equal(entry.anchor.source, 'host')
+  assert.equal(entry.anchor.suspect, false)
 })
 
 test('build-sidecar: a report for a different subject is rejected, not merged', (t) => {
@@ -392,6 +435,18 @@ test('publish/sidecar.json: 50 real dsh packages carry every additive field and 
     for (const field of ['dsh', 'cordis', 'platform']) {
       const value = entry.scope[field]
       assert.ok(value === null || (typeof value === 'string' && value.length > 0), `${key} scope.${field}`)
+    }
+    // anchor is additive: entries built before the scope/anchor split have none.
+    // When present it records what was checked and never a package requirement.
+    if (entry.anchor !== undefined) {
+      assert.deepEqual(Object.keys(entry.anchor).sort(), ['commit', 'cordis', 'dsh', 'source', 'suspect'], `${key} anchor keys`)
+      for (const field of ['dsh', 'cordis', 'commit']) {
+        const value = entry.anchor[field]
+        assert.ok(value === null || (typeof value === 'string' && value.length > 0), `${key} anchor.${field}`)
+      }
+      if (entry.anchor.commit !== null) assert.match(entry.anchor.commit, /^[0-9a-f]{40}$/, `${key} anchor.commit`)
+      if (entry.anchor.source !== null) assert.ok(['cli', 'host', 'default'].includes(entry.anchor.source), `${key} anchor.source`)
+      if (entry.anchor.suspect !== null) assert.equal(typeof entry.anchor.suspect, 'boolean', `${key} anchor.suspect`)
     }
 
     assert.equal(entry.checks.length, 14)

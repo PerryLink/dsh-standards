@@ -2,7 +2,7 @@
   "schema": "dsh-entry18-manifest/1",
   "description": "The 18 deduplicated ENTRY packages: 10 GitHub + 8 npm. id/name/version come from 40-checker/results/entry/18/summary.json. source/spec select the installable artifact: a published npm tarball at the exact version when it exists, otherwise a shallow clone of the repo.",
   "profile": "base",
-  "targetDshVersion": "0.2.2-alpha.2",
+  "targetDshVersion": "0.2.2-rc.3",
   "count": 18,
   "sources": {
     "github": 10,

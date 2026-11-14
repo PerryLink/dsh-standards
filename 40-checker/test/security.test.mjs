@@ -581,6 +581,67 @@ test('DSC-11 C-11.5: an unobservable surface is not-run, not a permanent WARN', 
   assert.equal(noSources[0].result, 'NA')
 })
 
+test('DSC-11 C-11.5: a truncated source scan is NA/partial, never an over-declaration WARN', () => {
+  const truncatedScan = { files: 1, bytes: 40, maxFiles: 1, maxBytes: 2_000_000, truncated: true, skippedForBytes: 0 }
+  const withSources = checkCapabilities(
+    { dsh: { capabilities: ['fs:read', 'network:egress'] } },
+    [{ relative: 'index.mjs', text: 'export const x = 1\n' }],
+    {},
+    truncatedScan,
+  )
+  const findings = withSources.details.filter(item => item.item === 'C-11.5')
+  assert.equal(findings.length, 2, JSON.stringify(withSources.details))
+  for (const finding of findings) {
+    assert.equal(finding.result, 'NA')
+    assert.match(finding.reason, /not-run: source scan truncated/)
+  }
+  assert.equal(withSources.coverage, 'partial')
+  assert.equal(withSources.result, 'NA')
+
+  // The bounded scan can also stop before any source file is read.
+  const empty = checkCapabilities({ dsh: { capabilities: ['fs:read'] } }, [], {}, truncatedScan)
+  const emptyFinding = empty.details.find(item => item.item === 'C-11.5')
+  assert.equal(emptyFinding.result, 'NA')
+  assert.match(emptyFinding.reason, /not-run: source scan truncated/)
+  assert.equal(empty.coverage, 'partial')
+
+  // Without truncation the same unobserved declaration is still a WARN.
+  const untruncated = checkCapabilities(
+    { dsh: { capabilities: ['fs:read'] } },
+    [{ relative: 'index.mjs', text: 'export const x = 1\n' }],
+    {},
+    { files: 1, bytes: 40, maxFiles: 400, maxBytes: 2_000_000, truncated: false, skippedForBytes: 0 },
+  )
+  const warning = untruncated.details.find(item => item.item === 'C-11.5')
+  assert.equal(warning.result, 'WARN')
+  assert.equal(untruncated.coverage, 'full')
+})
+
+test('CLI: --max-files truncation is plumbed into C-11.5 as NA/partial', (t) => {
+  const dir = fs.mkdtempSync(path.join(os.tmpdir(), 'dsh-truncated-scan-'))
+  t.after(() => fs.rmSync(dir, { recursive: true, force: true }))
+  fs.writeFileSync(path.join(dir, 'package.json'), JSON.stringify({
+    name: '@fixtures/truncated-scan',
+    version: '1.0.0',
+    license: 'MIT',
+    type: 'module',
+    main: './a.mjs',
+    exports: { '.': './a.mjs' },
+    engines: { dsh: '>=0.2.2-0 <0.3.0' },
+    dsh: { manifestVersion: 1, kind: 'plugin', capabilities: ['fs:read'], labels: [] },
+  }, null, 2))
+  fs.writeFileSync(path.join(dir, 'a.mjs'), 'export function apply() {}\n')
+  fs.writeFileSync(path.join(dir, 'b.mjs'), 'export const b = 1\n')
+  const { code, report, stderr } = runCli(dir, ['--max-files', '1', '--no-exec', '--scope', 'entry', '--entry-claim', 'static'])
+  assert.equal(code, 0, stderr)
+  const dsc11 = report.checks.find(item => item.id === 'DSC-11')
+  assert.equal(dsc11.coverage, 'partial')
+  const rows = dsc11.details.filter(item => item.item === 'C-11.5')
+  assert.equal(rows.length, 1, JSON.stringify(dsc11.details))
+  assert.equal(rows[0].result, 'NA')
+  assert.match(rows[0].reason, /not-run: source scan truncated/)
+})
+
 test('CLI: healed credential, command and install fixtures are blocking in security scope', () => {
   for (const [name, id] of [['sec17-home-env', 'DSC-17'], ['sec16-exec-curl', 'DSC-16'], ['sec15-install-dynamic', 'DSC-15']]) {
     const run = runCli(path.join(SECURITY_FIXTURES, name), ['--scope', 'security', '--no-exec'])

@@ -50,7 +50,7 @@ DSH 插件的采用深度分三层，每层一个问题、一套证据状态，*
 
 仓里就三样东西：`40-checker/`（DS-C 一致性检查器与全部证据脚本）、`bin/`（两个公开入口 `dsh-standards` 与 `dsh-levels`），以及 `spec/` 与 `31`–`35` 号规范正文。工具只读目标包，不改被检对象；结论只认证据，`not-run`、`NA`、`static` 都不会被写成 PASS。
 
-npm 上的旧占位 `dsh-standards@0.0.3` 只是名字预留，这条 1.x 线取代了它（当前 `1.6.x`）；两个 bin 分别叫 `dsh-standards` 与 `dsh-levels`。
+npm 上的旧占位 `dsh-standards@0.0.3` 只是名字预留，这条 1.x 线取代了它（当前 `1.6.11`）；两个 bin 分别叫 `dsh-standards` 与 `dsh-levels`。
 
 锚点不是硬编码的通行证：`repo` / `commit` / `cordis` 记在报告里，`dsh` 由 `--host-version`、`DSH_HOST_VERSION` 或显式 `--allow-host-probe` 解析；都没有时报告写「host 版本未知」，并标 `source=default, suspect=true`。换一次版本就是另一把尺子，旧报告不能直接当新版本的证据。
 
@@ -230,8 +230,8 @@ coverage: mandatory=5 pass=5 warn=0 fail=0 na=0 notRun=0
 | `--profile` | `package` | 评估 profile：`package` / `listing` / `both` |
 | `--runtime` | — | 指向构建好的 `@deepseek-ai/cordis` `lib/index.js`，开启 L1–L3 |
 | `--runtime-version` | 宿主版本（`check`）；否则内置常量 | 写进 anchor 的 dsh 运行时版本，供 C-2 判定；报告用 `anchor.runtimeSource` 说明来源 |
-| `--cordis-version` | `4.0.6-alpha.1` | 写进 anchor 的 cordis 版本 |
-| `--commit` | `ce7073d51254` | 写进 anchor 的 harness commit |
+| `--cordis-version` | `4.1.0` | 写进 anchor 的 cordis 版本 |
+| `--commit` | `38a6a5c965aa` | 写进 anchor 的 harness commit |
 | `--install-spec` | — | 给 C-3 用的推荐安装 spec |
 | `--market-index` | — | 格式 1 的市场索引 JSON，开启 listing 模式 |
 | `--plugin-name` | — | 市场索引里的插件名 |

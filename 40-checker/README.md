@@ -104,7 +104,7 @@ node bin/dsh-plugin-verify.mjs ./my-plugin --scope entry --entry-claim static
 
 # plugin：必须 L1 真跑，才算 runtime
 node bin/dsh-plugin-verify.mjs ./my-plugin --scope entry \
-  --runtime /path/to/cordis/lib/index.js --runtime-version 0.2.2-alpha.2
+  --runtime /path/to/cordis/lib/index.js --runtime-version 0.2.2-rc.3
 
 # bundle：默认 require，有 --host 时跑 G0–G3（无 host 则 incomplete）
 node bin/dsh-plugin-verify.mjs ./my-bundle --scope entry --host /path/to/app-boot/lib/index.js
@@ -112,7 +112,7 @@ node bin/dsh-plugin-verify.mjs ./my-bundle --scope entry --host /path/to/app-boo
 # 兼容旧数据：只跑 server entry，明确标 proxy，不冒充 bundle
 node bin/dsh-plugin-verify.mjs ./my-bundle --scope entry \
   --entry-runtime server-entry --treat-as-plugin \
-  --runtime /path/to/cordis/lib/index.js --runtime-version 0.2.2-alpha.2
+  --runtime /path/to/cordis/lib/index.js --runtime-version 0.2.2-rc.3
 ```
 
 - `interop-static` 只表示可识别/可安装，不是通过；只有 `interop-runtime` 才是通过。
@@ -164,8 +164,8 @@ node bin/dsh-flow-collect.mjs --package ./my-plugin --sandbox --out flow-evidenc
 ```bash
 node bin/dsh-plugin-verify.mjs ./my-plugin \
   --runtime /path/to/deepseek-harness/vendor/cordis/lib/index.js \
-  --runtime-version 0.2.1-rc.5 \   # 省略时自动取 `dsh --version`（宿主实际版本）
-  --cordis-version 4.0.6-alpha.1
+  --runtime-version 0.2.2-rc.3 \   # 省略时自动取 `dsh --version`（宿主实际版本）
+  --cordis-version 4.1.0
 ```
 
 - 只对 `kind: plugin` 跑；`bundle`/`client` 默认输出 NA。`--treat-as-plugin` 可对 bundle 的 server entry 跑（见下）。
@@ -194,13 +194,13 @@ node bin/dsh-plugin-verify.mjs ./my-plugin \
 
 **覆盖度与分桶（加性）**：`coverage` 统计报告携带的**全部**检查（完整跑是 14 项）——`pass/warn/fail/na/notRun/error` 都按 `checks[]` 实算，`total` 是总数；`coverage.notRun` 含 ERROR/未跑与缺失的强制项，`na` 再单列。`metrics = {checked, total, declaredFields}` 中的 `declaredFields` 是 5 个可选声明面（capabilities/labels/commitments/disclosure/engines.dsh）中实际声明的个数，只作上下文、不进结论。`buckets.blocking`（FAIL）、`buckets.hygiene`（WARN，`DSC-11/12/13` 标 `declaration`）、`buckets.notChecked`（NA/not-run/ERROR）是 text 的渲染顺序。`entryBlocking` 增加 `checked`/`notChecked`：`pass` 仅在 6 个阻断前提（C-1.1/1.2/1.4、C-3.1/3.2/3.5；runtime claim 再加 C-2.2/2.3）**都**产出 detail 且无 FAIL 时为 true——没给 `--install-spec`/`--market-index` 时 C-3.x 未查，`pass` 必为 false。
 
-**锚**：`anchor.dsh` 默认取宿主 `dsh --version`（`anchor.runtimeSource=host`）；显式 `--runtime-version` 时 `runtimeSource=cli`，与宿主不一致则 `anchor.suspect=true`；找不到 dsh 才回退常量并标 `fallback`。
+**锚**：`anchor.dsh` 默认取宿主 `dsh --version`（`anchor.runtimeSource=host`）；显式 `--runtime-version` 时 `runtimeSource=cli`，与宿主不一致则 `anchor.suspect=true`；找不到 dsh 才回退常量并标 `default`（`anchor.suspect=true`）。
 
 ## 6. 已知限制
 
 1. **C-3 只在 listing 模式可判**；package 模式是 NA，仅附供应链 advisory 证据。
 2. **L1–L3 已覆盖 13/14 个真实包**：4 个 npm bundle + 9/10 GitHub 源码样本 C-4/C-7 PASS；仅 `dsh-vision-router` 构建后仍缺 `lib/session-affinity.js` FAIL。host farm 用 `scripts/host-farm.mjs` 搭建，仍是临时目录。
-3. **C-8.2 的 revision/epoch 在 Cordis 4.0.5 构建里不可观测**，因此 good fixture 的 C-8 是 WARN；4.0.6 源码有 `_revision`，换运行时后应变 PASS。
+3. **C-8.2 的 revision/epoch 在 Cordis 4.0.5 构建里不可观测**，因此 good fixture 的 C-8 是 WARN；rc3 vendored `4.1.0` 源码仍有 `_revision`（`vendor/cordis/src/fiber.ts:209`），换运行时后应变 PASS（rc3 下未重跑复验）。
 4. **C-13 只判声明一致性**；没有 `dsh.capabilities` 的插件无法被分类，高风险样本需要人工/市场复核（见 41）。
 5. **C-10 是 advisory**，不产生 FAIL；危险 AST/句柄泄漏仍不进强制级。
 6. `dsh.commitments`/`dsh.disclosure` 缺失只记 NA/WARN；C-12 不会因“没写承诺”而 FAIL。

@@ -54,8 +54,8 @@ jobs:
         with:
           node-version: 24
 
-      - name: Install DSH 0.2.2-alpha.2
-        run: npm install -g @deepseek-ai/dsh@0.2.2-alpha.2
+      - name: Install DSH 0.2.2-rc.3
+        run: npm install -g @deepseek-ai/dsh@0.2.2-rc.3
 
       # Committed local rows are inputs to the checkout, not CI evidence. Remove
       # this shard's pair before the run so a preflight failure uploads nothing
@@ -66,7 +66,7 @@ jobs:
           rm -f "40-checker/results/entry/18/fullbase/${{ matrix.id }}.log"
 
       - name: Run base-profile G0–G3 shard
-        run: node 40-checker/scripts/entry18-ci.mjs --only "${{ matrix.id }}" --expected-dsh-version 0.2.2-alpha.2
+        run: node 40-checker/scripts/entry18-ci.mjs --only "${{ matrix.id }}" --expected-dsh-version 0.2.2-rc.3
 
       - name: Show shard row
         if: always()

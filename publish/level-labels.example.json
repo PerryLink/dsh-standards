@@ -30,11 +30,12 @@
     "name": "@example/plugin",
     "levels": {
       "entry": {
-        "status": "runtime",
-        "evidence": "https://github.com/PerryLink/dsh-standards/actions/runs/41219602842",
-        "dsh": "0.2.2-alpha.2",
-        "cordis": "4.0.6-alpha.1",
-        "generatedAt": "2026-11-01"
+        "status": "not-run",
+        "evidence": null,
+        "dsh": "0.2.2-rc.3",
+        "cordis": "4.1.0",
+        "generatedAt": "2026-11-14",
+        "note": "no committed result carries the 0.2.2-rc.3 anchor yet (asOf 2026-11-14); a runtime label needs a report whose anchor.dsh is 0.2.2-rc.3"
       },
       "flow": {
         "status": "not-run",

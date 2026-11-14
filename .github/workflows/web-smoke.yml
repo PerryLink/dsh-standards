@@ -23,7 +23,7 @@ jobs:
           node-version: 24
 
       - name: Install DSH
-        run: npm install -g @deepseek-ai/dsh@0.2.2-alpha.2
+        run: npm install -g @deepseek-ai/dsh@0.2.2-rc.3
 
       - name: Create web profile
         run: |

@@ -4,7 +4,8 @@
 
 > **版本**：v1.0.0-rc.1（T1 定稿候选，待工作组确认）
 > **日期**：2026-10-31
-> **依据**：`01-项目纲领.md`、`03-可行性与条款草案.md`、`10-输入/源码取证索引.md`、`20-研究底稿/B-Cordis契约可判定性矩阵.md`、`20-研究底稿/E-一致性检查器可行性.md`、`20-研究底稿/F-GBZ级Cordis效能实践.md`，以及 `deepseek-harness` 源码实测（commit `ce7073d51254c26cd63b22a60835b8f948deb447`）。
+> **依据**：`01-项目纲领.md`、`03-可行性与条款草案.md`、`10-输入/源码取证索引.md`、`20-研究底稿/B-Cordis契约可判定性矩阵.md`、`20-研究底稿/E-一致性检查器可行性.md`、`20-研究底稿/F-GBZ级Cordis效能实践.md`，以及 `deepseek-harness` 源码实测（commit `ce7073d51254c26cd63b22a60835b8f948deb447`，2026-10-30）。
+> **rc3 复核（2026-11-14）**：`resolveConfig` / `ctx.root` 等 Cordis API 在 rc3 仍有效，不改；`practices.md` 已随 `dsh-doc` 技能迁移到 `skills/dsh-doc/references/practices.md`（内容与行号与旧路径一致，属「rc3 重取」）。
 > **覆盖条款**：R-1 ～ R-12（R-11/R-12 仅 listing profile，见 §1.4）。
 > **已知未完成项**：
 > 1. **DS-R 检查器未实现**；DS-C 检查器已实现（`40-checker`，16 tests）。本文件给 `DSR-01`～`DSR-12` 的判定方式与机器/人工分界。
@@ -411,7 +412,7 @@ import type {} from '@deepseek-ai/dsh-tools'   // 只为声明合并
 - `REPO/packages/core/system-prompt/src/index.ts:415-422`：section/variable 的同名错误。
 - `REPO/packages/core/scope/README.md:27`：`agent.ctx` 注册只对该 agent 可见。
 - `REPO/packages/core/agent/README.md:174`：`agent.ctx` 可遮蔽全局。
-- `REPO/packages/preset/agent-preset/skills/cordis-plugin-development/references/practices.md:19`：双持有 disposer。
+- `REPO/packages/preset/agent-preset/skills/dsh-doc/references/practices.md:19`：双持有 disposer。（rc3 重取：旧路径 `cordis-plugin-development/references/practices.md` 已删；新路径内容与行号一致）
 
 **正面示例**：
 
@@ -782,7 +783,7 @@ for (const listener of ctx.events.dispatch('emit', ['greet/changed', value])) {
 | 26 | `REPO/packages/core/system-prompt/src/index.ts:415-422` | section/variable 重名 | 已核验 |
 | 27 | `REPO/packages/core/scope/README.md:27` | agent.ctx 可见性 | 已核验 |
 | 28 | `REPO/packages/core/agent/README.md:174` | agent.ctx 遮蔽 | 已核验 |
-| 29 | `REPO/packages/preset/agent-preset/skills/cordis-plugin-development/references/practices.md:19` | 双持有 disposer | 已核验 |
+| 29 | `REPO/packages/preset/agent-preset/skills/dsh-doc/references/practices.md:19` | 双持有 disposer | 已核验（rc3 重取路径，行号不变） |
 | 30 | `REPO/packages/core/tools/src/events.ts:10-13,32-36` | signal 契约 | 已核验 |
 | 31 | `REPO/packages/core/tools/src/batch.ts:50-88` | abort 批处理 | 已核验 |
 | 32 | `REPO/packages/core/tools/src/index.ts:264-297` | `throwIfAborted` 复检 | 已核验 |

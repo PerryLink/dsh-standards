@@ -44,9 +44,9 @@ DSH अपनाव की गहराई के तीन स्तर है�
 
 यहाँ तीन चीज़ें हैं: `40-checker/` (DS-C जाँचकर्ता और सभी साक्ष्य-स्क्रिप्ट), `bin/` (दो सार्वजनिक प्रवेश बिंदु, `dsh-standards` और `dsh-levels`), और `spec/` के साथ संख्यांकित `31`–`35` दस्तावेज़ों का मानक पाठ। उपकरण लक्ष्य पैकेज को केवल पढ़ते हैं, उसे बदलते नहीं; निर्णय केवल साक्ष्य स्वीकार करता है, इसलिए `not-run`, `NA` और `static` कभी PASS के रूप में नहीं लिखे जाते।
 
-npm पर पुराना आरक्षण `dsh-standards@0.0.3` केवल नाम रखता था; यह 1.x श्रृंखला उसकी जगह लेती है (अभी `1.1.2`), और दोनों bin `dsh-standards` तथा `dsh-levels` हैं।
+npm पर पुराना आरक्षण `dsh-standards@0.0.3` केवल नाम रखता था; यह 1.x श्रृंखला उसकी जगह लेती है (अभी `1.6.11`), और दोनों bin `dsh-standards` तथा `dsh-levels` हैं।
 
-स्थिर एंकर, `spec/levels.json` और हर रिपोर्ट में दर्ज: `repo=deepseek-ai/deepseek-harness`, `commit=ce7073d51254`, `dsh=0.2.2-alpha.2`, `cordis=4.0.6-alpha.1`। अलग रनटाइम संस्करण दें तो रिपोर्ट लिख देती है कि आपने किस लकीर से मापा।
+एंकर हर रिपोर्ट में दर्ज होता है, `spec/levels.json` में नहीं (checker इसे रनटाइम पर तय करता है: CLI फ़्लैग, फिर होस्ट जाँच, अंत में अंतर्निहित डिफ़ॉल्ट): `repo=deepseek-ai/deepseek-harness`, `commit=38a6a5c965aa`, `dsh=0.2.2-rc.3`, `cordis=4.1.0`। अलग रनटाइम संस्करण दें तो रिपोर्ट लिख देती है कि आपने किस लकीर से मापा।
 
 ### वर्तमान ठोस आँकड़े
 
@@ -197,9 +197,9 @@ coverage: mandatory=5 pass=5 warn=0 fail=0 na=0 notRun=0
 | `--scope` | `ds-c` | जाँच दायरा: `mvp` / `ds-c` / `entry` |
 | `--profile` | `package` | मूल्यांकन प्रोफ़ाइल: `package` / `listing` / `both` |
 | `--runtime` | — | बने हुए `@deepseek-ai/cordis` के `lib/index.js` का पथ; L1–L3 चालू करता है |
-| `--runtime-version` | `0.2.2-alpha.2` | anchor में दर्ज dsh रनटाइम संस्करण, C-2 के लिए |
-| `--cordis-version` | `4.0.6-alpha.1` | anchor में दर्ज cordis संस्करण |
-| `--commit` | `ce7073d51254` | anchor में दर्ज harness commit |
+| `--runtime-version` | `0.2.2-rc.3` | anchor में दर्ज dsh रनटाइम संस्करण, C-2 के लिए (अंतर्निहित; `check` होस्ट संस्करण को प्राथमिकता देता है) |
+| `--cordis-version` | `4.1.0` | anchor में दर्ज cordis संस्करण |
+| `--commit` | `38a6a5c965aa` | anchor में दर्ज harness commit |
 | `--install-spec` | — | C-3 के लिए सुझाया गया इंस्टॉल spec |
 | `--market-index` | — | फ़ॉर्मैट-1 मार्केट इंडेक्स JSON; listing मोड चालू करता है |
 | `--plugin-name` | — | मार्केट इंडेक्स के भीतर प्लगइन का नाम |

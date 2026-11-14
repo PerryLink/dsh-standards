@@ -635,10 +635,21 @@ export function checkImportTimeAdvisory(sources, entryRelative = null, scan = nu
   })
 }
 
+/**
+ * Bounded-scan statement for C-11.5. A truncated scan cannot prove a declared
+ * capability is unused: the use may live in the files the budget never read, so
+ * the finding is not-run (NA) with partial coverage, never a WARN.
+ */
+function capabilityTruncationReason(scan) {
+  if (!scan?.truncated) return ''
+  return `source scan truncated at ${scan.maxFiles} files / ${scan.maxBytes} bytes (scanned ${scan.files} files / ${scan.bytes} bytes)`
+}
+
 /** DSC-11: dsh.capabilities declaration + high-signal static triggers. */
-export function checkCapabilities(manifest, sources, patch) {
+export function checkCapabilities(manifest, sources, patch, scan = null) {
   const caps = capabilityList(manifest)
   const details = []
+  const truncation = capabilityTruncationReason(scan)
   if (caps.error) details.push(detail('C-11.1', 'FAIL', caps.error, ['package.json#dsh.capabilities']))
   if (!caps.defined) {
     details.push(detail('C-11.1', 'WARN', 'dsh.capabilities is not declared (transitional WARN; host does not read it yet)', ['package.json#dsh.capabilities']))
@@ -670,7 +681,9 @@ export function checkCapabilities(manifest, sources, patch) {
       }
     }
     if (sources.length === 0) {
-      details.push(detail('C-11.5', 'NA', 'not-run: no source files were scanned, so no capability can be observed', []))
+      details.push(detail('C-11.5', 'NA', truncation
+        ? `not-run: ${truncation}, so no capability can be observed`
+        : 'not-run: no source files were scanned, so no capability can be observed', []))
     } else {
       for (const cap of caps.list) {
         if (NO_OBSERVATION_SURFACE.has(cap)) {
@@ -681,7 +694,15 @@ export function checkCapabilities(manifest, sources, patch) {
         // read-only plugin declare a write capability and pass. Read and write
         // are now observed independently (ctx.fs method + direct node:fs).
         const observed = triggered.has(cap) || observedEvidence.has(cap)
-        if (!observed) details.push(detail('C-11.5', 'WARN', `declared capability ${cap} was not observed statically (this is not proof it is unused: node:fs, dynamic calls and scan truncation are outside the trigger surface)`, ['package.json#dsh.capabilities']))
+        if (!observed) {
+          // A truncated scan is missing coverage, not an over-declaration:
+          // report NA/partial instead of WARN so the cap is not accused.
+          if (truncation) {
+            details.push(detail('C-11.5', 'NA', `not-run: ${truncation}; declared capability ${cap} may be used outside the scanned subset`, ['package.json#dsh.capabilities']))
+          } else {
+            details.push(detail('C-11.5', 'WARN', `declared capability ${cap} was not observed statically (this is not proof it is unused: node:fs and dynamic calls are outside the trigger surface)`, ['package.json#dsh.capabilities']))
+          }
+        }
       }
     }
   }
@@ -702,7 +723,7 @@ export function checkCapabilities(manifest, sources, patch) {
   const result = worst(details.map(item => item.result))
   return check({
     id: 'DSC-11', clause: 'C-11', layer: 'L0', result,
-    coverage: dangerUnparsableAll ? 'not-run' : dangerScan.parseErrors.length > 0 ? 'partial' : 'full',
+    coverage: dangerUnparsableAll ? 'not-run' : (dangerScan.parseErrors.length > 0 || truncation !== '') ? 'partial' : 'full',
     reason: details.filter(item => item.result !== 'PASS').map(item => `${item.item}: ${item.reason}`).join(' | '),
     details,
     evidence: ['package.json#dsh.capabilities', 'dsh.bundle.patch'],

@@ -27,7 +27,7 @@ permissions:
   contents: read
 
 env:
-  DSH_VERSION: 0.2.2-alpha.2
+  DSH_VERSION: 0.2.2-rc.3
   CAPTURE_PORT: '8787'
   OUT_DIR: ${{ github.workspace }}/.lev6-out
 

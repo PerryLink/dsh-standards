@@ -17,7 +17,11 @@ const REGISTRY_ID = /^[a-z0-9][a-z0-9._~-]*(?:\/[a-z0-9][a-z0-9._~-]*)?$/
 const UNKNOWN_HOST_HOW = 'pass --host-version <v> (or run `check --allow-host-probe`); without a host version C-2.1/C-2.2 stay NA and compatibility is not judged'
 const UNKNOWN_HOST_REASON = '未指定 host 版本（host version not specified），兼容性未判定（compatibility not judged）；C-2.1/C-2.2 are NA, not FAIL/PASS'
 
-export const DEFAULT_RUNTIME_VERSION = '0.2.2-alpha.2'
+// The release this checker is calibrated against. It is only a placeholder:
+// when no host version is known the anchor records it with
+// runtimeSource=default and suspect=true, and C-2 stays NA. Never judge
+// compatibility against it as if it were the installed host.
+export const DEFAULT_RUNTIME_VERSION = '0.2.2-rc.3'
 
 export function inferKind(manifest, entryExists) {
   const declared = manifest?.dsh?.kind
@@ -457,7 +461,7 @@ export function runManifestChecks(dir, options = {}) {
       }
     }
     if (!invalid) {
-      compatDetails.push(detail('C-2.1', 'PASS', 'dsh peer range(s) are valid SemVer; no engines.dsh declared'))
+      compatDetails.push(detail('C-2.1', 'PASS', 'dsh peer range(s) are valid SemVer; no engines.dsh declared (peer substitute, weaker than engines.dsh)'))
     }
     if (invalid) {
       compatDetails.push(detail('C-2.1', 'FAIL', 'one or more dsh peer ranges are invalid'))

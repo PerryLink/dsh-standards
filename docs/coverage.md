@@ -115,7 +115,7 @@ dsh-standards check <package-dir> --json | node -e 'let s="";process.stdin.on("d
 dsh-standards check <package-dir> --scope security --json | node -e 'let s="";process.stdin.on("data",d=>s+=d).on("end",()=>{const r=JSON.parse(s);console.log(r.coverage.checked+"/"+r.coverage.total);console.log(r.security)})'
 
 # 显式声明宿主版本，仍不执行插件
-dsh-standards check <package-dir> --host-version 0.2.2-rc.1
+dsh-standards check <package-dir> --host-version 0.2.2-rc.3
 
 # 显式允许宿主版本探测（只跑 dsh --version，不跑插件）
 dsh-standards check <package-dir> --allow-host-probe

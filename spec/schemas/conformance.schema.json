@@ -195,7 +195,7 @@
     },
     "anchor": {
       "type": "object",
-      "description": "The five-part anchor plus scanner/runtime provenance. `runtimeSource` says where `dsh` came from: cli (--runtime-version), host detection, or the checked-in fallback constant. `suspect` is true only when a cli-supplied version differs from the detected host.",
+      "description": "The five-part anchor plus scanner/runtime provenance. `runtimeSource` says where `dsh` came from: cli (--runtime-version), host detection, or the built-in default constant. `suspect` is true when the source is `default`, or when a cli-supplied version differs from the detected host.",
       "additionalProperties": false,
       "required": [
         "repo",
@@ -259,7 +259,6 @@
           "enum": [
             "cli",
             "host",
-            "fallback",
             "default"
           ],
           "description": "default is emitted by the author-facing `check --json` path when no host version is known."

@@ -44,9 +44,9 @@ La profundidad de adopción de DSH tiene tres niveles, cada uno con su pregunta 
 
 Aquí viven tres cosas: `40-checker/` (el verificador DS-C y todos los scripts de evidencia), `bin/` (dos puntos de entrada públicos, `dsh-standards` y `dsh-levels`) y `spec/` junto con el texto normativo de los documentos numerados `31`–`35`. Las herramientas solo leen el paquete objetivo y nunca modifican lo que inspeccionan; el veredicto solo acepta evidencia, así que `not-run`, `NA` y `static` jamás se escriben como PASS.
 
-La antigua reserva de npm `dsh-standards@0.0.3` solo ocupaba el nombre; esta línea 1.x la sustituye (hoy `1.1.2`) y los dos bins son `dsh-standards` y `dsh-levels`.
+La antigua reserva de npm `dsh-standards@0.0.3` solo ocupaba el nombre; esta línea 1.x la sustituye (hoy `1.6.11`) y los dos bins son `dsh-standards` y `dsh-levels`.
 
-Ancla fija, registrada en `spec/levels.json` y en cada informe: `repo=deepseek-ai/deepseek-harness`, `commit=ce7073d51254`, `dsh=0.2.2-alpha.2`, `cordis=4.0.6-alpha.1`. Si pasas otra versión de runtime, el informe deja constancia de con qué regla mediste.
+El ancla se registra en cada informe, no en `spec/levels.json` (el checker la resuelve en tiempo de ejecución: flag de CLI, luego sondeo del host y por último la constante incorporada): `repo=deepseek-ai/deepseek-harness`, `commit=38a6a5c965aa`, `dsh=0.2.2-rc.3`, `cordis=4.1.0`. Si pasas otra versión de runtime, el informe deja constancia de con qué regla mediste.
 
 ### Cifras duras actuales
 
@@ -197,9 +197,9 @@ Los ocho que de verdad se usan:
 | `--scope` | `ds-c` | alcance: `mvp` / `ds-c` / `entry` |
 | `--profile` | `package` | perfil de evaluación: `package` / `listing` / `both` |
 | `--runtime` | — | ruta al `lib/index.js` compilado de `@deepseek-ai/cordis`; activa L1–L3 |
-| `--runtime-version` | `0.2.2-alpha.2` | versión de dsh anotada en el anchor, usada por C-2 |
-| `--cordis-version` | `4.0.6-alpha.1` | versión de cordis anotada en el anchor |
-| `--commit` | `ce7073d51254` | commit del harness anotado en el anchor |
+| `--runtime-version` | `0.2.2-rc.3` | versión de dsh anotada en el anchor, usada por C-2 (valor incorporado; `check` prefiere la versión del host) |
+| `--cordis-version` | `4.1.0` | versión de cordis anotada en el anchor |
+| `--commit` | `38a6a5c965aa` | commit del harness anotado en el anchor |
 | `--install-spec` | — | spec de instalación recomendada para C-3 |
 | `--market-index` | — | JSON de índice de mercado formato 1; activa el modo listing |
 | `--plugin-name` | — | nombre del plugin dentro del índice de mercado |

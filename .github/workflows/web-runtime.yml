@@ -185,7 +185,7 @@ jobs:
 
       - name: Install DSH, pnpm, Playwright
         env:
-          DSH_VERSION: 0.2.2-alpha.2
+          DSH_VERSION: 0.2.2-rc.3
           PLAYWRIGHT_VERSION: 1.49.1
         run: |
           set -euo pipefail

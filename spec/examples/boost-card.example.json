@@ -1,6 +1,6 @@
 {
   "subject": "@acme/dsh-hello@0.1.0",
-  "host": "dsh 0.2.2-alpha.3 / cordis 4.0.6-alpha.2 / node 24.9 / linux-x64",
+  "host": "dsh 0.2.2-rc.3 / cordis 4.1.0 / node 24.9 / linux-x64",
   "method": "字段示例：单机单次；安装后启动与一轮对话，对照 nonce arm；非生产基准",
   "scope": "LEV-6 稳定前缀/装配 — hello 示例的工具与提示声明",
   "command": "node bench/hello.mjs",
@@ -11,5 +11,5 @@
   "claimLevel": "self-assessed",
   "issuer": "author",
   "selfAssessed": true,
-  "recordHash": "sha256:355f4015eadd3610f64cb1caab35f576f374a8fb718a761cfebad419de85f644"
+  "recordHash": "sha256:3aba640bd8471b8118342fa632f34921527c2f1c5de8e7de6194c8f37be015d3"
 }

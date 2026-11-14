@@ -2,9 +2,9 @@
 
 > **v1 历史命名**：v2 以 `89-三套标准命名决定.md` 为准（DSH-ENTRY / DSH-FLOW / DSH-BOOST）；本文件保留旧码作历史，不在新文档引用。
 
-> **版本**：v1.0.0-rc.2（T1 定稿候选；2026-11-07 增补 C-15～C-22 安全扩展）
-> **日期**：2026-11-07
-> **依据**：`01-项目纲领.md`、`03-可行性与条款草案.md`、`10-输入/源码取证索引.md`、`00-索引.md`、`20-研究底稿/B-Cordis契约可判定性矩阵.md`、`20-研究底稿/C-安全基线与权限面.md`、`20-研究底稿/E-一致性检查器可行性.md`，以及 `deepseek-harness` 源码实测（commit `ce7073d51254c26cd63b22a60835b8f948deb447`，2026-10-30）与 2026-11-07 安全审计（宿主 0.2.2-rc.1）。
+> **版本**：v1.0.0-rc.3（T1 定稿候选；2026-11-07 增补 C-15～C-22 安全扩展；2026-11-14 rc3 锚与 REPO 行号复核）
+> **日期**：2026-11-07（rc3 复核 2026-11-14）
+> **依据**：`01-项目纲领.md`、`03-可行性与条款草案.md`、`10-输入/源码取证索引.md`、`00-索引.md`、`20-研究底稿/B-Cordis契约可判定性矩阵.md`、`20-研究底稿/C-安全基线与权限面.md`、`20-研究底稿/E-一致性检查器可行性.md`，以及 `deepseek-harness` 源码实测（**rc3 commit `38a6a5c965aa99ab525161efb7cc5cf1fe62fced`，2026-11-13，DSH `0.2.2-rc.3`**；2026-10-30 的 `ce7073d5…` / `0.2.2-alpha.2` 一组见 §1.5 历史锚）与 2026-11-07 安全审计（宿主 `0.2.2-rc.1`；**security scope 证据仅到 rc.1，rc3 未复跑**）。
 > **覆盖条款**：C-1 ～ C-22（22 条编号）。C-1～C-14 是基线/入口面；C-15～C-22 是 2026-11-07 新增的 **security scope** 扩展，默认 DS-C package/listing 判定不变。C-10/C-18/C-19/C-20/C-22 为 advisory；C-3 仅 listing profile；C-21 是 security 强制项但 **WARN-only、不阻断**（listing 同）。
 > **已知未完成项**：
 > 1. 检查器已实现（T2）：16 tests；10 个 GitHub 样本 + 4 个 npm bundle 的 L0；L1–L3 13/14 真实包（`41`/`81`）。本文件仍只定义检查项 ID、判定方式与覆盖门。
@@ -83,26 +83,29 @@ DS-C 的符合性绑定五元锚，缺一不可：
 ```json
 {
   "repo": "deepseek-ai/deepseek-harness",
-  "commit": "ce7073d51254c26cd63b22a60835b8f948deb447",
+  "commit": "38a6a5c965aa99ab525161efb7cc5cf1fe62fced",
   "scanner": "dsh-plugin-verify@<semver>",
-  "dsh": "0.2.2-alpha.2",
-  "cordis": "4.0.6-alpha.1"
+  "dsh": "0.2.2-rc.3",
+  "cordis": "4.1.0"
 }
 ```
 
 本 commit 的三个版本轴必须分开记录，不能合并成一个"DSH 版本"：
 
-| 轴 | 本 commit 实测 | 证据 |
+| 轴 | rc3 实测 | 证据 |
 |---|---|---|
-| Harness 根包版本 | `0.2.2-alpha.2` | `REPO/package.json` 的 `version`；`getDshRuntimeVersion()` 实际读的是 `packages/boot/app-boot/package.json`（本 commit 同为 `0.2.2-alpha.2`，见 `REPO/packages/boot/app-boot/src/plugin-compatibility.ts:44-49`） |
-| vendored Cordis 包版本 | `4.0.6-alpha.1` | `REPO/vendor/cordis/package.json` 的 `version` |
-| Cordis 上游基线 | `4.0.0-rc.11` | `REPO/vendor/README.md:19` |
+| Harness 根包版本 | `0.2.2-rc.3` | `REPO/package.json` 的 `version`；`getDshRuntimeVersion()` 实际读的是 `packages/boot/app-boot/package.json`（rc3 同为 `0.2.2-rc.3`，见 `REPO/packages/boot/app-boot/src/plugin-compatibility.ts:44-49`） |
+| vendored Cordis 包版本 | `4.1.0` | `REPO/vendor/cordis/package.json` 的 `version` |
+| Cordis 上游基线 | `4.0.0-rc.11` | `REPO/vendor/README.md:15` |
+| Node 引擎线（附加轴，不是五元锚之一） | `>=24.9.0` | `REPO/package.json` 的 `engines.node` |
 
-**任何条款在 `cordis` 轴跨 minor 后必须重跑适配层**；徽章必须带 `reviewedAt` 与 `expiresAt`。宿主 minor bump 后旧徽章标记 `stale`，不得继续展示为有效。
+**历史锚（2026-10-30，`0.2.2-alpha.2`）**：commit `ce7073d51254c26cd63b22a60835b8f948deb447`、dsh `0.2.2-alpha.2`、cordis `4.0.6-alpha.1`。这一组只用于阅读 2026-10-30～11-01 产出的旧结果（`40-checker/results/**`），**不得**再用作当前符合性绑定。
+
+**任何条款在 `cordis` 轴跨 minor 后必须重跑适配层**；rc3 的 cordis 由 `4.0.6-alpha.1` 变为 `4.1.0` 仅是 vendored 包版本号变化（rc3 审计实测该目录源码与 alpha.2 逐字节相同），不构成 minor 跨版，但仍要求以新锚重跑后才可引用。徽章必须带 `reviewedAt` 与 `expiresAt`。宿主 minor bump 后旧徽章标记 `stale`，不得继续展示为有效。
 
 ### 1.6 本标准不做什么
 
-- **不做安全审计**：`ctx.*` 的 seam 不是权限边界。三处源码自陈：`fs-sandbox` 的 fence 是 "policy check in TRUSTED code … NOT a kernel boundary"（`REPO/packages/fs/fs-sandbox/src/index.ts:10-16`）；`plugin-manager/tools.ts:108` 明写 "installed Host code runs outside the workspace sandbox"；`cordis-host-runner/sandbox.ts:8` 明写 "is not containment"。
+- **不做安全审计**：`ctx.*` 的 seam 不是权限边界。三处源码自陈：`fs-sandbox` 的 fence 是 "policy check in TRUSTED code … NOT a kernel boundary"（`REPO/packages/fs/fs-sandbox/src/index.ts:10-16`）；`plugin-manager/tools.ts:109` 明写 "installed Host code runs outside the workspace sandbox"；`cordis-host-runner/sandbox.ts:7` 明写 "is not containment"。
 - **不做运行时沙箱/门控**：同进程插件可 `import node:fs` / 裸 `fetch` 绕过一切 seam（`20/C` §4(d-2)）。C-11/C-12 只做**装载期声明一致性 + 披露**。
 - **不证明"无恶意"**：C-15～C-22 是风险线索与阻断项，不是恶意软件判定。静态检查只能发现已知形态；运行时拼路径、远程取代码、反射调用都不可判。任何 PASS 都不得写成"安全""已审计""无风险"。
 - **不排名、不打分、不设 star/下载量门槛**。
@@ -152,8 +155,8 @@ DS-C 的符合性绑定五元锚，缺一不可：
 - 生态实例：`Tencent/WeKnora` 的目录条目无安装命令证据（`10-输入/生态调研报告.md:171`），说明"清单/入口"在目录侧经常没有可核验的锚点；C-1 只能判包内事实，判不了目录条目的完整性。
 
 **证据锚点**：
-- `REPO/packages/util/package-manifest/src/types.ts:8-29`：`DshPackageManifest` 要求 `name`、`version`；`dsh` 字段只定义 `manifestVersion`/`bundle`/`profile`/`client`（`:31-40`）。
-- `REPO/packages/util/plugin-market-index/src/index.ts:29`：npm 包名正则；`:268-289`：市场条目必须有 `name` 与 `versions`；`:299-316`：`parseMarketIndex` 入口。
+- `REPO/packages/util/package-manifest/src/types.ts:8-29`：`DshPackageManifest` 要求 `name`、`version`；`dsh` 字段（`:28`）只定义 `manifestVersion`/`bundle`/`profile`/`client`（`DshManifest` 声明 `:32-41`）。
+- `REPO/packages/util/plugin-market-index/src/index.ts:29`：npm 包名正则；`:271-292`：市场条目必须有 `name` 与 `versions`；`:303-320`：`parseMarketIndex` 入口。
 - `REPO/docs/defensive-patterns/package-surface.md:7-20`：Loader 只接受"函数插件四件套"或"默认导出服务类"，两者不得混用。
 - `REPO/packages/boot/app-boot/src/profile-plugins.ts:65-83`：`readProfilePlugins()` 只读已安装 manifest，不执行代码。
 
@@ -167,8 +170,8 @@ DS-C 的符合性绑定五元锚，缺一不可：
   "type": "module",
   "exports": { ".": "./lib/index.js" },
   "files": ["lib", "locale"],
-  "engines": { "dsh": ">=0.2.2-alpha.2 <0.3.0" },
-  "peerDependencies": { "@deepseek-ai/cordis": ">=4.0.6-alpha.1 <5" },
+  "engines": { "dsh": ">=0.2.2-0 <0.3.0" },
+  "peerDependencies": { "@deepseek-ai/cordis": ">=4.1.0 <5" },
   "dsh": { "manifestVersion": 1, "kind": "plugin" }
 }
 ```
@@ -196,31 +199,33 @@ DS-C 的符合性绑定五元锚，缺一不可：
 
 | 值 | 条件 |
 |---|---|
-| PASS | `engines.dsh` 存在、合法、被当前 runtime 满足 |
-| WARN | 仅有无 `engines.dsh` 但 dsh peer 范围且满足（替代声明，较弱）；或 C-2.4 冲突 |
+| PASS | `engines.dsh` 存在、合法、被当前 runtime 满足；**或**无 `engines.dsh` 但至少一个 dsh peer 范围合法且被满足（peer 替代声明，**较弱**；rc3 宿主的 `unmetRequirements` 把 peer 当等价门，检查器同判 PASS，见下） |
+| WARN | C-2.4：`engines.dsh` 与 dsh peers 的结论冲突（宿主以 `engines.dsh` 单独裁决） |
 | FAIL | 两者皆无；`engines.dsh` 非法/空/不满足；peer 不满足 |
 | NA | `dsh.kind` 非 plugin/bundle |
 
+**实现对齐（1.6.11）**：`40-checker/src/manifest.mjs` 的 C-2 分支与 `40-checker/test/c2-exports.test.mjs` 的 peer-only 用例都产出 C-2.1/C-2.2 PASS（`DSC-02 = PASS`），与本表一致；报告须在 reason/peer 说明里注明「peer 替代声明，较弱」。
+
 **已知反例**：
-- `dsh-purge-plus` 适配到 `0.2.1-rc.2`，宿主已到 `0.2.2-alpha.2`，装上去就坏（`01-项目纲领.md:34` P0-3；`10-输入/生态调研报告.md:91`）。
+- `dsh-purge-plus` 适配到 `0.2.1-rc.2`，宿主（2026-10 当时）已到 `0.2.2-alpha.2`，装上去就坏（`01-项目纲领.md:34` P0-3；`10-输入/生态调研报告.md:91`）。rc3 下宿主是 `0.2.2-rc.3`，同类漂移仍成立。
 - 宿主 `plugin-compatibility.ts:62` 在"既无 `engines.dsh` 又无 `peerDependencies`"时 `return {}`，即**无声明 = 兼容**；这是本条款要堵的洞。
 - 构造反例：`engines.dsh: ">=0.2.1-rc.2"` 在 prerelease 语义下可能满足，但插件实际用了 0.2.2 才有的 API；版本声明正确不等于行为正确，C-4 只补一半。
 
 **证据锚点**：
 - `REPO/packages/boot/app-boot/src/plugin-compatibility.ts:55-74`：`unmetRequirements`；`:62` 无 peer 即返回空对象；`:69-71` 只看 `@deepseek-ai/dsh*` peer；`:87-102` `evaluatePluginCompatibility(manifest, exemptions, runtimeVersion)`。
 - `REPO/packages/boot/app-boot/src/plugin-compatibility.ts:110-117`：`pluginCompatibilityWarning` 给出精确版本豁免通道（`--accept-risk` / `allow-version`）。
-- `REPO/vendor/README.md:19`：Cordis 上游基线 `4.0.0-rc.11`；`REPO/vendor/cordis/package.json` 的 `4.0.6-alpha.1` 是 Harness 发布版本，不是上游基线。
+- `REPO/vendor/README.md:15`：Cordis 上游基线 `4.0.0-rc.11`；`REPO/vendor/cordis/package.json` 的 `4.1.0` 是 Harness 发布版本，不是上游基线。
 
 **正面示例**：
 
 ```json
-{ "engines": { "dsh": ">=0.2.2-alpha.2 <0.3.0" } }
+{ "engines": { "dsh": ">=0.2.2-0 <0.3.0" } }
 ```
 
 或（无 `engines.dsh` 时）：
 
 ```json
-{ "peerDependencies": { "@deepseek-ai/dsh-tools": ">=0.2.2-alpha.2 <0.3.0" } }
+{ "peerDependencies": { "@deepseek-ai/dsh-tools": ">=0.2.2-0 <0.3.0" } }
 ```
 
 **建议分级**：DS-C 强制。**本条款比宿主更严**：宿主允许"无声明即兼容"，DS-C 不允许；这是有意为之，因为无声明的插件无法被五元锚约束。
@@ -259,9 +264,9 @@ DS-C 的符合性绑定五元锚，缺一不可：
 - CLI 把 `args` 原样转给 pnpm（`REPO/apps/cli/src/plugin.ts:92-98`），spec 面很宽；没有本条款，pnpm 接受什么就装什么。
 
 **证据锚点**：
-- `REPO/packages/boot/plugin-manager/src/install-spec.ts:69-92`：`parseInstallSpec` 的四种形态与拒绝规则；`:94-95` `NON_REGISTRY_VALUE`。
+- `REPO/packages/boot/plugin-manager/src/install-spec.ts:70-93`：`parseInstallSpec` 的四种形态与拒绝规则；`:131` `NON_REGISTRY_VALUE`。
 - `REPO/packages/boot/plugin-manager/src/build-approval.ts:78-83`：`blockedBuildNames` 从 pnpm 输出提取构建脚本；`:63-72` `recordPendingBuilds` 写入 `allowBuilds`。
-- `REPO/packages/util/plugin-market-index/src/index.ts:191-206`：`source` 只接受 npm/git，git 必须 40hex；`:208-217` `engines.dsh` 不得 `workspace:`；`:240-253` 精确 SemVer；`:299-316` 总校验。
+- `REPO/packages/util/plugin-market-index/src/index.ts:194-209`：`source` 只接受 npm/git，git 必须 40hex；`:211-220` `engines.dsh` 不得 `workspace:`；`:243-256` 精确 SemVer；`:303-320` 总校验。
 - `REPO/apps/cli/src/plugin.ts:92-98`：参数转发给 pnpm。
 
 **正面示例**（listing 模式）：
@@ -273,7 +278,7 @@ DS-C 的符合性绑定五元锚，缺一不可：
     "version": "1.2.3",
     "publishTimestamp": 1760000000,
     "source": { "type": "npm" },
-    "engines": { "dsh": ">=0.2.2-alpha.2 <0.3.0" }
+    "engines": { "dsh": ">=0.2.2-0 <0.3.0" }
   }]
 }
 ```
@@ -308,7 +313,7 @@ DS-C 的符合性绑定五元锚，缺一不可：
 
 **已知反例**：
 - 插件 `inject` 了一个没人提供的服务 → PENDING，打印 nothing，无错误（`REPO/docs/cordis-tutorial/06-composition-and-hmr.md:63`；`REPO/docs/cordis-tutorial/03-services.md:72`）。
-- `dsh-purge-plus` 适配到 `0.2.1-rc.2`，宿主已到 `0.2.2-alpha.2`：版本漂移使"装载前兼容性判定"不可靠（`10-输入/生态调研报告.md:91`；`01-项目纲领.md:34`）。
+- `dsh-purge-plus` 适配到 `0.2.1-rc.2`，宿主（2026-10 当时）已到 `0.2.2-alpha.2`：版本漂移使"装载前兼容性判定"不可靠（`10-输入/生态调研报告.md:91`；`01-项目纲领.md:34`）。rc3 下同类漂移仍成立。
 - 构造反例：入口 `import` 一个未声明的 peer，抛出 `ERR_MODULE_NOT_FOUND`；C-4.1 直接 FAIL。
 
 **证据锚点**：
@@ -486,6 +491,8 @@ assert.deepEqual(keys(ctx.reflect.store), before.reflectKeys)
 assert.equal(ctx.registry.size, before.registrySize)
 ```
 
+> **rc3 有效（future-only 注）**：`ctx.root` 与 `await ctx.root.fiber.await()` 在 DSH `0.2.2-rc.3`（vendored cordis `4.1.0`）里仍然存在——`Context.root` / `Service.resolveConfig` 均未移除，本示例**不是 rc3 错误**。下一版（rc3 之后的 `v0.2.2-rc.2` 指南 `cordis-root-and-intercept-metadata`）才会改为 `ctx[Context.root]` / `resolveIntercept`；届时再迁移，现在不要提前改。
+
 **建议分级**：DS-C 强制。这是"不破坏宿主"的唯一机械证据。
 
 **边界说明**：C-7 的 PASS **不证明**"没有未登记资源泄漏"。报告必须写 `leakScope: registered-only`，不得把 C-7 PASS 宣传成"无泄漏"。
@@ -662,7 +669,7 @@ export function apply(ctx: Context) {
 | C-11.2 | **字段存在时**，高信号触发必须申报（映射见下表） | 字段存在且漏报 → FAIL；字段缺失 → 不评估，C-11 整体 WARN（过渡期） |
 | C-11.3 | bundle patch 不得启用 `@deepseek-ai/dsh-plugin-manager/tools` | 启用 → FAIL |
 | C-11.4 | 源码/配置中 `danger-full-access` 的 AST 字符串字面量；注释、等值比较、文档字符串不算（见下） | 真实授权/命令上下文或未知上下文 → WARN |
-| C-11.5 | 声明了但静态未观测到对应触发 | WARN（**不等于未使用/过度声明**：`node:fs`、动态调用、扫描截断不在触发面内；无源码或无观测面记 NA） |
+| C-11.5 | 声明了但静态未观测到对应触发 | WARN（**不等于未使用/过度声明**：`node:fs` 的读/写调用已作为观测证据；动态调用仍不在触发面内）。**NA（not-run）**：无源码、该能力无静态观测面（`credentials:provider`）、或**扫描截断**（`coverage=partial`，reason 记 `source scan truncated …`）——截断是覆盖缺口，不是过度声明 |
 
 **C-11.2 触发映射**：
 
@@ -686,20 +693,20 @@ export function apply(ctx: Context) {
 | 值 | 条件 |
 |---|---|
 | PASS | C-11.1 字段存在/合法；C-11.2 无漏报；C-11.3 未启用；C-11.4 无命中 |
-| WARN | 字段缺失（过渡期，C-11.2 不评估）；C-11.4 命中；C-11.5 静态未观测（不等于过度声明）；触发信号不确定（动态调用） |
+| WARN | 字段缺失（过渡期，C-11.2 不评估）；C-11.4 命中；C-11.5 静态未观测（不等于过度声明）；触发信号不确定（动态调用）。C-11.5 的「无源码/无观测面/扫描截断」记 NA，不记 WARN |
 | ERROR | AST 解析失败导致 C-11.4 not-run（coverage=not-run，不冒充 PASS） |
 | FAIL | 非法 ID；字段存在但 C-11.2 漏报；C-11.3 启用 |
 | NA | `dsh.kind` 非 plugin/bundle |
 
 **已知反例**：
 - `@deepseek-ai/dsh-plugin-manager/tools` 在 base 层默认 `disabled: true`（`REPO/packages/bundle/base/cordis.patch.yml:16-18`）；某个 bundle 把它打开，等于把"模型自安装"能力放给所有会话。
-- `plugin_manager` 工具的风险提示自己写着 "installed Host code runs outside the workspace sandbox"（`REPO/packages/boot/plugin-manager/src/tools.ts:108`）；`installBundle` 在 `plugin-manager/src/index.ts:873`，工具入口在 `tools.ts:149`。
+- `plugin_manager` 工具的风险提示自己写着 "installed Host code runs outside the workspace sandbox"（`REPO/packages/boot/plugin-manager/src/tools.ts:109`）；`installBundle` 在 `plugin-manager/src/index.ts:969`，工具入口在 `tools.ts:150`。
 - `@Remote` 未标注的方法"cannot be called"，但标注了就进入 Client 面（`REPO/docs/api-gateway.md:9`）；一个插件可能无意中把内部方法暴露出去。
 
 **证据锚点**：
-- `REPO/packages/util/package-manifest/src/types.ts:31-40`：`dsh` 字段当前只有 `manifestVersion`/`bundle`/`profile`/`client`，**没有** `capabilities`/`labels`/`upstream`。本条款字段是标准扩展，宿主本 commit 不读取。
-- `REPO/packages/boot/plugin-manager/src/tools.ts:108,149`：安装工具的风险与 `installBundle` 调用。
-- `REPO/packages/boot/plugin-manager/src/index.ts:873`：`installBundle` 的公开方法。
+- `REPO/packages/util/package-manifest/src/types.ts:32-41`：`dsh` 字段当前只有 `manifestVersion`/`bundle`/`profile`/`client`，**没有** `capabilities`/`labels`/`upstream`。本条款字段是标准扩展，宿主本 commit 不读取。
+- `REPO/packages/boot/plugin-manager/src/tools.ts:109,150`：安装工具的风险与 `installBundle` 调用。
+- `REPO/packages/boot/plugin-manager/src/index.ts:969`：`installBundle` 的公开方法。
 - `REPO/packages/bundle/base/cordis.patch.yml:16-18`：`tool-plugin-manager` 默认 disabled。
 - `REPO/docs/api-gateway.md:9`：`@Remote`/`@RemoteScope` 的暴露语义。
 - `REPO/packages/boot/app-boot/src/profile-plugins.ts:65-83`：只读 manifest 的天然检查点。
@@ -716,7 +723,7 @@ export function apply(ctx: Context) {
 }
 ```
 
-**建议分级**：DS-C 强制（C-11.1～C-11.3）；C-11.4/C-11.5 为 WARN；C-11.5 在无源码或该能力无静态观测面时记 NA（not-run），不记 WARN。
+**建议分级**：DS-C 强制（C-11.1～C-11.3）；C-11.4/C-11.5 为 WARN；C-11.5 在无源码、该能力无静态观测面、**或扫描截断**时记 NA（not-run），不记 WARN（扫描截断时 `coverage=partial`，与 `60-权限与标注规范.md:101` 一致）。
 
 **边界说明**：`dsh.capabilities` **不是权限门控**。宿主不读它，也没有运行时沙箱；它只是"装载期声明 + UI 披露"。一个插件完全可以声明 `[]` 然后裸 `import node:fs`，C-11 抓不到。这是 D5 的已知边界，必须在徽章文案里写明"非安全审计"。
 
@@ -758,7 +765,7 @@ export function apply(ctx: Context) {
 **证据锚点**：
 - `REPO/packages/credentials/credentials-local/src/index.ts:2-6`：文件头声明 backing file 路径；`:61` `CREDENTIALS_FILENAME`；`:687,703` 权限模式。
 - `REPO/packages/credentials/credentials/src/index.ts:234`：`listRecords()` 抽象方法。
-- `REPO/packages/boot/plugin-manager/src/tools.ts:108`：安装的 Host code 在 workspace sandbox 之外。
+- `REPO/packages/boot/plugin-manager/src/tools.ts:109`：安装的 Host code 在 workspace sandbox 之外。
 - `REPO/packages/fs/fs-sandbox/src/index.ts:10-16`："NOT a kernel boundary"。
 
 **正面示例**：
@@ -808,10 +815,10 @@ export function apply(ctx: Context) {
 - `tabbit-browser/dsh-plugin` 已 404 仍被收录（`10-输入/生态调研报告.md:264`）——生命周期/状态字段缺失的典型（R-11/R-12 管）。
 
 **证据锚点**：
-- `REPO/packages/util/package-manifest/src/types.ts:31-40`：`dsh` 没有 `labels`/`upstream` 字段；本条款字段是标准扩展。
+- `REPO/packages/util/package-manifest/src/types.ts:32-41`：`dsh` 没有 `labels`/`upstream` 字段；本条款字段是标准扩展。
 - `10-输入/生态调研报告.md:36-59,171,264`：生态实例与数字（唯一来源）。
 - `20-研究底稿/C-安全基线与权限面.md:242-252`：三类分法与标注建议。
-- `REPO/packages/util/plugin-market-index/src/index.ts:292`：format-1 会"ignore and drop"未定义成员；新增字段不会破坏旧解析器，但旧解析器读不到。
+- `REPO/packages/util/plugin-market-index/src/index.ts:295-296`：format-1 会"ignore and drop"未定义成员；新增字段不会破坏旧解析器，但旧解析器读不到。
 
 **正面示例**：
 
@@ -1148,10 +1155,10 @@ E 路的 MVP 13 项（L0-1/2/3 + L1-1/3/4/5 + L2-1/2/4 + L3-1/3/5）只覆盖 C-
   "standard": { "id": "DS-C", "version": "1.0.0" },
   "anchor": {
     "repo": "deepseek-ai/deepseek-harness",
-    "commit": "ce7073d51254c26cd63b22a60835b8f948deb447",
+    "commit": "38a6a5c965aa99ab525161efb7cc5cf1fe62fced",
     "scanner": "dsh-plugin-verify@0.1.0",
-    "dsh": "0.2.2-alpha.2",
-    "cordis": "4.0.6-alpha.1"
+    "dsh": "0.2.2-rc.3",
+    "cordis": "4.1.0"
   },
   "subject": { "mode": "package", "profile": "package", "kind": "plugin", "name": "@acme/dsh-greet", "version": "1.2.3" },
   "checks": [
@@ -1230,7 +1237,7 @@ E 路的 MVP 13 项（L0-1/2/3 + L1-1/3/4/5 + L2-1/2/4 + L3-1/3/5）只覆盖 C-
 - monorepo 根目录不评级；根 `package.json` 只作为构建上下文。若根本身也是可安装包，按它自己的包评。
 - 兄弟包不继承等级：A 包 DS-C 不代表 B 包 DS-C；B 包 FAIL 不连坐 A 包。
 - 共享代码包（不单独安装）→ `NA`，理由 "internal package, not installable"。
-- 市场条目必须能定位到包：format-1 的 `repository.directory` 已支持（`REPO/packages/util/plugin-market-index/src/index.ts:184-188`）；T3 的 schema 补丁应要求 monorepo 条目带 `directory`。
+- 市场条目必须能定位到包：format-1 的 `repository.directory` 已支持（`REPO/packages/util/plugin-market-index/src/index.ts:187-192`）；T3 的 schema 补丁应要求 monorepo 条目带 `directory`。
 - 同一版本号在不同包路径下是不同主体；五元锚里加 `packagePath` 作为 `subject` 的子字段。
 
 ### 5.3 Q5：skill-only / 主题 / 客户端形态怎么处理
@@ -1264,7 +1271,7 @@ E 路的 MVP 13 项（L0-1/2/3 + L1-1/3/4/5 + L2-1/2/4 + L3-1/3/5）只覆盖 C-
 
 ### 6.4 C-11/C-12/C-13 的字段是标准扩展，不是宿主现状
 
-`03` §三(c) 直接写 `dsh.labels`，但 `packages/util/package-manifest/src/types.ts:31-40` 没有这个字段，宿主也不读。本文件保留字段，但把"缺失"定为 WARN（过渡期），并在徽章文案里写明"声明，不是门控"。建议 `03` 的 §三(a)/(c) 加"字段为本标准提案，宿主采纳前只读不门控"。
+`03` §三(c) 直接写 `dsh.labels`，但 `packages/util/package-manifest/src/types.ts:32-41` 没有这个字段，宿主也不读。本文件保留字段，但把"缺失"定为 WARN（过渡期），并在徽章文案里写明"声明，不是门控"。建议 `03` 的 §三(a)/(c) 加"字段为本标准提案，宿主采纳前只读不门控"。
 
 ### 6.5 MVP 13 项覆盖不了 13 条 DS-C
 
@@ -1272,11 +1279,11 @@ E 路的 MVP 13 项（L0-1/2/3 + L1-1/3/4/5 + L2-1/2/4 + L3-1/3/5）只覆盖 C-
 
 ### 6.6 版本轴措辞
 
-`03` §七.1 写"Cordis 4.0.0-rc.11"；`01` §十一只说"宿主仍在 rc"，没有区分三个轴。本 commit 实测：根包 `0.2.2-alpha.2`、vendored manifest `4.0.6-alpha.1`、`vendor/README.md:19` 记录的上游基线 `4.0.0-rc.11`。三个轴不是同一个东西。建议 `01`/`03` 改用 §1.5 的三轴写法，避免把上游基线当现值。
+`03` §七.1 写"Cordis 4.0.0-rc.11"；`01` §十一只说"宿主仍在 rc"，没有区分三个轴。rc3 实测：根包 `0.2.2-rc.3`、vendored manifest `4.1.0`、`vendor/README.md:15` 记录的上游基线 `4.0.0-rc.11`。三个轴不是同一个东西。建议 `01`/`03` 改用 §1.5 的三轴写法，避免把上游基线当现值。
 
 ### 6.7 两处研究底稿的行号/资产漂移
 
-- `03` §四说 `parseMarketIndex` 是"191 行规则"；本 commit 的 `packages/util/plugin-market-index/src/index.ts` 是 330 行，`parseMarketIndex` 在 `:299-316`。建议改为"330 行模块，核心校验 :299-316"。
+- `03` §四说 `parseMarketIndex` 是"191 行规则"；rc3 的 `packages/util/plugin-market-index/src/index.ts` 是 334 行，`parseMarketIndex` 在 `:303-320`。建议改为"334 行模块，核心校验 :303-320"。
 - `20/E` 提到的 `packageProblems()` 在 `scripts/verify-package-meta.ts:115`，是 monorepo 的 `verify-*` 脚本，不在 `packages/` 的可发布包里。T2 不能直接 import；需要剥一层（复制规则）或自写等价校验。建议 E 路把该资产标为"B 档：剥一层"。
 
 ### 6.8 C-1 的 license 只到 WARN
@@ -1287,18 +1294,18 @@ E 路的 MVP 13 项（L0-1/2/3 + L1-1/3/4/5 + L2-1/2/4 + L3-1/3/5）只覆盖 C-
 
 ## 七、附录 A · 证据核验表
 
-> 行号为本 commit 实测；标"输入"的生态数字来自 `10-输入/生态调研报告.md`，按 §8 不重新联网核验。
+> 行号为 rc3 commit（`38a6a5c9`）实测：2026-11-14 按 rc3 重取了已知漂移的锚（`plugin-manager/src/index.ts`、`tools.ts`、`cordis-host-runner/sandbox.ts`、`package-manifest/src/types.ts`、`vendor/README.md`、`install-spec.ts`），并顺带复取了 `plugin-market-index/src/index.ts` 的行号；其余条目在 rc3 上抽检仍命中、未逐条复跑。标"输入"的生态数字来自 `10-输入/生态调研报告.md`，按 §8 不重新联网核验。
 
 | # | 锚点 | 证明什么 | 状态 |
 |---|---|---|---|
 | 1 | `REPO/packages/util/package-manifest/src/types.ts:8-29` | manifest 必填 name/version；dsh 字段范围 | 已核验 |
-| 2 | `REPO/packages/util/package-manifest/src/types.ts:31-40` | **没有** capabilities/labels/upstream | 已核验（缺失） |
-| 3 | `REPO/packages/util/plugin-market-index/src/index.ts:29,268-289,299-316` | 包名/条目/索引校验 | 已核验 |
-| 4 | `REPO/packages/util/plugin-market-index/src/index.ts:191-217,240-253` | source/engines/精确 SemVer | 已核验 |
-| 5 | `REPO/packages/util/plugin-market-index/src/index.ts:292` | 未定义成员被 ignore/drop | 已核验 |
+| 2 | `REPO/packages/util/package-manifest/src/types.ts:32-41` | **没有** capabilities/labels/upstream | 已核验（缺失） |
+| 3 | `REPO/packages/util/plugin-market-index/src/index.ts:29,271-292,303-320` | 包名/条目/索引校验 | 已核验 |
+| 4 | `REPO/packages/util/plugin-market-index/src/index.ts:194-220,243-256` | source/engines/精确 SemVer | 已核验 |
+| 5 | `REPO/packages/util/plugin-market-index/src/index.ts:295` | 未定义成员被 ignore/drop | 已核验 |
 | 6 | `REPO/packages/boot/app-boot/src/plugin-compatibility.ts:55-74,87-102` | 版本兼容裁决 | 已核验 |
 | 7 | 同上 `:62` | 无 peer 声明即 `return {}` | 已核验 |
-| 8 | `REPO/packages/boot/plugin-manager/src/install-spec.ts:69-92` | `parseInstallSpec` | 已核验 |
+| 8 | `REPO/packages/boot/plugin-manager/src/install-spec.ts:70-93` | `parseInstallSpec` | 已核验 |
 | 9 | `REPO/packages/boot/plugin-manager/src/build-approval.ts:63-83` | `blockedBuildNames`/`pendingBuilds` | 已核验 |
 | 10 | `REPO/apps/cli/src/plugin.ts:92-98` | args 原样转 pnpm | 已核验 |
 | 11 | `REPO/vendor/cordis/src/fiber.ts:147-154` | FiberState 六态；const enum | 已核验 |
@@ -1329,12 +1336,12 @@ E 路的 MVP 13 项（L0-1/2/3 + L1-1/3/4/5 + L2-1/2/4 + L3-1/3/5）只覆盖 C-
 | 36 | `REPO/packages/preset/agent-preset-registry/src/mount.ts:213` | preset 服务泄漏硬失败 | 已核验 |
 | 37 | `REPO/packages/credentials/credentials-local/src/index.ts:61,687,703` | backing file/权限 | 已核验 |
 | 38 | `REPO/packages/credentials/credentials/src/index.ts:234` | `listRecords()` | 已核验 |
-| 39 | `REPO/packages/boot/plugin-manager/src/tools.ts:108,149` | sandbox 之外/installBundle | 已核验 |
-| 40 | `REPO/packages/boot/plugin-manager/src/index.ts:873` | `installBundle` | 已核验 |
+| 39 | `REPO/packages/boot/plugin-manager/src/tools.ts:109,150` | sandbox 之外/installBundle | 已核验 |
+| 40 | `REPO/packages/boot/plugin-manager/src/index.ts:969` | `installBundle` | 已核验 |
 | 41 | `REPO/packages/bundle/base/cordis.patch.yml:16-18` | plugin-manager/tools 默认 disabled | 已核验 |
 | 42 | `REPO/docs/api-gateway.md:9` | `@Remote` 暴露语义 | 已核验 |
 | 43 | `REPO/packages/fs/fs-sandbox/src/index.ts:10-16` | NOT a kernel boundary | 已核验 |
-| 44 | `REPO/packages/extensions/cordis-host-runner/src/sandbox.ts:8` | is not containment | 已核验 |
+| 44 | `REPO/packages/extensions/cordis-host-runner/src/sandbox.ts:7` | is not containment | 已核验 |
 | 45 | `REPO/docs/defensive-patterns/package-surface.md:7-20,227-233` | Loader 导出形态/顶层 await | 已核验 |
 | 46 | `REPO/docs/cordis-tutorial/02-lifecycle-and-effects.md:9-27,84-94` | effect/清理顺序 | 已核验 |
 | 47 | `REPO/docs/cordis-tutorial/03-services.md:52-72` | inject 与 PENDING | 已核验 |
@@ -1396,7 +1403,7 @@ E 路的 MVP 13 项（L0-1/2/3 + L1-1/3/4/5 + L2-1/2/4 + L3-1/3/5）只覆盖 C-
 
 ### 8.4 新增字段的兼容性
 
-宿主当前会忽略 `package.json` 里未定义的 `dsh.*` 字段（`types.ts:31-40` 只声明四个）；市场 format-1 解析器会"ignore and drop"未定义成员（`index.ts:292`）。因此新增字段**不会破坏旧解析器**，但旧解析器读不到——这正是 T3 要给 schema 打补丁的原因。
+宿主当前会忽略 `package.json` 里未定义的 `dsh.*` 字段（`types.ts:32-41` 只声明四个）；市场 format-1 解析器会"ignore and drop"未定义成员（`index.ts:295`）。因此新增字段**不会破坏旧解析器**，但旧解析器读不到——这正是 T3 要给 schema 打补丁的原因。
 
 ---
 

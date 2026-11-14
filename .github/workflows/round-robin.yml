@@ -22,7 +22,7 @@ jobs:
       - uses: actions/checkout@v4
       - uses: actions/setup-node@v4
         with:
-          node-version: 22
+          node-version: 24
       - name: Collect known-answer statuses
         run: node 40-checker/scripts/collect-fixtures.mjs --out runner.json
       - uses: actions/upload-artifact@v4
@@ -37,7 +37,7 @@ jobs:
       - uses: actions/checkout@v4
       - uses: actions/setup-node@v4
         with:
-          node-version: 22
+          node-version: 24
       - uses: actions/download-artifact@v4
         with:
           path: artifacts

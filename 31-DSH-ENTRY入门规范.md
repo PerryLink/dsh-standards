@@ -95,7 +95,8 @@
 
 > 这不是“18/18 可用”；是“18/18 能被识别，7/18 在 base-only + gate 下全行 ACTIVE”。完整 base+web-app 未跑，4 个 pending 不得写成 pass。
 >
-> **0.2.2-alpha.3 补充（2026-11-04）**：ENTRY 还要按 Node `>=24.9.0`、`engines.dsh` 优先（0.2.1-alpha.4+）、Typert `create()`、`dsh-client-runtime` 已移除来核对；详见 `35` §七。
+> **0.2.2-alpha.3 补充（2026-11-04，历史）**：ENTRY 还要按 Node `>=24.9.0`、`engines.dsh` 优先（0.2.1-alpha.4+）、Typert `create()`、`dsh-client-runtime` 已移除来核对。
+> **0.2.2-rc.3 补充（2026-11-14）**：现行锚为 `dsh=0.2.2-rc.3`（tag `38a6a5c9`）/ vendored `cordis=4.1.0`（upstream `4.0.0-rc.11`）/ Node `>=24.9.0`；`engines.dsh` 写 `>=0.2.2-0 <0.3.0`；`ctx.root` 在 rc3 仍有效（下一版才迁移）；详见 `35` §7.1。
 
 ---
 

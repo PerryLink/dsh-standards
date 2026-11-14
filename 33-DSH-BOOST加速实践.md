@@ -75,7 +75,7 @@
 
 ```yaml
 subject: "@acme/dsh-hello@0.1.0"
-host: "dsh 0.2.2-alpha.3 / cordis 4.0.6-alpha.2 / node 24.9 / linux-x64"
+host: "dsh 0.2.2-rc.3 / cordis 4.1.0 / node 24.9 / linux-x64"
 method: "字段示例：单机单次；安装后启动与一轮对话，对照 nonce arm；非生产基准"
 scope: "LEV-6 稳定前缀/装配 — hello 示例的工具与提示声明"
 command: "node bench/hello.mjs"

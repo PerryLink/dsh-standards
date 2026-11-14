@@ -11,7 +11,8 @@
  *   node scripts/m2-runner.mjs \
  *     --package /tmp/dsh-host/plugins/ci-diet \
  *     --runtime <dsh-checkout>/vendor/cordis/lib/index.js \
- *     --runtime-version 0.2.2-alpha.2 \
+ *     --runtime-version 0.2.2-rc.3 \
+ *     --cordis-version 4.1.0 \
  *     --out results/m2/ci-diet.json
  */
 import fs from 'node:fs'
@@ -19,10 +20,12 @@ import os from 'node:os'
 import path from 'node:path'
 import { spawn, spawnSync } from 'node:child_process'
 import { sanitizedEnv } from '../src/sandbox-env.mjs'
+import { DEFAULT_RUNTIME_VERSION } from '../src/manifest.mjs'
+import { DEFAULT_CORDIS } from '../src/cli.mjs'
 
 function parse(argv) {
   const options = {
-    package: null, runtime: null, runtimeVersion: '0.2.2-alpha.2', cordisVersion: '4.0.6-alpha.1',
+    package: null, runtime: null, runtimeVersion: DEFAULT_RUNTIME_VERSION, cordisVersion: DEFAULT_CORDIS,
     timeoutMs: 60_000, out: null, keep: false, json: false, modules: null, backend: 'process', image: null,
   }
   for (let i = 0; i < argv.length; i += 1) {

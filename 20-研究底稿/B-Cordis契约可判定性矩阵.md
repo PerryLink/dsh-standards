@@ -3,6 +3,8 @@
 > 第二路产出：枚举一个 dsh 插件身上**第三方工具能客观判定**的所有契约点，给出判定方式、源码证据与建议分级。
 > 只读研究，未修改仓库任何文件。
 >
+> **rc3 备注（2026-11-14，仅标注，未重做矩阵）**：本矩阵的宿主取证是 **2026-10-30 / commit `ce7073d5…` / DSH `0.2.2-alpha.2`** 的历史快照；rc3（`38a6a5c9` / `0.2.2-rc.3` / vendored cordis `4.1.0`）**未逐条复跑**，行号按旧 commit 保留、允许 ±N 漂移。文中 `packages/preset/agent-preset/skills/cordis-plugin-development/references/practices.md` 在 rc3 已迁移到 `packages/preset/agent-preset/skills/dsh-doc/references/practices.md`，内容与行号不变（rc3 重取）。
+>
 > 分级口径（沿用本项目设想）：
 > - **GB 强制** = 基本可运行与基础安全（不做就坏、或会污染宿主）
 > - **GB/T 推荐** = 运行顺畅（不做也能跑，但热重载 / 组合 / 升级会疼）
