@@ -345,7 +345,7 @@ test('publish/sidecar.json: 50 real dsh packages carry every additive field and 
   assert.match(sidecar.checker.version, /^\d+\.\d+\.\d+(?:[-+][0-9A-Za-z.-]+)?$/)
   assert.ok(sidecar.checker.sha === null || /^[0-9a-f]{40}$/.test(sidecar.checker.sha))
   assert.equal(sidecar.index.format, 1)
-  assert.equal(sidecar.generatedAt, '2026-11-07T00:00:00.000Z')
+  assert.match(sidecar.generatedAt, /^\d{4}-\d{2}-\d{2}T00:00:00\.000Z$/)
   assertNoForbidden(sidecar)
   assertNoKey(sidecar, 'details')
 
@@ -446,15 +446,15 @@ test('publish/sidecar.json: 50 real dsh packages carry every additive field and 
 
     assert.match(entry.evidence.reportSha256, /^[0-9a-f]{64}$/)
     assert.equal(entry.evidence.reportUrl, undefined)
-    assert.match(entry.checkedBy.checker, /^dsh-standards@1\.6\.7/)
+    assert.equal(entry.checkedBy.checker.split(' ')[0], `dsh-standards@${sidecar.checker.version}`)
     assert.match(entry.checkedBy.command, /--no-runtime/)
     assert.ok(Array.isArray(entry.notChecked))
     assert.ok(entry.notChecked.some(item => item.startsWith('ENTRY:runtime')))
     assert.ok(entry.notChecked.some(item => item.startsWith('FLOW:')))
     assert.ok(entry.notChecked.some(item => item.startsWith('BOOST:')))
 
-    assert.equal(entry.validity.checkedAt, '2026-11-07')
-    assert.equal(entry.validity.expiresAt, '2027-02-05')
+    assert.equal(entry.validity.checkedAt, sidecar.generatedAt.slice(0, 10))
+    assert.equal(entry.validity.expiresAt, new Date(Date.parse(`${sidecar.generatedAt.slice(0, 10)}T00:00:00.000Z`) + 90 * 86_400_000).toISOString().slice(0, 10))
     assert.equal(entry.validity.policy, '90d')
     assert.equal(entry.lifecycle, 'active')
     assert.equal(entry.selfAssessed, true)

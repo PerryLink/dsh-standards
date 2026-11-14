@@ -1,14 +1,14 @@
 {
   "schema": "dsh-market-sidecar/1",
-  "generatedAt": "2026-11-07T00:00:00.000Z",
+  "generatedAt": "2026-11-14T00:00:00.000Z",
   "index": {
     "url": "https://awesome-dsh-plugin.com/index.json",
     "format": 1
   },
   "checker": {
     "name": "dsh-standards",
-    "version": "1.6.7",
-    "sha": "da6eeac72318fceca264abee9b1b818b02643953"
+    "version": "1.6.10",
+    "sha": "18af83daa4b0403552a473737550c08ef8efda10"
   },
   "notClaimed": [
     "official",
@@ -30,7 +30,7 @@
       "repo": "https://github.com/howmp/dsh-pentest",
       "license": "MIT",
       "scope": {
-        "dsh": "0.2.1-rc.5",
+        "dsh": "0.2.2-rc.3",
         "cordis": "^4.0.1",
         "platform": "web"
       },
@@ -54,8 +54,8 @@
         },
         {
           "id": "DSC-02",
-          "result": "PASS",
-          "coverage": "full"
+          "result": "NA",
+          "coverage": "partial"
         },
         {
           "id": "DSC-03",
@@ -128,8 +128,8 @@
           },
           {
             "id": "DSC-02",
-            "result": "PASS",
-            "coverage": "full"
+            "result": "NA",
+            "coverage": "partial"
           },
           {
             "id": "DSC-03",
@@ -237,17 +237,17 @@
           "checked": 19,
           "blocking": 0,
           "warn": 2,
-          "na": 3,
+          "na": 4,
           "notRun": 3
         },
         "command": "dsh-standards check <package-dir> --scope security --json"
       },
       "evidence": {
-        "sha256": "69835e5d106ace52027fa85621b733293dd79af5f856609ae57684b61256d1d2",
-        "reportSha256": "69835e5d106ace52027fa85621b733293dd79af5f856609ae57684b61256d1d2"
+        "sha256": "f8165f4f42ad95e439c5cd95e7bbcbbd30242202862ac3ee3458263b7c18ec3e",
+        "reportSha256": "f8165f4f42ad95e439c5cd95e7bbcbbd30242202862ac3ee3458263b7c18ec3e"
       },
       "checkedBy": {
-        "checker": "dsh-standards@1.6.7 (dsh-plugin-verify@0.1.0)",
+        "checker": "dsh-standards@1.6.10 (dsh-plugin-verify@0.1.0)",
         "command": "dsh-levels <package-dir> --no-runtime --format json",
         "securityCommand": "dsh-standards check <package-dir> --scope security --json"
       },
@@ -258,8 +258,8 @@
         "BOOST:LEV-3..LEV-4 (not-measured)"
       ],
       "validity": {
-        "checkedAt": "2026-11-07",
-        "expiresAt": "2027-02-05",
+        "checkedAt": "2026-11-14",
+        "expiresAt": "2027-02-12",
         "policy": "90d"
       },
       "lifecycle": "active",
@@ -275,7 +275,7 @@
       "repo": "https://github.com/xmanrui/dsh-im",
       "license": "MIT",
       "scope": {
-        "dsh": "0.2.1-rc.5",
+        "dsh": "0.2.2-rc.3",
         "cordis": "4.0.6-alpha.1",
         "platform": "web"
       },
@@ -299,8 +299,8 @@
         },
         {
           "id": "DSC-02",
-          "result": "WARN",
-          "coverage": "full"
+          "result": "NA",
+          "coverage": "partial"
         },
         {
           "id": "DSC-03",
@@ -373,8 +373,8 @@
           },
           {
             "id": "DSC-02",
-            "result": "FAIL",
-            "coverage": "full"
+            "result": "NA",
+            "coverage": "partial"
           },
           {
             "id": "DSC-03",
@@ -480,19 +480,19 @@
         "summary": {
           "total": 22,
           "checked": 19,
-          "blocking": 1,
+          "blocking": 0,
           "warn": 4,
-          "na": 4,
+          "na": 5,
           "notRun": 3
         },
         "command": "dsh-standards check <package-dir> --scope security --json"
       },
       "evidence": {
-        "sha256": "8454149260d3d406fbc6be944e9806d3ec692906becbe62dab9816ce3fb25aef",
-        "reportSha256": "8454149260d3d406fbc6be944e9806d3ec692906becbe62dab9816ce3fb25aef"
+        "sha256": "8716d4fee5b77aa5f7389948fb4ed601bd863a74e6dccfaae7b2d795fca8361a",
+        "reportSha256": "8716d4fee5b77aa5f7389948fb4ed601bd863a74e6dccfaae7b2d795fca8361a"
       },
       "checkedBy": {
-        "checker": "dsh-standards@1.6.7 (dsh-plugin-verify@0.1.0)",
+        "checker": "dsh-standards@1.6.10 (dsh-plugin-verify@0.1.0)",
         "command": "dsh-levels <package-dir> --no-runtime --format json",
         "securityCommand": "dsh-standards check <package-dir> --scope security --json"
       },
@@ -503,8 +503,8 @@
         "BOOST:LEV-3..LEV-4 (not-measured)"
       ],
       "validity": {
-        "checkedAt": "2026-11-07",
-        "expiresAt": "2027-02-05",
+        "checkedAt": "2026-11-14",
+        "expiresAt": "2027-02-12",
         "policy": "90d"
       },
       "lifecycle": "active",
@@ -544,8 +544,8 @@
         },
         {
           "id": "DSC-02",
-          "result": "PASS",
-          "coverage": "full"
+          "result": "NA",
+          "coverage": "partial"
         },
         {
           "id": "DSC-03",
@@ -618,8 +618,8 @@
           },
           {
             "id": "DSC-02",
-            "result": "PASS",
-            "coverage": "full"
+            "result": "NA",
+            "coverage": "partial"
           },
           {
             "id": "DSC-03",
@@ -727,17 +727,17 @@
           "checked": 19,
           "blocking": 0,
           "warn": 4,
-          "na": 3,
+          "na": 4,
           "notRun": 3
         },
         "command": "dsh-standards check <package-dir> --scope security --json"
       },
       "evidence": {
-        "sha256": "f950caf609b4ce8448e7043eec8e767fb20052e66390eb4367f24ea67f682fc2",
-        "reportSha256": "f950caf609b4ce8448e7043eec8e767fb20052e66390eb4367f24ea67f682fc2"
+        "sha256": "7cdb838d966c02db6ab2926fa904db562f1a2cd05fadb9b8d9fcce0355c003f5",
+        "reportSha256": "7cdb838d966c02db6ab2926fa904db562f1a2cd05fadb9b8d9fcce0355c003f5"
       },
       "checkedBy": {
-        "checker": "dsh-standards@1.6.7 (dsh-plugin-verify@0.1.0)",
+        "checker": "dsh-standards@1.6.10 (dsh-plugin-verify@0.1.0)",
         "command": "dsh-levels <package-dir> --no-runtime --format json",
         "securityCommand": "dsh-standards check <package-dir> --scope security --json"
       },
@@ -748,8 +748,8 @@
         "BOOST:LEV-3..LEV-4 (not-measured)"
       ],
       "validity": {
-        "checkedAt": "2026-11-07",
-        "expiresAt": "2027-02-05",
+        "checkedAt": "2026-11-14",
+        "expiresAt": "2027-02-12",
         "policy": "90d"
       },
       "lifecycle": "active",
@@ -765,7 +765,7 @@
       "repo": "https://github.com/0x7A7A6572/dsh-forge-studio",
       "license": "MIT",
       "scope": {
-        "dsh": "0.2.1-rc.5",
+        "dsh": "0.2.2-rc.3",
         "cordis": "^4.0.4",
         "platform": "web"
       },
@@ -789,8 +789,8 @@
         },
         {
           "id": "DSC-02",
-          "result": "PASS",
-          "coverage": "full"
+          "result": "NA",
+          "coverage": "partial"
         },
         {
           "id": "DSC-03",
@@ -863,8 +863,8 @@
           },
           {
             "id": "DSC-02",
-            "result": "PASS",
-            "coverage": "full"
+            "result": "NA",
+            "coverage": "partial"
           },
           {
             "id": "DSC-03",
@@ -972,17 +972,17 @@
           "checked": 19,
           "blocking": 0,
           "warn": 4,
-          "na": 3,
+          "na": 4,
           "notRun": 3
         },
         "command": "dsh-standards check <package-dir> --scope security --json"
       },
       "evidence": {
-        "sha256": "ce6172e2ef959d2e5b74740d855141557e00c84026c74940e9a72174cbb30963",
-        "reportSha256": "ce6172e2ef959d2e5b74740d855141557e00c84026c74940e9a72174cbb30963"
+        "sha256": "74e1fe555fbce0263b687981dbc3b1e8ea1db0ddcb87f4d29abc0029b0660c4f",
+        "reportSha256": "74e1fe555fbce0263b687981dbc3b1e8ea1db0ddcb87f4d29abc0029b0660c4f"
       },
       "checkedBy": {
-        "checker": "dsh-standards@1.6.7 (dsh-plugin-verify@0.1.0)",
+        "checker": "dsh-standards@1.6.10 (dsh-plugin-verify@0.1.0)",
         "command": "dsh-levels <package-dir> --no-runtime --format json",
         "securityCommand": "dsh-standards check <package-dir> --scope security --json"
       },
@@ -993,8 +993,8 @@
         "BOOST:LEV-3..LEV-4 (not-measured)"
       ],
       "validity": {
-        "checkedAt": "2026-11-07",
-        "expiresAt": "2027-02-05",
+        "checkedAt": "2026-11-14",
+        "expiresAt": "2027-02-12",
         "policy": "90d"
       },
       "lifecycle": "active",
@@ -1034,8 +1034,8 @@
         },
         {
           "id": "DSC-02",
-          "result": "PASS",
-          "coverage": "full"
+          "result": "NA",
+          "coverage": "partial"
         },
         {
           "id": "DSC-03",
@@ -1108,8 +1108,8 @@
           },
           {
             "id": "DSC-02",
-            "result": "PASS",
-            "coverage": "full"
+            "result": "NA",
+            "coverage": "partial"
           },
           {
             "id": "DSC-03",
@@ -1217,17 +1217,17 @@
           "checked": 19,
           "blocking": 0,
           "warn": 6,
-          "na": 3,
+          "na": 4,
           "notRun": 3
         },
         "command": "dsh-standards check <package-dir> --scope security --json"
       },
       "evidence": {
-        "sha256": "3e82c2972dcf53741dfcbec51f875fd63864e8bcae5f060404bda03e6f57d529",
-        "reportSha256": "3e82c2972dcf53741dfcbec51f875fd63864e8bcae5f060404bda03e6f57d529"
+        "sha256": "7dbc831d621850b7a81532986deafbd40c895dc4baaf64c4deba5c4213b3cc10",
+        "reportSha256": "7dbc831d621850b7a81532986deafbd40c895dc4baaf64c4deba5c4213b3cc10"
       },
       "checkedBy": {
-        "checker": "dsh-standards@1.6.7 (dsh-plugin-verify@0.1.0)",
+        "checker": "dsh-standards@1.6.10 (dsh-plugin-verify@0.1.0)",
         "command": "dsh-levels <package-dir> --no-runtime --format json",
         "securityCommand": "dsh-standards check <package-dir> --scope security --json"
       },
@@ -1238,8 +1238,8 @@
         "BOOST:LEV-3..LEV-4 (not-measured)"
       ],
       "validity": {
-        "checkedAt": "2026-11-07",
-        "expiresAt": "2027-02-05",
+        "checkedAt": "2026-11-14",
+        "expiresAt": "2027-02-12",
         "policy": "90d"
       },
       "lifecycle": "active",
@@ -1279,8 +1279,8 @@
         },
         {
           "id": "DSC-02",
-          "result": "PASS",
-          "coverage": "full"
+          "result": "NA",
+          "coverage": "partial"
         },
         {
           "id": "DSC-03",
@@ -1353,8 +1353,8 @@
           },
           {
             "id": "DSC-02",
-            "result": "PASS",
-            "coverage": "full"
+            "result": "NA",
+            "coverage": "partial"
           },
           {
             "id": "DSC-03",
@@ -1462,17 +1462,17 @@
           "checked": 19,
           "blocking": 0,
           "warn": 5,
-          "na": 3,
+          "na": 4,
           "notRun": 3
         },
         "command": "dsh-standards check <package-dir> --scope security --json"
       },
       "evidence": {
-        "sha256": "8b84780ff74dcf204a2a5a68870720000381ad3763d5d3aed5cac1c8532e9ba9",
-        "reportSha256": "8b84780ff74dcf204a2a5a68870720000381ad3763d5d3aed5cac1c8532e9ba9"
+        "sha256": "32f1246450d8fec4a6de2acdc9d237297872881ab276001d96a4adc91bcdfa89",
+        "reportSha256": "32f1246450d8fec4a6de2acdc9d237297872881ab276001d96a4adc91bcdfa89"
       },
       "checkedBy": {
-        "checker": "dsh-standards@1.6.7 (dsh-plugin-verify@0.1.0)",
+        "checker": "dsh-standards@1.6.10 (dsh-plugin-verify@0.1.0)",
         "command": "dsh-levels <package-dir> --no-runtime --format json",
         "securityCommand": "dsh-standards check <package-dir> --scope security --json"
       },
@@ -1483,8 +1483,8 @@
         "BOOST:LEV-3..LEV-4 (not-measured)"
       ],
       "validity": {
-        "checkedAt": "2026-11-07",
-        "expiresAt": "2027-02-05",
+        "checkedAt": "2026-11-14",
+        "expiresAt": "2027-02-12",
         "policy": "90d"
       },
       "lifecycle": "active",
@@ -1524,8 +1524,8 @@
         },
         {
           "id": "DSC-02",
-          "result": "PASS",
-          "coverage": "full"
+          "result": "NA",
+          "coverage": "partial"
         },
         {
           "id": "DSC-03",
@@ -1598,8 +1598,8 @@
           },
           {
             "id": "DSC-02",
-            "result": "PASS",
-            "coverage": "full"
+            "result": "NA",
+            "coverage": "partial"
           },
           {
             "id": "DSC-03",
@@ -1707,17 +1707,17 @@
           "checked": 19,
           "blocking": 0,
           "warn": 5,
-          "na": 3,
+          "na": 4,
           "notRun": 3
         },
         "command": "dsh-standards check <package-dir> --scope security --json"
       },
       "evidence": {
-        "sha256": "4f5e74c3da311352c604a54aa2a2d8b668f4792ebf9ade1541ab2dc45c9215ad",
-        "reportSha256": "4f5e74c3da311352c604a54aa2a2d8b668f4792ebf9ade1541ab2dc45c9215ad"
+        "sha256": "92465f93bfdb86549327788a60800f23292e638a27540779b4ba28f879e57e74",
+        "reportSha256": "92465f93bfdb86549327788a60800f23292e638a27540779b4ba28f879e57e74"
       },
       "checkedBy": {
-        "checker": "dsh-standards@1.6.7 (dsh-plugin-verify@0.1.0)",
+        "checker": "dsh-standards@1.6.10 (dsh-plugin-verify@0.1.0)",
         "command": "dsh-levels <package-dir> --no-runtime --format json",
         "securityCommand": "dsh-standards check <package-dir> --scope security --json"
       },
@@ -1728,8 +1728,8 @@
         "BOOST:LEV-3..LEV-4 (not-measured)"
       ],
       "validity": {
-        "checkedAt": "2026-11-07",
-        "expiresAt": "2027-02-05",
+        "checkedAt": "2026-11-14",
+        "expiresAt": "2027-02-12",
         "policy": "90d"
       },
       "lifecycle": "active",
@@ -1745,7 +1745,7 @@
       "repo": "https://github.com/HsiangNianian/dsh-auto-continue",
       "license": "MIT",
       "scope": {
-        "dsh": "0.2.1-rc.5",
+        "dsh": "0.2.2-rc.3",
         "cordis": "^4.0.1",
         "platform": "web"
       },
@@ -1769,8 +1769,8 @@
         },
         {
           "id": "DSC-02",
-          "result": "PASS",
-          "coverage": "full"
+          "result": "NA",
+          "coverage": "partial"
         },
         {
           "id": "DSC-03",
@@ -1843,8 +1843,8 @@
           },
           {
             "id": "DSC-02",
-            "result": "PASS",
-            "coverage": "full"
+            "result": "NA",
+            "coverage": "partial"
           },
           {
             "id": "DSC-03",
@@ -1952,17 +1952,17 @@
           "checked": 19,
           "blocking": 0,
           "warn": 3,
-          "na": 3,
+          "na": 4,
           "notRun": 3
         },
         "command": "dsh-standards check <package-dir> --scope security --json"
       },
       "evidence": {
-        "sha256": "a1f3e5a022cd5a6e2e341a6fba81522760589edf955840a4a6b39efc17a68e13",
-        "reportSha256": "a1f3e5a022cd5a6e2e341a6fba81522760589edf955840a4a6b39efc17a68e13"
+        "sha256": "44c142d8db6d368bbbc9f68c25fc460fdb39551b1937b18f8d10408bfeff65fe",
+        "reportSha256": "44c142d8db6d368bbbc9f68c25fc460fdb39551b1937b18f8d10408bfeff65fe"
       },
       "checkedBy": {
-        "checker": "dsh-standards@1.6.7 (dsh-plugin-verify@0.1.0)",
+        "checker": "dsh-standards@1.6.10 (dsh-plugin-verify@0.1.0)",
         "command": "dsh-levels <package-dir> --no-runtime --format json",
         "securityCommand": "dsh-standards check <package-dir> --scope security --json"
       },
@@ -1973,8 +1973,8 @@
         "BOOST:LEV-3..LEV-4 (not-measured)"
       ],
       "validity": {
-        "checkedAt": "2026-11-07",
-        "expiresAt": "2027-02-05",
+        "checkedAt": "2026-11-14",
+        "expiresAt": "2027-02-12",
         "policy": "90d"
       },
       "lifecycle": "active",
@@ -1990,7 +1990,7 @@
       "repo": "https://github.com/xiajiajun516/dsh-config-manager",
       "license": "MIT",
       "scope": {
-        "dsh": "0.2.1-rc.5",
+        "dsh": "0.2.2-rc.3",
         "cordis": "4.0.6-alpha.1",
         "platform": "web"
       },
@@ -2014,8 +2014,8 @@
         },
         {
           "id": "DSC-02",
-          "result": "PASS",
-          "coverage": "full"
+          "result": "NA",
+          "coverage": "partial"
         },
         {
           "id": "DSC-03",
@@ -2088,8 +2088,8 @@
           },
           {
             "id": "DSC-02",
-            "result": "PASS",
-            "coverage": "full"
+            "result": "NA",
+            "coverage": "partial"
           },
           {
             "id": "DSC-03",
@@ -2197,17 +2197,17 @@
           "checked": 19,
           "blocking": 1,
           "warn": 6,
-          "na": 4,
+          "na": 5,
           "notRun": 3
         },
         "command": "dsh-standards check <package-dir> --scope security --json"
       },
       "evidence": {
-        "sha256": "ddf2f37c1afd54dcdfb52d5406e591ec37a4f4fdab4b434e16172bdebf93e667",
-        "reportSha256": "ddf2f37c1afd54dcdfb52d5406e591ec37a4f4fdab4b434e16172bdebf93e667"
+        "sha256": "b7f21eb8de5e874b10803219d6a9154465c35e02220b86ac80a91c0478f01433",
+        "reportSha256": "b7f21eb8de5e874b10803219d6a9154465c35e02220b86ac80a91c0478f01433"
       },
       "checkedBy": {
-        "checker": "dsh-standards@1.6.7 (dsh-plugin-verify@0.1.0)",
+        "checker": "dsh-standards@1.6.10 (dsh-plugin-verify@0.1.0)",
         "command": "dsh-levels <package-dir> --no-runtime --format json",
         "securityCommand": "dsh-standards check <package-dir> --scope security --json"
       },
@@ -2218,8 +2218,8 @@
         "BOOST:LEV-3..LEV-4 (not-measured)"
       ],
       "validity": {
-        "checkedAt": "2026-11-07",
-        "expiresAt": "2027-02-05",
+        "checkedAt": "2026-11-14",
+        "expiresAt": "2027-02-12",
         "policy": "90d"
       },
       "lifecycle": "active",
@@ -2259,8 +2259,8 @@
         },
         {
           "id": "DSC-02",
-          "result": "PASS",
-          "coverage": "full"
+          "result": "NA",
+          "coverage": "partial"
         },
         {
           "id": "DSC-03",
@@ -2333,8 +2333,8 @@
           },
           {
             "id": "DSC-02",
-            "result": "PASS",
-            "coverage": "full"
+            "result": "NA",
+            "coverage": "partial"
           },
           {
             "id": "DSC-03",
@@ -2442,17 +2442,17 @@
           "checked": 19,
           "blocking": 0,
           "warn": 4,
-          "na": 3,
+          "na": 4,
           "notRun": 3
         },
         "command": "dsh-standards check <package-dir> --scope security --json"
       },
       "evidence": {
-        "sha256": "45f08aad9a822d2db7e3357724f30c06c29e8c31afef24635fc46f9498b17340",
-        "reportSha256": "45f08aad9a822d2db7e3357724f30c06c29e8c31afef24635fc46f9498b17340"
+        "sha256": "732f54a5fe7b79245ebf1ac85e00df74909577f0836eee9eab3ca8d0214048b5",
+        "reportSha256": "732f54a5fe7b79245ebf1ac85e00df74909577f0836eee9eab3ca8d0214048b5"
       },
       "checkedBy": {
-        "checker": "dsh-standards@1.6.7 (dsh-plugin-verify@0.1.0)",
+        "checker": "dsh-standards@1.6.10 (dsh-plugin-verify@0.1.0)",
         "command": "dsh-levels <package-dir> --no-runtime --format json",
         "securityCommand": "dsh-standards check <package-dir> --scope security --json"
       },
@@ -2463,8 +2463,8 @@
         "BOOST:LEV-3..LEV-4 (not-measured)"
       ],
       "validity": {
-        "checkedAt": "2026-11-07",
-        "expiresAt": "2027-02-05",
+        "checkedAt": "2026-11-14",
+        "expiresAt": "2027-02-12",
         "policy": "90d"
       },
       "lifecycle": "active",
@@ -2504,8 +2504,8 @@
         },
         {
           "id": "DSC-02",
-          "result": "PASS",
-          "coverage": "full"
+          "result": "NA",
+          "coverage": "partial"
         },
         {
           "id": "DSC-03",
@@ -2578,8 +2578,8 @@
           },
           {
             "id": "DSC-02",
-            "result": "PASS",
-            "coverage": "full"
+            "result": "NA",
+            "coverage": "partial"
           },
           {
             "id": "DSC-03",
@@ -2687,17 +2687,17 @@
           "checked": 19,
           "blocking": 0,
           "warn": 5,
-          "na": 3,
+          "na": 4,
           "notRun": 3
         },
         "command": "dsh-standards check <package-dir> --scope security --json"
       },
       "evidence": {
-        "sha256": "4b5a277c8eb995463b9f8d4c3fcb811b76acf9946eab684156426b0c292942d4",
-        "reportSha256": "4b5a277c8eb995463b9f8d4c3fcb811b76acf9946eab684156426b0c292942d4"
+        "sha256": "846232dc67ab7a97186af59123e711b3565848c1621c6ef95575395d2e746d8e",
+        "reportSha256": "846232dc67ab7a97186af59123e711b3565848c1621c6ef95575395d2e746d8e"
       },
       "checkedBy": {
-        "checker": "dsh-standards@1.6.7 (dsh-plugin-verify@0.1.0)",
+        "checker": "dsh-standards@1.6.10 (dsh-plugin-verify@0.1.0)",
         "command": "dsh-levels <package-dir> --no-runtime --format json",
         "securityCommand": "dsh-standards check <package-dir> --scope security --json"
       },
@@ -2708,8 +2708,8 @@
         "BOOST:LEV-3..LEV-4 (not-measured)"
       ],
       "validity": {
-        "checkedAt": "2026-11-07",
-        "expiresAt": "2027-02-05",
+        "checkedAt": "2026-11-14",
+        "expiresAt": "2027-02-12",
         "policy": "90d"
       },
       "lifecycle": "active",
@@ -2725,7 +2725,7 @@
       "repo": "https://gitcode.com/LLLAAAAA/dsh-dream-skin",
       "license": "MIT",
       "scope": {
-        "dsh": "0.2.1-rc.5",
+        "dsh": "0.2.2-rc.3",
         "cordis": "^4.0.1 || >=4.0.5-0 <5",
         "platform": "web"
       },
@@ -2749,8 +2749,8 @@
         },
         {
           "id": "DSC-02",
-          "result": "PASS",
-          "coverage": "full"
+          "result": "NA",
+          "coverage": "partial"
         },
         {
           "id": "DSC-03",
@@ -2823,8 +2823,8 @@
           },
           {
             "id": "DSC-02",
-            "result": "PASS",
-            "coverage": "full"
+            "result": "NA",
+            "coverage": "partial"
           },
           {
             "id": "DSC-03",
@@ -2932,17 +2932,17 @@
           "checked": 19,
           "blocking": 0,
           "warn": 2,
-          "na": 3,
+          "na": 4,
           "notRun": 3
         },
         "command": "dsh-standards check <package-dir> --scope security --json"
       },
       "evidence": {
-        "sha256": "746a74ae9761a428d1a92c85b2565344e126776bad7f1a0fcf52d2d0dfa2cb96",
-        "reportSha256": "746a74ae9761a428d1a92c85b2565344e126776bad7f1a0fcf52d2d0dfa2cb96"
+        "sha256": "5898aecbe6225c2b9603e14e7c3e6bec26ba7d8bc7544a4ffa09efeb9e381c57",
+        "reportSha256": "5898aecbe6225c2b9603e14e7c3e6bec26ba7d8bc7544a4ffa09efeb9e381c57"
       },
       "checkedBy": {
-        "checker": "dsh-standards@1.6.7 (dsh-plugin-verify@0.1.0)",
+        "checker": "dsh-standards@1.6.10 (dsh-plugin-verify@0.1.0)",
         "command": "dsh-levels <package-dir> --no-runtime --format json",
         "securityCommand": "dsh-standards check <package-dir> --scope security --json"
       },
@@ -2953,8 +2953,8 @@
         "BOOST:LEV-3..LEV-4 (not-measured)"
       ],
       "validity": {
-        "checkedAt": "2026-11-07",
-        "expiresAt": "2027-02-05",
+        "checkedAt": "2026-11-14",
+        "expiresAt": "2027-02-12",
         "policy": "90d"
       },
       "lifecycle": "active",
@@ -2994,8 +2994,8 @@
         },
         {
           "id": "DSC-02",
-          "result": "PASS",
-          "coverage": "full"
+          "result": "NA",
+          "coverage": "partial"
         },
         {
           "id": "DSC-03",
@@ -3068,8 +3068,8 @@
           },
           {
             "id": "DSC-02",
-            "result": "PASS",
-            "coverage": "full"
+            "result": "NA",
+            "coverage": "partial"
           },
           {
             "id": "DSC-03",
@@ -3177,17 +3177,17 @@
           "checked": 19,
           "blocking": 0,
           "warn": 3,
-          "na": 3,
+          "na": 4,
           "notRun": 3
         },
         "command": "dsh-standards check <package-dir> --scope security --json"
       },
       "evidence": {
-        "sha256": "30eaa8c8003098c25902abd2b91d38ec0064ee90c03d6f27cf220050543403fc",
-        "reportSha256": "30eaa8c8003098c25902abd2b91d38ec0064ee90c03d6f27cf220050543403fc"
+        "sha256": "a21135e88742d1e4887cae3f2dfd171ffb1a2c33919780a06973b2b426eae491",
+        "reportSha256": "a21135e88742d1e4887cae3f2dfd171ffb1a2c33919780a06973b2b426eae491"
       },
       "checkedBy": {
-        "checker": "dsh-standards@1.6.7 (dsh-plugin-verify@0.1.0)",
+        "checker": "dsh-standards@1.6.10 (dsh-plugin-verify@0.1.0)",
         "command": "dsh-levels <package-dir> --no-runtime --format json",
         "securityCommand": "dsh-standards check <package-dir> --scope security --json"
       },
@@ -3198,8 +3198,8 @@
         "BOOST:LEV-3..LEV-4 (not-measured)"
       ],
       "validity": {
-        "checkedAt": "2026-11-07",
-        "expiresAt": "2027-02-05",
+        "checkedAt": "2026-11-14",
+        "expiresAt": "2027-02-12",
         "policy": "90d"
       },
       "lifecycle": "active",
@@ -3215,7 +3215,7 @@
       "repo": "https://github.com/awesome-dsh-plugin/dsh-find-plugin",
       "license": "MIT",
       "scope": {
-        "dsh": "0.2.1-rc.5",
+        "dsh": "0.2.2-rc.3",
         "cordis": "^4.0.1",
         "platform": null
       },
@@ -3239,8 +3239,8 @@
         },
         {
           "id": "DSC-02",
-          "result": "WARN",
-          "coverage": "full"
+          "result": "NA",
+          "coverage": "partial"
         },
         {
           "id": "DSC-03",
@@ -3313,8 +3313,8 @@
           },
           {
             "id": "DSC-02",
-            "result": "FAIL",
-            "coverage": "full"
+            "result": "NA",
+            "coverage": "partial"
           },
           {
             "id": "DSC-03",
@@ -3420,19 +3420,19 @@
         "summary": {
           "total": 22,
           "checked": 19,
-          "blocking": 1,
+          "blocking": 0,
           "warn": 2,
-          "na": 3,
+          "na": 4,
           "notRun": 3
         },
         "command": "dsh-standards check <package-dir> --scope security --json"
       },
       "evidence": {
-        "sha256": "3998adf78c85545f977c4617db8f6606450683bb08540a5bd215ce734a4e9afc",
-        "reportSha256": "3998adf78c85545f977c4617db8f6606450683bb08540a5bd215ce734a4e9afc"
+        "sha256": "4884d4408e6d39b5467c8ef6473bfb1d351af23cd81aecec9ad318be44639e2a",
+        "reportSha256": "4884d4408e6d39b5467c8ef6473bfb1d351af23cd81aecec9ad318be44639e2a"
       },
       "checkedBy": {
-        "checker": "dsh-standards@1.6.7 (dsh-plugin-verify@0.1.0)",
+        "checker": "dsh-standards@1.6.10 (dsh-plugin-verify@0.1.0)",
         "command": "dsh-levels <package-dir> --no-runtime --format json",
         "securityCommand": "dsh-standards check <package-dir> --scope security --json"
       },
@@ -3443,8 +3443,8 @@
         "BOOST:LEV-3..LEV-4 (not-measured)"
       ],
       "validity": {
-        "checkedAt": "2026-11-07",
-        "expiresAt": "2027-02-05",
+        "checkedAt": "2026-11-14",
+        "expiresAt": "2027-02-12",
         "policy": "90d"
       },
       "lifecycle": "active",
@@ -3484,8 +3484,8 @@
         },
         {
           "id": "DSC-02",
-          "result": "PASS",
-          "coverage": "full"
+          "result": "NA",
+          "coverage": "partial"
         },
         {
           "id": "DSC-03",
@@ -3558,8 +3558,8 @@
           },
           {
             "id": "DSC-02",
-            "result": "PASS",
-            "coverage": "full"
+            "result": "NA",
+            "coverage": "partial"
           },
           {
             "id": "DSC-03",
@@ -3667,17 +3667,17 @@
           "checked": 19,
           "blocking": 0,
           "warn": 4,
-          "na": 3,
+          "na": 4,
           "notRun": 3
         },
         "command": "dsh-standards check <package-dir> --scope security --json"
       },
       "evidence": {
-        "sha256": "51783c0cb211cdd73276a663ede702d6c3e7e8d38bf0b5a2f8bc6a3b5acd4563",
-        "reportSha256": "51783c0cb211cdd73276a663ede702d6c3e7e8d38bf0b5a2f8bc6a3b5acd4563"
+        "sha256": "df98bd03567f37048ad8202f63f91e6ea66022c2ab8004f0c9583b3c3c7aed68",
+        "reportSha256": "df98bd03567f37048ad8202f63f91e6ea66022c2ab8004f0c9583b3c3c7aed68"
       },
       "checkedBy": {
-        "checker": "dsh-standards@1.6.7 (dsh-plugin-verify@0.1.0)",
+        "checker": "dsh-standards@1.6.10 (dsh-plugin-verify@0.1.0)",
         "command": "dsh-levels <package-dir> --no-runtime --format json",
         "securityCommand": "dsh-standards check <package-dir> --scope security --json"
       },
@@ -3688,8 +3688,8 @@
         "BOOST:LEV-3..LEV-4 (not-measured)"
       ],
       "validity": {
-        "checkedAt": "2026-11-07",
-        "expiresAt": "2027-02-05",
+        "checkedAt": "2026-11-14",
+        "expiresAt": "2027-02-12",
         "policy": "90d"
       },
       "lifecycle": "active",
@@ -3705,7 +3705,7 @@
       "repo": "https://github.com/lhuans/dsh-genui",
       "license": "MIT",
       "scope": {
-        "dsh": "0.2.1-rc.5",
+        "dsh": "0.2.2-rc.3",
         "cordis": "^4.0.1",
         "platform": "web"
       },
@@ -3729,8 +3729,8 @@
         },
         {
           "id": "DSC-02",
-          "result": "PASS",
-          "coverage": "full"
+          "result": "NA",
+          "coverage": "partial"
         },
         {
           "id": "DSC-03",
@@ -3803,8 +3803,8 @@
           },
           {
             "id": "DSC-02",
-            "result": "PASS",
-            "coverage": "full"
+            "result": "NA",
+            "coverage": "partial"
           },
           {
             "id": "DSC-03",
@@ -3912,17 +3912,17 @@
           "checked": 19,
           "blocking": 0,
           "warn": 3,
-          "na": 3,
+          "na": 4,
           "notRun": 3
         },
         "command": "dsh-standards check <package-dir> --scope security --json"
       },
       "evidence": {
-        "sha256": "22179b9f442269fbd10fb8f35019148d52aba30527b4619a5d8f2865858832a6",
-        "reportSha256": "22179b9f442269fbd10fb8f35019148d52aba30527b4619a5d8f2865858832a6"
+        "sha256": "3c4eb2adebbc866836fd2bc4d9cdb23c6bfdc2033b050043a650fa1decb36551",
+        "reportSha256": "3c4eb2adebbc866836fd2bc4d9cdb23c6bfdc2033b050043a650fa1decb36551"
       },
       "checkedBy": {
-        "checker": "dsh-standards@1.6.7 (dsh-plugin-verify@0.1.0)",
+        "checker": "dsh-standards@1.6.10 (dsh-plugin-verify@0.1.0)",
         "command": "dsh-levels <package-dir> --no-runtime --format json",
         "securityCommand": "dsh-standards check <package-dir> --scope security --json"
       },
@@ -3933,8 +3933,8 @@
         "BOOST:LEV-3..LEV-4 (not-measured)"
       ],
       "validity": {
-        "checkedAt": "2026-11-07",
-        "expiresAt": "2027-02-05",
+        "checkedAt": "2026-11-14",
+        "expiresAt": "2027-02-12",
         "policy": "90d"
       },
       "lifecycle": "active",
@@ -3950,7 +3950,7 @@
       "repo": "https://github.com/shanliuling/dsh-image-gen",
       "license": "Apache-2.0",
       "scope": {
-        "dsh": "0.2.1-rc.5",
+        "dsh": "0.2.2-rc.3",
         "cordis": ">=4.0.0 <5",
         "platform": "web"
       },
@@ -3974,8 +3974,8 @@
         },
         {
           "id": "DSC-02",
-          "result": "WARN",
-          "coverage": "full"
+          "result": "NA",
+          "coverage": "partial"
         },
         {
           "id": "DSC-03",
@@ -4048,8 +4048,8 @@
           },
           {
             "id": "DSC-02",
-            "result": "FAIL",
-            "coverage": "full"
+            "result": "NA",
+            "coverage": "partial"
           },
           {
             "id": "DSC-03",
@@ -4155,19 +4155,19 @@
         "summary": {
           "total": 22,
           "checked": 18,
-          "blocking": 1,
+          "blocking": 0,
           "warn": 4,
-          "na": 5,
+          "na": 6,
           "notRun": 4
         },
         "command": "dsh-standards check <package-dir> --scope security --json"
       },
       "evidence": {
-        "sha256": "1e4dba92c6d6266324f796ddad9ac4af51513651d614ef10206ab00459fd07b0",
-        "reportSha256": "1e4dba92c6d6266324f796ddad9ac4af51513651d614ef10206ab00459fd07b0"
+        "sha256": "500306cd954c62f33d9441c8930ec2c580c41ca7aabbea69cd13a842abceefa0",
+        "reportSha256": "500306cd954c62f33d9441c8930ec2c580c41ca7aabbea69cd13a842abceefa0"
       },
       "checkedBy": {
-        "checker": "dsh-standards@1.6.7 (dsh-plugin-verify@0.1.0)",
+        "checker": "dsh-standards@1.6.10 (dsh-plugin-verify@0.1.0)",
         "command": "dsh-levels <package-dir> --no-runtime --format json",
         "securityCommand": "dsh-standards check <package-dir> --scope security --json"
       },
@@ -4178,8 +4178,8 @@
         "BOOST:LEV-3..LEV-4 (not-measured)"
       ],
       "validity": {
-        "checkedAt": "2026-11-07",
-        "expiresAt": "2027-02-05",
+        "checkedAt": "2026-11-14",
+        "expiresAt": "2027-02-12",
         "policy": "90d"
       },
       "lifecycle": "active",
@@ -4195,7 +4195,7 @@
       "repo": "https://github.com/iasiv5/dsh-m",
       "license": "MIT",
       "scope": {
-        "dsh": "0.2.1-rc.5",
+        "dsh": "0.2.2-rc.3",
         "cordis": "*",
         "platform": "web"
       },
@@ -4219,8 +4219,8 @@
         },
         {
           "id": "DSC-02",
-          "result": "PASS",
-          "coverage": "full"
+          "result": "NA",
+          "coverage": "partial"
         },
         {
           "id": "DSC-03",
@@ -4293,8 +4293,8 @@
           },
           {
             "id": "DSC-02",
-            "result": "PASS",
-            "coverage": "full"
+            "result": "NA",
+            "coverage": "partial"
           },
           {
             "id": "DSC-03",
@@ -4402,17 +4402,17 @@
           "checked": 19,
           "blocking": 0,
           "warn": 4,
-          "na": 3,
+          "na": 4,
           "notRun": 3
         },
         "command": "dsh-standards check <package-dir> --scope security --json"
       },
       "evidence": {
-        "sha256": "48eee141cba5e19baf0f28ac13f08d29d688b108282c92c96f05965c96932ea6",
-        "reportSha256": "48eee141cba5e19baf0f28ac13f08d29d688b108282c92c96f05965c96932ea6"
+        "sha256": "8e77820123e0c8be3d393049291edffbbb286d1c27e34a6587353919f96d1c98",
+        "reportSha256": "8e77820123e0c8be3d393049291edffbbb286d1c27e34a6587353919f96d1c98"
       },
       "checkedBy": {
-        "checker": "dsh-standards@1.6.7 (dsh-plugin-verify@0.1.0)",
+        "checker": "dsh-standards@1.6.10 (dsh-plugin-verify@0.1.0)",
         "command": "dsh-levels <package-dir> --no-runtime --format json",
         "securityCommand": "dsh-standards check <package-dir> --scope security --json"
       },
@@ -4423,8 +4423,8 @@
         "BOOST:LEV-3..LEV-4 (not-measured)"
       ],
       "validity": {
-        "checkedAt": "2026-11-07",
-        "expiresAt": "2027-02-05",
+        "checkedAt": "2026-11-14",
+        "expiresAt": "2027-02-12",
         "policy": "90d"
       },
       "lifecycle": "active",
@@ -4440,7 +4440,7 @@
       "repo": "https://github.com/yyh-001/dsh-meme",
       "license": "MIT",
       "scope": {
-        "dsh": "0.2.1-rc.5",
+        "dsh": "0.2.2-rc.3",
         "cordis": "4.0.6-alpha.1",
         "platform": "web"
       },
@@ -4464,8 +4464,8 @@
         },
         {
           "id": "DSC-02",
-          "result": "PASS",
-          "coverage": "full"
+          "result": "NA",
+          "coverage": "partial"
         },
         {
           "id": "DSC-03",
@@ -4538,8 +4538,8 @@
           },
           {
             "id": "DSC-02",
-            "result": "PASS",
-            "coverage": "full"
+            "result": "NA",
+            "coverage": "partial"
           },
           {
             "id": "DSC-03",
@@ -4647,17 +4647,17 @@
           "checked": 19,
           "blocking": 0,
           "warn": 3,
-          "na": 3,
+          "na": 4,
           "notRun": 3
         },
         "command": "dsh-standards check <package-dir> --scope security --json"
       },
       "evidence": {
-        "sha256": "5f0c772c6f5ff9b4ee914b9f797c0670c53af7ec7855374af94cc8960fbb31d9",
-        "reportSha256": "5f0c772c6f5ff9b4ee914b9f797c0670c53af7ec7855374af94cc8960fbb31d9"
+        "sha256": "21bd6997dd759b4e00052df0fc937ed5c4aa30af8adf291203ce6a95521845d2",
+        "reportSha256": "21bd6997dd759b4e00052df0fc937ed5c4aa30af8adf291203ce6a95521845d2"
       },
       "checkedBy": {
-        "checker": "dsh-standards@1.6.7 (dsh-plugin-verify@0.1.0)",
+        "checker": "dsh-standards@1.6.10 (dsh-plugin-verify@0.1.0)",
         "command": "dsh-levels <package-dir> --no-runtime --format json",
         "securityCommand": "dsh-standards check <package-dir> --scope security --json"
       },
@@ -4668,8 +4668,8 @@
         "BOOST:LEV-3..LEV-4 (not-measured)"
       ],
       "validity": {
-        "checkedAt": "2026-11-07",
-        "expiresAt": "2027-02-05",
+        "checkedAt": "2026-11-14",
+        "expiresAt": "2027-02-12",
         "policy": "90d"
       },
       "lifecycle": "active",
@@ -4709,8 +4709,8 @@
         },
         {
           "id": "DSC-02",
-          "result": "PASS",
-          "coverage": "full"
+          "result": "NA",
+          "coverage": "partial"
         },
         {
           "id": "DSC-03",
@@ -4783,8 +4783,8 @@
           },
           {
             "id": "DSC-02",
-            "result": "PASS",
-            "coverage": "full"
+            "result": "NA",
+            "coverage": "partial"
           },
           {
             "id": "DSC-03",
@@ -4892,17 +4892,17 @@
           "checked": 19,
           "blocking": 0,
           "warn": 4,
-          "na": 3,
+          "na": 4,
           "notRun": 3
         },
         "command": "dsh-standards check <package-dir> --scope security --json"
       },
       "evidence": {
-        "sha256": "c349fcf6d1d81d0808e7717c4789469ffdbc7a04ecf80db530a36b2d505e2249",
-        "reportSha256": "c349fcf6d1d81d0808e7717c4789469ffdbc7a04ecf80db530a36b2d505e2249"
+        "sha256": "de0c5dbd4371f6eb4da0a0d0fd997b8b0c46a5a4b539956d2e4d893c01b8665b",
+        "reportSha256": "de0c5dbd4371f6eb4da0a0d0fd997b8b0c46a5a4b539956d2e4d893c01b8665b"
       },
       "checkedBy": {
-        "checker": "dsh-standards@1.6.7 (dsh-plugin-verify@0.1.0)",
+        "checker": "dsh-standards@1.6.10 (dsh-plugin-verify@0.1.0)",
         "command": "dsh-levels <package-dir> --no-runtime --format json",
         "securityCommand": "dsh-standards check <package-dir> --scope security --json"
       },
@@ -4913,8 +4913,8 @@
         "BOOST:LEV-3..LEV-4 (not-measured)"
       ],
       "validity": {
-        "checkedAt": "2026-11-07",
-        "expiresAt": "2027-02-05",
+        "checkedAt": "2026-11-14",
+        "expiresAt": "2027-02-12",
         "policy": "90d"
       },
       "lifecycle": "active",
@@ -4954,8 +4954,8 @@
         },
         {
           "id": "DSC-02",
-          "result": "PASS",
-          "coverage": "full"
+          "result": "NA",
+          "coverage": "partial"
         },
         {
           "id": "DSC-03",
@@ -5028,8 +5028,8 @@
           },
           {
             "id": "DSC-02",
-            "result": "PASS",
-            "coverage": "full"
+            "result": "NA",
+            "coverage": "partial"
           },
           {
             "id": "DSC-03",
@@ -5137,17 +5137,17 @@
           "checked": 19,
           "blocking": 1,
           "warn": 3,
-          "na": 3,
+          "na": 4,
           "notRun": 3
         },
         "command": "dsh-standards check <package-dir> --scope security --json"
       },
       "evidence": {
-        "sha256": "444fe22619f6da96d4c4655fd7b278023f57da5913ba36039623a004680064b6",
-        "reportSha256": "444fe22619f6da96d4c4655fd7b278023f57da5913ba36039623a004680064b6"
+        "sha256": "12b35ce63a5646c40f67d309211ef06f70daeebec881178c6b5270623cde37a7",
+        "reportSha256": "12b35ce63a5646c40f67d309211ef06f70daeebec881178c6b5270623cde37a7"
       },
       "checkedBy": {
-        "checker": "dsh-standards@1.6.7 (dsh-plugin-verify@0.1.0)",
+        "checker": "dsh-standards@1.6.10 (dsh-plugin-verify@0.1.0)",
         "command": "dsh-levels <package-dir> --no-runtime --format json",
         "securityCommand": "dsh-standards check <package-dir> --scope security --json"
       },
@@ -5158,8 +5158,8 @@
         "BOOST:LEV-3..LEV-4 (not-measured)"
       ],
       "validity": {
-        "checkedAt": "2026-11-07",
-        "expiresAt": "2027-02-05",
+        "checkedAt": "2026-11-14",
+        "expiresAt": "2027-02-12",
         "policy": "90d"
       },
       "lifecycle": "active",
@@ -5175,7 +5175,7 @@
       "repo": "https://github.com/saya-ch/dsh-mobile",
       "license": "Apache-2.0",
       "scope": {
-        "dsh": "0.2.1-rc.5",
+        "dsh": "0.2.2-rc.3",
         "cordis": "^4.0.1",
         "platform": "web"
       },
@@ -5199,8 +5199,8 @@
         },
         {
           "id": "DSC-02",
-          "result": "PASS",
-          "coverage": "full"
+          "result": "NA",
+          "coverage": "partial"
         },
         {
           "id": "DSC-03",
@@ -5273,8 +5273,8 @@
           },
           {
             "id": "DSC-02",
-            "result": "PASS",
-            "coverage": "full"
+            "result": "NA",
+            "coverage": "partial"
           },
           {
             "id": "DSC-03",
@@ -5344,6 +5344,251 @@
           {
             "id": "DSC-16",
             "result": "WARN",
+            "coverage": "partial"
+          },
+          {
+            "id": "DSC-17",
+            "result": "PASS",
+            "coverage": "partial"
+          },
+          {
+            "id": "DSC-18",
+            "result": "PASS",
+            "coverage": "full"
+          },
+          {
+            "id": "DSC-19",
+            "result": "WARN",
+            "coverage": "partial"
+          },
+          {
+            "id": "DSC-20",
+            "result": "PASS",
+            "coverage": "full"
+          },
+          {
+            "id": "DSC-21",
+            "result": "PASS",
+            "coverage": "partial"
+          },
+          {
+            "id": "DSC-22",
+            "result": "NA",
+            "coverage": "not-run"
+          }
+        ],
+        "summary": {
+          "total": 22,
+          "checked": 19,
+          "blocking": 0,
+          "warn": 4,
+          "na": 5,
+          "notRun": 3
+        },
+        "command": "dsh-standards check <package-dir> --scope security --json"
+      },
+      "evidence": {
+        "sha256": "72637580ec2f0090a6b4b7c1e51698b68c6d68a42b9af82510993414fc64775d",
+        "reportSha256": "72637580ec2f0090a6b4b7c1e51698b68c6d68a42b9af82510993414fc64775d"
+      },
+      "checkedBy": {
+        "checker": "dsh-standards@1.6.10 (dsh-plugin-verify@0.1.0)",
+        "command": "dsh-levels <package-dir> --no-runtime --format json",
+        "securityCommand": "dsh-standards check <package-dir> --scope security --json"
+      },
+      "notChecked": [
+        "ENTRY:runtime (claim=static; not exercised)",
+        "ENTRY:DSC-03, DSC-14 (coverage=not-run)",
+        "FLOW:J1-J8 (not-run; 0/8 journeys pass)",
+        "BOOST:LEV-3..LEV-4 (not-measured)"
+      ],
+      "validity": {
+        "checkedAt": "2026-11-14",
+        "expiresAt": "2027-02-12",
+        "policy": "90d"
+      },
+      "lifecycle": "active",
+      "selfAssessed": true
+    },
+    "dsh-ops@0.5.0": {
+      "subject": {
+        "name": "dsh-ops",
+        "version": "0.5.0",
+        "tarballSha256": "d4cd6358f29fc19daac2a8b582cfb021deb2a9ce4eaefae06ab7f64172fbadc5"
+      },
+      "title": "Native file and PTC tools for DSH on Windows x64, Linux x64 and macOS arm64/x64; Windows-only optional Bash payload and host PowerShell integration",
+      "repo": "https://github.com/T-Auto/dsh-ops",
+      "license": "MIT",
+      "scope": {
+        "dsh": ">=0.2.2-rc.1 <0.2.3-0",
+        "cordis": "~4.1.0",
+        "platform": "web"
+      },
+      "levels": {
+        "entry": {
+          "state": "recognized",
+          "claim": "static"
+        },
+        "flow": {
+          "state": "not-run"
+        },
+        "boost": {
+          "state": "not-measured"
+        }
+      },
+      "checks": [
+        {
+          "id": "DSC-01",
+          "result": "PASS",
+          "coverage": "full"
+        },
+        {
+          "id": "DSC-02",
+          "result": "NA",
+          "coverage": "partial"
+        },
+        {
+          "id": "DSC-03",
+          "result": "NA",
+          "coverage": "not-run"
+        },
+        {
+          "id": "DSC-04",
+          "result": "PASS",
+          "coverage": "partial"
+        },
+        {
+          "id": "DSC-05",
+          "result": "PASS",
+          "coverage": "partial"
+        },
+        {
+          "id": "DSC-06",
+          "result": "PASS",
+          "coverage": "partial"
+        },
+        {
+          "id": "DSC-07",
+          "result": "PASS",
+          "coverage": "partial"
+        },
+        {
+          "id": "DSC-08",
+          "result": "PASS",
+          "coverage": "partial"
+        },
+        {
+          "id": "DSC-09",
+          "result": "PASS",
+          "coverage": "partial"
+        },
+        {
+          "id": "DSC-14",
+          "result": "NA",
+          "coverage": "not-run"
+        },
+        {
+          "id": "DSC-10",
+          "result": "PASS",
+          "coverage": "partial"
+        },
+        {
+          "id": "DSC-11",
+          "result": "WARN",
+          "coverage": "full"
+        },
+        {
+          "id": "DSC-12",
+          "result": "WARN",
+          "coverage": "full"
+        },
+        {
+          "id": "DSC-13",
+          "result": "WARN",
+          "coverage": "full"
+        }
+      ],
+      "security": {
+        "state": "partial",
+        "checks": [
+          {
+            "id": "DSC-01",
+            "result": "PASS",
+            "coverage": "full"
+          },
+          {
+            "id": "DSC-02",
+            "result": "NA",
+            "coverage": "partial"
+          },
+          {
+            "id": "DSC-03",
+            "result": "NA",
+            "coverage": "not-run"
+          },
+          {
+            "id": "DSC-04",
+            "result": "PASS",
+            "coverage": "partial"
+          },
+          {
+            "id": "DSC-05",
+            "result": "PASS",
+            "coverage": "partial"
+          },
+          {
+            "id": "DSC-06",
+            "result": "PASS",
+            "coverage": "partial"
+          },
+          {
+            "id": "DSC-07",
+            "result": "PASS",
+            "coverage": "partial"
+          },
+          {
+            "id": "DSC-08",
+            "result": "PASS",
+            "coverage": "partial"
+          },
+          {
+            "id": "DSC-09",
+            "result": "PASS",
+            "coverage": "partial"
+          },
+          {
+            "id": "DSC-10",
+            "result": "PASS",
+            "coverage": "partial"
+          },
+          {
+            "id": "DSC-11",
+            "result": "WARN",
+            "coverage": "full"
+          },
+          {
+            "id": "DSC-12",
+            "result": "WARN",
+            "coverage": "full"
+          },
+          {
+            "id": "DSC-13",
+            "result": "WARN",
+            "coverage": "full"
+          },
+          {
+            "id": "DSC-14",
+            "result": "NA",
+            "coverage": "not-run"
+          },
+          {
+            "id": "DSC-15",
+            "result": "PASS",
+            "coverage": "full"
+          },
+          {
+            "id": "DSC-16",
+            "result": "PASS",
             "coverage": "partial"
           },
           {
@@ -5388,11 +5633,11 @@
         "command": "dsh-standards check <package-dir> --scope security --json"
       },
       "evidence": {
-        "sha256": "54e46322e98aee976d2ee89b24ec3d3fd912f515b7e6735308061a9eb8169e88",
-        "reportSha256": "54e46322e98aee976d2ee89b24ec3d3fd912f515b7e6735308061a9eb8169e88"
+        "sha256": "cbd9df049545ae315d7143ddf5b560adaf22e797d9ca5daf217320aa45397e28",
+        "reportSha256": "cbd9df049545ae315d7143ddf5b560adaf22e797d9ca5daf217320aa45397e28"
       },
       "checkedBy": {
-        "checker": "dsh-standards@1.6.7 (dsh-plugin-verify@0.1.0)",
+        "checker": "dsh-standards@1.6.10 (dsh-plugin-verify@0.1.0)",
         "command": "dsh-levels <package-dir> --no-runtime --format json",
         "securityCommand": "dsh-standards check <package-dir> --scope security --json"
       },
@@ -5403,253 +5648,8 @@
         "BOOST:LEV-3..LEV-4 (not-measured)"
       ],
       "validity": {
-        "checkedAt": "2026-11-07",
-        "expiresAt": "2027-02-05",
-        "policy": "90d"
-      },
-      "lifecycle": "active",
-      "selfAssessed": true
-    },
-    "dsh-ops@0.5.0": {
-      "subject": {
-        "name": "dsh-ops",
-        "version": "0.5.0",
-        "tarballSha256": "d4cd6358f29fc19daac2a8b582cfb021deb2a9ce4eaefae06ab7f64172fbadc5"
-      },
-      "title": "Native file and PTC tools for DSH on Windows x64, Linux x64 and macOS arm64/x64; Windows-only optional Bash payload and host PowerShell integration",
-      "repo": "https://github.com/T-Auto/dsh-ops",
-      "license": "MIT",
-      "scope": {
-        "dsh": ">=0.2.2-rc.1 <0.2.3-0",
-        "cordis": "~4.1.0",
-        "platform": "web"
-      },
-      "levels": {
-        "entry": {
-          "state": "recognized",
-          "claim": "static"
-        },
-        "flow": {
-          "state": "not-run"
-        },
-        "boost": {
-          "state": "not-measured"
-        }
-      },
-      "checks": [
-        {
-          "id": "DSC-01",
-          "result": "PASS",
-          "coverage": "full"
-        },
-        {
-          "id": "DSC-02",
-          "result": "WARN",
-          "coverage": "full"
-        },
-        {
-          "id": "DSC-03",
-          "result": "NA",
-          "coverage": "not-run"
-        },
-        {
-          "id": "DSC-04",
-          "result": "PASS",
-          "coverage": "partial"
-        },
-        {
-          "id": "DSC-05",
-          "result": "PASS",
-          "coverage": "partial"
-        },
-        {
-          "id": "DSC-06",
-          "result": "PASS",
-          "coverage": "partial"
-        },
-        {
-          "id": "DSC-07",
-          "result": "PASS",
-          "coverage": "partial"
-        },
-        {
-          "id": "DSC-08",
-          "result": "PASS",
-          "coverage": "partial"
-        },
-        {
-          "id": "DSC-09",
-          "result": "PASS",
-          "coverage": "partial"
-        },
-        {
-          "id": "DSC-14",
-          "result": "NA",
-          "coverage": "not-run"
-        },
-        {
-          "id": "DSC-10",
-          "result": "PASS",
-          "coverage": "partial"
-        },
-        {
-          "id": "DSC-11",
-          "result": "WARN",
-          "coverage": "full"
-        },
-        {
-          "id": "DSC-12",
-          "result": "WARN",
-          "coverage": "full"
-        },
-        {
-          "id": "DSC-13",
-          "result": "WARN",
-          "coverage": "full"
-        }
-      ],
-      "security": {
-        "state": "partial",
-        "checks": [
-          {
-            "id": "DSC-01",
-            "result": "PASS",
-            "coverage": "full"
-          },
-          {
-            "id": "DSC-02",
-            "result": "FAIL",
-            "coverage": "full"
-          },
-          {
-            "id": "DSC-03",
-            "result": "NA",
-            "coverage": "not-run"
-          },
-          {
-            "id": "DSC-04",
-            "result": "PASS",
-            "coverage": "partial"
-          },
-          {
-            "id": "DSC-05",
-            "result": "PASS",
-            "coverage": "partial"
-          },
-          {
-            "id": "DSC-06",
-            "result": "PASS",
-            "coverage": "partial"
-          },
-          {
-            "id": "DSC-07",
-            "result": "PASS",
-            "coverage": "partial"
-          },
-          {
-            "id": "DSC-08",
-            "result": "PASS",
-            "coverage": "partial"
-          },
-          {
-            "id": "DSC-09",
-            "result": "PASS",
-            "coverage": "partial"
-          },
-          {
-            "id": "DSC-10",
-            "result": "PASS",
-            "coverage": "partial"
-          },
-          {
-            "id": "DSC-11",
-            "result": "WARN",
-            "coverage": "full"
-          },
-          {
-            "id": "DSC-12",
-            "result": "WARN",
-            "coverage": "full"
-          },
-          {
-            "id": "DSC-13",
-            "result": "WARN",
-            "coverage": "full"
-          },
-          {
-            "id": "DSC-14",
-            "result": "NA",
-            "coverage": "not-run"
-          },
-          {
-            "id": "DSC-15",
-            "result": "PASS",
-            "coverage": "full"
-          },
-          {
-            "id": "DSC-16",
-            "result": "PASS",
-            "coverage": "partial"
-          },
-          {
-            "id": "DSC-17",
-            "result": "PASS",
-            "coverage": "partial"
-          },
-          {
-            "id": "DSC-18",
-            "result": "PASS",
-            "coverage": "full"
-          },
-          {
-            "id": "DSC-19",
-            "result": "WARN",
-            "coverage": "partial"
-          },
-          {
-            "id": "DSC-20",
-            "result": "PASS",
-            "coverage": "full"
-          },
-          {
-            "id": "DSC-21",
-            "result": "PASS",
-            "coverage": "partial"
-          },
-          {
-            "id": "DSC-22",
-            "result": "NA",
-            "coverage": "not-run"
-          }
-        ],
-        "summary": {
-          "total": 22,
-          "checked": 19,
-          "blocking": 1,
-          "warn": 4,
-          "na": 3,
-          "notRun": 3
-        },
-        "command": "dsh-standards check <package-dir> --scope security --json"
-      },
-      "evidence": {
-        "sha256": "50797173e6e2a28e0b229b4f1ff468ba1a233f75558f4a094faa67fe49b5a93f",
-        "reportSha256": "50797173e6e2a28e0b229b4f1ff468ba1a233f75558f4a094faa67fe49b5a93f"
-      },
-      "checkedBy": {
-        "checker": "dsh-standards@1.6.7 (dsh-plugin-verify@0.1.0)",
-        "command": "dsh-levels <package-dir> --no-runtime --format json",
-        "securityCommand": "dsh-standards check <package-dir> --scope security --json"
-      },
-      "notChecked": [
-        "ENTRY:runtime (claim=static; not exercised)",
-        "ENTRY:DSC-03, DSC-14 (coverage=not-run)",
-        "FLOW:J1-J8 (not-run; 0/8 journeys pass)",
-        "BOOST:LEV-3..LEV-4 (not-measured)"
-      ],
-      "validity": {
-        "checkedAt": "2026-11-07",
-        "expiresAt": "2027-02-05",
+        "checkedAt": "2026-11-14",
+        "expiresAt": "2027-02-12",
         "policy": "90d"
       },
       "lifecycle": "active",
@@ -5665,7 +5665,7 @@
       "repo": "https://github.com/mini-yifan/dsh-orb-cordis",
       "license": "MIT",
       "scope": {
-        "dsh": "0.2.1-rc.5",
+        "dsh": "0.2.2-rc.3",
         "cordis": "4.0.4",
         "platform": "web"
       },
@@ -5689,8 +5689,8 @@
         },
         {
           "id": "DSC-02",
-          "result": "PASS",
-          "coverage": "full"
+          "result": "NA",
+          "coverage": "partial"
         },
         {
           "id": "DSC-03",
@@ -5763,8 +5763,8 @@
           },
           {
             "id": "DSC-02",
-            "result": "PASS",
-            "coverage": "full"
+            "result": "NA",
+            "coverage": "partial"
           },
           {
             "id": "DSC-03",
@@ -5872,17 +5872,17 @@
           "checked": 19,
           "blocking": 0,
           "warn": 6,
-          "na": 3,
+          "na": 4,
           "notRun": 3
         },
         "command": "dsh-standards check <package-dir> --scope security --json"
       },
       "evidence": {
-        "sha256": "22cc4707cf11140ed5b9d3b00c98f28e5c32a7dbe1de3d640b3a40963a12916f",
-        "reportSha256": "22cc4707cf11140ed5b9d3b00c98f28e5c32a7dbe1de3d640b3a40963a12916f"
+        "sha256": "f602407d4a405f6ea307aa1ccb93ab3c17370d74f861e58bda0037e0bbedeae0",
+        "reportSha256": "f602407d4a405f6ea307aa1ccb93ab3c17370d74f861e58bda0037e0bbedeae0"
       },
       "checkedBy": {
-        "checker": "dsh-standards@1.6.7 (dsh-plugin-verify@0.1.0)",
+        "checker": "dsh-standards@1.6.10 (dsh-plugin-verify@0.1.0)",
         "command": "dsh-levels <package-dir> --no-runtime --format json",
         "securityCommand": "dsh-standards check <package-dir> --scope security --json"
       },
@@ -5893,8 +5893,8 @@
         "BOOST:LEV-3..LEV-4 (not-measured)"
       ],
       "validity": {
-        "checkedAt": "2026-11-07",
-        "expiresAt": "2027-02-05",
+        "checkedAt": "2026-11-14",
+        "expiresAt": "2027-02-12",
         "policy": "90d"
       },
       "lifecycle": "active",
@@ -5910,7 +5910,7 @@
       "repo": null,
       "license": "MIT",
       "scope": {
-        "dsh": "0.2.1-rc.5",
+        "dsh": "0.2.2-rc.3",
         "cordis": "^4.0.2",
         "platform": "web"
       },
@@ -5934,8 +5934,8 @@
         },
         {
           "id": "DSC-02",
-          "result": "PASS",
-          "coverage": "full"
+          "result": "NA",
+          "coverage": "partial"
         },
         {
           "id": "DSC-03",
@@ -6008,8 +6008,8 @@
           },
           {
             "id": "DSC-02",
-            "result": "PASS",
-            "coverage": "full"
+            "result": "NA",
+            "coverage": "partial"
           },
           {
             "id": "DSC-03",
@@ -6117,17 +6117,17 @@
           "checked": 19,
           "blocking": 0,
           "warn": 4,
-          "na": 3,
+          "na": 4,
           "notRun": 3
         },
         "command": "dsh-standards check <package-dir> --scope security --json"
       },
       "evidence": {
-        "sha256": "8a4da6c4203066f31d3cfbfb760eb1abcab9cb324ea4cfcf9602ab3e2c18c2ce",
-        "reportSha256": "8a4da6c4203066f31d3cfbfb760eb1abcab9cb324ea4cfcf9602ab3e2c18c2ce"
+        "sha256": "a53e247d22efb147b60abdbc7634b3e88dc86227cb2a795017c56197dad04a55",
+        "reportSha256": "a53e247d22efb147b60abdbc7634b3e88dc86227cb2a795017c56197dad04a55"
       },
       "checkedBy": {
-        "checker": "dsh-standards@1.6.7 (dsh-plugin-verify@0.1.0)",
+        "checker": "dsh-standards@1.6.10 (dsh-plugin-verify@0.1.0)",
         "command": "dsh-levels <package-dir> --no-runtime --format json",
         "securityCommand": "dsh-standards check <package-dir> --scope security --json"
       },
@@ -6138,8 +6138,8 @@
         "BOOST:LEV-3..LEV-4 (not-measured)"
       ],
       "validity": {
-        "checkedAt": "2026-11-07",
-        "expiresAt": "2027-02-05",
+        "checkedAt": "2026-11-14",
+        "expiresAt": "2027-02-12",
         "policy": "90d"
       },
       "lifecycle": "active",
@@ -6155,7 +6155,7 @@
       "repo": "https://github.com/PC2005-cloud/dsh-pet",
       "license": "MIT",
       "scope": {
-        "dsh": "0.2.1-rc.5",
+        "dsh": "0.2.2-rc.3",
         "cordis": "^4.0.4",
         "platform": "web"
       },
@@ -6179,8 +6179,8 @@
         },
         {
           "id": "DSC-02",
-          "result": "PASS",
-          "coverage": "full"
+          "result": "NA",
+          "coverage": "partial"
         },
         {
           "id": "DSC-03",
@@ -6253,8 +6253,8 @@
           },
           {
             "id": "DSC-02",
-            "result": "PASS",
-            "coverage": "full"
+            "result": "NA",
+            "coverage": "partial"
           },
           {
             "id": "DSC-03",
@@ -6362,17 +6362,17 @@
           "checked": 19,
           "blocking": 0,
           "warn": 3,
-          "na": 4,
+          "na": 5,
           "notRun": 3
         },
         "command": "dsh-standards check <package-dir> --scope security --json"
       },
       "evidence": {
-        "sha256": "c5b2f1ddb74aaa0161636e065596d761ca6f393c053a1c1c32a2991ae3d5de8d",
-        "reportSha256": "c5b2f1ddb74aaa0161636e065596d761ca6f393c053a1c1c32a2991ae3d5de8d"
+        "sha256": "38f5bc91a766e040318cf1d9cc77c6cc748966fd85b2472c555e8c5c0048b441",
+        "reportSha256": "38f5bc91a766e040318cf1d9cc77c6cc748966fd85b2472c555e8c5c0048b441"
       },
       "checkedBy": {
-        "checker": "dsh-standards@1.6.7 (dsh-plugin-verify@0.1.0)",
+        "checker": "dsh-standards@1.6.10 (dsh-plugin-verify@0.1.0)",
         "command": "dsh-levels <package-dir> --no-runtime --format json",
         "securityCommand": "dsh-standards check <package-dir> --scope security --json"
       },
@@ -6383,8 +6383,8 @@
         "BOOST:LEV-3..LEV-4 (not-measured)"
       ],
       "validity": {
-        "checkedAt": "2026-11-07",
-        "expiresAt": "2027-02-05",
+        "checkedAt": "2026-11-14",
+        "expiresAt": "2027-02-12",
         "policy": "90d"
       },
       "lifecycle": "active",
@@ -6424,8 +6424,8 @@
         },
         {
           "id": "DSC-02",
-          "result": "PASS",
-          "coverage": "full"
+          "result": "NA",
+          "coverage": "partial"
         },
         {
           "id": "DSC-03",
@@ -6498,8 +6498,8 @@
           },
           {
             "id": "DSC-02",
-            "result": "PASS",
-            "coverage": "full"
+            "result": "NA",
+            "coverage": "partial"
           },
           {
             "id": "DSC-03",
@@ -6607,17 +6607,17 @@
           "checked": 19,
           "blocking": 0,
           "warn": 3,
-          "na": 3,
+          "na": 4,
           "notRun": 3
         },
         "command": "dsh-standards check <package-dir> --scope security --json"
       },
       "evidence": {
-        "sha256": "c935373554ddcaa3db0965f18060c3f0ee91d77cd5187d7606e7863936e6a5b6",
-        "reportSha256": "c935373554ddcaa3db0965f18060c3f0ee91d77cd5187d7606e7863936e6a5b6"
+        "sha256": "47c12a67fbd9ab69ed01b693887552f515c785d7c1c7a29eedd116a10b3bda6c",
+        "reportSha256": "47c12a67fbd9ab69ed01b693887552f515c785d7c1c7a29eedd116a10b3bda6c"
       },
       "checkedBy": {
-        "checker": "dsh-standards@1.6.7 (dsh-plugin-verify@0.1.0)",
+        "checker": "dsh-standards@1.6.10 (dsh-plugin-verify@0.1.0)",
         "command": "dsh-levels <package-dir> --no-runtime --format json",
         "securityCommand": "dsh-standards check <package-dir> --scope security --json"
       },
@@ -6628,8 +6628,8 @@
         "BOOST:LEV-3..LEV-4 (not-measured)"
       ],
       "validity": {
-        "checkedAt": "2026-11-07",
-        "expiresAt": "2027-02-05",
+        "checkedAt": "2026-11-14",
+        "expiresAt": "2027-02-12",
         "policy": "90d"
       },
       "lifecycle": "active",
@@ -6669,8 +6669,8 @@
         },
         {
           "id": "DSC-02",
-          "result": "PASS",
-          "coverage": "full"
+          "result": "NA",
+          "coverage": "partial"
         },
         {
           "id": "DSC-03",
@@ -6743,8 +6743,8 @@
           },
           {
             "id": "DSC-02",
-            "result": "PASS",
-            "coverage": "full"
+            "result": "NA",
+            "coverage": "partial"
           },
           {
             "id": "DSC-03",
@@ -6852,17 +6852,17 @@
           "checked": 19,
           "blocking": 0,
           "warn": 3,
-          "na": 3,
+          "na": 4,
           "notRun": 3
         },
         "command": "dsh-standards check <package-dir> --scope security --json"
       },
       "evidence": {
-        "sha256": "ba3bfbf0c515c9e85dd1718cc381017e1883d96d34dc50767cbad8dac6e10e04",
-        "reportSha256": "ba3bfbf0c515c9e85dd1718cc381017e1883d96d34dc50767cbad8dac6e10e04"
+        "sha256": "7dd898398d14a75d0493095b7bf1a861f18048097fc7b3acf8d85878d3a340e7",
+        "reportSha256": "7dd898398d14a75d0493095b7bf1a861f18048097fc7b3acf8d85878d3a340e7"
       },
       "checkedBy": {
-        "checker": "dsh-standards@1.6.7 (dsh-plugin-verify@0.1.0)",
+        "checker": "dsh-standards@1.6.10 (dsh-plugin-verify@0.1.0)",
         "command": "dsh-levels <package-dir> --no-runtime --format json",
         "securityCommand": "dsh-standards check <package-dir> --scope security --json"
       },
@@ -6873,8 +6873,8 @@
         "BOOST:LEV-3..LEV-4 (not-measured)"
       ],
       "validity": {
-        "checkedAt": "2026-11-07",
-        "expiresAt": "2027-02-05",
+        "checkedAt": "2026-11-14",
+        "expiresAt": "2027-02-12",
         "policy": "90d"
       },
       "lifecycle": "active",
@@ -6914,8 +6914,8 @@
         },
         {
           "id": "DSC-02",
-          "result": "PASS",
-          "coverage": "full"
+          "result": "NA",
+          "coverage": "partial"
         },
         {
           "id": "DSC-03",
@@ -6988,8 +6988,8 @@
           },
           {
             "id": "DSC-02",
-            "result": "PASS",
-            "coverage": "full"
+            "result": "NA",
+            "coverage": "partial"
           },
           {
             "id": "DSC-03",
@@ -7097,17 +7097,17 @@
           "checked": 19,
           "blocking": 0,
           "warn": 3,
-          "na": 3,
+          "na": 4,
           "notRun": 3
         },
         "command": "dsh-standards check <package-dir> --scope security --json"
       },
       "evidence": {
-        "sha256": "0d7610895af66a2e4ca7824f965d0d80b74f8cce255065b039be4eb2db5f0a90",
-        "reportSha256": "0d7610895af66a2e4ca7824f965d0d80b74f8cce255065b039be4eb2db5f0a90"
+        "sha256": "b0eb6b269ab1474c6d600b8392a0b371f8d07679241f23ad29216ef823c50608",
+        "reportSha256": "b0eb6b269ab1474c6d600b8392a0b371f8d07679241f23ad29216ef823c50608"
       },
       "checkedBy": {
-        "checker": "dsh-standards@1.6.7 (dsh-plugin-verify@0.1.0)",
+        "checker": "dsh-standards@1.6.10 (dsh-plugin-verify@0.1.0)",
         "command": "dsh-levels <package-dir> --no-runtime --format json",
         "securityCommand": "dsh-standards check <package-dir> --scope security --json"
       },
@@ -7118,8 +7118,8 @@
         "BOOST:LEV-3..LEV-4 (not-measured)"
       ],
       "validity": {
-        "checkedAt": "2026-11-07",
-        "expiresAt": "2027-02-05",
+        "checkedAt": "2026-11-14",
+        "expiresAt": "2027-02-12",
         "policy": "90d"
       },
       "lifecycle": "active",
@@ -7159,8 +7159,8 @@
         },
         {
           "id": "DSC-02",
-          "result": "PASS",
-          "coverage": "full"
+          "result": "NA",
+          "coverage": "partial"
         },
         {
           "id": "DSC-03",
@@ -7233,8 +7233,8 @@
           },
           {
             "id": "DSC-02",
-            "result": "PASS",
-            "coverage": "full"
+            "result": "NA",
+            "coverage": "partial"
           },
           {
             "id": "DSC-03",
@@ -7342,17 +7342,17 @@
           "checked": 19,
           "blocking": 0,
           "warn": 3,
-          "na": 4,
+          "na": 5,
           "notRun": 3
         },
         "command": "dsh-standards check <package-dir> --scope security --json"
       },
       "evidence": {
-        "sha256": "254119b35e03e099ee3cccc616699c2eb6dcf9999326b7c2f4e66fb31eefaa85",
-        "reportSha256": "254119b35e03e099ee3cccc616699c2eb6dcf9999326b7c2f4e66fb31eefaa85"
+        "sha256": "34114ec6c82a5e5da4d6d80c171e5988ea3dd4645db4413ef45730603e732ef4",
+        "reportSha256": "34114ec6c82a5e5da4d6d80c171e5988ea3dd4645db4413ef45730603e732ef4"
       },
       "checkedBy": {
-        "checker": "dsh-standards@1.6.7 (dsh-plugin-verify@0.1.0)",
+        "checker": "dsh-standards@1.6.10 (dsh-plugin-verify@0.1.0)",
         "command": "dsh-levels <package-dir> --no-runtime --format json",
         "securityCommand": "dsh-standards check <package-dir> --scope security --json"
       },
@@ -7363,8 +7363,8 @@
         "BOOST:LEV-3..LEV-4 (not-measured)"
       ],
       "validity": {
-        "checkedAt": "2026-11-07",
-        "expiresAt": "2027-02-05",
+        "checkedAt": "2026-11-14",
+        "expiresAt": "2027-02-12",
         "policy": "90d"
       },
       "lifecycle": "active",
@@ -7380,7 +7380,7 @@
       "repo": "https://github.com/shaobeichen/dsh-pocket",
       "license": "GPL-2.0",
       "scope": {
-        "dsh": "0.2.1-rc.5",
+        "dsh": "0.2.2-rc.3",
         "cordis": "^4.0.1",
         "platform": "web"
       },
@@ -7404,8 +7404,8 @@
         },
         {
           "id": "DSC-02",
-          "result": "WARN",
-          "coverage": "full"
+          "result": "NA",
+          "coverage": "partial"
         },
         {
           "id": "DSC-03",
@@ -7478,8 +7478,8 @@
           },
           {
             "id": "DSC-02",
-            "result": "FAIL",
-            "coverage": "full"
+            "result": "NA",
+            "coverage": "partial"
           },
           {
             "id": "DSC-03",
@@ -7585,19 +7585,19 @@
         "summary": {
           "total": 22,
           "checked": 19,
-          "blocking": 1,
+          "blocking": 0,
           "warn": 3,
-          "na": 3,
+          "na": 4,
           "notRun": 3
         },
         "command": "dsh-standards check <package-dir> --scope security --json"
       },
       "evidence": {
-        "sha256": "44269ae088b3c7d0fa32a033c3c488fe5cec19b1e0816eaa91fe94c7850a8f4a",
-        "reportSha256": "44269ae088b3c7d0fa32a033c3c488fe5cec19b1e0816eaa91fe94c7850a8f4a"
+        "sha256": "93738c00fe7673176cab6670ce849f4cc51918e2e2a6e7a7fe2b3ca06ea6b06e",
+        "reportSha256": "93738c00fe7673176cab6670ce849f4cc51918e2e2a6e7a7fe2b3ca06ea6b06e"
       },
       "checkedBy": {
-        "checker": "dsh-standards@1.6.7 (dsh-plugin-verify@0.1.0)",
+        "checker": "dsh-standards@1.6.10 (dsh-plugin-verify@0.1.0)",
         "command": "dsh-levels <package-dir> --no-runtime --format json",
         "securityCommand": "dsh-standards check <package-dir> --scope security --json"
       },
@@ -7608,8 +7608,8 @@
         "BOOST:LEV-3..LEV-4 (not-measured)"
       ],
       "validity": {
-        "checkedAt": "2026-11-07",
-        "expiresAt": "2027-02-05",
+        "checkedAt": "2026-11-14",
+        "expiresAt": "2027-02-12",
         "policy": "90d"
       },
       "lifecycle": "active",
@@ -7625,7 +7625,7 @@
       "repo": "https://github.com/Something11235/dsh-posterflow-ai",
       "license": "MIT",
       "scope": {
-        "dsh": "0.2.1-rc.5",
+        "dsh": "0.2.2-rc.3",
         "cordis": "^4.0.2",
         "platform": "web"
       },
@@ -7649,8 +7649,8 @@
         },
         {
           "id": "DSC-02",
-          "result": "WARN",
-          "coverage": "full"
+          "result": "NA",
+          "coverage": "partial"
         },
         {
           "id": "DSC-03",
@@ -7723,8 +7723,8 @@
           },
           {
             "id": "DSC-02",
-            "result": "FAIL",
-            "coverage": "full"
+            "result": "NA",
+            "coverage": "partial"
           },
           {
             "id": "DSC-03",
@@ -7830,19 +7830,19 @@
         "summary": {
           "total": 22,
           "checked": 19,
-          "blocking": 1,
+          "blocking": 0,
           "warn": 2,
-          "na": 3,
+          "na": 4,
           "notRun": 3
         },
         "command": "dsh-standards check <package-dir> --scope security --json"
       },
       "evidence": {
-        "sha256": "2f4322b0ce8ddd225610d9f39896e4b31851b35a353f99c789ad2a43bd2bf437",
-        "reportSha256": "2f4322b0ce8ddd225610d9f39896e4b31851b35a353f99c789ad2a43bd2bf437"
+        "sha256": "a80fba44c7e8e55ff33100abede46044faf0a0626c57f0c802c919043cc4b818",
+        "reportSha256": "a80fba44c7e8e55ff33100abede46044faf0a0626c57f0c802c919043cc4b818"
       },
       "checkedBy": {
-        "checker": "dsh-standards@1.6.7 (dsh-plugin-verify@0.1.0)",
+        "checker": "dsh-standards@1.6.10 (dsh-plugin-verify@0.1.0)",
         "command": "dsh-levels <package-dir> --no-runtime --format json",
         "securityCommand": "dsh-standards check <package-dir> --scope security --json"
       },
@@ -7853,8 +7853,8 @@
         "BOOST:LEV-3..LEV-4 (not-measured)"
       ],
       "validity": {
-        "checkedAt": "2026-11-07",
-        "expiresAt": "2027-02-05",
+        "checkedAt": "2026-11-14",
+        "expiresAt": "2027-02-12",
         "policy": "90d"
       },
       "lifecycle": "active",
@@ -7894,8 +7894,8 @@
         },
         {
           "id": "DSC-02",
-          "result": "PASS",
-          "coverage": "full"
+          "result": "NA",
+          "coverage": "partial"
         },
         {
           "id": "DSC-03",
@@ -7968,8 +7968,8 @@
           },
           {
             "id": "DSC-02",
-            "result": "PASS",
-            "coverage": "full"
+            "result": "NA",
+            "coverage": "partial"
           },
           {
             "id": "DSC-03",
@@ -8077,17 +8077,17 @@
           "checked": 19,
           "blocking": 0,
           "warn": 3,
-          "na": 3,
+          "na": 4,
           "notRun": 3
         },
         "command": "dsh-standards check <package-dir> --scope security --json"
       },
       "evidence": {
-        "sha256": "7ad44119db96e5a66d1cbed533720007763c38767fd9d45156f00a37a754d5a0",
-        "reportSha256": "7ad44119db96e5a66d1cbed533720007763c38767fd9d45156f00a37a754d5a0"
+        "sha256": "c041d4c7035350d6511f018f13fde32a5bff05e326f7564b02e5910324760279",
+        "reportSha256": "c041d4c7035350d6511f018f13fde32a5bff05e326f7564b02e5910324760279"
       },
       "checkedBy": {
-        "checker": "dsh-standards@1.6.7 (dsh-plugin-verify@0.1.0)",
+        "checker": "dsh-standards@1.6.10 (dsh-plugin-verify@0.1.0)",
         "command": "dsh-levels <package-dir> --no-runtime --format json",
         "securityCommand": "dsh-standards check <package-dir> --scope security --json"
       },
@@ -8098,8 +8098,8 @@
         "BOOST:LEV-3..LEV-4 (not-measured)"
       ],
       "validity": {
-        "checkedAt": "2026-11-07",
-        "expiresAt": "2027-02-05",
+        "checkedAt": "2026-11-14",
+        "expiresAt": "2027-02-12",
         "policy": "90d"
       },
       "lifecycle": "active",
@@ -8139,8 +8139,8 @@
         },
         {
           "id": "DSC-02",
-          "result": "PASS",
-          "coverage": "full"
+          "result": "NA",
+          "coverage": "partial"
         },
         {
           "id": "DSC-03",
@@ -8213,8 +8213,8 @@
           },
           {
             "id": "DSC-02",
-            "result": "PASS",
-            "coverage": "full"
+            "result": "NA",
+            "coverage": "partial"
           },
           {
             "id": "DSC-03",
@@ -8322,17 +8322,17 @@
           "checked": 19,
           "blocking": 0,
           "warn": 5,
-          "na": 3,
+          "na": 4,
           "notRun": 3
         },
         "command": "dsh-standards check <package-dir> --scope security --json"
       },
       "evidence": {
-        "sha256": "1b5bc72c920cad5e6ea713fbeb518c7576c37cf7c7bf2ac7d9a7f466e4680154",
-        "reportSha256": "1b5bc72c920cad5e6ea713fbeb518c7576c37cf7c7bf2ac7d9a7f466e4680154"
+        "sha256": "2d0abdd22600b01caf32f4b867fd1715d18c8e158c7ae468db01b4c8b5d9efe3",
+        "reportSha256": "2d0abdd22600b01caf32f4b867fd1715d18c8e158c7ae468db01b4c8b5d9efe3"
       },
       "checkedBy": {
-        "checker": "dsh-standards@1.6.7 (dsh-plugin-verify@0.1.0)",
+        "checker": "dsh-standards@1.6.10 (dsh-plugin-verify@0.1.0)",
         "command": "dsh-levels <package-dir> --no-runtime --format json",
         "securityCommand": "dsh-standards check <package-dir> --scope security --json"
       },
@@ -8343,8 +8343,8 @@
         "BOOST:LEV-3..LEV-4 (not-measured)"
       ],
       "validity": {
-        "checkedAt": "2026-11-07",
-        "expiresAt": "2027-02-05",
+        "checkedAt": "2026-11-14",
+        "expiresAt": "2027-02-12",
         "policy": "90d"
       },
       "lifecycle": "active",
@@ -8384,8 +8384,8 @@
         },
         {
           "id": "DSC-02",
-          "result": "WARN",
-          "coverage": "full"
+          "result": "NA",
+          "coverage": "partial"
         },
         {
           "id": "DSC-03",
@@ -8458,8 +8458,8 @@
           },
           {
             "id": "DSC-02",
-            "result": "FAIL",
-            "coverage": "full"
+            "result": "NA",
+            "coverage": "partial"
           },
           {
             "id": "DSC-03",
@@ -8565,19 +8565,19 @@
         "summary": {
           "total": 22,
           "checked": 19,
-          "blocking": 1,
+          "blocking": 0,
           "warn": 2,
-          "na": 3,
+          "na": 4,
           "notRun": 3
         },
         "command": "dsh-standards check <package-dir> --scope security --json"
       },
       "evidence": {
-        "sha256": "5b261674fb1df2babdf53d3e5ef155bcbb0e54ec7e153604d2612fde5845abe9",
-        "reportSha256": "5b261674fb1df2babdf53d3e5ef155bcbb0e54ec7e153604d2612fde5845abe9"
+        "sha256": "7b190443d9ecfa6bcc693190bbad9a123b769467a0d5c6e44a61fe930af87254",
+        "reportSha256": "7b190443d9ecfa6bcc693190bbad9a123b769467a0d5c6e44a61fe930af87254"
       },
       "checkedBy": {
-        "checker": "dsh-standards@1.6.7 (dsh-plugin-verify@0.1.0)",
+        "checker": "dsh-standards@1.6.10 (dsh-plugin-verify@0.1.0)",
         "command": "dsh-levels <package-dir> --no-runtime --format json",
         "securityCommand": "dsh-standards check <package-dir> --scope security --json"
       },
@@ -8588,8 +8588,8 @@
         "BOOST:LEV-3..LEV-4 (not-measured)"
       ],
       "validity": {
-        "checkedAt": "2026-11-07",
-        "expiresAt": "2027-02-05",
+        "checkedAt": "2026-11-14",
+        "expiresAt": "2027-02-12",
         "policy": "90d"
       },
       "lifecycle": "active",
@@ -8629,8 +8629,8 @@
         },
         {
           "id": "DSC-02",
-          "result": "PASS",
-          "coverage": "full"
+          "result": "NA",
+          "coverage": "partial"
         },
         {
           "id": "DSC-03",
@@ -8703,8 +8703,8 @@
           },
           {
             "id": "DSC-02",
-            "result": "PASS",
-            "coverage": "full"
+            "result": "NA",
+            "coverage": "partial"
           },
           {
             "id": "DSC-03",
@@ -8812,17 +8812,17 @@
           "checked": 19,
           "blocking": 0,
           "warn": 5,
-          "na": 3,
+          "na": 4,
           "notRun": 3
         },
         "command": "dsh-standards check <package-dir> --scope security --json"
       },
       "evidence": {
-        "sha256": "b72018f63a3d759bcf8aba37c4ef3ca716187b6dda1b3b694ba2b83d21b9e3f0",
-        "reportSha256": "b72018f63a3d759bcf8aba37c4ef3ca716187b6dda1b3b694ba2b83d21b9e3f0"
+        "sha256": "5fbe77362ca073a038c815c01d20ff2f50766dade4a5adfa32505fa441f01143",
+        "reportSha256": "5fbe77362ca073a038c815c01d20ff2f50766dade4a5adfa32505fa441f01143"
       },
       "checkedBy": {
-        "checker": "dsh-standards@1.6.7 (dsh-plugin-verify@0.1.0)",
+        "checker": "dsh-standards@1.6.10 (dsh-plugin-verify@0.1.0)",
         "command": "dsh-levels <package-dir> --no-runtime --format json",
         "securityCommand": "dsh-standards check <package-dir> --scope security --json"
       },
@@ -8833,8 +8833,8 @@
         "BOOST:LEV-3..LEV-4 (not-measured)"
       ],
       "validity": {
-        "checkedAt": "2026-11-07",
-        "expiresAt": "2027-02-05",
+        "checkedAt": "2026-11-14",
+        "expiresAt": "2027-02-12",
         "policy": "90d"
       },
       "lifecycle": "active",
@@ -8850,7 +8850,7 @@
       "repo": "https://github.com/01Virex/dsh-status-rotator",
       "license": "MIT",
       "scope": {
-        "dsh": "0.2.1-rc.5",
+        "dsh": "0.2.2-rc.3",
         "cordis": "*",
         "platform": "web"
       },
@@ -8874,8 +8874,8 @@
         },
         {
           "id": "DSC-02",
-          "result": "WARN",
-          "coverage": "full"
+          "result": "NA",
+          "coverage": "partial"
         },
         {
           "id": "DSC-03",
@@ -8948,8 +8948,8 @@
           },
           {
             "id": "DSC-02",
-            "result": "FAIL",
-            "coverage": "full"
+            "result": "NA",
+            "coverage": "partial"
           },
           {
             "id": "DSC-03",
@@ -9055,19 +9055,19 @@
         "summary": {
           "total": 22,
           "checked": 19,
-          "blocking": 1,
+          "blocking": 0,
           "warn": 3,
-          "na": 3,
+          "na": 4,
           "notRun": 3
         },
         "command": "dsh-standards check <package-dir> --scope security --json"
       },
       "evidence": {
-        "sha256": "034c99bc9248b842d285e0ac3a2352eebfc855611bd205032aaa0893861707f1",
-        "reportSha256": "034c99bc9248b842d285e0ac3a2352eebfc855611bd205032aaa0893861707f1"
+        "sha256": "68c54bbc3c07dd90dda9f6a3586ff5e415ab81bf5d1a1e73836f95d89469af43",
+        "reportSha256": "68c54bbc3c07dd90dda9f6a3586ff5e415ab81bf5d1a1e73836f95d89469af43"
       },
       "checkedBy": {
-        "checker": "dsh-standards@1.6.7 (dsh-plugin-verify@0.1.0)",
+        "checker": "dsh-standards@1.6.10 (dsh-plugin-verify@0.1.0)",
         "command": "dsh-levels <package-dir> --no-runtime --format json",
         "securityCommand": "dsh-standards check <package-dir> --scope security --json"
       },
@@ -9078,8 +9078,8 @@
         "BOOST:LEV-3..LEV-4 (not-measured)"
       ],
       "validity": {
-        "checkedAt": "2026-11-07",
-        "expiresAt": "2027-02-05",
+        "checkedAt": "2026-11-14",
+        "expiresAt": "2027-02-12",
         "policy": "90d"
       },
       "lifecycle": "active",
@@ -9095,7 +9095,7 @@
       "repo": "https://github.com/030611/dsh-telemetry-redactor",
       "license": "MIT",
       "scope": {
-        "dsh": "0.2.1-rc.5",
+        "dsh": "0.2.2-rc.3",
         "cordis": "^4.0.1",
         "platform": null
       },
@@ -9119,8 +9119,8 @@
         },
         {
           "id": "DSC-02",
-          "result": "WARN",
-          "coverage": "full"
+          "result": "NA",
+          "coverage": "partial"
         },
         {
           "id": "DSC-03",
@@ -9193,8 +9193,8 @@
           },
           {
             "id": "DSC-02",
-            "result": "FAIL",
-            "coverage": "full"
+            "result": "NA",
+            "coverage": "partial"
           },
           {
             "id": "DSC-03",
@@ -9300,19 +9300,19 @@
         "summary": {
           "total": 22,
           "checked": 19,
-          "blocking": 1,
+          "blocking": 0,
           "warn": 2,
-          "na": 3,
+          "na": 4,
           "notRun": 3
         },
         "command": "dsh-standards check <package-dir> --scope security --json"
       },
       "evidence": {
-        "sha256": "ed3fa8846dbf738542f0be9513b5592eba95b48bf0ad430bcc211560bf6141c5",
-        "reportSha256": "ed3fa8846dbf738542f0be9513b5592eba95b48bf0ad430bcc211560bf6141c5"
+        "sha256": "05104e12dfaeb8b9f81ace08b62574469c74001e797568ac8be8a8131136ae4a",
+        "reportSha256": "05104e12dfaeb8b9f81ace08b62574469c74001e797568ac8be8a8131136ae4a"
       },
       "checkedBy": {
-        "checker": "dsh-standards@1.6.7 (dsh-plugin-verify@0.1.0)",
+        "checker": "dsh-standards@1.6.10 (dsh-plugin-verify@0.1.0)",
         "command": "dsh-levels <package-dir> --no-runtime --format json",
         "securityCommand": "dsh-standards check <package-dir> --scope security --json"
       },
@@ -9323,8 +9323,8 @@
         "BOOST:LEV-3..LEV-4 (not-measured)"
       ],
       "validity": {
-        "checkedAt": "2026-11-07",
-        "expiresAt": "2027-02-05",
+        "checkedAt": "2026-11-14",
+        "expiresAt": "2027-02-12",
         "policy": "90d"
       },
       "lifecycle": "active",
@@ -9364,8 +9364,8 @@
         },
         {
           "id": "DSC-02",
-          "result": "PASS",
-          "coverage": "full"
+          "result": "NA",
+          "coverage": "partial"
         },
         {
           "id": "DSC-03",
@@ -9438,8 +9438,8 @@
           },
           {
             "id": "DSC-02",
-            "result": "PASS",
-            "coverage": "full"
+            "result": "NA",
+            "coverage": "partial"
           },
           {
             "id": "DSC-03",
@@ -9547,17 +9547,17 @@
           "checked": 19,
           "blocking": 0,
           "warn": 2,
-          "na": 3,
+          "na": 4,
           "notRun": 3
         },
         "command": "dsh-standards check <package-dir> --scope security --json"
       },
       "evidence": {
-        "sha256": "ee2c6d72bd89586b6f42a6c8122f8f7e4a7851bfb110c739fb4a59f713a3971c",
-        "reportSha256": "ee2c6d72bd89586b6f42a6c8122f8f7e4a7851bfb110c739fb4a59f713a3971c"
+        "sha256": "7c696d49263cc6070ee6c1dc3cd4ade1820c933c11b511b7b0c0fb1e1e4b31fb",
+        "reportSha256": "7c696d49263cc6070ee6c1dc3cd4ade1820c933c11b511b7b0c0fb1e1e4b31fb"
       },
       "checkedBy": {
-        "checker": "dsh-standards@1.6.7 (dsh-plugin-verify@0.1.0)",
+        "checker": "dsh-standards@1.6.10 (dsh-plugin-verify@0.1.0)",
         "command": "dsh-levels <package-dir> --no-runtime --format json",
         "securityCommand": "dsh-standards check <package-dir> --scope security --json"
       },
@@ -9568,8 +9568,8 @@
         "BOOST:LEV-3..LEV-4 (not-measured)"
       ],
       "validity": {
-        "checkedAt": "2026-11-07",
-        "expiresAt": "2027-02-05",
+        "checkedAt": "2026-11-14",
+        "expiresAt": "2027-02-12",
         "policy": "90d"
       },
       "lifecycle": "active",
@@ -9585,7 +9585,7 @@
       "repo": "https://github.com/0QwQ0/dsh-ui-auth",
       "license": "MIT",
       "scope": {
-        "dsh": "0.2.1-rc.5",
+        "dsh": "0.2.2-rc.3",
         "cordis": "^4.0.1",
         "platform": "web"
       },
@@ -9609,8 +9609,8 @@
         },
         {
           "id": "DSC-02",
-          "result": "WARN",
-          "coverage": "full"
+          "result": "NA",
+          "coverage": "partial"
         },
         {
           "id": "DSC-03",
@@ -9683,8 +9683,8 @@
           },
           {
             "id": "DSC-02",
-            "result": "FAIL",
-            "coverage": "full"
+            "result": "NA",
+            "coverage": "partial"
           },
           {
             "id": "DSC-03",
@@ -9790,19 +9790,19 @@
         "summary": {
           "total": 22,
           "checked": 19,
-          "blocking": 1,
+          "blocking": 0,
           "warn": 4,
-          "na": 3,
+          "na": 4,
           "notRun": 3
         },
         "command": "dsh-standards check <package-dir> --scope security --json"
       },
       "evidence": {
-        "sha256": "f16aa00cccd6607d36c3a8dce1655c1bd444c4dc48b87d4d5580330e702d41c2",
-        "reportSha256": "f16aa00cccd6607d36c3a8dce1655c1bd444c4dc48b87d4d5580330e702d41c2"
+        "sha256": "29f4926d462c9f14963235b4164e4b0aa2a88f5cb54a9aa246d731335d5562b5",
+        "reportSha256": "29f4926d462c9f14963235b4164e4b0aa2a88f5cb54a9aa246d731335d5562b5"
       },
       "checkedBy": {
-        "checker": "dsh-standards@1.6.7 (dsh-plugin-verify@0.1.0)",
+        "checker": "dsh-standards@1.6.10 (dsh-plugin-verify@0.1.0)",
         "command": "dsh-levels <package-dir> --no-runtime --format json",
         "securityCommand": "dsh-standards check <package-dir> --scope security --json"
       },
@@ -9813,8 +9813,8 @@
         "BOOST:LEV-3..LEV-4 (not-measured)"
       ],
       "validity": {
-        "checkedAt": "2026-11-07",
-        "expiresAt": "2027-02-05",
+        "checkedAt": "2026-11-14",
+        "expiresAt": "2027-02-12",
         "policy": "90d"
       },
       "lifecycle": "active",
@@ -9830,7 +9830,7 @@
       "repo": "https://github.com/dream-num/dsh-univer-office",
       "license": "Apache-2.0",
       "scope": {
-        "dsh": "0.2.1-rc.5",
+        "dsh": "0.2.2-rc.3",
         "cordis": "^4.0.2",
         "platform": "web"
       },
@@ -9854,8 +9854,8 @@
         },
         {
           "id": "DSC-02",
-          "result": "PASS",
-          "coverage": "full"
+          "result": "NA",
+          "coverage": "partial"
         },
         {
           "id": "DSC-03",
@@ -9928,8 +9928,8 @@
           },
           {
             "id": "DSC-02",
-            "result": "PASS",
-            "coverage": "full"
+            "result": "NA",
+            "coverage": "partial"
           },
           {
             "id": "DSC-03",
@@ -10037,17 +10037,17 @@
           "checked": 19,
           "blocking": 0,
           "warn": 3,
-          "na": 4,
+          "na": 5,
           "notRun": 3
         },
         "command": "dsh-standards check <package-dir> --scope security --json"
       },
       "evidence": {
-        "sha256": "ae7fed7ad0f0048557d7af7803228cd1d4426dc862ab1fd21c76436648ba85c6",
-        "reportSha256": "ae7fed7ad0f0048557d7af7803228cd1d4426dc862ab1fd21c76436648ba85c6"
+        "sha256": "c355ccb6a5db776795d22cb891c6b33b0b889fab236f68afba29e0105bc552eb",
+        "reportSha256": "c355ccb6a5db776795d22cb891c6b33b0b889fab236f68afba29e0105bc552eb"
       },
       "checkedBy": {
-        "checker": "dsh-standards@1.6.7 (dsh-plugin-verify@0.1.0)",
+        "checker": "dsh-standards@1.6.10 (dsh-plugin-verify@0.1.0)",
         "command": "dsh-levels <package-dir> --no-runtime --format json",
         "securityCommand": "dsh-standards check <package-dir> --scope security --json"
       },
@@ -10058,8 +10058,8 @@
         "BOOST:LEV-3..LEV-4 (not-measured)"
       ],
       "validity": {
-        "checkedAt": "2026-11-07",
-        "expiresAt": "2027-02-05",
+        "checkedAt": "2026-11-14",
+        "expiresAt": "2027-02-12",
         "policy": "90d"
       },
       "lifecycle": "active",
@@ -10099,8 +10099,8 @@
         },
         {
           "id": "DSC-02",
-          "result": "PASS",
-          "coverage": "full"
+          "result": "NA",
+          "coverage": "partial"
         },
         {
           "id": "DSC-03",
@@ -10173,8 +10173,8 @@
           },
           {
             "id": "DSC-02",
-            "result": "PASS",
-            "coverage": "full"
+            "result": "NA",
+            "coverage": "partial"
           },
           {
             "id": "DSC-03",
@@ -10282,17 +10282,17 @@
           "checked": 19,
           "blocking": 0,
           "warn": 3,
-          "na": 3,
+          "na": 4,
           "notRun": 3
         },
         "command": "dsh-standards check <package-dir> --scope security --json"
       },
       "evidence": {
-        "sha256": "159fa9655cff68855a3dc00467085dc879da7fffbd1aac125bed49818ee403ac",
-        "reportSha256": "159fa9655cff68855a3dc00467085dc879da7fffbd1aac125bed49818ee403ac"
+        "sha256": "3948f351e2e01380237177998a15af5a30f3ac58fc7689acce7753770043a22a",
+        "reportSha256": "3948f351e2e01380237177998a15af5a30f3ac58fc7689acce7753770043a22a"
       },
       "checkedBy": {
-        "checker": "dsh-standards@1.6.7 (dsh-plugin-verify@0.1.0)",
+        "checker": "dsh-standards@1.6.10 (dsh-plugin-verify@0.1.0)",
         "command": "dsh-levels <package-dir> --no-runtime --format json",
         "securityCommand": "dsh-standards check <package-dir> --scope security --json"
       },
@@ -10303,8 +10303,8 @@
         "BOOST:LEV-3..LEV-4 (not-measured)"
       ],
       "validity": {
-        "checkedAt": "2026-11-07",
-        "expiresAt": "2027-02-05",
+        "checkedAt": "2026-11-14",
+        "expiresAt": "2027-02-12",
         "policy": "90d"
       },
       "lifecycle": "active",
@@ -10320,7 +10320,7 @@
       "repo": "https://github.com/030611/dsh-verification-receipt",
       "license": "MIT",
       "scope": {
-        "dsh": "0.2.1-rc.5",
+        "dsh": "0.2.2-rc.3",
         "cordis": "^4.0.1",
         "platform": null
       },
@@ -10344,8 +10344,8 @@
         },
         {
           "id": "DSC-02",
-          "result": "WARN",
-          "coverage": "full"
+          "result": "NA",
+          "coverage": "partial"
         },
         {
           "id": "DSC-03",
@@ -10418,8 +10418,8 @@
           },
           {
             "id": "DSC-02",
-            "result": "FAIL",
-            "coverage": "full"
+            "result": "NA",
+            "coverage": "partial"
           },
           {
             "id": "DSC-03",
@@ -10525,19 +10525,19 @@
         "summary": {
           "total": 22,
           "checked": 19,
-          "blocking": 1,
+          "blocking": 0,
           "warn": 3,
-          "na": 3,
+          "na": 4,
           "notRun": 3
         },
         "command": "dsh-standards check <package-dir> --scope security --json"
       },
       "evidence": {
-        "sha256": "45fbc77fb957182250bd3de93ef62f895943d2a668e598363a24fb9c007796b2",
-        "reportSha256": "45fbc77fb957182250bd3de93ef62f895943d2a668e598363a24fb9c007796b2"
+        "sha256": "da520d0c99eb3dfddbbfdffb3b540eeaf2f099c768c62bcee3ef5f3745ea6a0e",
+        "reportSha256": "da520d0c99eb3dfddbbfdffb3b540eeaf2f099c768c62bcee3ef5f3745ea6a0e"
       },
       "checkedBy": {
-        "checker": "dsh-standards@1.6.7 (dsh-plugin-verify@0.1.0)",
+        "checker": "dsh-standards@1.6.10 (dsh-plugin-verify@0.1.0)",
         "command": "dsh-levels <package-dir> --no-runtime --format json",
         "securityCommand": "dsh-standards check <package-dir> --scope security --json"
       },
@@ -10548,8 +10548,8 @@
         "BOOST:LEV-3..LEV-4 (not-measured)"
       ],
       "validity": {
-        "checkedAt": "2026-11-07",
-        "expiresAt": "2027-02-05",
+        "checkedAt": "2026-11-14",
+        "expiresAt": "2027-02-12",
         "policy": "90d"
       },
       "lifecycle": "active",
@@ -10565,7 +10565,7 @@
       "repo": "https://github.com/Something11235/dsh-video-skin",
       "license": "MIT",
       "scope": {
-        "dsh": "0.2.1-rc.5",
+        "dsh": "0.2.2-rc.3",
         "cordis": "4.0.6-alpha.1",
         "platform": "web"
       },
@@ -10589,8 +10589,8 @@
         },
         {
           "id": "DSC-02",
-          "result": "WARN",
-          "coverage": "full"
+          "result": "NA",
+          "coverage": "partial"
         },
         {
           "id": "DSC-03",
@@ -10663,8 +10663,8 @@
           },
           {
             "id": "DSC-02",
-            "result": "FAIL",
-            "coverage": "full"
+            "result": "NA",
+            "coverage": "partial"
           },
           {
             "id": "DSC-03",
@@ -10770,19 +10770,19 @@
         "summary": {
           "total": 22,
           "checked": 19,
-          "blocking": 1,
+          "blocking": 0,
           "warn": 2,
-          "na": 3,
+          "na": 4,
           "notRun": 3
         },
         "command": "dsh-standards check <package-dir> --scope security --json"
       },
       "evidence": {
-        "sha256": "5a042ce9ae700da1b156fa1a75aa67da61c44e8eba880fbf965656d416ef114c",
-        "reportSha256": "5a042ce9ae700da1b156fa1a75aa67da61c44e8eba880fbf965656d416ef114c"
+        "sha256": "24447762def503eecb7b01d31a552bddd5c1c2912e5194a466482e947d8156fc",
+        "reportSha256": "24447762def503eecb7b01d31a552bddd5c1c2912e5194a466482e947d8156fc"
       },
       "checkedBy": {
-        "checker": "dsh-standards@1.6.7 (dsh-plugin-verify@0.1.0)",
+        "checker": "dsh-standards@1.6.10 (dsh-plugin-verify@0.1.0)",
         "command": "dsh-levels <package-dir> --no-runtime --format json",
         "securityCommand": "dsh-standards check <package-dir> --scope security --json"
       },
@@ -10793,8 +10793,8 @@
         "BOOST:LEV-3..LEV-4 (not-measured)"
       ],
       "validity": {
-        "checkedAt": "2026-11-07",
-        "expiresAt": "2027-02-05",
+        "checkedAt": "2026-11-14",
+        "expiresAt": "2027-02-12",
         "policy": "90d"
       },
       "lifecycle": "active",
@@ -10834,8 +10834,8 @@
         },
         {
           "id": "DSC-02",
-          "result": "PASS",
-          "coverage": "full"
+          "result": "NA",
+          "coverage": "partial"
         },
         {
           "id": "DSC-03",
@@ -10908,8 +10908,8 @@
           },
           {
             "id": "DSC-02",
-            "result": "PASS",
-            "coverage": "full"
+            "result": "NA",
+            "coverage": "partial"
           },
           {
             "id": "DSC-03",
@@ -11017,17 +11017,17 @@
           "checked": 19,
           "blocking": 0,
           "warn": 4,
-          "na": 3,
+          "na": 4,
           "notRun": 3
         },
         "command": "dsh-standards check <package-dir> --scope security --json"
       },
       "evidence": {
-        "sha256": "5b8fffe231a2c5f56e96180c360427b5c3ccb460f4c433f2b4b598ab24480798",
-        "reportSha256": "5b8fffe231a2c5f56e96180c360427b5c3ccb460f4c433f2b4b598ab24480798"
+        "sha256": "b524fea63bff0e06140b81beaa318d5cfe29acea521992b56abe36d82d6e1db1",
+        "reportSha256": "b524fea63bff0e06140b81beaa318d5cfe29acea521992b56abe36d82d6e1db1"
       },
       "checkedBy": {
-        "checker": "dsh-standards@1.6.7 (dsh-plugin-verify@0.1.0)",
+        "checker": "dsh-standards@1.6.10 (dsh-plugin-verify@0.1.0)",
         "command": "dsh-levels <package-dir> --no-runtime --format json",
         "securityCommand": "dsh-standards check <package-dir> --scope security --json"
       },
@@ -11038,8 +11038,8 @@
         "BOOST:LEV-3..LEV-4 (not-measured)"
       ],
       "validity": {
-        "checkedAt": "2026-11-07",
-        "expiresAt": "2027-02-05",
+        "checkedAt": "2026-11-14",
+        "expiresAt": "2027-02-12",
         "policy": "90d"
       },
       "lifecycle": "active",
@@ -11055,7 +11055,7 @@
       "repo": "https://github.com/mexiaosqwq/dsh-web-mobile",
       "license": "MIT",
       "scope": {
-        "dsh": "0.2.1-rc.5",
+        "dsh": "0.2.2-rc.3",
         "cordis": "^4.0.1",
         "platform": "web"
       },
@@ -11079,8 +11079,8 @@
         },
         {
           "id": "DSC-02",
-          "result": "WARN",
-          "coverage": "full"
+          "result": "NA",
+          "coverage": "partial"
         },
         {
           "id": "DSC-03",
@@ -11153,8 +11153,8 @@
           },
           {
             "id": "DSC-02",
-            "result": "FAIL",
-            "coverage": "full"
+            "result": "NA",
+            "coverage": "partial"
           },
           {
             "id": "DSC-03",
@@ -11260,19 +11260,19 @@
         "summary": {
           "total": 22,
           "checked": 19,
-          "blocking": 1,
+          "blocking": 0,
           "warn": 3,
-          "na": 3,
+          "na": 4,
           "notRun": 3
         },
         "command": "dsh-standards check <package-dir> --scope security --json"
       },
       "evidence": {
-        "sha256": "b7945d60a35446d55c5658de8191217d984c8ce19d19ed67b78ad8d719265988",
-        "reportSha256": "b7945d60a35446d55c5658de8191217d984c8ce19d19ed67b78ad8d719265988"
+        "sha256": "767a1f557891a39950b5dd831c69311cb1a601169cfcb49daee038d6a3ab2077",
+        "reportSha256": "767a1f557891a39950b5dd831c69311cb1a601169cfcb49daee038d6a3ab2077"
       },
       "checkedBy": {
-        "checker": "dsh-standards@1.6.7 (dsh-plugin-verify@0.1.0)",
+        "checker": "dsh-standards@1.6.10 (dsh-plugin-verify@0.1.0)",
         "command": "dsh-levels <package-dir> --no-runtime --format json",
         "securityCommand": "dsh-standards check <package-dir> --scope security --json"
       },
@@ -11283,8 +11283,8 @@
         "BOOST:LEV-3..LEV-4 (not-measured)"
       ],
       "validity": {
-        "checkedAt": "2026-11-07",
-        "expiresAt": "2027-02-05",
+        "checkedAt": "2026-11-14",
+        "expiresAt": "2027-02-12",
         "policy": "90d"
       },
       "lifecycle": "active",
@@ -11300,7 +11300,7 @@
       "repo": "https://github.com/xcisxc29/dsh-wechat",
       "license": "MIT",
       "scope": {
-        "dsh": "0.2.1-rc.5",
+        "dsh": "0.2.2-rc.3",
         "cordis": "4.0.6-alpha.1",
         "platform": "web"
       },
@@ -11324,8 +11324,8 @@
         },
         {
           "id": "DSC-02",
-          "result": "PASS",
-          "coverage": "full"
+          "result": "NA",
+          "coverage": "partial"
         },
         {
           "id": "DSC-03",
@@ -11398,8 +11398,8 @@
           },
           {
             "id": "DSC-02",
-            "result": "PASS",
-            "coverage": "full"
+            "result": "NA",
+            "coverage": "partial"
           },
           {
             "id": "DSC-03",
@@ -11507,17 +11507,17 @@
           "checked": 19,
           "blocking": 0,
           "warn": 3,
-          "na": 3,
+          "na": 4,
           "notRun": 3
         },
         "command": "dsh-standards check <package-dir> --scope security --json"
       },
       "evidence": {
-        "sha256": "41bc40c00da8d0f9f3a6848c9f5e15c0a29abf05630be0bbda76e855ec57a7cb",
-        "reportSha256": "41bc40c00da8d0f9f3a6848c9f5e15c0a29abf05630be0bbda76e855ec57a7cb"
+        "sha256": "98f10c58fefb021ddc85a975c4b9799f9e4f828d5e0fe095ba04f9d98de71d64",
+        "reportSha256": "98f10c58fefb021ddc85a975c4b9799f9e4f828d5e0fe095ba04f9d98de71d64"
       },
       "checkedBy": {
-        "checker": "dsh-standards@1.6.7 (dsh-plugin-verify@0.1.0)",
+        "checker": "dsh-standards@1.6.10 (dsh-plugin-verify@0.1.0)",
         "command": "dsh-levels <package-dir> --no-runtime --format json",
         "securityCommand": "dsh-standards check <package-dir> --scope security --json"
       },
@@ -11528,8 +11528,8 @@
         "BOOST:LEV-3..LEV-4 (not-measured)"
       ],
       "validity": {
-        "checkedAt": "2026-11-07",
-        "expiresAt": "2027-02-05",
+        "checkedAt": "2026-11-14",
+        "expiresAt": "2027-02-12",
         "policy": "90d"
       },
       "lifecycle": "active",
@@ -11545,7 +11545,7 @@
       "repo": "https://github.com/MeteorNOX/DeepSeek-Balance-Whale-Widget",
       "license": "MIT",
       "scope": {
-        "dsh": "0.2.1-rc.5",
+        "dsh": "0.2.2-rc.3",
         "cordis": "4.0.6-alpha.1",
         "platform": null
       },
@@ -11569,8 +11569,8 @@
         },
         {
           "id": "DSC-02",
-          "result": "WARN",
-          "coverage": "full"
+          "result": "NA",
+          "coverage": "partial"
         },
         {
           "id": "DSC-03",
@@ -11643,8 +11643,8 @@
           },
           {
             "id": "DSC-02",
-            "result": "FAIL",
-            "coverage": "full"
+            "result": "NA",
+            "coverage": "partial"
           },
           {
             "id": "DSC-03",
@@ -11750,19 +11750,19 @@
         "summary": {
           "total": 22,
           "checked": 19,
-          "blocking": 1,
+          "blocking": 0,
           "warn": 4,
-          "na": 3,
+          "na": 4,
           "notRun": 3
         },
         "command": "dsh-standards check <package-dir> --scope security --json"
       },
       "evidence": {
-        "sha256": "c89c1a8f35982e4befcd279f27b3692aa6c311e0058d0476c811a32ebdfe5843",
-        "reportSha256": "c89c1a8f35982e4befcd279f27b3692aa6c311e0058d0476c811a32ebdfe5843"
+        "sha256": "3fee339f822830a8f44232662068b3c4208ed79806991e2ecf3c3faebe2885ad",
+        "reportSha256": "3fee339f822830a8f44232662068b3c4208ed79806991e2ecf3c3faebe2885ad"
       },
       "checkedBy": {
-        "checker": "dsh-standards@1.6.7 (dsh-plugin-verify@0.1.0)",
+        "checker": "dsh-standards@1.6.10 (dsh-plugin-verify@0.1.0)",
         "command": "dsh-levels <package-dir> --no-runtime --format json",
         "securityCommand": "dsh-standards check <package-dir> --scope security --json"
       },
@@ -11773,8 +11773,8 @@
         "BOOST:LEV-3..LEV-4 (not-measured)"
       ],
       "validity": {
-        "checkedAt": "2026-11-07",
-        "expiresAt": "2027-02-05",
+        "checkedAt": "2026-11-14",
+        "expiresAt": "2027-02-12",
         "policy": "90d"
       },
       "lifecycle": "active",
@@ -11790,7 +11790,7 @@
       "repo": "https://github.com/helloHub1212/dsh-windows-mcp",
       "license": "MIT",
       "scope": {
-        "dsh": "0.2.1-rc.5",
+        "dsh": "0.2.2-rc.3",
         "cordis": "4.0.6-alpha.1",
         "platform": "web"
       },
@@ -11814,8 +11814,8 @@
         },
         {
           "id": "DSC-02",
-          "result": "WARN",
-          "coverage": "full"
+          "result": "NA",
+          "coverage": "partial"
         },
         {
           "id": "DSC-03",
@@ -11888,8 +11888,8 @@
           },
           {
             "id": "DSC-02",
-            "result": "FAIL",
-            "coverage": "full"
+            "result": "NA",
+            "coverage": "partial"
           },
           {
             "id": "DSC-03",
@@ -11995,19 +11995,19 @@
         "summary": {
           "total": 22,
           "checked": 19,
-          "blocking": 1,
+          "blocking": 0,
           "warn": 3,
-          "na": 3,
+          "na": 4,
           "notRun": 3
         },
         "command": "dsh-standards check <package-dir> --scope security --json"
       },
       "evidence": {
-        "sha256": "2662154ab7d751fcbc3bb6c476854e9f278a2497e91efedff286d1033aae637a",
-        "reportSha256": "2662154ab7d751fcbc3bb6c476854e9f278a2497e91efedff286d1033aae637a"
+        "sha256": "3f3afeb968e4605571ed8f91aaa00df209f0e31e713119501eac2ec225ebff59",
+        "reportSha256": "3f3afeb968e4605571ed8f91aaa00df209f0e31e713119501eac2ec225ebff59"
       },
       "checkedBy": {
-        "checker": "dsh-standards@1.6.7 (dsh-plugin-verify@0.1.0)",
+        "checker": "dsh-standards@1.6.10 (dsh-plugin-verify@0.1.0)",
         "command": "dsh-levels <package-dir> --no-runtime --format json",
         "securityCommand": "dsh-standards check <package-dir> --scope security --json"
       },
@@ -12018,8 +12018,8 @@
         "BOOST:LEV-3..LEV-4 (not-measured)"
       ],
       "validity": {
-        "checkedAt": "2026-11-07",
-        "expiresAt": "2027-02-05",
+        "checkedAt": "2026-11-14",
+        "expiresAt": "2027-02-12",
         "policy": "90d"
       },
       "lifecycle": "active",
@@ -12035,7 +12035,7 @@
       "repo": "https://github.com/corrinehu/dsh-workbuddy-connect",
       "license": "MIT",
       "scope": {
-        "dsh": "0.2.1-rc.5",
+        "dsh": "0.2.2-rc.3",
         "cordis": "^4.0.5",
         "platform": "web"
       },
@@ -12059,8 +12059,8 @@
         },
         {
           "id": "DSC-02",
-          "result": "WARN",
-          "coverage": "full"
+          "result": "NA",
+          "coverage": "partial"
         },
         {
           "id": "DSC-03",
@@ -12133,8 +12133,8 @@
           },
           {
             "id": "DSC-02",
-            "result": "FAIL",
-            "coverage": "full"
+            "result": "NA",
+            "coverage": "partial"
           },
           {
             "id": "DSC-03",
@@ -12240,19 +12240,19 @@
         "summary": {
           "total": 22,
           "checked": 19,
-          "blocking": 1,
+          "blocking": 0,
           "warn": 4,
-          "na": 3,
+          "na": 4,
           "notRun": 3
         },
         "command": "dsh-standards check <package-dir> --scope security --json"
       },
       "evidence": {
-        "sha256": "f5146cae3eea053bb25e33a1a4508bdabfbf1c114fcc0444e379c0fdf1e0f444",
-        "reportSha256": "f5146cae3eea053bb25e33a1a4508bdabfbf1c114fcc0444e379c0fdf1e0f444"
+        "sha256": "eb65b000ce55b0de52bc5210a724fa894871acf971cff6a572cc3664049c5566",
+        "reportSha256": "eb65b000ce55b0de52bc5210a724fa894871acf971cff6a572cc3664049c5566"
       },
       "checkedBy": {
-        "checker": "dsh-standards@1.6.7 (dsh-plugin-verify@0.1.0)",
+        "checker": "dsh-standards@1.6.10 (dsh-plugin-verify@0.1.0)",
         "command": "dsh-levels <package-dir> --no-runtime --format json",
         "securityCommand": "dsh-standards check <package-dir> --scope security --json"
       },
@@ -12263,8 +12263,8 @@
         "BOOST:LEV-3..LEV-4 (not-measured)"
       ],
       "validity": {
-        "checkedAt": "2026-11-07",
-        "expiresAt": "2027-02-05",
+        "checkedAt": "2026-11-14",
+        "expiresAt": "2027-02-12",
         "policy": "90d"
       },
       "lifecycle": "active",
