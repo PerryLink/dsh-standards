@@ -388,6 +388,6 @@ docs/             DEVELOPER-JOURNEY 等长期文档与 README 配图
 <p align="center"><sub>CC BY 4.0（文本）· Apache-2.0（代码）· 社区项目，与 DeepSeek 无关。</sub></p>
 
 
-## 相关：HCB 兼容矩阵
+## 相关：HCB（兼容 × 三轨）
 
-[HCB（Host Compatibility Baseline）](https://github.com/PerryLink/dsh-compat-baseline) 把插件的 `engines.dsh` 声明映射到最近 10 个 DSH host 版本，输出 `declared-compatible / declared-incompatible / unknown` 矩阵。它与 dsh-standards 的静态检查互补：HCB 回答「声明支持哪些版本」，dsh-standards 回答「代码是否满足规范」。
+[HCB v0.2](https://github.com/PerryLink/dsh-compat-baseline) 消费 `dsh-levels/1`：把 `engines.dsh` 映射到最近 10 个 DSH host，并把 `dsh.standards` 里的 ENTRY/FLOW/BOOST 三轨原样展示，另加 capability risk 与 `hcb-gate/1` 门禁建议。它**不把三轨压成分数**，也不替代 dsh-standards 的检查：HCB 回答「声明了什么」，dsh-standards 回答「实际是否通过」。
