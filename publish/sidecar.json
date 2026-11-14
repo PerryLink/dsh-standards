@@ -7,8 +7,8 @@
   },
   "checker": {
     "name": "dsh-standards",
-    "version": "1.6.10",
-    "sha": "18af83daa4b0403552a473737550c08ef8efda10"
+    "version": "1.6.11",
+    "sha": "2507b8c3365b5dcfe31be66725a1ca2577af352b"
   },
   "notClaimed": [
     "official",
@@ -30,9 +30,16 @@
       "repo": "https://github.com/howmp/dsh-pentest",
       "license": "MIT",
       "scope": {
-        "dsh": "0.2.2-rc.3",
+        "dsh": null,
         "cordis": "^4.0.1",
         "platform": "web"
+      },
+      "anchor": {
+        "dsh": "0.2.2-rc.3",
+        "cordis": "4.1.0",
+        "commit": "38a6a5c965aa99ab525161efb7cc5cf1fe62fced",
+        "source": "host",
+        "suspect": false
       },
       "levels": {
         "entry": {
@@ -243,11 +250,11 @@
         "command": "dsh-standards check <package-dir> --scope security --json"
       },
       "evidence": {
-        "sha256": "f8165f4f42ad95e439c5cd95e7bbcbbd30242202862ac3ee3458263b7c18ec3e",
-        "reportSha256": "f8165f4f42ad95e439c5cd95e7bbcbbd30242202862ac3ee3458263b7c18ec3e"
+        "sha256": "32a6b120fd4b195b717cdc0b28af8e01e1aa3f009878441efc00455630cf34fc",
+        "reportSha256": "32a6b120fd4b195b717cdc0b28af8e01e1aa3f009878441efc00455630cf34fc"
       },
       "checkedBy": {
-        "checker": "dsh-standards@1.6.10 (dsh-plugin-verify@0.1.0)",
+        "checker": "dsh-standards@1.6.11 (dsh-plugin-verify@0.1.0)",
         "command": "dsh-levels <package-dir> --no-runtime --format json",
         "securityCommand": "dsh-standards check <package-dir> --scope security --json"
       },
@@ -275,9 +282,16 @@
       "repo": "https://github.com/xmanrui/dsh-im",
       "license": "MIT",
       "scope": {
-        "dsh": "0.2.2-rc.3",
-        "cordis": "4.0.6-alpha.1",
+        "dsh": null,
+        "cordis": null,
         "platform": "web"
+      },
+      "anchor": {
+        "dsh": "0.2.2-rc.3",
+        "cordis": "4.1.0",
+        "commit": "38a6a5c965aa99ab525161efb7cc5cf1fe62fced",
+        "source": "host",
+        "suspect": false
       },
       "levels": {
         "entry": {
@@ -350,7 +364,7 @@
         {
           "id": "DSC-11",
           "result": "WARN",
-          "coverage": "full"
+          "coverage": "partial"
         },
         {
           "id": "DSC-12",
@@ -419,7 +433,7 @@
           {
             "id": "DSC-11",
             "result": "WARN",
-            "coverage": "full"
+            "coverage": "partial"
           },
           {
             "id": "DSC-12",
@@ -488,11 +502,11 @@
         "command": "dsh-standards check <package-dir> --scope security --json"
       },
       "evidence": {
-        "sha256": "8716d4fee5b77aa5f7389948fb4ed601bd863a74e6dccfaae7b2d795fca8361a",
-        "reportSha256": "8716d4fee5b77aa5f7389948fb4ed601bd863a74e6dccfaae7b2d795fca8361a"
+        "sha256": "6ef5e0a01e297e22876ae6358bc2473ea861867f18e4b3561beae939341b1a7e",
+        "reportSha256": "6ef5e0a01e297e22876ae6358bc2473ea861867f18e4b3561beae939341b1a7e"
       },
       "checkedBy": {
-        "checker": "dsh-standards@1.6.10 (dsh-plugin-verify@0.1.0)",
+        "checker": "dsh-standards@1.6.11 (dsh-plugin-verify@0.1.0)",
         "command": "dsh-levels <package-dir> --no-runtime --format json",
         "securityCommand": "dsh-standards check <package-dir> --scope security --json"
       },
@@ -524,6 +538,13 @@
         "cordis": "^4.0.1",
         "platform": "web"
       },
+      "anchor": {
+        "dsh": "0.2.2-rc.3",
+        "cordis": "4.1.0",
+        "commit": "38a6a5c965aa99ab525161efb7cc5cf1fe62fced",
+        "source": "host",
+        "suspect": false
+      },
       "levels": {
         "entry": {
           "state": "recognized",
@@ -733,11 +754,11 @@
         "command": "dsh-standards check <package-dir> --scope security --json"
       },
       "evidence": {
-        "sha256": "7cdb838d966c02db6ab2926fa904db562f1a2cd05fadb9b8d9fcce0355c003f5",
-        "reportSha256": "7cdb838d966c02db6ab2926fa904db562f1a2cd05fadb9b8d9fcce0355c003f5"
+        "sha256": "75a30cd288b687d007fd72e9a377f220acf71e8026447dd7ed5035c55a240c7b",
+        "reportSha256": "75a30cd288b687d007fd72e9a377f220acf71e8026447dd7ed5035c55a240c7b"
       },
       "checkedBy": {
-        "checker": "dsh-standards@1.6.10 (dsh-plugin-verify@0.1.0)",
+        "checker": "dsh-standards@1.6.11 (dsh-plugin-verify@0.1.0)",
         "command": "dsh-levels <package-dir> --no-runtime --format json",
         "securityCommand": "dsh-standards check <package-dir> --scope security --json"
       },
@@ -765,9 +786,16 @@
       "repo": "https://github.com/0x7A7A6572/dsh-forge-studio",
       "license": "MIT",
       "scope": {
-        "dsh": "0.2.2-rc.3",
+        "dsh": null,
         "cordis": "^4.0.4",
         "platform": "web"
+      },
+      "anchor": {
+        "dsh": "0.2.2-rc.3",
+        "cordis": "4.1.0",
+        "commit": "38a6a5c965aa99ab525161efb7cc5cf1fe62fced",
+        "source": "host",
+        "suspect": false
       },
       "levels": {
         "entry": {
@@ -978,11 +1006,11 @@
         "command": "dsh-standards check <package-dir> --scope security --json"
       },
       "evidence": {
-        "sha256": "74e1fe555fbce0263b687981dbc3b1e8ea1db0ddcb87f4d29abc0029b0660c4f",
-        "reportSha256": "74e1fe555fbce0263b687981dbc3b1e8ea1db0ddcb87f4d29abc0029b0660c4f"
+        "sha256": "d97d0598824cfb4555310fed486e69ad4795379398cb945a755f37b3efa31320",
+        "reportSha256": "d97d0598824cfb4555310fed486e69ad4795379398cb945a755f37b3efa31320"
       },
       "checkedBy": {
-        "checker": "dsh-standards@1.6.10 (dsh-plugin-verify@0.1.0)",
+        "checker": "dsh-standards@1.6.11 (dsh-plugin-verify@0.1.0)",
         "command": "dsh-levels <package-dir> --no-runtime --format json",
         "securityCommand": "dsh-standards check <package-dir> --scope security --json"
       },
@@ -1011,8 +1039,15 @@
       "license": "MIT",
       "scope": {
         "dsh": ">=0.1.7-rc.1",
-        "cordis": "4.0.6-alpha.1",
+        "cordis": null,
         "platform": "web"
+      },
+      "anchor": {
+        "dsh": "0.2.2-rc.3",
+        "cordis": "4.1.0",
+        "commit": "38a6a5c965aa99ab525161efb7cc5cf1fe62fced",
+        "source": "host",
+        "suspect": false
       },
       "levels": {
         "entry": {
@@ -1223,11 +1258,11 @@
         "command": "dsh-standards check <package-dir> --scope security --json"
       },
       "evidence": {
-        "sha256": "7dbc831d621850b7a81532986deafbd40c895dc4baaf64c4deba5c4213b3cc10",
-        "reportSha256": "7dbc831d621850b7a81532986deafbd40c895dc4baaf64c4deba5c4213b3cc10"
+        "sha256": "4f2e72851ba60a40c4a4c9d4987e2c7d1147c916e1e6926acef072cc5bdfa767",
+        "reportSha256": "4f2e72851ba60a40c4a4c9d4987e2c7d1147c916e1e6926acef072cc5bdfa767"
       },
       "checkedBy": {
-        "checker": "dsh-standards@1.6.10 (dsh-plugin-verify@0.1.0)",
+        "checker": "dsh-standards@1.6.11 (dsh-plugin-verify@0.1.0)",
         "command": "dsh-levels <package-dir> --no-runtime --format json",
         "securityCommand": "dsh-standards check <package-dir> --scope security --json"
       },
@@ -1259,6 +1294,13 @@
         "cordis": "^4.0.1",
         "platform": "web"
       },
+      "anchor": {
+        "dsh": "0.2.2-rc.3",
+        "cordis": "4.1.0",
+        "commit": "38a6a5c965aa99ab525161efb7cc5cf1fe62fced",
+        "source": "host",
+        "suspect": false
+      },
       "levels": {
         "entry": {
           "state": "recognized",
@@ -1330,7 +1372,7 @@
         {
           "id": "DSC-11",
           "result": "WARN",
-          "coverage": "full"
+          "coverage": "partial"
         },
         {
           "id": "DSC-12",
@@ -1399,7 +1441,7 @@
           {
             "id": "DSC-11",
             "result": "WARN",
-            "coverage": "full"
+            "coverage": "partial"
           },
           {
             "id": "DSC-12",
@@ -1468,11 +1510,11 @@
         "command": "dsh-standards check <package-dir> --scope security --json"
       },
       "evidence": {
-        "sha256": "32f1246450d8fec4a6de2acdc9d237297872881ab276001d96a4adc91bcdfa89",
-        "reportSha256": "32f1246450d8fec4a6de2acdc9d237297872881ab276001d96a4adc91bcdfa89"
+        "sha256": "37828585bb32a90ca613b69ca6943a21364e8726e565f59a118a5a2b30149625",
+        "reportSha256": "37828585bb32a90ca613b69ca6943a21364e8726e565f59a118a5a2b30149625"
       },
       "checkedBy": {
-        "checker": "dsh-standards@1.6.10 (dsh-plugin-verify@0.1.0)",
+        "checker": "dsh-standards@1.6.11 (dsh-plugin-verify@0.1.0)",
         "command": "dsh-levels <package-dir> --no-runtime --format json",
         "securityCommand": "dsh-standards check <package-dir> --scope security --json"
       },
@@ -1504,6 +1546,13 @@
         "cordis": "^4.0.5",
         "platform": "web"
       },
+      "anchor": {
+        "dsh": "0.2.2-rc.3",
+        "cordis": "4.1.0",
+        "commit": "38a6a5c965aa99ab525161efb7cc5cf1fe62fced",
+        "source": "host",
+        "suspect": false
+      },
       "levels": {
         "entry": {
           "state": "recognized",
@@ -1713,11 +1762,11 @@
         "command": "dsh-standards check <package-dir> --scope security --json"
       },
       "evidence": {
-        "sha256": "92465f93bfdb86549327788a60800f23292e638a27540779b4ba28f879e57e74",
-        "reportSha256": "92465f93bfdb86549327788a60800f23292e638a27540779b4ba28f879e57e74"
+        "sha256": "22dff14d75f957eeba44565159bec1f223b74251bf6eb686befe0b3a3f52dedb",
+        "reportSha256": "22dff14d75f957eeba44565159bec1f223b74251bf6eb686befe0b3a3f52dedb"
       },
       "checkedBy": {
-        "checker": "dsh-standards@1.6.10 (dsh-plugin-verify@0.1.0)",
+        "checker": "dsh-standards@1.6.11 (dsh-plugin-verify@0.1.0)",
         "command": "dsh-levels <package-dir> --no-runtime --format json",
         "securityCommand": "dsh-standards check <package-dir> --scope security --json"
       },
@@ -1745,9 +1794,16 @@
       "repo": "https://github.com/HsiangNianian/dsh-auto-continue",
       "license": "MIT",
       "scope": {
-        "dsh": "0.2.2-rc.3",
+        "dsh": null,
         "cordis": "^4.0.1",
         "platform": "web"
+      },
+      "anchor": {
+        "dsh": "0.2.2-rc.3",
+        "cordis": "4.1.0",
+        "commit": "38a6a5c965aa99ab525161efb7cc5cf1fe62fced",
+        "source": "host",
+        "suspect": false
       },
       "levels": {
         "entry": {
@@ -1958,11 +2014,11 @@
         "command": "dsh-standards check <package-dir> --scope security --json"
       },
       "evidence": {
-        "sha256": "44c142d8db6d368bbbc9f68c25fc460fdb39551b1937b18f8d10408bfeff65fe",
-        "reportSha256": "44c142d8db6d368bbbc9f68c25fc460fdb39551b1937b18f8d10408bfeff65fe"
+        "sha256": "3fffc70e904e82bf9d3560431e9b83b2ff83d33e8e3e21edb2af72caaca062f8",
+        "reportSha256": "3fffc70e904e82bf9d3560431e9b83b2ff83d33e8e3e21edb2af72caaca062f8"
       },
       "checkedBy": {
-        "checker": "dsh-standards@1.6.10 (dsh-plugin-verify@0.1.0)",
+        "checker": "dsh-standards@1.6.11 (dsh-plugin-verify@0.1.0)",
         "command": "dsh-levels <package-dir> --no-runtime --format json",
         "securityCommand": "dsh-standards check <package-dir> --scope security --json"
       },
@@ -1990,9 +2046,16 @@
       "repo": "https://github.com/xiajiajun516/dsh-config-manager",
       "license": "MIT",
       "scope": {
-        "dsh": "0.2.2-rc.3",
-        "cordis": "4.0.6-alpha.1",
+        "dsh": null,
+        "cordis": null,
         "platform": "web"
+      },
+      "anchor": {
+        "dsh": "0.2.2-rc.3",
+        "cordis": "4.1.0",
+        "commit": "38a6a5c965aa99ab525161efb7cc5cf1fe62fced",
+        "source": "host",
+        "suspect": false
       },
       "levels": {
         "entry": {
@@ -2065,7 +2128,7 @@
         {
           "id": "DSC-11",
           "result": "WARN",
-          "coverage": "full"
+          "coverage": "partial"
         },
         {
           "id": "DSC-12",
@@ -2134,7 +2197,7 @@
           {
             "id": "DSC-11",
             "result": "WARN",
-            "coverage": "full"
+            "coverage": "partial"
           },
           {
             "id": "DSC-12",
@@ -2203,11 +2266,11 @@
         "command": "dsh-standards check <package-dir> --scope security --json"
       },
       "evidence": {
-        "sha256": "b7f21eb8de5e874b10803219d6a9154465c35e02220b86ac80a91c0478f01433",
-        "reportSha256": "b7f21eb8de5e874b10803219d6a9154465c35e02220b86ac80a91c0478f01433"
+        "sha256": "b79f50f4d706d625267ff7475ec4fa1c33a705e0daf9fb5450b1ce7c3221ef7e",
+        "reportSha256": "b79f50f4d706d625267ff7475ec4fa1c33a705e0daf9fb5450b1ce7c3221ef7e"
       },
       "checkedBy": {
-        "checker": "dsh-standards@1.6.10 (dsh-plugin-verify@0.1.0)",
+        "checker": "dsh-standards@1.6.11 (dsh-plugin-verify@0.1.0)",
         "command": "dsh-levels <package-dir> --no-runtime --format json",
         "securityCommand": "dsh-standards check <package-dir> --scope security --json"
       },
@@ -2238,6 +2301,13 @@
         "dsh": ">=0.2.0-rc.2 || >=0.2.1-rc.2 || >=0.2.2-rc.1",
         "cordis": "^4.0.4 || >=4.0.6-alpha.2 <5.0.0",
         "platform": "web"
+      },
+      "anchor": {
+        "dsh": "0.2.2-rc.3",
+        "cordis": "4.1.0",
+        "commit": "38a6a5c965aa99ab525161efb7cc5cf1fe62fced",
+        "source": "host",
+        "suspect": false
       },
       "levels": {
         "entry": {
@@ -2448,11 +2518,11 @@
         "command": "dsh-standards check <package-dir> --scope security --json"
       },
       "evidence": {
-        "sha256": "732f54a5fe7b79245ebf1ac85e00df74909577f0836eee9eab3ca8d0214048b5",
-        "reportSha256": "732f54a5fe7b79245ebf1ac85e00df74909577f0836eee9eab3ca8d0214048b5"
+        "sha256": "8c54fde5f47cd9f81788920e166bc044ee456f34c29c911b0993d1efa86f5b50",
+        "reportSha256": "8c54fde5f47cd9f81788920e166bc044ee456f34c29c911b0993d1efa86f5b50"
       },
       "checkedBy": {
-        "checker": "dsh-standards@1.6.10 (dsh-plugin-verify@0.1.0)",
+        "checker": "dsh-standards@1.6.11 (dsh-plugin-verify@0.1.0)",
         "command": "dsh-levels <package-dir> --no-runtime --format json",
         "securityCommand": "dsh-standards check <package-dir> --scope security --json"
       },
@@ -2481,8 +2551,15 @@
       "license": "MIT",
       "scope": {
         "dsh": ">=0.2.0-rc.1 <0.3.0-0",
-        "cordis": "4.0.6-alpha.1",
+        "cordis": null,
         "platform": "web"
+      },
+      "anchor": {
+        "dsh": "0.2.2-rc.3",
+        "cordis": "4.1.0",
+        "commit": "38a6a5c965aa99ab525161efb7cc5cf1fe62fced",
+        "source": "host",
+        "suspect": false
       },
       "levels": {
         "entry": {
@@ -2555,7 +2632,7 @@
         {
           "id": "DSC-11",
           "result": "WARN",
-          "coverage": "full"
+          "coverage": "partial"
         },
         {
           "id": "DSC-12",
@@ -2624,7 +2701,7 @@
           {
             "id": "DSC-11",
             "result": "WARN",
-            "coverage": "full"
+            "coverage": "partial"
           },
           {
             "id": "DSC-12",
@@ -2693,11 +2770,11 @@
         "command": "dsh-standards check <package-dir> --scope security --json"
       },
       "evidence": {
-        "sha256": "846232dc67ab7a97186af59123e711b3565848c1621c6ef95575395d2e746d8e",
-        "reportSha256": "846232dc67ab7a97186af59123e711b3565848c1621c6ef95575395d2e746d8e"
+        "sha256": "ba003cf877e12dfdf9bbce18bc812ea619846bcf6ff92e333eadbfe717717e76",
+        "reportSha256": "ba003cf877e12dfdf9bbce18bc812ea619846bcf6ff92e333eadbfe717717e76"
       },
       "checkedBy": {
-        "checker": "dsh-standards@1.6.10 (dsh-plugin-verify@0.1.0)",
+        "checker": "dsh-standards@1.6.11 (dsh-plugin-verify@0.1.0)",
         "command": "dsh-levels <package-dir> --no-runtime --format json",
         "securityCommand": "dsh-standards check <package-dir> --scope security --json"
       },
@@ -2725,9 +2802,16 @@
       "repo": "https://gitcode.com/LLLAAAAA/dsh-dream-skin",
       "license": "MIT",
       "scope": {
-        "dsh": "0.2.2-rc.3",
+        "dsh": null,
         "cordis": "^4.0.1 || >=4.0.5-0 <5",
         "platform": "web"
+      },
+      "anchor": {
+        "dsh": "0.2.2-rc.3",
+        "cordis": "4.1.0",
+        "commit": "38a6a5c965aa99ab525161efb7cc5cf1fe62fced",
+        "source": "host",
+        "suspect": false
       },
       "levels": {
         "entry": {
@@ -2938,11 +3022,11 @@
         "command": "dsh-standards check <package-dir> --scope security --json"
       },
       "evidence": {
-        "sha256": "5898aecbe6225c2b9603e14e7c3e6bec26ba7d8bc7544a4ffa09efeb9e381c57",
-        "reportSha256": "5898aecbe6225c2b9603e14e7c3e6bec26ba7d8bc7544a4ffa09efeb9e381c57"
+        "sha256": "2d0e61b6b0afc3355eddb82a30c15f29fe478a3eb462695f851d7bc9df0d4036",
+        "reportSha256": "2d0e61b6b0afc3355eddb82a30c15f29fe478a3eb462695f851d7bc9df0d4036"
       },
       "checkedBy": {
-        "checker": "dsh-standards@1.6.10 (dsh-plugin-verify@0.1.0)",
+        "checker": "dsh-standards@1.6.11 (dsh-plugin-verify@0.1.0)",
         "command": "dsh-levels <package-dir> --no-runtime --format json",
         "securityCommand": "dsh-standards check <package-dir> --scope security --json"
       },
@@ -2973,6 +3057,13 @@
         "dsh": ">=0.1.2-alpha.2 <0.3.0-0",
         "cordis": "^4.0.2",
         "platform": "web"
+      },
+      "anchor": {
+        "dsh": "0.2.2-rc.3",
+        "cordis": "4.1.0",
+        "commit": "38a6a5c965aa99ab525161efb7cc5cf1fe62fced",
+        "source": "host",
+        "suspect": false
       },
       "levels": {
         "entry": {
@@ -3183,11 +3274,11 @@
         "command": "dsh-standards check <package-dir> --scope security --json"
       },
       "evidence": {
-        "sha256": "a21135e88742d1e4887cae3f2dfd171ffb1a2c33919780a06973b2b426eae491",
-        "reportSha256": "a21135e88742d1e4887cae3f2dfd171ffb1a2c33919780a06973b2b426eae491"
+        "sha256": "2f45c173002c69f56a28fcb6e6a63c5d02d138ab7d31958f21811626cdb1c984",
+        "reportSha256": "2f45c173002c69f56a28fcb6e6a63c5d02d138ab7d31958f21811626cdb1c984"
       },
       "checkedBy": {
-        "checker": "dsh-standards@1.6.10 (dsh-plugin-verify@0.1.0)",
+        "checker": "dsh-standards@1.6.11 (dsh-plugin-verify@0.1.0)",
         "command": "dsh-levels <package-dir> --no-runtime --format json",
         "securityCommand": "dsh-standards check <package-dir> --scope security --json"
       },
@@ -3215,9 +3306,16 @@
       "repo": "https://github.com/awesome-dsh-plugin/dsh-find-plugin",
       "license": "MIT",
       "scope": {
-        "dsh": "0.2.2-rc.3",
+        "dsh": null,
         "cordis": "^4.0.1",
         "platform": null
+      },
+      "anchor": {
+        "dsh": "0.2.2-rc.3",
+        "cordis": "4.1.0",
+        "commit": "38a6a5c965aa99ab525161efb7cc5cf1fe62fced",
+        "source": "host",
+        "suspect": false
       },
       "levels": {
         "entry": {
@@ -3428,11 +3526,11 @@
         "command": "dsh-standards check <package-dir> --scope security --json"
       },
       "evidence": {
-        "sha256": "4884d4408e6d39b5467c8ef6473bfb1d351af23cd81aecec9ad318be44639e2a",
-        "reportSha256": "4884d4408e6d39b5467c8ef6473bfb1d351af23cd81aecec9ad318be44639e2a"
+        "sha256": "879c05686b851d8d800caf1aca59a0968da7e060f7a74a42010a641487385807",
+        "reportSha256": "879c05686b851d8d800caf1aca59a0968da7e060f7a74a42010a641487385807"
       },
       "checkedBy": {
-        "checker": "dsh-standards@1.6.10 (dsh-plugin-verify@0.1.0)",
+        "checker": "dsh-standards@1.6.11 (dsh-plugin-verify@0.1.0)",
         "command": "dsh-levels <package-dir> --no-runtime --format json",
         "securityCommand": "dsh-standards check <package-dir> --scope security --json"
       },
@@ -3463,6 +3561,13 @@
         "dsh": ">=0.1.7-rc.1",
         "cordis": "^4.0.1",
         "platform": "web"
+      },
+      "anchor": {
+        "dsh": "0.2.2-rc.3",
+        "cordis": "4.1.0",
+        "commit": "38a6a5c965aa99ab525161efb7cc5cf1fe62fced",
+        "source": "host",
+        "suspect": false
       },
       "levels": {
         "entry": {
@@ -3673,11 +3778,11 @@
         "command": "dsh-standards check <package-dir> --scope security --json"
       },
       "evidence": {
-        "sha256": "df98bd03567f37048ad8202f63f91e6ea66022c2ab8004f0c9583b3c3c7aed68",
-        "reportSha256": "df98bd03567f37048ad8202f63f91e6ea66022c2ab8004f0c9583b3c3c7aed68"
+        "sha256": "69e8f7c819d29de51aaf9cca99908896cd7cddd105215da560e059209eb157fa",
+        "reportSha256": "69e8f7c819d29de51aaf9cca99908896cd7cddd105215da560e059209eb157fa"
       },
       "checkedBy": {
-        "checker": "dsh-standards@1.6.10 (dsh-plugin-verify@0.1.0)",
+        "checker": "dsh-standards@1.6.11 (dsh-plugin-verify@0.1.0)",
         "command": "dsh-levels <package-dir> --no-runtime --format json",
         "securityCommand": "dsh-standards check <package-dir> --scope security --json"
       },
@@ -3705,9 +3810,16 @@
       "repo": "https://github.com/lhuans/dsh-genui",
       "license": "MIT",
       "scope": {
-        "dsh": "0.2.2-rc.3",
+        "dsh": null,
         "cordis": "^4.0.1",
         "platform": "web"
+      },
+      "anchor": {
+        "dsh": "0.2.2-rc.3",
+        "cordis": "4.1.0",
+        "commit": "38a6a5c965aa99ab525161efb7cc5cf1fe62fced",
+        "source": "host",
+        "suspect": false
       },
       "levels": {
         "entry": {
@@ -3780,7 +3892,7 @@
         {
           "id": "DSC-11",
           "result": "WARN",
-          "coverage": "full"
+          "coverage": "partial"
         },
         {
           "id": "DSC-12",
@@ -3849,7 +3961,7 @@
           {
             "id": "DSC-11",
             "result": "WARN",
-            "coverage": "full"
+            "coverage": "partial"
           },
           {
             "id": "DSC-12",
@@ -3918,11 +4030,11 @@
         "command": "dsh-standards check <package-dir> --scope security --json"
       },
       "evidence": {
-        "sha256": "3c4eb2adebbc866836fd2bc4d9cdb23c6bfdc2033b050043a650fa1decb36551",
-        "reportSha256": "3c4eb2adebbc866836fd2bc4d9cdb23c6bfdc2033b050043a650fa1decb36551"
+        "sha256": "7e5d8a57faca337ee8ab40329062494449a52c36804031437484023d77133f4e",
+        "reportSha256": "7e5d8a57faca337ee8ab40329062494449a52c36804031437484023d77133f4e"
       },
       "checkedBy": {
-        "checker": "dsh-standards@1.6.10 (dsh-plugin-verify@0.1.0)",
+        "checker": "dsh-standards@1.6.11 (dsh-plugin-verify@0.1.0)",
         "command": "dsh-levels <package-dir> --no-runtime --format json",
         "securityCommand": "dsh-standards check <package-dir> --scope security --json"
       },
@@ -3950,9 +4062,16 @@
       "repo": "https://github.com/shanliuling/dsh-image-gen",
       "license": "Apache-2.0",
       "scope": {
-        "dsh": "0.2.2-rc.3",
+        "dsh": null,
         "cordis": ">=4.0.0 <5",
         "platform": "web"
+      },
+      "anchor": {
+        "dsh": "0.2.2-rc.3",
+        "cordis": "4.1.0",
+        "commit": "38a6a5c965aa99ab525161efb7cc5cf1fe62fced",
+        "source": "host",
+        "suspect": false
       },
       "levels": {
         "entry": {
@@ -4025,7 +4144,7 @@
         {
           "id": "DSC-11",
           "result": "WARN",
-          "coverage": "full"
+          "coverage": "partial"
         },
         {
           "id": "DSC-12",
@@ -4094,7 +4213,7 @@
           {
             "id": "DSC-11",
             "result": "WARN",
-            "coverage": "full"
+            "coverage": "partial"
           },
           {
             "id": "DSC-12",
@@ -4163,11 +4282,11 @@
         "command": "dsh-standards check <package-dir> --scope security --json"
       },
       "evidence": {
-        "sha256": "500306cd954c62f33d9441c8930ec2c580c41ca7aabbea69cd13a842abceefa0",
-        "reportSha256": "500306cd954c62f33d9441c8930ec2c580c41ca7aabbea69cd13a842abceefa0"
+        "sha256": "2a816de6a30f4ba2c0d5da30d00bc4d2487073330f54831b2aee8f8741995dbc",
+        "reportSha256": "2a816de6a30f4ba2c0d5da30d00bc4d2487073330f54831b2aee8f8741995dbc"
       },
       "checkedBy": {
-        "checker": "dsh-standards@1.6.10 (dsh-plugin-verify@0.1.0)",
+        "checker": "dsh-standards@1.6.11 (dsh-plugin-verify@0.1.0)",
         "command": "dsh-levels <package-dir> --no-runtime --format json",
         "securityCommand": "dsh-standards check <package-dir> --scope security --json"
       },
@@ -4195,9 +4314,16 @@
       "repo": "https://github.com/iasiv5/dsh-m",
       "license": "MIT",
       "scope": {
-        "dsh": "0.2.2-rc.3",
+        "dsh": null,
         "cordis": "*",
         "platform": "web"
+      },
+      "anchor": {
+        "dsh": "0.2.2-rc.3",
+        "cordis": "4.1.0",
+        "commit": "38a6a5c965aa99ab525161efb7cc5cf1fe62fced",
+        "source": "host",
+        "suspect": false
       },
       "levels": {
         "entry": {
@@ -4408,11 +4534,11 @@
         "command": "dsh-standards check <package-dir> --scope security --json"
       },
       "evidence": {
-        "sha256": "8e77820123e0c8be3d393049291edffbbb286d1c27e34a6587353919f96d1c98",
-        "reportSha256": "8e77820123e0c8be3d393049291edffbbb286d1c27e34a6587353919f96d1c98"
+        "sha256": "392a28a8ac25a2b28eddd306bd31110c03655271783ed63f2f20fa94a31b9d3f",
+        "reportSha256": "392a28a8ac25a2b28eddd306bd31110c03655271783ed63f2f20fa94a31b9d3f"
       },
       "checkedBy": {
-        "checker": "dsh-standards@1.6.10 (dsh-plugin-verify@0.1.0)",
+        "checker": "dsh-standards@1.6.11 (dsh-plugin-verify@0.1.0)",
         "command": "dsh-levels <package-dir> --no-runtime --format json",
         "securityCommand": "dsh-standards check <package-dir> --scope security --json"
       },
@@ -4440,9 +4566,16 @@
       "repo": "https://github.com/yyh-001/dsh-meme",
       "license": "MIT",
       "scope": {
-        "dsh": "0.2.2-rc.3",
-        "cordis": "4.0.6-alpha.1",
+        "dsh": null,
+        "cordis": null,
         "platform": "web"
+      },
+      "anchor": {
+        "dsh": "0.2.2-rc.3",
+        "cordis": "4.1.0",
+        "commit": "38a6a5c965aa99ab525161efb7cc5cf1fe62fced",
+        "source": "host",
+        "suspect": false
       },
       "levels": {
         "entry": {
@@ -4653,11 +4786,11 @@
         "command": "dsh-standards check <package-dir> --scope security --json"
       },
       "evidence": {
-        "sha256": "21bd6997dd759b4e00052df0fc937ed5c4aa30af8adf291203ce6a95521845d2",
-        "reportSha256": "21bd6997dd759b4e00052df0fc937ed5c4aa30af8adf291203ce6a95521845d2"
+        "sha256": "539133dc8cf07555192f3a1334c97e98f601445e35d8557b57948a4054a5cb3f",
+        "reportSha256": "539133dc8cf07555192f3a1334c97e98f601445e35d8557b57948a4054a5cb3f"
       },
       "checkedBy": {
-        "checker": "dsh-standards@1.6.10 (dsh-plugin-verify@0.1.0)",
+        "checker": "dsh-standards@1.6.11 (dsh-plugin-verify@0.1.0)",
         "command": "dsh-levels <package-dir> --no-runtime --format json",
         "securityCommand": "dsh-standards check <package-dir> --scope security --json"
       },
@@ -4688,6 +4821,13 @@
         "dsh": ">=0.2.0-rc.2 <0.2.1-0 || >=0.2.1-rc.1 <0.3.0-0",
         "cordis": "^4.0.4",
         "platform": "web"
+      },
+      "anchor": {
+        "dsh": "0.2.2-rc.3",
+        "cordis": "4.1.0",
+        "commit": "38a6a5c965aa99ab525161efb7cc5cf1fe62fced",
+        "source": "host",
+        "suspect": false
       },
       "levels": {
         "entry": {
@@ -4760,7 +4900,7 @@
         {
           "id": "DSC-11",
           "result": "WARN",
-          "coverage": "full"
+          "coverage": "partial"
         },
         {
           "id": "DSC-12",
@@ -4829,7 +4969,7 @@
           {
             "id": "DSC-11",
             "result": "WARN",
-            "coverage": "full"
+            "coverage": "partial"
           },
           {
             "id": "DSC-12",
@@ -4898,11 +5038,11 @@
         "command": "dsh-standards check <package-dir> --scope security --json"
       },
       "evidence": {
-        "sha256": "de0c5dbd4371f6eb4da0a0d0fd997b8b0c46a5a4b539956d2e4d893c01b8665b",
-        "reportSha256": "de0c5dbd4371f6eb4da0a0d0fd997b8b0c46a5a4b539956d2e4d893c01b8665b"
+        "sha256": "117af2c68a5aa4192db2f70e89cd225247ae6e1a1739aa6351d6b3ca09addd0f",
+        "reportSha256": "117af2c68a5aa4192db2f70e89cd225247ae6e1a1739aa6351d6b3ca09addd0f"
       },
       "checkedBy": {
-        "checker": "dsh-standards@1.6.10 (dsh-plugin-verify@0.1.0)",
+        "checker": "dsh-standards@1.6.11 (dsh-plugin-verify@0.1.0)",
         "command": "dsh-levels <package-dir> --no-runtime --format json",
         "securityCommand": "dsh-standards check <package-dir> --scope security --json"
       },
@@ -4933,6 +5073,13 @@
         "dsh": ">=0.2.0",
         "cordis": ">=4.0.1",
         "platform": "web"
+      },
+      "anchor": {
+        "dsh": "0.2.2-rc.3",
+        "cordis": "4.1.0",
+        "commit": "38a6a5c965aa99ab525161efb7cc5cf1fe62fced",
+        "source": "host",
+        "suspect": false
       },
       "levels": {
         "entry": {
@@ -5005,7 +5152,7 @@
         {
           "id": "DSC-11",
           "result": "WARN",
-          "coverage": "full"
+          "coverage": "partial"
         },
         {
           "id": "DSC-12",
@@ -5074,7 +5221,7 @@
           {
             "id": "DSC-11",
             "result": "WARN",
-            "coverage": "full"
+            "coverage": "partial"
           },
           {
             "id": "DSC-12",
@@ -5143,11 +5290,11 @@
         "command": "dsh-standards check <package-dir> --scope security --json"
       },
       "evidence": {
-        "sha256": "12b35ce63a5646c40f67d309211ef06f70daeebec881178c6b5270623cde37a7",
-        "reportSha256": "12b35ce63a5646c40f67d309211ef06f70daeebec881178c6b5270623cde37a7"
+        "sha256": "57ccd27ec13bb58b766f04a0e7ea1eb90c759b3a8c9b027853d2435376d85508",
+        "reportSha256": "57ccd27ec13bb58b766f04a0e7ea1eb90c759b3a8c9b027853d2435376d85508"
       },
       "checkedBy": {
-        "checker": "dsh-standards@1.6.10 (dsh-plugin-verify@0.1.0)",
+        "checker": "dsh-standards@1.6.11 (dsh-plugin-verify@0.1.0)",
         "command": "dsh-levels <package-dir> --no-runtime --format json",
         "securityCommand": "dsh-standards check <package-dir> --scope security --json"
       },
@@ -5175,9 +5322,16 @@
       "repo": "https://github.com/saya-ch/dsh-mobile",
       "license": "Apache-2.0",
       "scope": {
-        "dsh": "0.2.2-rc.3",
+        "dsh": null,
         "cordis": "^4.0.1",
         "platform": "web"
+      },
+      "anchor": {
+        "dsh": "0.2.2-rc.3",
+        "cordis": "4.1.0",
+        "commit": "38a6a5c965aa99ab525161efb7cc5cf1fe62fced",
+        "source": "host",
+        "suspect": false
       },
       "levels": {
         "entry": {
@@ -5250,7 +5404,7 @@
         {
           "id": "DSC-11",
           "result": "WARN",
-          "coverage": "full"
+          "coverage": "partial"
         },
         {
           "id": "DSC-12",
@@ -5319,7 +5473,7 @@
           {
             "id": "DSC-11",
             "result": "WARN",
-            "coverage": "full"
+            "coverage": "partial"
           },
           {
             "id": "DSC-12",
@@ -5388,11 +5542,11 @@
         "command": "dsh-standards check <package-dir> --scope security --json"
       },
       "evidence": {
-        "sha256": "72637580ec2f0090a6b4b7c1e51698b68c6d68a42b9af82510993414fc64775d",
-        "reportSha256": "72637580ec2f0090a6b4b7c1e51698b68c6d68a42b9af82510993414fc64775d"
+        "sha256": "54c37f672d2b1f3d519376a9f3abdb8dd97f59dde51937ca9c93d859a5529071",
+        "reportSha256": "54c37f672d2b1f3d519376a9f3abdb8dd97f59dde51937ca9c93d859a5529071"
       },
       "checkedBy": {
-        "checker": "dsh-standards@1.6.10 (dsh-plugin-verify@0.1.0)",
+        "checker": "dsh-standards@1.6.11 (dsh-plugin-verify@0.1.0)",
         "command": "dsh-levels <package-dir> --no-runtime --format json",
         "securityCommand": "dsh-standards check <package-dir> --scope security --json"
       },
@@ -5423,6 +5577,13 @@
         "dsh": ">=0.2.2-rc.1 <0.2.3-0",
         "cordis": "~4.1.0",
         "platform": "web"
+      },
+      "anchor": {
+        "dsh": "0.2.2-rc.3",
+        "cordis": "4.1.0",
+        "commit": "38a6a5c965aa99ab525161efb7cc5cf1fe62fced",
+        "source": "host",
+        "suspect": false
       },
       "levels": {
         "entry": {
@@ -5495,7 +5656,7 @@
         {
           "id": "DSC-11",
           "result": "WARN",
-          "coverage": "full"
+          "coverage": "partial"
         },
         {
           "id": "DSC-12",
@@ -5564,7 +5725,7 @@
           {
             "id": "DSC-11",
             "result": "WARN",
-            "coverage": "full"
+            "coverage": "partial"
           },
           {
             "id": "DSC-12",
@@ -5633,11 +5794,11 @@
         "command": "dsh-standards check <package-dir> --scope security --json"
       },
       "evidence": {
-        "sha256": "cbd9df049545ae315d7143ddf5b560adaf22e797d9ca5daf217320aa45397e28",
-        "reportSha256": "cbd9df049545ae315d7143ddf5b560adaf22e797d9ca5daf217320aa45397e28"
+        "sha256": "694b25ecedabb42f02610f6dbb43cbe7597913b384aa06e461e448c1dbefb299",
+        "reportSha256": "694b25ecedabb42f02610f6dbb43cbe7597913b384aa06e461e448c1dbefb299"
       },
       "checkedBy": {
-        "checker": "dsh-standards@1.6.10 (dsh-plugin-verify@0.1.0)",
+        "checker": "dsh-standards@1.6.11 (dsh-plugin-verify@0.1.0)",
         "command": "dsh-levels <package-dir> --no-runtime --format json",
         "securityCommand": "dsh-standards check <package-dir> --scope security --json"
       },
@@ -5665,9 +5826,16 @@
       "repo": "https://github.com/mini-yifan/dsh-orb-cordis",
       "license": "MIT",
       "scope": {
-        "dsh": "0.2.2-rc.3",
+        "dsh": null,
         "cordis": "4.0.4",
         "platform": "web"
+      },
+      "anchor": {
+        "dsh": "0.2.2-rc.3",
+        "cordis": "4.1.0",
+        "commit": "38a6a5c965aa99ab525161efb7cc5cf1fe62fced",
+        "source": "host",
+        "suspect": false
       },
       "levels": {
         "entry": {
@@ -5878,11 +6046,11 @@
         "command": "dsh-standards check <package-dir> --scope security --json"
       },
       "evidence": {
-        "sha256": "f602407d4a405f6ea307aa1ccb93ab3c17370d74f861e58bda0037e0bbedeae0",
-        "reportSha256": "f602407d4a405f6ea307aa1ccb93ab3c17370d74f861e58bda0037e0bbedeae0"
+        "sha256": "b6d969a31b644558a1bcd56daa5e9133580238aca35b6aabd5996bd8b0dcdba8",
+        "reportSha256": "b6d969a31b644558a1bcd56daa5e9133580238aca35b6aabd5996bd8b0dcdba8"
       },
       "checkedBy": {
-        "checker": "dsh-standards@1.6.10 (dsh-plugin-verify@0.1.0)",
+        "checker": "dsh-standards@1.6.11 (dsh-plugin-verify@0.1.0)",
         "command": "dsh-levels <package-dir> --no-runtime --format json",
         "securityCommand": "dsh-standards check <package-dir> --scope security --json"
       },
@@ -5910,9 +6078,16 @@
       "repo": null,
       "license": "MIT",
       "scope": {
-        "dsh": "0.2.2-rc.3",
+        "dsh": null,
         "cordis": "^4.0.2",
         "platform": "web"
+      },
+      "anchor": {
+        "dsh": "0.2.2-rc.3",
+        "cordis": "4.1.0",
+        "commit": "38a6a5c965aa99ab525161efb7cc5cf1fe62fced",
+        "source": "host",
+        "suspect": false
       },
       "levels": {
         "entry": {
@@ -5985,7 +6160,7 @@
         {
           "id": "DSC-11",
           "result": "WARN",
-          "coverage": "full"
+          "coverage": "partial"
         },
         {
           "id": "DSC-12",
@@ -6054,7 +6229,7 @@
           {
             "id": "DSC-11",
             "result": "WARN",
-            "coverage": "full"
+            "coverage": "partial"
           },
           {
             "id": "DSC-12",
@@ -6123,11 +6298,11 @@
         "command": "dsh-standards check <package-dir> --scope security --json"
       },
       "evidence": {
-        "sha256": "a53e247d22efb147b60abdbc7634b3e88dc86227cb2a795017c56197dad04a55",
-        "reportSha256": "a53e247d22efb147b60abdbc7634b3e88dc86227cb2a795017c56197dad04a55"
+        "sha256": "8f30c76b441216d6659aed38ede1a9e9dbe4fffa74963e17eaac89298c3a3432",
+        "reportSha256": "8f30c76b441216d6659aed38ede1a9e9dbe4fffa74963e17eaac89298c3a3432"
       },
       "checkedBy": {
-        "checker": "dsh-standards@1.6.10 (dsh-plugin-verify@0.1.0)",
+        "checker": "dsh-standards@1.6.11 (dsh-plugin-verify@0.1.0)",
         "command": "dsh-levels <package-dir> --no-runtime --format json",
         "securityCommand": "dsh-standards check <package-dir> --scope security --json"
       },
@@ -6155,9 +6330,16 @@
       "repo": "https://github.com/PC2005-cloud/dsh-pet",
       "license": "MIT",
       "scope": {
-        "dsh": "0.2.2-rc.3",
+        "dsh": null,
         "cordis": "^4.0.4",
         "platform": "web"
+      },
+      "anchor": {
+        "dsh": "0.2.2-rc.3",
+        "cordis": "4.1.0",
+        "commit": "38a6a5c965aa99ab525161efb7cc5cf1fe62fced",
+        "source": "host",
+        "suspect": false
       },
       "levels": {
         "entry": {
@@ -6230,7 +6412,7 @@
         {
           "id": "DSC-11",
           "result": "WARN",
-          "coverage": "full"
+          "coverage": "partial"
         },
         {
           "id": "DSC-12",
@@ -6299,7 +6481,7 @@
           {
             "id": "DSC-11",
             "result": "WARN",
-            "coverage": "full"
+            "coverage": "partial"
           },
           {
             "id": "DSC-12",
@@ -6368,11 +6550,11 @@
         "command": "dsh-standards check <package-dir> --scope security --json"
       },
       "evidence": {
-        "sha256": "38f5bc91a766e040318cf1d9cc77c6cc748966fd85b2472c555e8c5c0048b441",
-        "reportSha256": "38f5bc91a766e040318cf1d9cc77c6cc748966fd85b2472c555e8c5c0048b441"
+        "sha256": "4c8b4c92ef6df49025154d71faef8d21f1bd2e77b705e23cc82b3bbeb80d48c8",
+        "reportSha256": "4c8b4c92ef6df49025154d71faef8d21f1bd2e77b705e23cc82b3bbeb80d48c8"
       },
       "checkedBy": {
-        "checker": "dsh-standards@1.6.10 (dsh-plugin-verify@0.1.0)",
+        "checker": "dsh-standards@1.6.11 (dsh-plugin-verify@0.1.0)",
         "command": "dsh-levels <package-dir> --no-runtime --format json",
         "securityCommand": "dsh-standards check <package-dir> --scope security --json"
       },
@@ -6401,8 +6583,15 @@
       "license": "MIT",
       "scope": {
         "dsh": ">=0.2.0-rc.0 <0.3.0-0",
-        "cordis": "4.0.6-alpha.1",
+        "cordis": null,
         "platform": "web"
+      },
+      "anchor": {
+        "dsh": "0.2.2-rc.3",
+        "cordis": "4.1.0",
+        "commit": "38a6a5c965aa99ab525161efb7cc5cf1fe62fced",
+        "source": "host",
+        "suspect": false
       },
       "levels": {
         "entry": {
@@ -6613,11 +6802,11 @@
         "command": "dsh-standards check <package-dir> --scope security --json"
       },
       "evidence": {
-        "sha256": "47c12a67fbd9ab69ed01b693887552f515c785d7c1c7a29eedd116a10b3bda6c",
-        "reportSha256": "47c12a67fbd9ab69ed01b693887552f515c785d7c1c7a29eedd116a10b3bda6c"
+        "sha256": "edb8eb8ebfd15858357d40eb28776abdc6f8401f5410f1721b83b3bae8553b6b",
+        "reportSha256": "edb8eb8ebfd15858357d40eb28776abdc6f8401f5410f1721b83b3bae8553b6b"
       },
       "checkedBy": {
-        "checker": "dsh-standards@1.6.10 (dsh-plugin-verify@0.1.0)",
+        "checker": "dsh-standards@1.6.11 (dsh-plugin-verify@0.1.0)",
         "command": "dsh-levels <package-dir> --no-runtime --format json",
         "securityCommand": "dsh-standards check <package-dir> --scope security --json"
       },
@@ -6646,8 +6835,15 @@
       "license": "MIT",
       "scope": {
         "dsh": ">=0.2.0-rc.2 <0.3.0 || 0.2.1-rc.1 || 0.2.1-rc.2 || 0.2.1-rc.3 || 0.2.1-rc.4 || 0.2.1-rc.5 || 0.2.2-rc.1",
-        "cordis": "4.0.6-alpha.1",
+        "cordis": null,
         "platform": "web"
+      },
+      "anchor": {
+        "dsh": "0.2.2-rc.3",
+        "cordis": "4.1.0",
+        "commit": "38a6a5c965aa99ab525161efb7cc5cf1fe62fced",
+        "source": "host",
+        "suspect": false
       },
       "levels": {
         "entry": {
@@ -6858,11 +7054,11 @@
         "command": "dsh-standards check <package-dir> --scope security --json"
       },
       "evidence": {
-        "sha256": "7dd898398d14a75d0493095b7bf1a861f18048097fc7b3acf8d85878d3a340e7",
-        "reportSha256": "7dd898398d14a75d0493095b7bf1a861f18048097fc7b3acf8d85878d3a340e7"
+        "sha256": "f4842bd318d0dae602668714b9f99574c08268d4974e74f294caa067359ad5f8",
+        "reportSha256": "f4842bd318d0dae602668714b9f99574c08268d4974e74f294caa067359ad5f8"
       },
       "checkedBy": {
-        "checker": "dsh-standards@1.6.10 (dsh-plugin-verify@0.1.0)",
+        "checker": "dsh-standards@1.6.11 (dsh-plugin-verify@0.1.0)",
         "command": "dsh-levels <package-dir> --no-runtime --format json",
         "securityCommand": "dsh-standards check <package-dir> --scope security --json"
       },
@@ -6894,6 +7090,13 @@
         "cordis": "^4.0.1",
         "platform": "web"
       },
+      "anchor": {
+        "dsh": "0.2.2-rc.3",
+        "cordis": "4.1.0",
+        "commit": "38a6a5c965aa99ab525161efb7cc5cf1fe62fced",
+        "source": "host",
+        "suspect": false
+      },
       "levels": {
         "entry": {
           "state": "recognized",
@@ -7103,11 +7306,11 @@
         "command": "dsh-standards check <package-dir> --scope security --json"
       },
       "evidence": {
-        "sha256": "b0eb6b269ab1474c6d600b8392a0b371f8d07679241f23ad29216ef823c50608",
-        "reportSha256": "b0eb6b269ab1474c6d600b8392a0b371f8d07679241f23ad29216ef823c50608"
+        "sha256": "1231fbe0b026ba80343048dc6bbd10ac708522e2a0d53eeb2ae1980a58486660",
+        "reportSha256": "1231fbe0b026ba80343048dc6bbd10ac708522e2a0d53eeb2ae1980a58486660"
       },
       "checkedBy": {
-        "checker": "dsh-standards@1.6.10 (dsh-plugin-verify@0.1.0)",
+        "checker": "dsh-standards@1.6.11 (dsh-plugin-verify@0.1.0)",
         "command": "dsh-levels <package-dir> --no-runtime --format json",
         "securityCommand": "dsh-standards check <package-dir> --scope security --json"
       },
@@ -7139,6 +7342,13 @@
         "cordis": "^4.0.4",
         "platform": "web"
       },
+      "anchor": {
+        "dsh": "0.2.2-rc.3",
+        "cordis": "4.1.0",
+        "commit": "38a6a5c965aa99ab525161efb7cc5cf1fe62fced",
+        "source": "host",
+        "suspect": false
+      },
       "levels": {
         "entry": {
           "state": "recognized",
@@ -7210,7 +7420,7 @@
         {
           "id": "DSC-11",
           "result": "WARN",
-          "coverage": "full"
+          "coverage": "partial"
         },
         {
           "id": "DSC-12",
@@ -7279,7 +7489,7 @@
           {
             "id": "DSC-11",
             "result": "WARN",
-            "coverage": "full"
+            "coverage": "partial"
           },
           {
             "id": "DSC-12",
@@ -7348,11 +7558,11 @@
         "command": "dsh-standards check <package-dir> --scope security --json"
       },
       "evidence": {
-        "sha256": "34114ec6c82a5e5da4d6d80c171e5988ea3dd4645db4413ef45730603e732ef4",
-        "reportSha256": "34114ec6c82a5e5da4d6d80c171e5988ea3dd4645db4413ef45730603e732ef4"
+        "sha256": "0046cd00c3efa4ad36af9f5aae3abe21919999565b3055cc5f3d6afca71f2a87",
+        "reportSha256": "0046cd00c3efa4ad36af9f5aae3abe21919999565b3055cc5f3d6afca71f2a87"
       },
       "checkedBy": {
-        "checker": "dsh-standards@1.6.10 (dsh-plugin-verify@0.1.0)",
+        "checker": "dsh-standards@1.6.11 (dsh-plugin-verify@0.1.0)",
         "command": "dsh-levels <package-dir> --no-runtime --format json",
         "securityCommand": "dsh-standards check <package-dir> --scope security --json"
       },
@@ -7380,9 +7590,16 @@
       "repo": "https://github.com/shaobeichen/dsh-pocket",
       "license": "GPL-2.0",
       "scope": {
-        "dsh": "0.2.2-rc.3",
+        "dsh": null,
         "cordis": "^4.0.1",
         "platform": "web"
+      },
+      "anchor": {
+        "dsh": "0.2.2-rc.3",
+        "cordis": "4.1.0",
+        "commit": "38a6a5c965aa99ab525161efb7cc5cf1fe62fced",
+        "source": "host",
+        "suspect": false
       },
       "levels": {
         "entry": {
@@ -7593,11 +7810,11 @@
         "command": "dsh-standards check <package-dir> --scope security --json"
       },
       "evidence": {
-        "sha256": "93738c00fe7673176cab6670ce849f4cc51918e2e2a6e7a7fe2b3ca06ea6b06e",
-        "reportSha256": "93738c00fe7673176cab6670ce849f4cc51918e2e2a6e7a7fe2b3ca06ea6b06e"
+        "sha256": "8276251943cd2d6473580419787954dd51ac921711288b7149cd0edac7517956",
+        "reportSha256": "8276251943cd2d6473580419787954dd51ac921711288b7149cd0edac7517956"
       },
       "checkedBy": {
-        "checker": "dsh-standards@1.6.10 (dsh-plugin-verify@0.1.0)",
+        "checker": "dsh-standards@1.6.11 (dsh-plugin-verify@0.1.0)",
         "command": "dsh-levels <package-dir> --no-runtime --format json",
         "securityCommand": "dsh-standards check <package-dir> --scope security --json"
       },
@@ -7625,9 +7842,16 @@
       "repo": "https://github.com/Something11235/dsh-posterflow-ai",
       "license": "MIT",
       "scope": {
-        "dsh": "0.2.2-rc.3",
+        "dsh": null,
         "cordis": "^4.0.2",
         "platform": "web"
+      },
+      "anchor": {
+        "dsh": "0.2.2-rc.3",
+        "cordis": "4.1.0",
+        "commit": "38a6a5c965aa99ab525161efb7cc5cf1fe62fced",
+        "source": "host",
+        "suspect": false
       },
       "levels": {
         "entry": {
@@ -7838,11 +8062,11 @@
         "command": "dsh-standards check <package-dir> --scope security --json"
       },
       "evidence": {
-        "sha256": "a80fba44c7e8e55ff33100abede46044faf0a0626c57f0c802c919043cc4b818",
-        "reportSha256": "a80fba44c7e8e55ff33100abede46044faf0a0626c57f0c802c919043cc4b818"
+        "sha256": "ffb77898ca3bc53331291c207bf2c0d5feaff7a9e54dc3dc6204e766a1a9cef9",
+        "reportSha256": "ffb77898ca3bc53331291c207bf2c0d5feaff7a9e54dc3dc6204e766a1a9cef9"
       },
       "checkedBy": {
-        "checker": "dsh-standards@1.6.10 (dsh-plugin-verify@0.1.0)",
+        "checker": "dsh-standards@1.6.11 (dsh-plugin-verify@0.1.0)",
         "command": "dsh-levels <package-dir> --no-runtime --format json",
         "securityCommand": "dsh-standards check <package-dir> --scope security --json"
       },
@@ -7871,8 +8095,15 @@
       "license": "MIT",
       "scope": {
         "dsh": ">=0.2.1-rc.3",
-        "cordis": "4.0.6-alpha.1",
+        "cordis": null,
         "platform": "web"
+      },
+      "anchor": {
+        "dsh": "0.2.2-rc.3",
+        "cordis": "4.1.0",
+        "commit": "38a6a5c965aa99ab525161efb7cc5cf1fe62fced",
+        "source": "host",
+        "suspect": false
       },
       "levels": {
         "entry": {
@@ -8083,11 +8314,11 @@
         "command": "dsh-standards check <package-dir> --scope security --json"
       },
       "evidence": {
-        "sha256": "c041d4c7035350d6511f018f13fde32a5bff05e326f7564b02e5910324760279",
-        "reportSha256": "c041d4c7035350d6511f018f13fde32a5bff05e326f7564b02e5910324760279"
+        "sha256": "8f16319c4fac1f84763f521e2162bbb11cc3aed8c5219e9d1740b461c743b2aa",
+        "reportSha256": "8f16319c4fac1f84763f521e2162bbb11cc3aed8c5219e9d1740b461c743b2aa"
       },
       "checkedBy": {
-        "checker": "dsh-standards@1.6.10 (dsh-plugin-verify@0.1.0)",
+        "checker": "dsh-standards@1.6.11 (dsh-plugin-verify@0.1.0)",
         "command": "dsh-levels <package-dir> --no-runtime --format json",
         "securityCommand": "dsh-standards check <package-dir> --scope security --json"
       },
@@ -8119,6 +8350,13 @@
         "cordis": "^4.0.5",
         "platform": "web"
       },
+      "anchor": {
+        "dsh": "0.2.2-rc.3",
+        "cordis": "4.1.0",
+        "commit": "38a6a5c965aa99ab525161efb7cc5cf1fe62fced",
+        "source": "host",
+        "suspect": false
+      },
       "levels": {
         "entry": {
           "state": "recognized",
@@ -8328,11 +8566,11 @@
         "command": "dsh-standards check <package-dir> --scope security --json"
       },
       "evidence": {
-        "sha256": "2d0abdd22600b01caf32f4b867fd1715d18c8e158c7ae468db01b4c8b5d9efe3",
-        "reportSha256": "2d0abdd22600b01caf32f4b867fd1715d18c8e158c7ae468db01b4c8b5d9efe3"
+        "sha256": "95279c9a27767b14d0d9a2c70f83aec5d2fa08d06a9804523c53d15b5002f239",
+        "reportSha256": "95279c9a27767b14d0d9a2c70f83aec5d2fa08d06a9804523c53d15b5002f239"
       },
       "checkedBy": {
-        "checker": "dsh-standards@1.6.10 (dsh-plugin-verify@0.1.0)",
+        "checker": "dsh-standards@1.6.11 (dsh-plugin-verify@0.1.0)",
         "command": "dsh-levels <package-dir> --no-runtime --format json",
         "securityCommand": "dsh-standards check <package-dir> --scope security --json"
       },
@@ -8363,6 +8601,13 @@
         "dsh": ">=0.2.2-rc.1 <0.3.0-0",
         "cordis": "^4.1.0",
         "platform": "web"
+      },
+      "anchor": {
+        "dsh": "0.2.2-rc.3",
+        "cordis": "4.1.0",
+        "commit": "38a6a5c965aa99ab525161efb7cc5cf1fe62fced",
+        "source": "host",
+        "suspect": false
       },
       "levels": {
         "entry": {
@@ -8573,11 +8818,11 @@
         "command": "dsh-standards check <package-dir> --scope security --json"
       },
       "evidence": {
-        "sha256": "7b190443d9ecfa6bcc693190bbad9a123b769467a0d5c6e44a61fe930af87254",
-        "reportSha256": "7b190443d9ecfa6bcc693190bbad9a123b769467a0d5c6e44a61fe930af87254"
+        "sha256": "0e3415d46051140b37a0257e785e55c0f1bce84639c7a8a3ecca01da9e4c6cb9",
+        "reportSha256": "0e3415d46051140b37a0257e785e55c0f1bce84639c7a8a3ecca01da9e4c6cb9"
       },
       "checkedBy": {
-        "checker": "dsh-standards@1.6.10 (dsh-plugin-verify@0.1.0)",
+        "checker": "dsh-standards@1.6.11 (dsh-plugin-verify@0.1.0)",
         "command": "dsh-levels <package-dir> --no-runtime --format json",
         "securityCommand": "dsh-standards check <package-dir> --scope security --json"
       },
@@ -8608,6 +8853,13 @@
         "dsh": ">=0.2.1-rc.5 <0.2.2-0 || >=0.2.2-rc.1 <0.3.0-0",
         "cordis": "^4.0.1",
         "platform": "web"
+      },
+      "anchor": {
+        "dsh": "0.2.2-rc.3",
+        "cordis": "4.1.0",
+        "commit": "38a6a5c965aa99ab525161efb7cc5cf1fe62fced",
+        "source": "host",
+        "suspect": false
       },
       "levels": {
         "entry": {
@@ -8818,11 +9070,11 @@
         "command": "dsh-standards check <package-dir> --scope security --json"
       },
       "evidence": {
-        "sha256": "5fbe77362ca073a038c815c01d20ff2f50766dade4a5adfa32505fa441f01143",
-        "reportSha256": "5fbe77362ca073a038c815c01d20ff2f50766dade4a5adfa32505fa441f01143"
+        "sha256": "f57f30aeabc2643a1a8d98cfeacfc48a9842d32b67bc5d13a6bde7e13f737454",
+        "reportSha256": "f57f30aeabc2643a1a8d98cfeacfc48a9842d32b67bc5d13a6bde7e13f737454"
       },
       "checkedBy": {
-        "checker": "dsh-standards@1.6.10 (dsh-plugin-verify@0.1.0)",
+        "checker": "dsh-standards@1.6.11 (dsh-plugin-verify@0.1.0)",
         "command": "dsh-levels <package-dir> --no-runtime --format json",
         "securityCommand": "dsh-standards check <package-dir> --scope security --json"
       },
@@ -8850,9 +9102,16 @@
       "repo": "https://github.com/01Virex/dsh-status-rotator",
       "license": "MIT",
       "scope": {
-        "dsh": "0.2.2-rc.3",
+        "dsh": null,
         "cordis": "*",
         "platform": "web"
+      },
+      "anchor": {
+        "dsh": "0.2.2-rc.3",
+        "cordis": "4.1.0",
+        "commit": "38a6a5c965aa99ab525161efb7cc5cf1fe62fced",
+        "source": "host",
+        "suspect": false
       },
       "levels": {
         "entry": {
@@ -9063,11 +9322,11 @@
         "command": "dsh-standards check <package-dir> --scope security --json"
       },
       "evidence": {
-        "sha256": "68c54bbc3c07dd90dda9f6a3586ff5e415ab81bf5d1a1e73836f95d89469af43",
-        "reportSha256": "68c54bbc3c07dd90dda9f6a3586ff5e415ab81bf5d1a1e73836f95d89469af43"
+        "sha256": "c8d296b56aa366015272bd5464f03a1e83a025afb0acb0f7ae616fef22fe7d4a",
+        "reportSha256": "c8d296b56aa366015272bd5464f03a1e83a025afb0acb0f7ae616fef22fe7d4a"
       },
       "checkedBy": {
-        "checker": "dsh-standards@1.6.10 (dsh-plugin-verify@0.1.0)",
+        "checker": "dsh-standards@1.6.11 (dsh-plugin-verify@0.1.0)",
         "command": "dsh-levels <package-dir> --no-runtime --format json",
         "securityCommand": "dsh-standards check <package-dir> --scope security --json"
       },
@@ -9095,9 +9354,16 @@
       "repo": "https://github.com/030611/dsh-telemetry-redactor",
       "license": "MIT",
       "scope": {
-        "dsh": "0.2.2-rc.3",
+        "dsh": null,
         "cordis": "^4.0.1",
         "platform": null
+      },
+      "anchor": {
+        "dsh": "0.2.2-rc.3",
+        "cordis": "4.1.0",
+        "commit": "38a6a5c965aa99ab525161efb7cc5cf1fe62fced",
+        "source": "host",
+        "suspect": false
       },
       "levels": {
         "entry": {
@@ -9308,11 +9574,11 @@
         "command": "dsh-standards check <package-dir> --scope security --json"
       },
       "evidence": {
-        "sha256": "05104e12dfaeb8b9f81ace08b62574469c74001e797568ac8be8a8131136ae4a",
-        "reportSha256": "05104e12dfaeb8b9f81ace08b62574469c74001e797568ac8be8a8131136ae4a"
+        "sha256": "54036e6f42867e6b6271b617b985a419e4fabbf15d6bdecbaece4de12bb1e635",
+        "reportSha256": "54036e6f42867e6b6271b617b985a419e4fabbf15d6bdecbaece4de12bb1e635"
       },
       "checkedBy": {
-        "checker": "dsh-standards@1.6.10 (dsh-plugin-verify@0.1.0)",
+        "checker": "dsh-standards@1.6.11 (dsh-plugin-verify@0.1.0)",
         "command": "dsh-levels <package-dir> --no-runtime --format json",
         "securityCommand": "dsh-standards check <package-dir> --scope security --json"
       },
@@ -9344,6 +9610,13 @@
         "cordis": ">=4.0.0-rc.7",
         "platform": "web"
       },
+      "anchor": {
+        "dsh": "0.2.2-rc.3",
+        "cordis": "4.1.0",
+        "commit": "38a6a5c965aa99ab525161efb7cc5cf1fe62fced",
+        "source": "host",
+        "suspect": false
+      },
       "levels": {
         "entry": {
           "state": "recognized",
@@ -9553,11 +9826,11 @@
         "command": "dsh-standards check <package-dir> --scope security --json"
       },
       "evidence": {
-        "sha256": "7c696d49263cc6070ee6c1dc3cd4ade1820c933c11b511b7b0c0fb1e1e4b31fb",
-        "reportSha256": "7c696d49263cc6070ee6c1dc3cd4ade1820c933c11b511b7b0c0fb1e1e4b31fb"
+        "sha256": "652392c3bf41184a203a77330ed4e2afe17fe1fb7c1ed72f880ed5cc3dd85aa9",
+        "reportSha256": "652392c3bf41184a203a77330ed4e2afe17fe1fb7c1ed72f880ed5cc3dd85aa9"
       },
       "checkedBy": {
-        "checker": "dsh-standards@1.6.10 (dsh-plugin-verify@0.1.0)",
+        "checker": "dsh-standards@1.6.11 (dsh-plugin-verify@0.1.0)",
         "command": "dsh-levels <package-dir> --no-runtime --format json",
         "securityCommand": "dsh-standards check <package-dir> --scope security --json"
       },
@@ -9585,9 +9858,16 @@
       "repo": "https://github.com/0QwQ0/dsh-ui-auth",
       "license": "MIT",
       "scope": {
-        "dsh": "0.2.2-rc.3",
+        "dsh": null,
         "cordis": "^4.0.1",
         "platform": "web"
+      },
+      "anchor": {
+        "dsh": "0.2.2-rc.3",
+        "cordis": "4.1.0",
+        "commit": "38a6a5c965aa99ab525161efb7cc5cf1fe62fced",
+        "source": "host",
+        "suspect": false
       },
       "levels": {
         "entry": {
@@ -9798,11 +10078,11 @@
         "command": "dsh-standards check <package-dir> --scope security --json"
       },
       "evidence": {
-        "sha256": "29f4926d462c9f14963235b4164e4b0aa2a88f5cb54a9aa246d731335d5562b5",
-        "reportSha256": "29f4926d462c9f14963235b4164e4b0aa2a88f5cb54a9aa246d731335d5562b5"
+        "sha256": "9bcf0bff5ac5e28906302c2ab5d0994dcdc3b5d14aacfda2d0c2ef8d89789d6f",
+        "reportSha256": "9bcf0bff5ac5e28906302c2ab5d0994dcdc3b5d14aacfda2d0c2ef8d89789d6f"
       },
       "checkedBy": {
-        "checker": "dsh-standards@1.6.10 (dsh-plugin-verify@0.1.0)",
+        "checker": "dsh-standards@1.6.11 (dsh-plugin-verify@0.1.0)",
         "command": "dsh-levels <package-dir> --no-runtime --format json",
         "securityCommand": "dsh-standards check <package-dir> --scope security --json"
       },
@@ -9830,9 +10110,16 @@
       "repo": "https://github.com/dream-num/dsh-univer-office",
       "license": "Apache-2.0",
       "scope": {
-        "dsh": "0.2.2-rc.3",
+        "dsh": null,
         "cordis": "^4.0.2",
         "platform": "web"
+      },
+      "anchor": {
+        "dsh": "0.2.2-rc.3",
+        "cordis": "4.1.0",
+        "commit": "38a6a5c965aa99ab525161efb7cc5cf1fe62fced",
+        "source": "host",
+        "suspect": false
       },
       "levels": {
         "entry": {
@@ -9905,7 +10192,7 @@
         {
           "id": "DSC-11",
           "result": "WARN",
-          "coverage": "full"
+          "coverage": "partial"
         },
         {
           "id": "DSC-12",
@@ -9974,7 +10261,7 @@
           {
             "id": "DSC-11",
             "result": "WARN",
-            "coverage": "full"
+            "coverage": "partial"
           },
           {
             "id": "DSC-12",
@@ -10043,11 +10330,11 @@
         "command": "dsh-standards check <package-dir> --scope security --json"
       },
       "evidence": {
-        "sha256": "c355ccb6a5db776795d22cb891c6b33b0b889fab236f68afba29e0105bc552eb",
-        "reportSha256": "c355ccb6a5db776795d22cb891c6b33b0b889fab236f68afba29e0105bc552eb"
+        "sha256": "df7ed4a24eaf4dc9a7a006909397cb6eb84a93675fe0f77b6c454ea218da4b91",
+        "reportSha256": "df7ed4a24eaf4dc9a7a006909397cb6eb84a93675fe0f77b6c454ea218da4b91"
       },
       "checkedBy": {
-        "checker": "dsh-standards@1.6.10 (dsh-plugin-verify@0.1.0)",
+        "checker": "dsh-standards@1.6.11 (dsh-plugin-verify@0.1.0)",
         "command": "dsh-levels <package-dir> --no-runtime --format json",
         "securityCommand": "dsh-standards check <package-dir> --scope security --json"
       },
@@ -10076,8 +10363,15 @@
       "license": "MIT",
       "scope": {
         "dsh": ">=0.2.0-rc.1",
-        "cordis": "4.0.6-alpha.1",
+        "cordis": null,
         "platform": "web"
+      },
+      "anchor": {
+        "dsh": "0.2.2-rc.3",
+        "cordis": "4.1.0",
+        "commit": "38a6a5c965aa99ab525161efb7cc5cf1fe62fced",
+        "source": "host",
+        "suspect": false
       },
       "levels": {
         "entry": {
@@ -10288,11 +10582,11 @@
         "command": "dsh-standards check <package-dir> --scope security --json"
       },
       "evidence": {
-        "sha256": "3948f351e2e01380237177998a15af5a30f3ac58fc7689acce7753770043a22a",
-        "reportSha256": "3948f351e2e01380237177998a15af5a30f3ac58fc7689acce7753770043a22a"
+        "sha256": "1470e63b4cc931c05e6a5f75ce5649c7a83deb37efa5cafc5a2e3dac493ae153",
+        "reportSha256": "1470e63b4cc931c05e6a5f75ce5649c7a83deb37efa5cafc5a2e3dac493ae153"
       },
       "checkedBy": {
-        "checker": "dsh-standards@1.6.10 (dsh-plugin-verify@0.1.0)",
+        "checker": "dsh-standards@1.6.11 (dsh-plugin-verify@0.1.0)",
         "command": "dsh-levels <package-dir> --no-runtime --format json",
         "securityCommand": "dsh-standards check <package-dir> --scope security --json"
       },
@@ -10320,9 +10614,16 @@
       "repo": "https://github.com/030611/dsh-verification-receipt",
       "license": "MIT",
       "scope": {
-        "dsh": "0.2.2-rc.3",
+        "dsh": null,
         "cordis": "^4.0.1",
         "platform": null
+      },
+      "anchor": {
+        "dsh": "0.2.2-rc.3",
+        "cordis": "4.1.0",
+        "commit": "38a6a5c965aa99ab525161efb7cc5cf1fe62fced",
+        "source": "host",
+        "suspect": false
       },
       "levels": {
         "entry": {
@@ -10533,11 +10834,11 @@
         "command": "dsh-standards check <package-dir> --scope security --json"
       },
       "evidence": {
-        "sha256": "da520d0c99eb3dfddbbfdffb3b540eeaf2f099c768c62bcee3ef5f3745ea6a0e",
-        "reportSha256": "da520d0c99eb3dfddbbfdffb3b540eeaf2f099c768c62bcee3ef5f3745ea6a0e"
+        "sha256": "20e23cef81fcbb5ad9958fd14fc17d16f3aee64addea4145a904ff11699c5485",
+        "reportSha256": "20e23cef81fcbb5ad9958fd14fc17d16f3aee64addea4145a904ff11699c5485"
       },
       "checkedBy": {
-        "checker": "dsh-standards@1.6.10 (dsh-plugin-verify@0.1.0)",
+        "checker": "dsh-standards@1.6.11 (dsh-plugin-verify@0.1.0)",
         "command": "dsh-levels <package-dir> --no-runtime --format json",
         "securityCommand": "dsh-standards check <package-dir> --scope security --json"
       },
@@ -10565,9 +10866,16 @@
       "repo": "https://github.com/Something11235/dsh-video-skin",
       "license": "MIT",
       "scope": {
-        "dsh": "0.2.2-rc.3",
-        "cordis": "4.0.6-alpha.1",
+        "dsh": null,
+        "cordis": null,
         "platform": "web"
+      },
+      "anchor": {
+        "dsh": "0.2.2-rc.3",
+        "cordis": "4.1.0",
+        "commit": "38a6a5c965aa99ab525161efb7cc5cf1fe62fced",
+        "source": "host",
+        "suspect": false
       },
       "levels": {
         "entry": {
@@ -10778,11 +11086,11 @@
         "command": "dsh-standards check <package-dir> --scope security --json"
       },
       "evidence": {
-        "sha256": "24447762def503eecb7b01d31a552bddd5c1c2912e5194a466482e947d8156fc",
-        "reportSha256": "24447762def503eecb7b01d31a552bddd5c1c2912e5194a466482e947d8156fc"
+        "sha256": "128a61c28a1f352731b2d83a18f81b9fc3da758ca5bb6c85ee181a1b119aa86c",
+        "reportSha256": "128a61c28a1f352731b2d83a18f81b9fc3da758ca5bb6c85ee181a1b119aa86c"
       },
       "checkedBy": {
-        "checker": "dsh-standards@1.6.10 (dsh-plugin-verify@0.1.0)",
+        "checker": "dsh-standards@1.6.11 (dsh-plugin-verify@0.1.0)",
         "command": "dsh-levels <package-dir> --no-runtime --format json",
         "securityCommand": "dsh-standards check <package-dir> --scope security --json"
       },
@@ -10811,8 +11119,15 @@
       "license": "MIT",
       "scope": {
         "dsh": ">=0.1.5-rc.1 <0.2.0-0 || >=0.2.0-rc.2 <0.3.0-0",
-        "cordis": "4.0.6-alpha.1",
+        "cordis": null,
         "platform": "web"
+      },
+      "anchor": {
+        "dsh": "0.2.2-rc.3",
+        "cordis": "4.1.0",
+        "commit": "38a6a5c965aa99ab525161efb7cc5cf1fe62fced",
+        "source": "host",
+        "suspect": false
       },
       "levels": {
         "entry": {
@@ -10885,7 +11200,7 @@
         {
           "id": "DSC-11",
           "result": "WARN",
-          "coverage": "full"
+          "coverage": "partial"
         },
         {
           "id": "DSC-12",
@@ -10954,7 +11269,7 @@
           {
             "id": "DSC-11",
             "result": "WARN",
-            "coverage": "full"
+            "coverage": "partial"
           },
           {
             "id": "DSC-12",
@@ -11023,11 +11338,11 @@
         "command": "dsh-standards check <package-dir> --scope security --json"
       },
       "evidence": {
-        "sha256": "b524fea63bff0e06140b81beaa318d5cfe29acea521992b56abe36d82d6e1db1",
-        "reportSha256": "b524fea63bff0e06140b81beaa318d5cfe29acea521992b56abe36d82d6e1db1"
+        "sha256": "2fdfa060418ba31699c40cd0aad02500a411c45275ba95cd2a9c7207e2d7c0c3",
+        "reportSha256": "2fdfa060418ba31699c40cd0aad02500a411c45275ba95cd2a9c7207e2d7c0c3"
       },
       "checkedBy": {
-        "checker": "dsh-standards@1.6.10 (dsh-plugin-verify@0.1.0)",
+        "checker": "dsh-standards@1.6.11 (dsh-plugin-verify@0.1.0)",
         "command": "dsh-levels <package-dir> --no-runtime --format json",
         "securityCommand": "dsh-standards check <package-dir> --scope security --json"
       },
@@ -11055,9 +11370,16 @@
       "repo": "https://github.com/mexiaosqwq/dsh-web-mobile",
       "license": "MIT",
       "scope": {
-        "dsh": "0.2.2-rc.3",
+        "dsh": null,
         "cordis": "^4.0.1",
         "platform": "web"
+      },
+      "anchor": {
+        "dsh": "0.2.2-rc.3",
+        "cordis": "4.1.0",
+        "commit": "38a6a5c965aa99ab525161efb7cc5cf1fe62fced",
+        "source": "host",
+        "suspect": false
       },
       "levels": {
         "entry": {
@@ -11130,7 +11452,7 @@
         {
           "id": "DSC-11",
           "result": "WARN",
-          "coverage": "full"
+          "coverage": "partial"
         },
         {
           "id": "DSC-12",
@@ -11199,7 +11521,7 @@
           {
             "id": "DSC-11",
             "result": "WARN",
-            "coverage": "full"
+            "coverage": "partial"
           },
           {
             "id": "DSC-12",
@@ -11268,11 +11590,11 @@
         "command": "dsh-standards check <package-dir> --scope security --json"
       },
       "evidence": {
-        "sha256": "767a1f557891a39950b5dd831c69311cb1a601169cfcb49daee038d6a3ab2077",
-        "reportSha256": "767a1f557891a39950b5dd831c69311cb1a601169cfcb49daee038d6a3ab2077"
+        "sha256": "aaccaa3bb1ac46efcc3071156f19547f18a1915d2dfce422ac3868f2077a8479",
+        "reportSha256": "aaccaa3bb1ac46efcc3071156f19547f18a1915d2dfce422ac3868f2077a8479"
       },
       "checkedBy": {
-        "checker": "dsh-standards@1.6.10 (dsh-plugin-verify@0.1.0)",
+        "checker": "dsh-standards@1.6.11 (dsh-plugin-verify@0.1.0)",
         "command": "dsh-levels <package-dir> --no-runtime --format json",
         "securityCommand": "dsh-standards check <package-dir> --scope security --json"
       },
@@ -11300,9 +11622,16 @@
       "repo": "https://github.com/xcisxc29/dsh-wechat",
       "license": "MIT",
       "scope": {
-        "dsh": "0.2.2-rc.3",
-        "cordis": "4.0.6-alpha.1",
+        "dsh": null,
+        "cordis": null,
         "platform": "web"
+      },
+      "anchor": {
+        "dsh": "0.2.2-rc.3",
+        "cordis": "4.1.0",
+        "commit": "38a6a5c965aa99ab525161efb7cc5cf1fe62fced",
+        "source": "host",
+        "suspect": false
       },
       "levels": {
         "entry": {
@@ -11513,11 +11842,11 @@
         "command": "dsh-standards check <package-dir> --scope security --json"
       },
       "evidence": {
-        "sha256": "98f10c58fefb021ddc85a975c4b9799f9e4f828d5e0fe095ba04f9d98de71d64",
-        "reportSha256": "98f10c58fefb021ddc85a975c4b9799f9e4f828d5e0fe095ba04f9d98de71d64"
+        "sha256": "b5ffc192d7a43e165480dd19c7adcfff72c6a9498ecb0a69bac564c37c1faf12",
+        "reportSha256": "b5ffc192d7a43e165480dd19c7adcfff72c6a9498ecb0a69bac564c37c1faf12"
       },
       "checkedBy": {
-        "checker": "dsh-standards@1.6.10 (dsh-plugin-verify@0.1.0)",
+        "checker": "dsh-standards@1.6.11 (dsh-plugin-verify@0.1.0)",
         "command": "dsh-levels <package-dir> --no-runtime --format json",
         "securityCommand": "dsh-standards check <package-dir> --scope security --json"
       },
@@ -11545,9 +11874,16 @@
       "repo": "https://github.com/MeteorNOX/DeepSeek-Balance-Whale-Widget",
       "license": "MIT",
       "scope": {
-        "dsh": "0.2.2-rc.3",
-        "cordis": "4.0.6-alpha.1",
+        "dsh": null,
+        "cordis": null,
         "platform": null
+      },
+      "anchor": {
+        "dsh": "0.2.2-rc.3",
+        "cordis": "4.1.0",
+        "commit": "38a6a5c965aa99ab525161efb7cc5cf1fe62fced",
+        "source": "host",
+        "suspect": false
       },
       "levels": {
         "entry": {
@@ -11758,11 +12094,11 @@
         "command": "dsh-standards check <package-dir> --scope security --json"
       },
       "evidence": {
-        "sha256": "3fee339f822830a8f44232662068b3c4208ed79806991e2ecf3c3faebe2885ad",
-        "reportSha256": "3fee339f822830a8f44232662068b3c4208ed79806991e2ecf3c3faebe2885ad"
+        "sha256": "20616e90a583e9b1b83320b257f49085fcc47f903018d9222c0c4a8f8d0a240e",
+        "reportSha256": "20616e90a583e9b1b83320b257f49085fcc47f903018d9222c0c4a8f8d0a240e"
       },
       "checkedBy": {
-        "checker": "dsh-standards@1.6.10 (dsh-plugin-verify@0.1.0)",
+        "checker": "dsh-standards@1.6.11 (dsh-plugin-verify@0.1.0)",
         "command": "dsh-levels <package-dir> --no-runtime --format json",
         "securityCommand": "dsh-standards check <package-dir> --scope security --json"
       },
@@ -11790,9 +12126,16 @@
       "repo": "https://github.com/helloHub1212/dsh-windows-mcp",
       "license": "MIT",
       "scope": {
-        "dsh": "0.2.2-rc.3",
-        "cordis": "4.0.6-alpha.1",
+        "dsh": null,
+        "cordis": null,
         "platform": "web"
+      },
+      "anchor": {
+        "dsh": "0.2.2-rc.3",
+        "cordis": "4.1.0",
+        "commit": "38a6a5c965aa99ab525161efb7cc5cf1fe62fced",
+        "source": "host",
+        "suspect": false
       },
       "levels": {
         "entry": {
@@ -12003,11 +12346,11 @@
         "command": "dsh-standards check <package-dir> --scope security --json"
       },
       "evidence": {
-        "sha256": "3f3afeb968e4605571ed8f91aaa00df209f0e31e713119501eac2ec225ebff59",
-        "reportSha256": "3f3afeb968e4605571ed8f91aaa00df209f0e31e713119501eac2ec225ebff59"
+        "sha256": "e786f4b3e7ec0d16eecc87acea24ac0d4d4396bbb00eea6d26abe82071e2682e",
+        "reportSha256": "e786f4b3e7ec0d16eecc87acea24ac0d4d4396bbb00eea6d26abe82071e2682e"
       },
       "checkedBy": {
-        "checker": "dsh-standards@1.6.10 (dsh-plugin-verify@0.1.0)",
+        "checker": "dsh-standards@1.6.11 (dsh-plugin-verify@0.1.0)",
         "command": "dsh-levels <package-dir> --no-runtime --format json",
         "securityCommand": "dsh-standards check <package-dir> --scope security --json"
       },
@@ -12035,9 +12378,16 @@
       "repo": "https://github.com/corrinehu/dsh-workbuddy-connect",
       "license": "MIT",
       "scope": {
-        "dsh": "0.2.2-rc.3",
+        "dsh": null,
         "cordis": "^4.0.5",
         "platform": "web"
+      },
+      "anchor": {
+        "dsh": "0.2.2-rc.3",
+        "cordis": "4.1.0",
+        "commit": "38a6a5c965aa99ab525161efb7cc5cf1fe62fced",
+        "source": "host",
+        "suspect": false
       },
       "levels": {
         "entry": {
@@ -12248,11 +12598,11 @@
         "command": "dsh-standards check <package-dir> --scope security --json"
       },
       "evidence": {
-        "sha256": "eb65b000ce55b0de52bc5210a724fa894871acf971cff6a572cc3664049c5566",
-        "reportSha256": "eb65b000ce55b0de52bc5210a724fa894871acf971cff6a572cc3664049c5566"
+        "sha256": "dde8d612bccca718b6bf536ffc9f4f25885c12a9b5cfa27174a919b32c8c0170",
+        "reportSha256": "dde8d612bccca718b6bf536ffc9f4f25885c12a9b5cfa27174a919b32c8c0170"
       },
       "checkedBy": {
-        "checker": "dsh-standards@1.6.10 (dsh-plugin-verify@0.1.0)",
+        "checker": "dsh-standards@1.6.11 (dsh-plugin-verify@0.1.0)",
         "command": "dsh-levels <package-dir> --no-runtime --format json",
         "securityCommand": "dsh-standards check <package-dir> --scope security --json"
       },
