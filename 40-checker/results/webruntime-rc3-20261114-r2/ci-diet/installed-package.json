@@ -1,0 +1,100 @@
+{
+  "name": "dsh-ci-diet",
+  "version": "0.5.2",
+  "description": "Find wasted GitHub Actions runner time and propose small, reviewable local patches.",
+  "keywords": [
+    "dsh-plugin",
+    "github-actions",
+    "ci",
+    "cost-optimization",
+    "workflow"
+  ],
+  "homepage": "https://github.com/0disoft/dsh-ci-diet#readme",
+  "bugs": {
+    "url": "https://github.com/0disoft/dsh-ci-diet/issues"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/0disoft/dsh-ci-diet.git"
+  },
+  "type": "module",
+  "license": "MIT",
+  "bin": {
+    "ci-diet": "./dist/cli/index.js"
+  },
+  "exports": {
+    ".": "./dist/dsh/bootstrap.js",
+    "./client": {
+      "types": "./client/index.d.ts",
+      "default": "./client/index.js"
+    },
+    "./package.json": "./package.json"
+  },
+  "files": [
+    "dist",
+    "client",
+    "cordis.patch.yml",
+    "README*.md",
+    "LICENSE"
+  ],
+  "engines": {
+    "node": "^22.19.0 || >=24.0.0",
+    "dsh": ">=0.2.1-rc.2 <0.3.0-0 || >=0.2.2-rc.1 <0.3.0-0"
+  },
+  "scripts": {
+    "typecheck": "tsc -p tsconfig.json --noEmit",
+    "lint": "oxlint src tests",
+    "format": "oxfmt src tests",
+    "gen:types": "node scripts/gen-types.mjs",
+    "check:types": "node scripts/gen-types.mjs --check",
+    "gen:data": "node scripts/gen-data.mjs",
+    "check:data": "node scripts/gen-data.mjs --check",
+    "test:core": "node scripts/test-core.mjs",
+    "build": "tsc -p tsconfig.build.json && node scripts/build-client.mjs",
+    "build:client": "node scripts/build-client.mjs",
+    "prepack": "npm run build",
+    "smoke:node": "node dist/cli/index.js --version",
+    "check:contracts": "node scripts/sync-contracts.mjs --check",
+    "test:docs": "node scripts/check-docs.mjs",
+    "test:plugin": "node --test tests/unit/dsh-plugin.test.ts"
+  },
+  "dependencies": {
+    "ajv": "^8.17.1",
+    "ajv-formats": "^3.0.1",
+    "yaml": "^2.8.1"
+  },
+  "peerDependenciesMeta": {
+    "@deepseek-ai/cordis": {
+      "optional": true
+    },
+    "@deepseek-ai/dsh-tools": {
+      "optional": true
+    }
+  },
+  "devDependencies": {
+    "@deepseek-ai/cordis": "4.0.5",
+    "@deepseek-ai/dsh-tools": "0.2.1-rc.2",
+    "@deepseek-ai/schemastery": "3.18.5",
+    "@types/node": "^24.0.0",
+    "oxfmt": "^0.74.0",
+    "oxlint": "^1.89.0",
+    "typescript": "^5.9.0"
+  },
+  "peerDependencies": {
+    "@deepseek-ai/cordis": "^4.0.5",
+    "@deepseek-ai/dsh-tools": ">=0.2.1-rc.2 <0.3.0-0 || >=0.2.2-rc.1 <0.3.0-0",
+    "@deepseek-ai/schemastery": "^3.18.5"
+  },
+  "main": "./dist/dsh/bootstrap.js",
+  "dsh": {
+    "bundle": {
+      "patch": "./cordis.patch.yml"
+    },
+    "client": {
+      "platform": "web",
+      "inject": [
+        "@deepseek-ai/dsh-client-ui-settings"
+      ]
+    }
+  }
+}

@@ -1,0 +1,7 @@
+{
+  "name": "@yolk_vat-y/dsh-project-memory",
+  "version": "0.6.7",
+  "hasClientExport": true,
+  "clientExport": "./client/client.js",
+  "declaresDshClient": true
+}

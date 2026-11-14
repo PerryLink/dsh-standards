@@ -1,0 +1,7 @@
+{
+  "name": "@dsh-external/dsh-redteam-model",
+  "version": "1.1.2",
+  "hasClientExport": true,
+  "clientExport": "./lib/client.js",
+  "declaresDshClient": true
+}

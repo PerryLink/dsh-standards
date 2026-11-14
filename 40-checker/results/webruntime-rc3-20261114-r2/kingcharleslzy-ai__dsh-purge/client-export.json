@@ -1,0 +1,7 @@
+{
+  "name": "dsh-purge-community",
+  "version": "1.6.67",
+  "hasClientExport": true,
+  "clientExport": "./client.js",
+  "declaresDshClient": true
+}

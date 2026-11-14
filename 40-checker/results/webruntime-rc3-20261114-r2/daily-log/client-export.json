@@ -1,0 +1,10 @@
+{
+  "name": "@zzerx/dsh-plugin-daily-log",
+  "version": "0.4.3",
+  "hasClientExport": true,
+  "clientExport": {
+    "types": "./lib/types/client/index.d.ts",
+    "default": "./lib/client.js"
+  },
+  "declaresDshClient": true
+}

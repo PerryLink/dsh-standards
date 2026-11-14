@@ -1,0 +1,40 @@
+{
+  "schema": "dsh-entry18-fullbase/1",
+  "id": "YuJunZhiXue__dsh-purge",
+  "name": "dsh-purge",
+  "version": "1.1.85",
+  "source": "github",
+  "spec": "YuJunZhiXue/dsh-purge",
+  "profile": "base",
+  "base": {
+    "layer": "dsh-base/cordis.patch.yml",
+    "webLayer": false,
+    "webLayerPath": null
+  },
+  "environment": "github-actions",
+  "dshVersion": "0.2.2-rc.3",
+  "dshVersionExpected": "0.2.2-rc.3",
+  "host": null,
+  "startedAt": "2026-11-14T07:23:22.359Z",
+  "finishedAt": "2026-11-14T07:23:22.359Z",
+  "elapsedMs": 0,
+  "fixture": "none",
+  "artifact": null,
+  "installScripts": "skipped",
+  "installCommand": "npm install --omit=dev --ignore-scripts --legacy-peer-deps --no-package-lock --no-audit --no-fund",
+  "manifestRewrite": "none",
+  "install": null,
+  "status": "blocked",
+  "verdict": "blocked",
+  "blocked": true,
+  "g3State": null,
+  "g3Rows": null,
+  "g3Active": null,
+  "compatibility": null,
+  "exitCode": null,
+  "smoke": null,
+  "error": {
+    "stage": "fixture",
+    "message": "upstream repo YuJunZhiXue/dsh-purge was deleted (404 on 2026-11-14); no public fork or npm tarball exists"
+  }
+}

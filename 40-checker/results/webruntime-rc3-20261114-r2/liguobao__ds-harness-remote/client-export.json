@@ -1,0 +1,7 @@
+{
+  "name": "ds-harness-remote",
+  "version": "0.6.0",
+  "hasClientExport": true,
+  "clientExport": "./dist/client.js",
+  "declaresDshClient": true
+}

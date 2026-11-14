@@ -1,0 +1,110 @@
+{
+  "schema": "dsh-entry18-fullbase/1",
+  "id": "project-memory",
+  "name": "@yolk_vat-y/dsh-project-memory",
+  "version": "0.6.7",
+  "source": "npm",
+  "spec": "@yolk_vat-y/dsh-project-memory",
+  "profile": "base",
+  "base": {
+    "layer": "dsh-base/cordis.patch.yml",
+    "webLayer": false,
+    "webLayerPath": null
+  },
+  "environment": "github-actions",
+  "dshVersion": "0.2.2-rc.3",
+  "dshVersionExpected": "0.2.2-rc.3",
+  "host": {
+    "packageRoot": "/opt/hostedtoolcache/node/24.22.2/x64/lib/node_modules/@deepseek-ai/dsh",
+    "depsRoot": "/opt/hostedtoolcache/node/24.22.2/x64/lib/node_modules/@deepseek-ai/dsh/node_modules",
+    "appBoot": "/opt/hostedtoolcache/node/24.22.2/x64/lib/node_modules/@deepseek-ai/dsh/node_modules/@deepseek-ai/dsh-app-boot/lib/index.js",
+    "basePatch": "/opt/hostedtoolcache/node/24.22.2/x64/lib/node_modules/@deepseek-ai/dsh/node_modules/@deepseek-ai/dsh-base/cordis.patch.yml",
+    "webPatch": null
+  },
+  "startedAt": "2026-11-14T07:22:24.442Z",
+  "finishedAt": "2026-11-14T07:22:28.902Z",
+  "elapsedMs": 4460,
+  "fixture": "published-tarball",
+  "artifact": {
+    "requested": "@yolk_vat-y/dsh-project-memory@0.6.7",
+    "resolved": "published-tarball",
+    "reason": "source=npm: the registry tarball is the installable artifact",
+    "manifestName": "@yolk_vat-y/dsh-project-memory",
+    "manifestVersion": "0.6.7",
+    "versionMatches": true,
+    "nameMatches": true,
+    "publishedRepository": null,
+    "tarball": "yolk_vat-y-dsh-project-memory-0.6.7.tgz",
+    "repository": null
+  },
+  "installScripts": "skipped",
+  "installCommand": "npm install --omit=dev --ignore-scripts --legacy-peer-deps --no-package-lock --no-audit --no-fund",
+  "manifestRewrite": "removed devDependencies+scripts",
+  "install": {
+    "command": "npm install --omit=dev --ignore-scripts --legacy-peer-deps --no-package-lock --no-audit --no-fund",
+    "status": "ok",
+    "elapsedMs": 2145,
+    "scripts": "skipped"
+  },
+  "status": "verified",
+  "verdict": "verified",
+  "g3State": "verified",
+  "g3Rows": 1,
+  "g3Active": 1,
+  "compatibility": "admit",
+  "exitCode": 0,
+  "smoke": {
+    "schema": "dsh-bundle-smoke/1",
+    "package": "@yolk_vat-y/dsh-project-memory",
+    "version": "0.6.7",
+    "g0": {
+      "patchFiles": 1,
+      "parsed": true
+    },
+    "g1": {
+      "rows": 100,
+      "targetRows": 1,
+      "warnings": []
+    },
+    "g2": {
+      "compatibility": "admit"
+    },
+    "g3": {
+      "state": "verified",
+      "rows": [
+        {
+          "id": "include:project-memory",
+          "state": 2,
+          "disabled": false
+        }
+      ],
+      "active": 1
+    },
+    "g4": {
+      "hasClient": true,
+      "clientExport": true,
+      "rootRows": [
+        {
+          "id": "project-memory",
+          "name": "@yolk_vat-y/dsh-project-memory",
+          "config": {
+            "memoryDir": ".dsh-project-memory",
+            "chunkChars": 3000,
+            "maxChunksPerFile": 40,
+            "llmQueryExpansion": false,
+            "expansionCount": 6,
+            "lazyIndexing": true,
+            "autoIndexOnFirstUse": false,
+            "watch": true,
+            "watchInterval": 30,
+            "allowUnsafeRoots": false,
+            "maxScanFiles": 20000,
+            "maxScanDepth": 12
+          }
+        }
+      ],
+      "ok": true
+    }
+  },
+  "error": null
+}

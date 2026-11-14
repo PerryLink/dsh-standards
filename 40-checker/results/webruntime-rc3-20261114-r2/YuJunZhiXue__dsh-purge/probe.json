@@ -1,0 +1,29 @@
+{
+  "schema": "dsh-web-probe/1",
+  "id": "YuJunZhiXue__dsh-purge",
+  "pkg": "dsh-purge",
+  "webapp": false,
+  "login": false,
+  "ok": false,
+  "webappLoaded": false,
+  "hasClient": false,
+  "clientClaim": null,
+  "clientKnown": false,
+  "skipped": "fixture-deleted-upstream",
+  "blocked": true,
+  "bootGraph": "not-run",
+  "bootIds": [],
+  "expected": [],
+  "loadedEntries": [],
+  "missingEntries": [],
+  "notLoadedEntries": [],
+  "consoleErrors": [],
+  "pageErrors": [],
+  "failedRequests": [],
+  "rootChildren": 0,
+  "elapsedMs": 0,
+  "error": {
+    "stage": "fixture",
+    "message": "upstream repo YuJunZhiXue/dsh-purge was deleted (404 on 2026-11-14); no public fork or npm tarball exists"
+  }
+}

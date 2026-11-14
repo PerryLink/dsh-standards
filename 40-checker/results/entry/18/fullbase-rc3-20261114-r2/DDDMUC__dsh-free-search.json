@@ -1,0 +1,101 @@
+{
+  "schema": "dsh-entry18-fullbase/1",
+  "id": "DDDMUC__dsh-free-search",
+  "name": "dsh-free-search",
+  "version": "0.9.26",
+  "source": "github",
+  "spec": "DDDMUC/dsh-free-search",
+  "profile": "base",
+  "base": {
+    "layer": "dsh-base/cordis.patch.yml",
+    "webLayer": false,
+    "webLayerPath": null
+  },
+  "environment": "github-actions",
+  "dshVersion": "0.2.2-rc.3",
+  "dshVersionExpected": "0.2.2-rc.3",
+  "host": {
+    "packageRoot": "/opt/hostedtoolcache/node/24.22.2/x64/lib/node_modules/@deepseek-ai/dsh",
+    "depsRoot": "/opt/hostedtoolcache/node/24.22.2/x64/lib/node_modules/@deepseek-ai/dsh/node_modules",
+    "appBoot": "/opt/hostedtoolcache/node/24.22.2/x64/lib/node_modules/@deepseek-ai/dsh/node_modules/@deepseek-ai/dsh-app-boot/lib/index.js",
+    "basePatch": "/opt/hostedtoolcache/node/24.22.2/x64/lib/node_modules/@deepseek-ai/dsh/node_modules/@deepseek-ai/dsh-base/cordis.patch.yml",
+    "webPatch": null
+  },
+  "startedAt": "2026-11-14T07:21:40.207Z",
+  "finishedAt": "2026-11-14T07:21:43.126Z",
+  "elapsedMs": 2919,
+  "fixture": "published-tarball",
+  "artifact": {
+    "requested": "DDDMUC/dsh-free-search",
+    "resolved": "published-tarball",
+    "reason": "published tarball repository matches DDDMUC/dsh-free-search",
+    "manifestName": "dsh-free-search",
+    "manifestVersion": "0.9.26",
+    "versionMatches": true,
+    "nameMatches": true,
+    "publishedRepository": "git+https://github.com/DDDMUC/dsh-free-search.git",
+    "tarball": "dsh-free-search-0.9.26.tgz",
+    "repository": null
+  },
+  "installScripts": "skipped",
+  "installCommand": "npm install --omit=dev --ignore-scripts --legacy-peer-deps --no-package-lock --no-audit --no-fund",
+  "manifestRewrite": "removed devDependencies+scripts",
+  "install": {
+    "command": "npm install --omit=dev --ignore-scripts --legacy-peer-deps --no-package-lock --no-audit --no-fund",
+    "status": "ok",
+    "elapsedMs": 335,
+    "scripts": "skipped"
+  },
+  "status": "verified",
+  "verdict": "verified",
+  "g3State": "verified",
+  "g3Rows": 1,
+  "g3Active": 1,
+  "compatibility": "admit",
+  "exitCode": 0,
+  "smoke": {
+    "schema": "dsh-bundle-smoke/1",
+    "package": "dsh-free-search",
+    "version": "0.9.26",
+    "g0": {
+      "patchFiles": 1,
+      "parsed": true
+    },
+    "g1": {
+      "rows": 100,
+      "targetRows": 1,
+      "warnings": []
+    },
+    "g2": {
+      "compatibility": "admit"
+    },
+    "g3": {
+      "state": "verified",
+      "rows": [
+        {
+          "id": "include:web-search-free",
+          "state": 2,
+          "disabled": false
+        }
+      ],
+      "active": 1
+    },
+    "g4": {
+      "hasClient": true,
+      "clientExport": true,
+      "rootRows": [
+        {
+          "id": "web-search-free",
+          "name": "dsh-free-search",
+          "config": {
+            "provider": "bing",
+            "disabledEngines": [],
+            "bingMarket": "zh-CN"
+          }
+        }
+      ],
+      "ok": true
+    }
+  },
+  "error": null
+}

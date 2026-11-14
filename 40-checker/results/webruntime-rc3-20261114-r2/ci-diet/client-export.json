@@ -1,0 +1,10 @@
+{
+  "name": "dsh-ci-diet",
+  "version": "0.5.2",
+  "hasClientExport": true,
+  "clientExport": {
+    "types": "./client/index.d.ts",
+    "default": "./client/index.js"
+  },
+  "declaresDshClient": true
+}
