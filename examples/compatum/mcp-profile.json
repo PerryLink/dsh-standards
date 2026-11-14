@@ -1,0 +1,105 @@
+{
+  "$schema": "../../spec/compatum.schema.json",
+  "schema": "compatum/1",
+  "name": "mcp-example-filesystem",
+  "version": "1.4.0",
+  "capabilities": [
+    {
+      "id": "fs:read",
+      "effect": "read",
+      "scope": "workspace",
+      "targets": [
+        "workspace"
+      ],
+      "reversible": true,
+      "approval": "none",
+      "reason": "The server exposes read-only file tools."
+    },
+    {
+      "id": "fs:write",
+      "effect": "write",
+      "scope": "workspace",
+      "targets": [
+        "workspace"
+      ],
+      "reversible": true,
+      "approval": "once",
+      "reason": "The write tool is available but off by default."
+    },
+    {
+      "id": "subprocess",
+      "effect": "exec",
+      "scope": "host",
+      "targets": [
+        "stdio server process"
+      ],
+      "reversible": true,
+      "approval": "always",
+      "reason": "stdio transport starts one child process."
+    },
+    {
+      "id": "tools:register",
+      "effect": "control",
+      "scope": "host",
+      "targets": [
+        "read_file",
+        "write_file",
+        "list_directory"
+      ],
+      "reversible": true,
+      "approval": "once",
+      "reason": "The server publishes three MCP tools."
+    }
+  ],
+  "requires": {
+    "portable": "1.0",
+    "mcp": [
+      "2025-06-18",
+      "2025-11-25",
+      "2026-07-28"
+    ],
+    "node": ">=22.19.0",
+    "platform": [
+      "linux",
+      "darwin",
+      "win32"
+    ],
+    "transport": [
+      "stdio"
+    ],
+    "install": {
+      "unit": "server",
+      "entry": "mcpServers.filesystem",
+      "activation": "immediate",
+      "data": "none",
+      "uninstall": {
+        "stops": true,
+        "removesCode": true,
+        "removesData": false,
+        "residue": []
+      }
+    }
+  },
+  "evidence": [
+    {
+      "schema": "compatum-evidence/1",
+      "level": "checked",
+      "subject": {
+        "repo": "https://github.com/example/mcp-example-filesystem",
+        "version": "1.4.0",
+        "commit": "fedcba9876543210fedcba9876543210fedcba98"
+      },
+      "host": {
+        "name": "mcp",
+        "version": "2026-07-28"
+      },
+      "checker": "mcp-inspector@0.21.0",
+      "result": "PASS",
+      "scope": "tool",
+      "checkedAt": "2026-11-14T10:15:00Z",
+      "reportPath": "evidence/mcp-example-filesystem/1.4.0/2026-07-28/tools-list.json",
+      "expiresAt": "2027-05-13",
+      "stale": false
+    }
+  ]
+}

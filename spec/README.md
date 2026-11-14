@@ -15,6 +15,9 @@ Machine-readable:
 - [clauses.json](clauses.json) — stable clause IDs mapped to gates (`clause-map.mjs`).
 - [reference-suite.json](reference-suite.json) — versioned samples, anchors, change rules.
 - [remediation.json](remediation.json) — 68-key advice table for the additive `advice[]` report field (docs anchors + severity hints).
+- [compatum.schema.json](compatum.schema.json) — `compatum/1` profile block: 15-ID capability registry and aliases, `requires` (host ranges + install/uninstall), `evidence[]` (`declared`/`checked`/`tested` with subject/host anchors), `name` and `version`.
+- [compatum-validate.mjs](compatum-validate.mjs) — zero-dependency validator for the schema plus the profile rules JSON Schema cannot express (duplicate IDs, aliases, stale evidence, no `declared` PASS). `node spec/compatum-validate.mjs`.
+- [../examples/compatum/](../examples/compatum/) — `plugin-min.json`, `plugin-full.json`, `mcp-profile.json`; all three pass the schema and the validator.
 - [schemas/evidence.schema.json](schemas/evidence.schema.json) — `dsh-levels/1` record.
 - [schemas/advice.schema.json](schemas/advice.schema.json) — `dsh-advice/1` entry array: the additive `advice[]` field of a `dsh-conformance/1` report (13 required fields; `why`/`fix`/`docsUrl` may be null; `evidence` ≤ 10; `gate`/`severity` ∈ {FAIL,WARN}).
 - [flow-evidence.schema.json](flow-evidence.schema.json) — `dsh-flow-evidence/2` FLOW chain (J1–J8 checks, subject/host binding, `evidenceHash`). v1 and bare `{Jx:{status}}` rows are deprecated and never count as a pass.

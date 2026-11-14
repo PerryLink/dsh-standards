@@ -1,0 +1,48 @@
+{
+  "$schema": "../../spec/compatum.schema.json",
+  "schema": "compatum/1",
+  "name": "dsh-example-min",
+  "version": "0.1.0",
+  "capabilities": [
+    {
+      "id": "tools:register"
+    }
+  ],
+  "requires": {
+    "portable": "1.0",
+    "dsh": ">=0.2.1-0 <0.3.0",
+    "install": {
+      "unit": "bundle",
+      "entry": "dsh.bundle.patch",
+      "activation": "hot-reload",
+      "data": "$DSH_HOME/dsh-example-min",
+      "uninstall": {
+        "stops": true,
+        "removesCode": true,
+        "removesData": false,
+        "residue": []
+      }
+    }
+  },
+  "evidence": [
+    {
+      "schema": "compatum-evidence/1",
+      "level": "declared",
+      "subject": {
+        "repo": "https://github.com/example/dsh-example-min",
+        "version": "0.1.0",
+        "commit": "0123456789abcdef0123456789abcdef01234567"
+      },
+      "host": {
+        "name": "dsh",
+        "version": "0.2.2-rc.3"
+      },
+      "checker": "author@0.1.0",
+      "result": "NOT-RUN",
+      "scope": "capability",
+      "checkedAt": "2026-11-14T09:00:00Z",
+      "reportPath": "examples/compatum/plugin-min.json",
+      "stale": false
+    }
+  ]
+}

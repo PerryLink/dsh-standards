@@ -37,12 +37,18 @@ SBOM; signing or PKI (reuse Sigstore and in-toto); new cryptographic primitives.
 A conforming package carries a `compatum` object with `schema: "compatum/1"`:
 for DSH at `package.json#dsh.compatum`, elsewhere as a vendor extension. It is
 authoritative at package level, MUST be valid JSON, and MUST NOT contain
-secrets.
+secrets. The object also carries `name` and `version`, which bind the claim to
+one exact package version and let the block travel outside `package.json`; for
+a DSH package they MUST equal `package.json#name` and `package.json#version`.
+The [JSON Schema](../spec/compatum.schema.json) validates the inner object; the
+wrapper below only shows the embedding.
 
 ```json
 {
   "compatum": {
     "schema": "compatum/1",
+    "name": "dsh-example",
+    "version": "1.2.0",
     "capabilities": [
       { "id": "network:egress", "scope": "user", "approval": "once" },
       { "id": "tools:register", "scope": "host", "approval": "once" }
@@ -51,7 +57,19 @@ secrets.
       "portable": "1.0",
       "dsh": ">=0.2.1-0 <0.3.0",
       "node": "^22.19.0 || >=24.9.0",
-      "platform": ["linux", "darwin", "win32"]
+      "platform": ["linux", "darwin", "win32"],
+      "install": {
+        "unit": "bundle",
+        "entry": "dsh.bundle.patch",
+        "activation": "hot-reload",
+        "data": "$DSH_HOME/dsh-example",
+        "uninstall": {
+          "stops": true,
+          "removesCode": true,
+          "removesData": false,
+          "residue": []
+        }
+      }
     },
     "evidence": [
       {
@@ -63,7 +81,7 @@ secrets.
         "result": "PASS",
         "scope": "capability",
         "checkedAt": "2026-11-14T09:00:00Z",
-        "sha256": "sha256:<64 lowercase hex>"
+        "reportPath": "evidence/dsh-example/1.2.0/0.2.2-rc.3.json"
       }
     ]
   }
@@ -85,12 +103,15 @@ still a WARN with risk `unknown`, never a PASS.
 
 ### 3.2 `requires`
 
-A declarative object: `portable` (profile version) plus host constraints such as
-`dsh` and `node` (SemVer ranges), `platform` (enum), and optional `install`
-semantics (unit, entry, activation; whether uninstall stops processes, removes
-code, removes data, and what residue remains). Tested hosts belong in
-`evidence[]`: a test result is not a requirement. Missing or unsatisfied
-requirements mean *not run*, not *pass*.
+A declarative object: `portable` (profile version, currently `"1.0"`) plus host
+constraints such as `dsh` and `node` (SemVer ranges), `platform` (enum), and the
+required `install` object. `install` states the unit, entry, activation, data
+location, and uninstall semantics: whether uninstall stops processes, removes
+code, removes data (`true`, `false`, or `"ask"`), and what residue remains
+(`residue: []` is an explicit no-residue claim). `mcp`, `claude-code`, `codex`,
+`agent-plugins`, `agent-skills`, `transport`, and `denies` MAY further constrain
+the claim. Tested hosts belong in `evidence[]`: a test result is not a
+requirement. Missing or unsatisfied requirements mean *not run*, not *pass*.
 
 ### 3.3 `evidence[]`
 
@@ -109,6 +130,20 @@ canonical JSON (RFC 8785 JCS) of the record body, excluding the hash field.
   be deleted to improve the apparent level.
 - **Results:** `PASS | WARN | FAIL | NOT-RUN | BLOCKED | ERROR`, case-sensitive.
   `NOT-RUN` is never a pass and MUST be preserved as such.
+
+### 3.4 Machine-readable artifacts
+
+- [`spec/compatum.schema.json`](../spec/compatum.schema.json) — JSON Schema
+  2020-12 for one `compatum/1` block, including the 15-ID registry, the alias
+  map (`listen`, `exec`, `process`), the effect map, `requires.install`, and the
+  evidence record.
+- [`examples/compatum/`](../examples/compatum/) — `plugin-min.json`,
+  `plugin-full.json`, and `mcp-profile.json`; all three validate.
+- [`spec/compatum-validate.mjs`](../spec/compatum-validate.mjs) — zero-dependency
+  validator. It checks the schema plus rules JSON Schema cannot express
+  (duplicate IDs, aliases, effect consistency, historical evidence on a version
+  bump, and `declared` evidence that tries to carry `PASS`/`WARN`). Run
+  `node spec/compatum-validate.mjs`; CI runs the same command.
 
 ## 4. Relationship to HCB and dsh-standards
 

@@ -23,6 +23,7 @@
     "40-checker/package.json",
     "40-checker/README.md",
     "spec",
+    "examples/compatum",
     "docs",
     "README.md",
     "SECURITY.md",
@@ -37,6 +38,7 @@
   ],
   "scripts": {
     "test": "node 40-checker/scripts/run-tests.mjs",
+    "test:compatum": "node spec/compatum-validate.mjs",
     "test:fixtures": "node bin/dsh-standards.mjs 40-checker/fixtures/good --scope entry --entry-claim static --format text",
     "verify:repo-anchors": "node 40-checker/scripts/repo-anchor-check.mjs"
   },

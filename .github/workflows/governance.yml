@@ -62,6 +62,9 @@ jobs:
       - name: J5/J8 static preflight
         run: node 40-checker/scripts/journey-disclosure-shape.mjs --package 40-checker/fixtures/good
 
+      - name: Compatum schema and examples
+        run: node spec/compatum-validate.mjs
+
       - name: Verify the example record
         run: node publish/verify.mjs --id DSH-ATT-2026-001
 

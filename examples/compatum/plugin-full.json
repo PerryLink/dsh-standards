@@ -1,0 +1,155 @@
+{
+  "$schema": "../../spec/compatum.schema.json",
+  "schema": "compatum/1",
+  "name": "dsh-example-full",
+  "version": "1.4.2",
+  "capabilities": [
+    {
+      "id": "fs:read",
+      "effect": "read",
+      "scope": "workspace",
+      "targets": [
+        "workspace"
+      ],
+      "reversible": true,
+      "approval": "none",
+      "reason": "Reads project files to build the review context."
+    },
+    {
+      "id": "fs:write",
+      "effect": "write",
+      "scope": "workspace",
+      "targets": [
+        "workspace/.dsh-example"
+      ],
+      "reversible": true,
+      "approval": "once",
+      "reason": "Writes the review report next to the project."
+    },
+    {
+      "id": "network:egress",
+      "effect": "network",
+      "scope": "remote",
+      "targets": [
+        "api.example.com"
+      ],
+      "reversible": true,
+      "approval": "once",
+      "reason": "Fetches the review rules from one pinned host."
+    },
+    {
+      "id": "sessions:read",
+      "effect": "read",
+      "scope": "user",
+      "targets": [
+        "$DSH_HOME/sessions"
+      ],
+      "reversible": true,
+      "approval": "once",
+      "reason": "Reads the current session to attribute findings."
+    },
+    {
+      "id": "tools:register",
+      "effect": "control",
+      "scope": "host",
+      "targets": [
+        "review_run",
+        "review_report"
+      ],
+      "reversible": true,
+      "approval": "once",
+      "reason": "Registers two tools; both are removed on uninstall."
+    },
+    {
+      "id": "system-prompt:write",
+      "effect": "write",
+      "scope": "host",
+      "targets": [
+        "review-policy"
+      ],
+      "reversible": false,
+      "approval": "always",
+      "reason": "Adds a review policy section while the plugin is active."
+    },
+    {
+      "id": "credentials:read",
+      "effect": "credential",
+      "scope": "user",
+      "targets": [
+        "$DSH_HOME/credentials/example.json"
+      ],
+      "reversible": true,
+      "approval": "once",
+      "hostOnly": true,
+      "reason": "Reads one named credential; it does not enumerate the store."
+    }
+  ],
+  "requires": {
+    "portable": "1.0",
+    "dsh": ">=0.2.1-0 <0.3.0",
+    "node": "^22.19.0 || >=24.9.0",
+    "platform": [
+      "linux",
+      "darwin",
+      "win32"
+    ],
+    "install": {
+      "unit": "bundle",
+      "entry": "dsh.bundle.patch",
+      "activation": "hot-reload",
+      "data": "$DSH_HOME/dsh-example-full",
+      "uninstall": {
+        "stops": true,
+        "removesCode": true,
+        "removesData": false,
+        "residue": [
+          "review reports written under workspace/.dsh-example"
+        ]
+      }
+    }
+  },
+  "evidence": [
+    {
+      "schema": "compatum-evidence/1",
+      "level": "checked",
+      "subject": {
+        "repo": "https://github.com/example/dsh-example-full",
+        "version": "1.4.2",
+        "commit": "89abcdef0123456789abcdef0123456789abcdef"
+      },
+      "host": {
+        "name": "dsh",
+        "version": "0.2.2-rc.3"
+      },
+      "checker": "dsh-standards@1.6.12",
+      "result": "PASS",
+      "scope": "capability",
+      "checkedAt": "2026-11-14T09:30:00Z",
+      "reportPath": "evidence/dsh-example-full/1.4.2/0.2.2-rc.3/checked.json",
+      "expiresAt": "2027-05-13",
+      "stale": false
+    },
+    {
+      "schema": "compatum-evidence/1",
+      "level": "tested",
+      "subject": {
+        "repo": "https://github.com/example/dsh-example-full",
+        "version": "1.4.2",
+        "commit": "89abcdef0123456789abcdef0123456789abcdef"
+      },
+      "host": {
+        "name": "dsh",
+        "version": "0.2.2-rc.3"
+      },
+      "checker": "dsh-standards@1.6.12",
+      "result": "PASS",
+      "scope": "entry",
+      "checkedAt": "2026-11-14T09:45:00Z",
+      "reportPath": "evidence/dsh-example-full/1.4.2/0.2.2-rc.3/tested.json",
+      "command": "dsh plugin add ./dsh-example-full && dsh --dump-config",
+      "runId": "example-full-2026-11-14",
+      "expiresAt": "2027-05-13",
+      "stale": false
+    }
+  ]
+}

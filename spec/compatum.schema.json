@@ -1,0 +1,917 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://github.com/PerryLink/dsh-standards/spec/compatum.schema.json",
+  "title": "Compatum/1 compatibility, capability, and evidence profile",
+  "description": "Normative JSON Schema for one compatum/1 block. DSH packages embed the block at package.json#dsh.compatum; other hosts may carry it as vendor metadata. A declaration is disclosure, not enforcement, certification, a badge, a score, or a ranking. Missing is unknown, not none; an empty capabilities array is an explicit none claim but is still a WARN, never a PASS.",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "schema",
+    "name",
+    "version",
+    "capabilities",
+    "requires",
+    "evidence"
+  ],
+  "properties": {
+    "$schema": {
+      "type": "string",
+      "format": "uri-reference",
+      "description": "Optional self-reference to this schema. It is not required in package.json."
+    },
+    "schema": {
+      "const": "compatum/1",
+      "description": "Profile identifier. The only accepted value in this version."
+    },
+    "name": {
+      "$ref": "#/$defs/name",
+      "description": "Package or server name. For a DSH package it MUST equal package.json#name."
+    },
+    "version": {
+      "$ref": "#/$defs/semver",
+      "description": "Exact subject version. For a DSH package it MUST equal package.json#version. A version bump resets the effective level to declared."
+    },
+    "capabilities": {
+      "type": "array",
+      "maxItems": 15,
+      "items": {
+        "$ref": "#/$defs/capability"
+      },
+      "description": "Closed-set capability declarations. Missing means unknown. Empty is an explicit none claim and remains a WARN with risk unknown, never a PASS. Duplicate IDs and aliases are invalid; the validator checks both."
+    },
+    "requires": {
+      "$ref": "#/$defs/requires"
+    },
+    "evidence": {
+      "type": "array",
+      "minItems": 1,
+      "items": {
+        "$ref": "#/$defs/evidence"
+      },
+      "description": "At least one record is required so that 'no evidence' is written down rather than inferred. Failures remain evidence and MUST NOT be deleted."
+    }
+  },
+  "$comment": "The machine-readable 15-ID registry, alias map, and effect map live in $defs.capabilityRegistry, $defs.capabilityAliases, and $defs.capabilityEffects. Aliases are accepted only by a checker, never by this schema.",
+  "$defs": {
+    "name": {
+      "type": "string",
+      "minLength": 1,
+      "maxLength": 214,
+      "pattern": "^[A-Za-z0-9@][A-Za-z0-9@._~/-]*$"
+    },
+    "semver": {
+      "type": "string",
+      "pattern": "^(0|[1-9][0-9]*)\\.(0|[1-9][0-9]*)\\.(0|[1-9][0-9]*)(?:-[0-9A-Za-z-]+(?:\\.[0-9A-Za-z-]+)*)?(?:\\+[0-9A-Za-z-]+(?:\\.[0-9A-Za-z-]+)*)?$"
+    },
+    "semverRange": {
+      "type": "string",
+      "minLength": 1,
+      "maxLength": 128,
+      "pattern": "^[0-9A-Za-z.*+<>=^~| -]+$"
+    },
+    "sha256": {
+      "type": "string",
+      "pattern": "^sha256:[0-9a-f]{64}$"
+    },
+    "capabilityRegistry": {
+      "const": [
+        "fs:read",
+        "fs:write",
+        "shell",
+        "subprocess",
+        "network:egress",
+        "network:ingress",
+        "credentials:read",
+        "credentials:list",
+        "credentials:provider",
+        "llm:adapter",
+        "sessions:read",
+        "system-prompt:write",
+        "tools:register",
+        "remote:expose",
+        "plugin:install"
+      ]
+    },
+    "capabilityAliases": {
+      "const": {
+        "listen": "network:ingress",
+        "exec": "shell",
+        "process": "subprocess"
+      }
+    },
+    "capabilityEffects": {
+      "const": {
+        "fs:read": "read",
+        "fs:write": "write",
+        "shell": "exec",
+        "subprocess": "exec",
+        "network:egress": "network",
+        "network:ingress": "network",
+        "credentials:read": "credential",
+        "credentials:list": "credential",
+        "credentials:provider": "credential",
+        "llm:adapter": "control",
+        "sessions:read": "read",
+        "system-prompt:write": "write",
+        "tools:register": "control",
+        "remote:expose": "control",
+        "plugin:install": "control"
+      }
+    },
+    "effect": {
+      "enum": [
+        "read",
+        "write",
+        "exec",
+        "network",
+        "credential",
+        "control"
+      ]
+    },
+    "capability": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "id"
+      ],
+      "properties": {
+        "id": {
+          "enum": [
+            "fs:read",
+            "fs:write",
+            "shell",
+            "subprocess",
+            "network:egress",
+            "network:ingress",
+            "credentials:read",
+            "credentials:list",
+            "credentials:provider",
+            "llm:adapter",
+            "sessions:read",
+            "system-prompt:write",
+            "tools:register",
+            "remote:expose",
+            "plugin:install"
+          ],
+          "description": "Canonical ID only. Aliases listen, exec, and process MUST be normalized by the checker and MUST NOT be written here."
+        },
+        "effect": {
+          "$ref": "#/$defs/effect"
+        },
+        "scope": {
+          "enum": [
+            "workspace",
+            "user",
+            "host",
+            "remote"
+          ]
+        },
+        "targets": {
+          "type": "array",
+          "minItems": 1,
+          "maxItems": 32,
+          "uniqueItems": true,
+          "items": {
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 512
+          },
+          "description": "Paths, domains, tool names, or service names. MUST NOT contain secrets. Use placeholders such as $DSH_HOME rather than absolute user paths."
+        },
+        "reversible": {
+          "type": "boolean"
+        },
+        "approval": {
+          "enum": [
+            "none",
+            "once",
+            "always"
+          ]
+        },
+        "hostOnly": {
+          "type": "boolean",
+          "description": "True when the target carrier cannot express this capability. A loss explanation belongs in the carrier's own projection metadata."
+        },
+        "reason": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 280
+        }
+      },
+      "allOf": [
+        {
+          "if": {
+            "required": [
+              "reversible"
+            ],
+            "properties": {
+              "reversible": {
+                "const": false
+              }
+            }
+          },
+          "then": {
+            "required": [
+              "approval"
+            ],
+            "properties": {
+              "approval": {
+                "enum": [
+                  "once",
+                  "always"
+                ]
+              }
+            }
+          }
+        },
+        {
+          "if": {
+            "required": [
+              "id"
+            ],
+            "properties": {
+              "id": {
+                "const": "fs:read"
+              }
+            }
+          },
+          "then": {
+            "properties": {
+              "effect": {
+                "const": "read"
+              }
+            }
+          }
+        },
+        {
+          "if": {
+            "required": [
+              "id"
+            ],
+            "properties": {
+              "id": {
+                "const": "fs:write"
+              }
+            }
+          },
+          "then": {
+            "properties": {
+              "effect": {
+                "const": "write"
+              }
+            }
+          }
+        },
+        {
+          "if": {
+            "required": [
+              "id"
+            ],
+            "properties": {
+              "id": {
+                "const": "shell"
+              }
+            }
+          },
+          "then": {
+            "properties": {
+              "effect": {
+                "const": "exec"
+              }
+            }
+          }
+        },
+        {
+          "if": {
+            "required": [
+              "id"
+            ],
+            "properties": {
+              "id": {
+                "const": "subprocess"
+              }
+            }
+          },
+          "then": {
+            "properties": {
+              "effect": {
+                "const": "exec"
+              }
+            }
+          }
+        },
+        {
+          "if": {
+            "required": [
+              "id"
+            ],
+            "properties": {
+              "id": {
+                "const": "network:egress"
+              }
+            }
+          },
+          "then": {
+            "properties": {
+              "effect": {
+                "const": "network"
+              }
+            }
+          }
+        },
+        {
+          "if": {
+            "required": [
+              "id"
+            ],
+            "properties": {
+              "id": {
+                "const": "network:ingress"
+              }
+            }
+          },
+          "then": {
+            "properties": {
+              "effect": {
+                "const": "network"
+              }
+            }
+          }
+        },
+        {
+          "if": {
+            "required": [
+              "id"
+            ],
+            "properties": {
+              "id": {
+                "const": "credentials:read"
+              }
+            }
+          },
+          "then": {
+            "properties": {
+              "effect": {
+                "const": "credential"
+              }
+            }
+          }
+        },
+        {
+          "if": {
+            "required": [
+              "id"
+            ],
+            "properties": {
+              "id": {
+                "const": "credentials:list"
+              }
+            }
+          },
+          "then": {
+            "properties": {
+              "effect": {
+                "const": "credential"
+              }
+            }
+          }
+        },
+        {
+          "if": {
+            "required": [
+              "id"
+            ],
+            "properties": {
+              "id": {
+                "const": "credentials:provider"
+              }
+            }
+          },
+          "then": {
+            "properties": {
+              "effect": {
+                "const": "credential"
+              }
+            }
+          }
+        },
+        {
+          "if": {
+            "required": [
+              "id"
+            ],
+            "properties": {
+              "id": {
+                "const": "llm:adapter"
+              }
+            }
+          },
+          "then": {
+            "properties": {
+              "effect": {
+                "const": "control"
+              }
+            }
+          }
+        },
+        {
+          "if": {
+            "required": [
+              "id"
+            ],
+            "properties": {
+              "id": {
+                "const": "sessions:read"
+              }
+            }
+          },
+          "then": {
+            "properties": {
+              "effect": {
+                "const": "read"
+              }
+            }
+          }
+        },
+        {
+          "if": {
+            "required": [
+              "id"
+            ],
+            "properties": {
+              "id": {
+                "const": "system-prompt:write"
+              }
+            }
+          },
+          "then": {
+            "properties": {
+              "effect": {
+                "const": "write"
+              }
+            }
+          }
+        },
+        {
+          "if": {
+            "required": [
+              "id"
+            ],
+            "properties": {
+              "id": {
+                "const": "tools:register"
+              }
+            }
+          },
+          "then": {
+            "properties": {
+              "effect": {
+                "const": "control"
+              }
+            }
+          }
+        },
+        {
+          "if": {
+            "required": [
+              "id"
+            ],
+            "properties": {
+              "id": {
+                "const": "remote:expose"
+              }
+            }
+          },
+          "then": {
+            "properties": {
+              "effect": {
+                "const": "control"
+              }
+            }
+          }
+        },
+        {
+          "if": {
+            "required": [
+              "id"
+            ],
+            "properties": {
+              "id": {
+                "const": "plugin:install"
+              }
+            }
+          },
+          "then": {
+            "properties": {
+              "effect": {
+                "const": "control"
+              }
+            }
+          }
+        }
+      ]
+    },
+    "install": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "unit",
+        "entry",
+        "activation",
+        "data",
+        "uninstall"
+      ],
+      "properties": {
+        "unit": {
+          "enum": [
+            "bundle",
+            "plugin",
+            "server",
+            "skill",
+            "package",
+            "directory"
+          ]
+        },
+        "entry": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 256
+        },
+        "activation": {
+          "enum": [
+            "immediate",
+            "hot-reload",
+            "restart",
+            "next-session"
+          ]
+        },
+        "data": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 256,
+          "description": "none, storage-domain, $DSH_HOME/<name>, ${PLUGIN_DATA}, or ${CLAUDE_PLUGIN_DATA}."
+        },
+        "uninstall": {
+          "$ref": "#/$defs/uninstall"
+        }
+      }
+    },
+    "uninstall": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "stops",
+        "removesCode",
+        "removesData",
+        "residue"
+      ],
+      "properties": {
+        "stops": {
+          "const": true,
+          "description": "Stopping running processes or rows is mandatory when the unit can run."
+        },
+        "removesCode": {
+          "const": true,
+          "description": "Removing installed code is mandatory."
+        },
+        "removesData": {
+          "enum": [
+            true,
+            false,
+            "ask"
+          ],
+          "description": "Data handling MUST be explicit; false is a declaration, not a promise that no data exists."
+        },
+        "residue": {
+          "type": "array",
+          "maxItems": 32,
+          "uniqueItems": true,
+          "items": {
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 256
+          },
+          "description": "Known residue. An empty array is an explicit no-residue claim and must be testable."
+        }
+      }
+    },
+    "requires": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "portable",
+        "install"
+      ],
+      "anyOf": [
+        {
+          "required": [
+            "dsh"
+          ]
+        },
+        {
+          "required": [
+            "mcp"
+          ]
+        },
+        {
+          "required": [
+            "claude-code"
+          ]
+        },
+        {
+          "required": [
+            "codex"
+          ]
+        },
+        {
+          "required": [
+            "agent-plugins"
+          ]
+        },
+        {
+          "required": [
+            "agent-skills"
+          ]
+        },
+        {
+          "required": [
+            "node"
+          ]
+        }
+      ],
+      "properties": {
+        "portable": {
+          "const": "1.0"
+        },
+        "dsh": {
+          "$ref": "#/$defs/semverRange",
+          "description": "DSH host range. When package.json#engines.dsh exists the two MUST be equal."
+        },
+        "node": {
+          "$ref": "#/$defs/semverRange"
+        },
+        "claude-code": {
+          "$ref": "#/$defs/semverRange"
+        },
+        "codex": {
+          "$ref": "#/$defs/semverRange"
+        },
+        "agent-plugins": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 64
+        },
+        "agent-skills": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 64
+        },
+        "mcp": {
+          "type": "array",
+          "minItems": 1,
+          "uniqueItems": true,
+          "maxItems": 16,
+          "items": {
+            "type": "string",
+            "pattern": "^[0-9]{4}-[0-9]{2}-[0-9]{2}$"
+          },
+          "description": "Supported MCP protocol revisions. The client selects the intersection; no intersection means the server is skipped."
+        },
+        "platform": {
+          "type": "array",
+          "minItems": 1,
+          "uniqueItems": true,
+          "maxItems": 3,
+          "items": {
+            "enum": [
+              "linux",
+              "darwin",
+              "win32"
+            ]
+          }
+        },
+        "transport": {
+          "type": "array",
+          "minItems": 1,
+          "uniqueItems": true,
+          "maxItems": 3,
+          "items": {
+            "enum": [
+              "stdio",
+              "streamable-http",
+              "sse"
+            ]
+          }
+        },
+        "denies": {
+          "type": "array",
+          "uniqueItems": true,
+          "maxItems": 32,
+          "items": {
+            "type": "string",
+            "pattern": "^[a-z0-9*][a-z0-9*:_-]*:none$"
+          },
+          "description": "Negative constraints such as network:none. These are not capabilities."
+        },
+        "install": {
+          "$ref": "#/$defs/install"
+        }
+      }
+    },
+    "subject": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "repo",
+        "version",
+        "commit"
+      ],
+      "properties": {
+        "name": {
+          "$ref": "#/$defs/name"
+        },
+        "repo": {
+          "type": "string",
+          "format": "uri",
+          "minLength": 1,
+          "maxLength": 512
+        },
+        "version": {
+          "$ref": "#/$defs/semver"
+        },
+        "commit": {
+          "type": "string",
+          "pattern": "^[0-9a-f]{7,40}$"
+        },
+        "path": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 512
+        }
+      }
+    },
+    "host": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "name",
+        "version"
+      ],
+      "properties": {
+        "name": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 64,
+          "pattern": "^[a-z0-9][a-z0-9._-]*$"
+        },
+        "version": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 128,
+          "pattern": "^[0-9A-Za-z@][0-9A-Za-z@.+_-]*$"
+        }
+      },
+      "description": "Exact host anchor. A range is not an anchor; tested evidence must name the host version that actually ran."
+    },
+    "evidence": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "schema",
+        "level",
+        "subject",
+        "host",
+        "checker",
+        "result",
+        "scope",
+        "checkedAt"
+      ],
+      "anyOf": [
+        {
+          "required": [
+            "reportPath"
+          ]
+        },
+        {
+          "required": [
+            "sha256"
+          ]
+        }
+      ],
+      "properties": {
+        "schema": {
+          "const": "compatum-evidence/1"
+        },
+        "level": {
+          "enum": [
+            "declared",
+            "checked",
+            "tested"
+          ]
+        },
+        "subject": {
+          "$ref": "#/$defs/subject"
+        },
+        "host": {
+          "$ref": "#/$defs/host"
+        },
+        "checker": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 128,
+          "description": "Tool and version, for example dsh-standards@1.6.12. For a declared-only record the author may be named here."
+        },
+        "result": {
+          "enum": [
+            "PASS",
+            "WARN",
+            "FAIL",
+            "NOT-RUN",
+            "BLOCKED",
+            "ERROR"
+          ],
+          "description": "Case-sensitive. NOT-RUN is never a pass."
+        },
+        "scope": {
+          "enum": [
+            "install",
+            "capability",
+            "entry",
+            "flow",
+            "boost",
+            "skill",
+            "tool"
+          ]
+        },
+        "checkedAt": {
+          "type": "string",
+          "format": "date-time"
+        },
+        "reportPath": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 512
+        },
+        "sha256": {
+          "$ref": "#/$defs/sha256",
+          "description": "sha256: plus 64 lowercase hex characters over the canonical JSON (RFC 8785 JCS) of the record body, excluding this field."
+        },
+        "expiresAt": {
+          "type": "string",
+          "format": "date"
+        },
+        "stale": {
+          "type": "boolean"
+        },
+        "runId": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 256
+        },
+        "url": {
+          "type": "string",
+          "format": "uri"
+        },
+        "command": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 1024
+        }
+      },
+      "allOf": [
+        {
+          "if": {
+            "required": [
+              "level"
+            ],
+            "properties": {
+              "level": {
+                "const": "tested"
+              }
+            }
+          },
+          "then": {
+            "anyOf": [
+              {
+                "required": [
+                  "command"
+                ]
+              },
+              {
+                "required": [
+                  "runId"
+                ]
+              },
+              {
+                "required": [
+                  "url"
+                ]
+              }
+            ]
+          }
+        }
+      ],
+      "description": "One record per level and observed run. Failures remain evidence. A version or host change makes older records historical (stale: true), not deleted."
+    }
+  }
+}
