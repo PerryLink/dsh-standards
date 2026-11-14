@@ -156,6 +156,8 @@ CHK='D:\_wintmp_g2\chk-head\bin\dsh-standards.mjs'   # HEAD 31900e1 的 git arch
 
 ## 6 生成契约（TODO: generate）
 
+> **`publish/sidecar.json` 的 `checker.version` / `checker.sha` 语义（2026-11-14 定稿）**：它们记录**产出这些检查的 checker 版本/提交**，不是"当前包版本"，本仓**不要求**两者相等，也没有相等性门禁。理由：sidecar 不在 npm tarball 内（`files` 白名单不含 `publish/`），其唯一一致性契约是"顶层 `checker.version` ∈ 各条目 `checkedBy` 版本集合"（`test/sidecar.test.mjs` 断言）；重建只应发生在需要重新检查这 50 个包时（命令骨架见 `HANDOFF-CONTINUITY` §7.9），否则只会改元数据、不改语义。
+
 - **输入**：`40-checker/results/**/*.json`；`spec/levels.json` 的 evidence 枚举（`not-run, recognized, static, runtime, measured, blocked, failed, stale`）；`.github/workflows/*.yml` 的 `node-version` 与钉住的宿主版本；`gh api …/actions/runs`（run id / conclusion / head_sha / created_at）。
 - **输出**：只替换 `<!-- BEGIN GENERATED:supported -->` 与 `<!-- END GENERATED:supported -->` 之间的矩阵。
 - **结果 JSON 还缺的字段**（缺了就只能生成 `not-run`）：`checkerVersion`、`nodeVersion`、`ciRunUrl`、`runtimeSource`。`anchor.scanner` 现在写死 `dsh-plugin-verify@0.1.0`，必须补真实包版本。
