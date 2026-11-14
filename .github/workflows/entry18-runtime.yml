@@ -1,6 +1,7 @@
 name: entry18-runtime
 
-# Full base-profile G0–G3 runtime evidence for the 18 ENTRY packages.
+# Full base-profile G0–G3 runtime evidence for the 18 ENTRY packages:
+# 17 executed shards + 1 externally blocked row (see env.BLOCKED_* below).
 #
 # Each shard installs the published DSH anchor from npm, builds a disposable
 # farm (real node_modules dir of symlinks to the global install), installs the
@@ -9,6 +10,17 @@ name: entry18-runtime
 # that need the web-app bundle (connection / webServer) may stay `partial`.
 # Method, table and limitations: 40-checker/results/entry/18/fullbase/REPORT.md
 #
+# Denominator: 18 ENTRY rows = 17 executed + 1 blocked. `YuJunZhiXue__dsh-purge`
+# is NOT a shard: its upstream GitHub repository was deleted (404 on 2026-11-14)
+# and no public fork or npm tarball exists, so every clone-based run would fail
+# before G0 regardless of the DSH version. The aggregate job synthesizes that row
+# with status/verdict `blocked` (never a pass and never an rc.3 failure), uploads
+# it as the evidence artifact entry18-fullbase-<id>, and counts it separately
+# from the 17 executed rows. Its matrix entry would be `blocked: true`; a
+# job-level `if: !matrix.blocked` is not expressible in GitHub Actions (the
+# `matrix` context is not available in `jobs.<job_id>.if`), so the row is kept
+# out of the shard matrix and carried by env.BLOCKED_ID instead.
+#
 # Manual run: Actions → entry18-runtime → Run workflow.
 
 on:
@@ -16,6 +28,10 @@ on:
 
 permissions:
   contents: read
+
+env:
+  BLOCKED_ID: YuJunZhiXue__dsh-purge
+  BLOCKED_MESSAGE: 'upstream repo YuJunZhiXue/dsh-purge was deleted (404 on 2026-11-14); no public fork or npm tarball exists'
 
 jobs:
   runtime:
@@ -26,11 +42,12 @@ jobs:
       fail-fast: false
       max-parallel: 6
       matrix:
+        # 17 executable rows. The 18th ENTRY row is the blocked fixture carried
+        # by env.BLOCKED_ID and synthesized by the aggregate job below.
         id:
           - DDDMUC__dsh-free-search
           - Ebony-Vinyl__dsh-our-free-model
           - SeaOf0__dsh-redteam-model
-          - YuJunZhiXue__dsh-purge
           - ci-diet
           - daily-log
           - howmp__dsh-pentest
@@ -117,8 +134,137 @@ jobs:
           path: 40-checker/results/entry/18/fullbase
           merge-multiple: true
 
-      - name: Aggregate 18 shards
+      # The 18th ENTRY row is externally blocked: its upstream repository was
+      # deleted and the package has no public fork or npm tarball. No shard can
+      # ever produce this row, so synthesize it from the shipped manifest (which
+      # owns name/version/source/spec) and keep the row shape identical to a real
+      # row. `blocked` is a first-class outcome: it is neither a pass nor a dsh
+      # failure, and it is counted separately from the 17 executed rows.
+      - name: Synthesize blocked row for the deleted fixture
+        run: |
+          set -euo pipefail
+          node - "$BLOCKED_ID" "$BLOCKED_MESSAGE" <<'NODE'
+          const fs = require('node:fs')
+          const path = require('node:path')
+          const [id, message] = process.argv.slice(2)
+          if (!id || !message) {
+            console.error('BLOCKED_ID / BLOCKED_MESSAGE are not set')
+            process.exit(1)
+          }
+          const manifest = JSON.parse(fs.readFileSync('40-checker/samples/entry18.json', 'utf8'))
+          const row = manifest.rows.find((candidate) => candidate.id === id)
+          if (!row) {
+            console.error(`blocked row ${id} is not in 40-checker/samples/entry18.json`)
+            process.exit(1)
+          }
+          const now = new Date().toISOString()
+          const record = {
+            schema: 'dsh-entry18-fullbase/1',
+            id: row.id,
+            name: row.name,
+            version: row.version,
+            source: row.source,
+            spec: row.spec,
+            profile: 'base',
+            base: { layer: 'dsh-base/cordis.patch.yml', webLayer: false, webLayerPath: null },
+            environment: 'github-actions',
+            dshVersion: manifest.targetDshVersion,
+            dshVersionExpected: manifest.targetDshVersion,
+            // No host layout is resolved for this row: the fixture clone is the
+            // first step and it cannot succeed because the upstream repo is gone.
+            host: null,
+            startedAt: now,
+            finishedAt: now,
+            elapsedMs: 0,
+            fixture: 'none',
+            artifact: null,
+            installScripts: 'skipped',
+            installCommand: 'npm install --omit=dev --ignore-scripts --legacy-peer-deps --no-package-lock --no-audit --no-fund',
+            manifestRewrite: 'none',
+            install: null,
+            status: 'blocked',
+            verdict: 'blocked',
+            blocked: true,
+            g3State: null,
+            g3Rows: null,
+            g3Active: null,
+            compatibility: null,
+            exitCode: null,
+            smoke: null,
+            error: { stage: 'fixture', message },
+          }
+          const out = path.join('40-checker', 'results', 'entry', '18', 'fullbase')
+          fs.mkdirSync(out, { recursive: true })
+          fs.writeFileSync(path.join(out, `${id}.json`), `${JSON.stringify(record, null, 2)}\n`)
+          fs.writeFileSync(path.join(out, `${id}.log`), [
+            `# entry18 fullbase shard: ${id}`,
+            '# status=blocked (external fixture, nothing installed or booted)',
+            `# ${message}`,
+          ].join('\n') + '\n')
+          if (process.env.GITHUB_STEP_SUMMARY) {
+            fs.appendFileSync(process.env.GITHUB_STEP_SUMMARY, `- blocked row synthesized: \`${id}\` — ${message}\n`)
+          }
+          console.log(`wrote blocked row ${id}`)
+          NODE
+
+      - name: Aggregate 18 rows (17 executed + 1 blocked)
         run: node 40-checker/scripts/entry18-ci.mjs --summary
+
+      # The helper script is part of the shipped surface, so the blocked/coverage
+      # fields are added here instead of editing 40-checker/scripts/entry18-ci.mjs.
+      - name: Assert 17 executed + 1 blocked in the summary
+        run: |
+          set -euo pipefail
+          node <<'NODE'
+          const fs = require('node:fs')
+          const file = '40-checker/results/entry/18/fullbase/summary.json'
+          const summary = JSON.parse(fs.readFileSync(file, 'utf8'))
+          const blockedRows = summary.rows.filter((row) => row.status === 'blocked')
+          const executed = summary.rows.filter((row) => row.status !== 'blocked' && row.status !== 'missing')
+          summary.blocked = blockedRows.length
+          summary.coverage = {
+            rows: summary.count,
+            present: summary.present,
+            executed: executed.length,
+            blocked: blockedRows.length,
+            note: 'the 18 ENTRY rows are 17 executed shards + 1 externally blocked row; the blocked row is not a pass and not a dsh 0.2.2-rc.3 failure',
+            blockedRows: blockedRows.map((row) => ({ id: row.id, reason: row.error?.message ?? null })),
+          }
+          fs.writeFileSync(file, `${JSON.stringify(summary, null, 2)}\n`)
+          const lines = [
+            '## entry18 denominator',
+            '',
+            `- rows: ${summary.present}/${summary.count} present (${executed.length} executed + ${blockedRows.length} blocked)`,
+            `- blocked (fixture deleted upstream): ${blockedRows.length}/1`,
+            `- status: ${JSON.stringify(summary.status)}`,
+            `- verdicts: ${JSON.stringify(summary.verdicts)}`,
+            '',
+            '| row | status | verdict | fixture / error |',
+            '|---|---|---|---|',
+            ...summary.rows.map((row) => `| ${row.id} | ${row.status} | ${row.verdict} | ${row.error?.message ?? row.fixture ?? ''} |`),
+          ]
+          const text = lines.join('\n') + '\n'
+          if (process.env.GITHUB_STEP_SUMMARY) fs.appendFileSync(process.env.GITHUB_STEP_SUMMARY, text)
+          console.log(text)
+          let failed = false
+          if (summary.count !== 18) { console.error(`expected 18 manifest rows, found ${summary.count}`); failed = true }
+          if (summary.present !== 18) { console.error(`expected 18 present rows, found ${summary.present}`); failed = true }
+          if (blockedRows.length !== 1) { console.error(`expected exactly 1 blocked row, found ${blockedRows.length}`); failed = true }
+          if (blockedRows[0]?.id !== process.env.BLOCKED_ID) { console.error(`blocked row is ${blockedRows[0]?.id}, expected ${process.env.BLOCKED_ID}`); failed = true }
+          if (executed.length !== 17) { console.error(`expected 17 executed rows, found ${executed.length}`); failed = true }
+          process.exitCode = failed ? 1 : 0
+          NODE
+
+      - name: Upload blocked row evidence
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: entry18-fullbase-${{ env.BLOCKED_ID }}
+          path: |
+            40-checker/results/entry/18/fullbase/${{ env.BLOCKED_ID }}.json
+            40-checker/results/entry/18/fullbase/${{ env.BLOCKED_ID }}.log
+          if-no-files-found: error
+          retention-days: 14
 
       - name: Upload summary
         if: always()

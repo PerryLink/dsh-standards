@@ -1,8 +1,9 @@
 name: web-runtime
 
-# Real Web-profile evidence for the 18 ENTRY packages.
+# Real Web-profile evidence for the 18 ENTRY packages: 17 measured rows + 1
+# externally blocked row (see env.BLOCKED_* below).
 #
-# One job per package (18 rows, no package booted twice):
+# One job per *executable* package (17 jobs, no package booted twice):
 #   - 4 rows are marked `webapp: true` (SeaOf0/dsh-redteam-model,
 #     liguobao/ds-harness-remote, shaobeichen/dsh-pocket, dsh-ui-auth);
 #   - every row is probed for the client module when the installed package
@@ -17,20 +18,35 @@ name: web-runtime
 #
 # This is `client-module-loaded`, not a visual UI review. A package without a
 # client export still gets a shell-only probe and is recorded with
-# `skipped: "no ./client export"`; the summary job proves the 15/18 denominator.
+# `skipped: "no ./client export"`.
+#
+# Denominator: 18 ENTRY rows = 14 measured client-bearing + 3 measured
+# shell-only + 1 blocked. `YuJunZhiXue__dsh-purge` is NOT a job: its upstream
+# GitHub repository was deleted (404 on 2026-11-14) and no public fork or npm
+# tarball exists, so every install would fail before the client probe. The
+# denominator-summary job synthesizes that probe with `ok: false`,
+# `hasClient: false`, `skipped: "fixture-deleted-upstream"`, uploads it as the
+# normal row artifact, and gates on 18 rows / 14 client-bearing / 4 skipped
+# (3 measured + 1 blocked) / 4 webapp / 1 blocked. The 15th client row is the
+# blocked fixture, so 15/15 is impossible by construction, not a regression.
 #
 # Manual run: Actions -> web-runtime -> Run workflow.
 #
-# VERIFY: the four `github:` specs are pinned to commit SHAs because those
-# packages are not published on npm. Their package.json contents were validated
-# from checkouts at the same commits; the GitHub fetch itself is first exercised
-# by CI.
+# VERIFY: the three remaining `github:` specs are pinned to commit SHAs because
+# those packages are not published on npm. Their package.json contents were
+# validated from checkouts at the same commits; the GitHub fetch itself is first
+# exercised by CI.
 
 on:
   workflow_dispatch:
 
 permissions:
   contents: read
+
+env:
+  BLOCKED_ID: YuJunZhiXue__dsh-purge
+  BLOCKED_PKG: dsh-purge
+  BLOCKED_MESSAGE: 'upstream repo YuJunZhiXue/dsh-purge was deleted (404 on 2026-11-14); no public fork or npm tarball exists'
 
 jobs:
   runtime:
@@ -41,6 +57,14 @@ jobs:
       fail-fast: false
       max-parallel: 4
       matrix:
+        # 17 executable rows. The 18th ENTRY row (`YuJunZhiXue__dsh-purge`,
+        # alias dsh-purge@1.1.85) is the blocked fixture carried by
+        # env.BLOCKED_ID: its upstream repository was deleted (404 on
+        # 2026-11-14) and there is no public fork or npm tarball, so the install
+        # can never succeed. It is synthesized by the denominator-summary job
+        # instead of running an always-failing job (a job-level
+        # `if: !matrix.blocked` is not expressible in GitHub Actions: the
+        # `matrix` context is not available in `jobs.<job_id>.if`).
         include:
           - id: DDDMUC__dsh-free-search
             pkg: dsh-free-search
@@ -64,14 +88,6 @@ jobs:
             spec: 'github:SeaOf0/dsh-redteam-model#ce24bb25e35df8c8514e00e0d98f1a36d2e2a562'
             repo: SeaOf0/dsh-redteam-model
             webapp: true
-            login: false
-          - id: YuJunZhiXue__dsh-purge
-            pkg: dsh-purge
-            version: 1.1.85
-            # Not published on npm; pin the commit whose package.json says 1.1.85.
-            spec: 'github:YuJunZhiXue/dsh-purge#9716ca3e8711c7bb680668d34cc2e93e184028ad'
-            repo: YuJunZhiXue/dsh-purge
-            webapp: false
             login: false
           - id: ci-diet
             pkg: dsh-ci-diet
@@ -510,7 +526,77 @@ jobs:
           pattern: web-runtime-*
           path: artifacts
 
-      - name: Prove 15/18 client rows and 4 webapp rows
+      # The 18th ENTRY row is externally blocked: its upstream repository was
+      # deleted (404 on 2026-11-14) and the package has no public fork or npm
+      # tarball. No job can install it, so synthesize a probe that says exactly
+      # that. It is kept out of the client-bearing denominator and counted in a
+      # separate `blocked` counter (18 = 14 client + 3 shell-only + 1 blocked).
+      - name: Synthesize blocked probe for the deleted fixture
+        run: |
+          set -euo pipefail
+          node - "$BLOCKED_ID" "$BLOCKED_PKG" "$BLOCKED_MESSAGE" <<'NODE'
+          const fs = require('node:fs')
+          const path = require('node:path')
+          const [id, pkg, message] = process.argv.slice(2)
+          if (!id || !pkg || !message) {
+            console.error('BLOCKED_ID / BLOCKED_PKG / BLOCKED_MESSAGE are not set')
+            process.exit(1)
+          }
+          const dir = path.join('artifacts', 'blocked', id)
+          fs.mkdirSync(dir, { recursive: true })
+          const probe = {
+            schema: 'dsh-web-probe/1',
+            id,
+            pkg,
+            webapp: false,
+            login: false,
+            ok: false,
+            webappLoaded: false,
+            hasClient: false,
+            clientClaim: null,
+            clientKnown: false,
+            skipped: 'fixture-deleted-upstream',
+            blocked: true,
+            bootGraph: 'not-run',
+            bootIds: [],
+            expected: [],
+            loadedEntries: [],
+            missingEntries: [],
+            notLoadedEntries: [],
+            consoleErrors: [],
+            pageErrors: [],
+            failedRequests: [],
+            rootChildren: 0,
+            elapsedMs: 0,
+            error: { stage: 'fixture', message },
+          }
+          fs.writeFileSync(path.join(dir, 'probe.json'), `${JSON.stringify(probe, null, 2)}\n`)
+          fs.writeFileSync(path.join(dir, 'summary.md'), [
+            `# ${id}`,
+            '',
+            `- package: \`${pkg}\``,
+            '- webapp: false',
+            '- client export: unknown (the package was never installed)',
+            '- ok: no',
+            '- blocked: upstream repository deleted; no public fork or npm tarball exists',
+            `- error: ${message}`,
+          ].join('\n') + '\n')
+          console.log(`wrote blocked probe artifacts/blocked/${id}`)
+          NODE
+
+      # Upload the synthesized row as a normal per-row artifact so the durable
+      # landing (40-checker/scripts/land-runtime-artifacts.mjs) sees a full
+      # 18-row directory without special cases.
+      - name: Upload blocked probe evidence
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: web-runtime-${{ env.BLOCKED_ID }}
+          path: artifacts/blocked/${{ env.BLOCKED_ID }}/
+          if-no-files-found: error
+          retention-days: 14
+
+      - name: 'Prove 18 rows: 14 measured client + 4 skipped (1 blocked) + 4 webapp'
         run: |
           node - <<'NODE'
           const fs = require('node:fs')
@@ -529,6 +615,8 @@ jobs:
           }
           walk(root)
           rows.sort((a, b) => String(a.id).localeCompare(String(b.id)))
+          const blockedRows = rows.filter(row => row.blocked === true)
+          const executedRows = rows.filter(row => row.blocked !== true)
           const clientRows = rows.filter(row => row.hasClient === true)
           const skippedRows = rows.filter(row => row.hasClient !== true)
           const webappRows = rows.filter(row => row.webapp === true)
@@ -536,23 +624,29 @@ jobs:
           const lines = [
             '## web-runtime denominator',
             '',
-            `- rows: ${rows.length}`,
-            `- client-bearing rows: ${clientRows.length}/15`,
-            `- skipped (no ./client export): ${skippedRows.length}/3`,
+            `- rows: ${rows.length}/18 (${executedRows.length} executed + ${blockedRows.length} blocked)`,
+            `- client-bearing rows: ${clientRows.length}/14 measured + 1 blocked (fixture deleted upstream)`,
+            `- skipped rows: ${skippedRows.length}/4 (${executedRows.length - clientRows.length} measured shell-only + ${blockedRows.length} blocked)`,
             `- webapp rows: ${webappRows.length}/4`,
-            `- client-module-loaded: ${passed.length}/${clientRows.length}`,
+            `- blocked (fixture deleted upstream): ${blockedRows.length}/1`,
+            `- client-module-loaded: ${passed.length}/${clientRows.length} measured client rows`,
             '',
-            '| row | webapp | client | ok | bootGraph | missing | console | page |',
-            '|---|---|---|---|---|---|---|---|',
-            ...rows.map(row => `| ${row.id} | ${row.webapp === true ? 'yes' : ''} | ${row.hasClient === true ? 'yes' : 'skipped'} | ${row.ok === true ? 'yes' : 'no'} | ${row.bootGraph} | ${(row.missingEntries || []).join('<br>') || ''} | ${row.consoleErrors?.length ?? 0} | ${row.pageErrors?.length ?? 0} |`),
+            'Coverage: 14/18 client rows measured + 1 blocked (fixture deleted upstream) + 3 measured shell-only rows. The 15th client row is the blocked fixture, so 15/15 is impossible by construction, not a regression.',
+            '',
+            '| row | blocked | webapp | client | ok | bootGraph | missing | console | page |',
+            '|---|---|---|---|---|---|---|---|---|',
+            ...rows.map(row => `| ${row.id} | ${row.blocked === true ? 'yes' : ''} | ${row.webapp === true ? 'yes' : ''} | ${row.hasClient === true ? 'yes' : 'skipped'} | ${row.ok === true ? 'yes' : 'no'} | ${row.bootGraph} | ${(row.missingEntries || []).join('<br>') || ''} | ${row.consoleErrors?.length ?? 0} | ${row.pageErrors?.length ?? 0} |`),
           ]
           const text = lines.join('\n') + '\n'
           if (process.env.GITHUB_STEP_SUMMARY) fs.appendFileSync(process.env.GITHUB_STEP_SUMMARY, text)
           console.log(text)
           let failed = false
           if (rows.length !== 18) { console.error(`expected 18 row artifacts, found ${rows.length}`); failed = true }
-          if (clientRows.length !== 15) { console.error(`expected 15 client-bearing rows, found ${clientRows.length}`); failed = true }
-          if (skippedRows.length !== 3) { console.error(`expected 3 skipped rows, found ${skippedRows.length}`); failed = true }
-          if (webappRows.length !== 4) { console.error(`expected 4 webapp rows, found ${webappRows.length}`); failed = true }
+          if (blockedRows.length !== 1) { console.error(`expected exactly 1 blocked row, found ${blockedRows.length}`); failed = true }
+          if (blockedRows[0]?.id !== process.env.BLOCKED_ID) { console.error(`blocked row is ${blockedRows[0]?.id}, expected ${process.env.BLOCKED_ID}`); failed = true }
+          if (executedRows.length !== 17) { console.error(`expected 17 executed rows, found ${executedRows.length}`); failed = true }
+          if (clientRows.length !== 14) { console.error(`expected 14 measured client-bearing rows, found ${clientRows.length}`); failed = true }
+          if (skippedRows.length !== 4) { console.error(`expected 4 skipped rows (3 measured + 1 blocked), found ${skippedRows.length}`); failed = true }
+          if (webappRows.length !== 4) { console.error(`expected 4 measured webapp rows, found ${webappRows.length}`); failed = true }
           process.exitCode = failed ? 1 : 0
           NODE
