@@ -386,3 +386,8 @@ docs/             DEVELOPER-JOURNEY 等长期文档与 README 配图
 - **贡献**：DCO 1.1 + DCT v1，不要求版权转让。
 
 <p align="center"><sub>CC BY 4.0（文本）· Apache-2.0（代码）· 社区项目，与 DeepSeek 无关。</sub></p>
+
+
+## 相关：HCB 兼容矩阵
+
+[HCB（Host Compatibility Baseline）](https://github.com/PerryLink/dsh-compat-baseline) 把插件的 `engines.dsh` 声明映射到最近 10 个 DSH host 版本，输出 `declared-compatible / declared-incompatible / unknown` 矩阵。它与 dsh-standards 的静态检查互补：HCB 回答「声明支持哪些版本」，dsh-standards 回答「代码是否满足规范」。
