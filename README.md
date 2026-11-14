@@ -388,6 +388,6 @@ docs/             DEVELOPER-JOURNEY 等长期文档与 README 配图
 <p align="center"><sub>CC BY 4.0（文本）· Apache-2.0（代码）· 社区项目，与 DeepSeek 无关。</sub></p>
 
 
-## 相关：HCB（兼容 × 三轨）
+## 相关：HCB 数据层（dsh-hcb）
 
-[HCB v0.2](https://github.com/PerryLink/dsh-compat-baseline) 消费 `dsh-levels/1`：把 `engines.dsh` 映射到最近 10 个 DSH host，并把 `dsh.standards` 里的 ENTRY/FLOW/BOOST 三轨原样展示，另加 capability risk 与 `hcb-gate/1` 门禁建议。它**不把三轨压成分数**，也不替代 dsh-standards 的检查：HCB 回答「声明了什么」，dsh-standards 回答「实际是否通过」。
+HCB 是本栈的**数据/门禁子项目**：规则、checker 与 ENTRY/FLOW/BOOST 定义都在本仓；兼容矩阵、三轨声明数据、capability risk 与 `hcb-gate/1` 在 [dsh-hcb](https://github.com/PerryLink/dsh-hcb)。HCB 消费 `dsh-levels/1`，不把三轨压成分数，也不替代 checker——HCB 回答「声明了什么」，dsh-standards 回答「实际是否通过」。
