@@ -7,6 +7,7 @@
   - Checker: `40-checker/src/declarations.mjs` adds `sessions:write` to the judged set and maps `session.append(...)` (e.g. `agent.session.append`) to it for C-11.2, with C-11.5 observation from the same trigger; `40-checker/test/checks.test.mjs` covers declared PASS and undeclared FAIL.
 - **`examples/compatum/permission-rules-profile.json`** — the `dsh-permission-rules` capability shape (`fs:read`, `fs:write`, `network:egress`, `sessions:write`), declared/NOT-RUN. All four Compatum examples validate.
 - Docs 31 §8.1 / 60 §2.2 / 81 / 00-index / spec README / `docs/COMPATUM.md` / `spec/remediation.json` now say 16 IDs and list the new trigger.
+- **Compatum reference implementation.** `spec/compatum-reference.mjs` generates a `compatum/1` profile from the metadata a package already ships (`dsh.capabilities`, `engines.dsh`/`node`, `dsh.bundle`, `dshWorkshop.lifecycle`, `repository`) and runs it through the existing validator instead of re-implementing JSON Schema. It emits only one `declared` / `NOT-RUN` record, normalizes aliases, refuses a missing `dsh.capabilities` (`missing ≠ none`), refuses a dirty working tree, and can read the committed blob with `--from-git`. `spec/compatum-reference.test.mjs` adds 12 tests; `docs/COMPATUM.md` §3.5–3.6 document the generator and three checked package runs (one generated, two refused because no declaration exists at the anchored commit).
 
 ### Changed
 
@@ -15,6 +16,7 @@
 ### Verified
 
 - `node spec/compatum-validate.mjs`: registry 16 IDs, 3 aliases, 16 effects; self-test 5/5 negative cases rejected; **4/4 examples valid** (the three existing examples still pass).
+- `node --test spec/compatum-reference.test.mjs`: **12/12 tests pass** (explicit `[]`, fs/network, `sessions:write`, aliases/duplicates/unknowns, CLI, dirty-tree refusal, `--from-git`).
 - Independent Python `jsonschema` 4.10.3: Draft 2020-12 metaschema OK; **4/4 examples** pass with `FormatChecker`.
 - `DSH_GUIDE_DOCS=<fresh dsh-plugin-guide>/docs npm test`: 323 tests, 322 pass, 1 skipped, 0 failed. The default sibling guide checkout at `audit-2026-11-03/own/dsh-plugin-guide` is stale and fails the docs-anchor test; pointing `DSH_GUIDE_DOCS` at the current guide makes it green. The failure is pre-existing and unrelated to this change.
 - Not verified here: no npm publish (local + `main` only), no runtime/host run for the new example.

@@ -65,6 +65,9 @@ jobs:
       - name: Compatum schema and examples
         run: node spec/compatum-validate.mjs
 
+      - name: Compatum reference implementation
+        run: node --test spec/compatum-reference.test.mjs
+
       - name: Verify the example record
         run: node publish/verify.mjs --id DSH-ATT-2026-001
 

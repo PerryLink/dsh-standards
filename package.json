@@ -40,7 +40,8 @@
     "test": "node 40-checker/scripts/run-tests.mjs",
     "test:compatum": "node spec/compatum-validate.mjs",
     "test:fixtures": "node bin/dsh-standards.mjs 40-checker/fixtures/good --scope entry --entry-claim static --format text",
-    "verify:repo-anchors": "node 40-checker/scripts/repo-anchor-check.mjs"
+    "verify:repo-anchors": "node 40-checker/scripts/repo-anchor-check.mjs",
+    "test:compatum-reference": "node --test spec/compatum-reference.test.mjs"
   },
   "engines": {
     "node": ">=24.9.0"

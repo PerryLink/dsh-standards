@@ -17,6 +17,8 @@ Machine-readable:
 - [remediation.json](remediation.json) — 68-key advice table for the additive `advice[]` report field (docs anchors + severity hints).
 - [compatum.schema.json](compatum.schema.json) — `compatum/1` profile block: 16-ID capability registry and aliases, `requires` (host ranges + install/uninstall), `evidence[]` (`declared`/`checked`/`tested` with subject/host anchors), `name` and `version`.
 - [compatum-validate.mjs](compatum-validate.mjs) — zero-dependency validator for the schema plus the profile rules JSON Schema cannot express (duplicate IDs, aliases, stale evidence, no `declared` PASS). `node spec/compatum-validate.mjs`.
+- [compatum-reference.mjs](compatum-reference.mjs) — reference generator: reads a committed `package.json`, emits `capabilities` / `requires` / one `declared`+`NOT-RUN` evidence record, then runs the validator above. Missing `dsh.capabilities` is refused (`missing ≠ none`); `--from-git` anchors the blob to a revision. `node spec/compatum-reference.mjs <dir> --from-git`.
+- [compatum-reference.test.mjs](compatum-reference.test.mjs) — 12 tests (explicit `[]`, fs/network, `sessions:write`, aliases, refusal cases, CLI, `--from-git`). `node --test spec/compatum-reference.test.mjs`.
 - [../examples/compatum/](../examples/compatum/) — `plugin-min.json`, `plugin-full.json`, `mcp-profile.json`, `permission-rules-profile.json`; all four pass the schema and the validator.
 - [schemas/evidence.schema.json](schemas/evidence.schema.json) — `dsh-levels/1` record.
 - [schemas/advice.schema.json](schemas/advice.schema.json) — `dsh-advice/1` entry array: the additive `advice[]` field of a `dsh-conformance/1` report (13 required fields; `why`/`fix`/`docsUrl` may be null; `evidence` ≤ 10; `gate`/`severity` ∈ {FAIL,WARN}).

@@ -1,6 +1,6 @@
 # Compatum/1 — compatibility, capability, and evidence profile
 
-> **Status:** Draft 0.9 · 2026-11-14 · Editor: PerryLink (independent community project)
+> **Status:** Draft 0.10 · 2026-11-15 · Editor: PerryLink (independent community project)
 > **Notice:** This is **not an official standard**. It is not a W3C, AAIF, OpenAtom,
 > OpenSSF, IETF, or DeepSeek deliverable and carries no endorsement from any of
 > them. “Compatum” is an unregistered working name; no trademark is claimed.
@@ -145,6 +145,127 @@ canonical JSON (RFC 8785 JCS) of the record body, excluding the hash field.
   (duplicate IDs, aliases, effect consistency, historical evidence on a version
   bump, and `declared` evidence that tries to carry `PASS`/`WARN`). Run
   `node spec/compatum-validate.mjs`; CI runs the same command.
+- [`spec/compatum-reference.mjs`](../spec/compatum-reference.mjs) — reference
+  generator: `package.json` → `compatum/1`, then the validator above. It emits
+  only `declared`/`NOT-RUN` evidence and refuses to invent missing declarations.
+- [`spec/compatum-reference.test.mjs`](../spec/compatum-reference.test.mjs) —
+  12 tests for the generator, including explicit `[]`, fs/network,
+  `sessions:write`, alias normalization, refusal cases, the CLI, and
+  `--from-git`. Run `node --test spec/compatum-reference.test.mjs`.
+
+### 3.5 Reference implementation
+
+[`spec/compatum-reference.mjs`](../spec/compatum-reference.mjs) turns the
+metadata a package already ships into one `compatum/1` profile. It reads
+`dsh.capabilities`, `engines.dsh`, `engines.node`, `dsh.bundle`,
+`dshWorkshop.lifecycle`, and `repository`, then runs the result through
+[`spec/compatum-validate.mjs`](../spec/compatum-validate.mjs); it does not
+re-implement JSON Schema.
+
+```text
+node spec/compatum-reference.mjs <dir> [--from-git [--rev <rev>]]
+  [--commit <sha>] [--repo <url>] [--host <name@version>] [--data <value>]
+  [--out <file>] [--json]
+```
+
+It deliberately cannot invent a declaration:
+
+- A missing `dsh.capabilities` exits `2` (`MISSING_CAPABILITIES`), because
+  missing means *unknown*, not *none*. An explicit `[]` is preserved and still
+  validates as a WARN.
+- Aliases are normalized with a `note:` and never written to `capabilities[]`.
+- A working-tree read requires a clean `package.json`: anchoring a dirty file
+  to `HEAD` would describe a version that is not in the commit. `--from-git`
+  reads the committed blob and anchors `subject.commit` to that revision.
+- Evidence is always one `declared` / `NOT-RUN` record; the generator never
+  emits `PASS`. When no host version was observed, `host.version` is the
+  literal `not-run` (the schema has no null); a checked/tested record must name
+  the exact host that ran.
+- Exit `0` = profile valid, `1` = generated but invalid, `2` = declaration or
+  input error (no profile is emitted).
+
+### 3.6 Checked package runs (2026-11-15)
+
+The generator was run against the committed `package.json` of three packages
+with `--from-git`, so no uncommitted working-tree declaration could leak in.
+Two of them still have no declaration at their anchored commit; the generator
+refuses rather than writing an empty array.
+
+| Package | Anchored commit | `dsh.capabilities` at that commit | Reference result |
+|---|---|---|---|
+| `dsh-auto-review@0.15.1` | `7fc4598` | `network:egress`, `sessions:read` | generated; validator PASS |
+| `dsh-permission-rules@0.8.0` | `624a170` | absent | exit 2, `MISSING_CAPABILITIES` |
+| `dsh-plugin-guide@0.5.8` | `f59c425` | absent | exit 2, `MISSING_CAPABILITIES` |
+
+`dsh-permission-rules` has a four-ID draft in an uncommitted `0.8.1` working
+tree, and `dsh-plugin-guide` has `dshWorkshop.permissions:
+["filesystem:read"]`; neither is a capability declaration at a commit. The
+different vocabulary is not auto-mapped, and an uncommitted block is not
+counted as adoption. No external package is known to carry a `compatum` block
+yet.
+
+The generated `dsh-auto-review` profile (validator: `1/1 examples valid`, with
+the expected `NOT-RUN` note):
+
+```json
+{
+  "schema": "compatum/1",
+  "name": "dsh-auto-review",
+  "version": "0.15.1",
+  "capabilities": [
+    {
+      "id": "network:egress",
+      "effect": "network",
+      "reason": "Declared in package.json#dsh.capabilities."
+    },
+    {
+      "id": "sessions:read",
+      "effect": "read",
+      "reason": "Declared in package.json#dsh.capabilities."
+    }
+  ],
+  "requires": {
+    "portable": "1.0",
+    "dsh": ">=0.2.1-0 <0.3.0 || >=0.2.2-0 <0.3.0",
+    "node": "^22.19.0 || >=24.0.0",
+    "install": {
+      "unit": "bundle",
+      "entry": "dsh.bundle.patch",
+      "activation": "restart",
+      "data": "$DSH_HOME/dsh-auto-review",
+      "uninstall": {
+        "stops": true,
+        "removesCode": true,
+        "removesData": false,
+        "residue": [
+          "plugin data under $DSH_HOME/dsh-auto-review is not removed by `dsh plugin remove`"
+        ]
+      }
+    }
+  },
+  "evidence": [
+    {
+      "schema": "compatum-evidence/1",
+      "level": "declared",
+      "subject": {
+        "repo": "https://github.com/PerryLink/dsh-auto-review",
+        "version": "0.15.1",
+        "commit": "7fc45989d7a0ca3bd368763e2df9ccdfff00fb79"
+      },
+      "host": {
+        "name": "dsh",
+        "version": "not-run"
+      },
+      "checker": "dsh-standards/compatum-reference@1.7.0",
+      "result": "NOT-RUN",
+      "scope": "capability",
+      "checkedAt": "2026-11-15T00:00:00.000Z",
+      "reportPath": "package.json#dsh.capabilities",
+      "stale": false
+    }
+  ]
+}
+```
 
 ## 4. Relationship to HCB and dsh-standards
 
