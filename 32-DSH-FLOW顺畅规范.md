@@ -53,6 +53,10 @@
 | J7 | 正常/缺服务/端口占用 | 三种都有可读诊断 | 只覆盖正常 | 崩溃无日志 |
 | J8 | headless/web/client off | 三态可用或明确拒绝 | 一态未测 | 宣称支持但崩溃 |
 
+
+
+> **J7 证据分级（2026-11-15）**：当宿主成功启动但不打印逐插件 `name@version` 启动行时，允许用 **live inventory**（`pluginInventory/list` 的 active 行 + `pluginManager/listBundles` 的 version，按 `entryId` join）记为 **`manual`**。`manual` 不是 `runtime`：`runtime` 仍只接受真实启动行；inventory 只能证明“已加载 + 版本”，不能证明启动行/日志完整。
+
 **未跑=`not-run`，不冒充 PASS。** 每个 J 记录：命令、环境、结果、日志路径、时间。
 
 ---
