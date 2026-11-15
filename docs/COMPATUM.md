@@ -181,6 +181,10 @@ It deliberately cannot invent a declaration:
   emits `PASS`. When no host version was observed, `host.version` is the
   literal `not-run` (the schema has no null); a checked/tested record must name
   the exact host that ran.
+- `install.data` defaults to `$DSH_HOME/<name>` (or `none` without a bundle),
+  and the uninstall residue string is a conservative template, not a verified
+  data-location observation; review it, or override with `--data`, before
+  publishing.
 - Exit `0` = profile valid, `1` = generated but invalid, `2` = declaration or
   input error (no profile is emitted).
 
@@ -204,8 +208,9 @@ different vocabulary is not auto-mapped, and an uncommitted block is not
 counted as adoption. No external package is known to carry a `compatum` block
 yet.
 
-The generated `dsh-auto-review` profile (validator: `1/1 examples valid`, with
-the expected `NOT-RUN` note):
+A generated `dsh-auto-review` profile. Its `checkedAt` is fixed for this
+document; everything else is the reference output (validator: `1/1 examples
+valid`, with the expected `NOT-RUN` note):
 
 ```json
 {
