@@ -81,6 +81,11 @@ npm पर पुराना आरक्षण `dsh-standards@0.0.3` केव
   <img src="docs/assets/dsh-standards-flow-v4-light.svg" width="100%" alt="dsh-standards pipeline: plugin dir → DSC-01…13 → L1–L3 runtime → report → dsh-levels">
 </picture>
 
+![dsh-standards का असली टर्मिनल रन](docs/assets/dsh-standards-demo.gif)
+
+*इस रिपॉज़िटरी के असली रन का एनिमेटेड रीप्ले (2026-11-21)।*
+
+
 ## तीन चरणों में शुरुआत
 
 **1. इंस्टॉल** (दो में से कोई भी; Node `>=24.9.0`):

@@ -81,6 +81,11 @@ O índice completo de 51 documentos está no [README.md](README.md) em chinês.
   <img src="docs/assets/dsh-standards-flow-v4-light.svg" width="100%" alt="dsh-standards pipeline: plugin dir → DSC-01…13 → L1–L3 runtime → report → dsh-levels">
 </picture>
 
+![dsh-standards: execução real de terminal](docs/assets/dsh-standards-demo.gif)
+
+*Repetição animada de uma execução real deste repositório (2026-11-21).*
+
+
 ## Instalação em três passos
 
 **1. Instalar** (duas opções; Node `>=24.9.0`):

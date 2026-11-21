@@ -89,6 +89,11 @@ The full 51-document index lives in the Chinese [README.md](README.md).
 
 ## Three-step setup
 
+
+![dsh-standards: real terminal run](docs/assets/dsh-standards-demo.gif)
+
+*Animated replay of a real run in this repository (2026-11-21).*
+
 **1. Install** (either way; Node `>=24.9.0`):
 
 ```sh

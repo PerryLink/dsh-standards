@@ -110,6 +110,11 @@ npm 上的旧占位 `dsh-standards@0.0.3` 只是名字预留，这条 1.x 线取
 
 ## 三步上手
 
+
+![dsh-standards 真实终端运行](docs/assets/dsh-standards-demo.gif)
+
+*本仓库真实运行的动图回放（2026-11-21）。*
+
 **1. 安装**（二选一，Node 需 `>=24.9.0`）：
 
 ```sh
