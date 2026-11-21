@@ -361,3 +361,7 @@ The earlier project `dsh-plugin-standard` (lanbaolu) belongs to the same ecosyst
 - **Contributions**: DCO 1.1 + DCT v1, with no copyright assignment.
 
 <p align="center"><sub>CC BY 4.0 (text) · Apache-2.0 (code) · community project, not affiliated with DeepSeek.</sub></p>
+
+## Related: the HCB data layer (dsh-hcb)
+
+HCB is the **data / gatekeeping sub-project** of this stack: the rules, the checker, and the ENTRY/FLOW/BOOST definitions live in this repository; the compatibility matrix, the three-track declaration data, capability risk, and `hcb-gate/1` live in [dsh-hcb](https://github.com/PerryLink/dsh-hcb). HCB consumes `dsh-levels/1`; it does not compress the three tracks into a score, and it does not replace the checker — HCB answers "what was declared", dsh-standards answers "what actually passes".

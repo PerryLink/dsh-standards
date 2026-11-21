@@ -355,3 +355,7 @@ El proyecto anterior `dsh-plugin-standard` (lanbaolu) pertenece al mismo ecosist
 - **Contribuciones**: DCO 1.1 + DCT v1, sin cesión de derechos de autor.
 
 <p align="center"><sub>CC BY 4.0 (texto) · Apache-2.0 (código) · proyecto comunitario, sin afiliación con DeepSeek.</sub></p>
+
+## Relacionado: la capa de datos HCB (dsh-hcb)
+
+HCB es el **subproyecto de datos y de puerta** de este stack: las reglas, el verificador y las definiciones ENTRY/FLOW/BOOST viven en este repositorio; la matriz de compatibilidad, los datos de declaración de las tres pistas, el riesgo de capacidades y `hcb-gate/1` viven en [dsh-hcb](https://github.com/PerryLink/dsh-hcb). HCB consume `dsh-levels/1`; no comprime las tres pistas en una puntuación ni sustituye al verificador: HCB responde «qué se declaró» y dsh-standards responde «qué se aprueba realmente».
